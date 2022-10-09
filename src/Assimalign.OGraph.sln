@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A7772D96-73BB-4CA9-AA56-A6083767F27F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F832D709-0CCC-4B14-976A-467167944BAE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph", "Assimalign.OGraph\Assimalign.OGraph.csproj", "{258EFAD1-ADC4-40CC-B04E-6DF787EC4885}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{258EFAD1-ADC4-40CC-B04E-6DF787EC4885}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{258EFAD1-ADC4-40CC-B04E-6DF787EC4885}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{258EFAD1-ADC4-40CC-B04E-6DF787EC4885}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{258EFAD1-ADC4-40CC-B04E-6DF787EC4885}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{258EFAD1-ADC4-40CC-B04E-6DF787EC4885} = {A7772D96-73BB-4CA9-AA56-A6083767F27F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {64E79EA5-8DCB-4919-BA27-1A5EB89F839B}
+	EndGlobalSection
+EndGlobal
