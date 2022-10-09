@@ -14,8 +14,11 @@ public class SortNode : QueryNode
 
     }
 
-
+    public MemberNode Member { get; }
     public SortNode ThenBy { get; }
-
     public SortNodeKind SortKind { get; }
+    public override T Accept<T>(IQueryVisitor<T> visitor)
+    {
+        return base.Accept(visitor);
+    }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Query;
 
-public class QueryVisistorClient : IQueryVisitorClient
+public class QueryVisistorClient : IQueryVisitorExecutor
 {
     public void Execute<T>(RootNode root, IQueryVisitor<T> visitor)
     {

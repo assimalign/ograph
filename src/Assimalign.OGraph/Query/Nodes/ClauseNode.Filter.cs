@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Query;
 
-public class FilterNode
+public class FilterNode : QueryNode
 {
 
 }

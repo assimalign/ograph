@@ -1,5 +1,9 @@
 ﻿namespace Assimalign.OGraph.Query;
 
+
+/// <summary>
+/// A <see cref="ConstantNode"/> represents a value type.
+/// </summary>
 public class ConstantNode : QueryNode
 {
 	public ConstantNode(object value) : base(QueryNodeKind.Constant)

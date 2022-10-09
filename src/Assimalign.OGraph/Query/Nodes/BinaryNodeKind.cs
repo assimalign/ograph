@@ -10,6 +10,5 @@ public enum BinaryNodeKind
     GreaterThan = 5,
     GreaterThanOrEqual = 6,
     LessThan = 7,
-    LessThanOrEqual = 8,
-    Between = 9
+    LessThanOrEqual = 8
 }
