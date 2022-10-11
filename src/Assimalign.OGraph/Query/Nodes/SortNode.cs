@@ -9,14 +9,14 @@ namespace Assimalign.OGraph.Query;
 public class SortNode : QueryNode
 {
 
-    public SortNode() : base (QueryNodeKind.Sort)
+    public SortNode(MemberNode memberNode) : base (QueryNodeKind.Sort)
     {
 
     }
 
     public MemberNode Member { get; }
     public SortNode ThenBy { get; }
-    public SortNodeKind SortKind { get; }
+    public SortNodeKind SortKind { get; } = SortNodeKind.Ascending;
     public override T Accept<T>(IQueryVisitor<T> visitor)
     {
         return base.Accept(visitor);

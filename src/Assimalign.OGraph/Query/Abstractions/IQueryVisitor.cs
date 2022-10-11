@@ -6,6 +6,18 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Query;
 
+public interface IQueryVisitor
+{
+    void Visit(QueryNode node);
+    void Visit(RootNode node);
+    void Visit(FilterNode node);
+    void Visit(SelectNode node);
+    void Visit(SortNode node);
+    void Visit(BinaryNode node);
+    void Visit(ConstantNode node);
+    void Visit(MemberNode node);
+}
+
 public interface IQueryVisitor<out T>
 {
     T Visit(QueryNode node);

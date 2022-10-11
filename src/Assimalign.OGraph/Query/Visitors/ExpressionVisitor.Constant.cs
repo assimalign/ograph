@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Query;
 
-public sealed partial class ExpressionVisitor
+public sealed partial class ExpressionVisitor<T>
 {
     public Expression Visit(ConstantNode node) => Expression.Constant(node.Value);
 }

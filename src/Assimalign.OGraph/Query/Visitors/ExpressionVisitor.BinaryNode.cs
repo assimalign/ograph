@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace Assimalign.OGraph.Query;
 
-public sealed partial class ExpressionVisitor
+public sealed partial class ExpressionVisitor<T>
 {
     public Expression Visit(BinaryNode node)
     {

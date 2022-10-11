@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Query;
 
-public class QueryVisistorClient : IQueryVisitorExecutor
+public class QueryVisistorExecutor : IQueryVisitorExecutor
 {
     public void Execute<T>(RootNode root, IQueryVisitor<T> visitor)
     {
-        foreach (var item in root.)
+        
     }
 }

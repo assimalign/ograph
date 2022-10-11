@@ -8,7 +8,7 @@ public class MemberNode  : QueryNode
 	{
 		if (string.IsNullOrEmpty(name))
 		{
-			throw new ArgumentException("Thr property ", nameof(name));
+			throw new ArgumentException("The property", nameof(name));
 		}
 		this.Name = name;
 	}
@@ -22,7 +22,6 @@ public class MemberNode  : QueryNode
 	/// The name of the Entity Member being queried.
 	/// </summary>
 	public string Name { get; }
-
 	public MemberNode? Child { get; }
 	public override T Accept<T>(IQueryVisitor<T> visitor)
 	{
