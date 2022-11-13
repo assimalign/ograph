@@ -6,17 +6,10 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphEntity
+public interface IOGraphNode
 {
-    /// <summary>
-    /// The name of the Entity.
-    /// </summary>
-    string Name { get; }
-
     /// <summary>
     /// 
     /// </summary>
-    IEnumerable<IOGraphEntityMember> Members { get; }
-
-
+    OGraphElementType ElementType { get; }
 }

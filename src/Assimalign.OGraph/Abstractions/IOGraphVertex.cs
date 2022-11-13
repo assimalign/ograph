@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphEntityMember
+public interface IOGraphVertex
 {
     /// <summary>
-    /// The member name.
+    /// The name of the Entity.
     /// </summary>
-    string Name { get;  }
+    string Name { get; }
 }

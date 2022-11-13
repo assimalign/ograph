@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph;
-
-public interface IOGraphEntityBuilder
+namespace Assimalign.OGraph
 {
+    public class OGraphEntityBuilder<T>
+    {
 
-
-    IOGraphEntity Build();
+    }
 }
