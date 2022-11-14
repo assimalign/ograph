@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph;
+namespace Assimalign.OGraph.Syntax;
 
-internal class TokenLexerOptions
+public interface IQueryNodeVisitor<T>
 {
+    T Visit(QueryNode node);
 }

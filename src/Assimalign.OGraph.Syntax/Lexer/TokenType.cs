@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assimalign.OGraph;
+namespace Assimalign.OGraph.Syntax;
 
 // Reference for Syntax Tokens: https://codeforwin.org/2015/05/introduction-to-programming-tokens.html#separators
 
@@ -14,10 +14,9 @@ namespace Assimalign.OGraph;
 public enum TokenType
 {
     #region Other
-
     /// <summary>
-    /// Identifiers are the name given to different programming elements. 
-    /// Either name given to a variable or a function or any other programming element, all follow some basic naming conventions
+    /// Identifier is the name given to different programming elements. 
+    /// It can be either a name given to a variable or a function or any other programming element which follow some basic naming conventions
     /// </summary>
     /// <remarks>
     /// The parser is responsible for identifying what 

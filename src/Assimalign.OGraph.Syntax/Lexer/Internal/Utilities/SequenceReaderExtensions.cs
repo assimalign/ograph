@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Internal;
+namespace Assimalign.OGraph.Syntax.Internal;
 
 internal static class SequenceReaderExtensions
 {
@@ -26,6 +26,16 @@ internal static class SequenceReaderExtensions
         }
 
         return buffer.AsSpan();
+    }
+
+    public static bool IsAlphaNumericCharNext(this ref SequenceReader<byte> sequenceReader)
+    {
+        if (sequenceReader.TryPeek(out var value))
+        {
+            return char.IsLetterOrDigit((char)value);
+        }
+
+        return false;
     }
 
     /// <summary>
