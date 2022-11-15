@@ -43,6 +43,13 @@ public readonly struct Token
                 case TokenType.Null:
                 case TokenType.And:
                 case TokenType.Or:
+                case TokenType.Boolean:
+                case TokenType.Alias:
+                case TokenType.Ascending:
+                case TokenType.Descending:
+                case TokenType.Take:
+                case TokenType.Skip:
+                case TokenType.Token:
                     return true;
                 default:
                     return false;
@@ -55,7 +62,10 @@ public readonly struct Token
         {
             switch (TokenType)
             {
-                case TokenType.String: 
+                case TokenType.String:
+                case TokenType.FloatingPoint:
+                case TokenType.Boolean:
+                case TokenType.Integer:
                     return true;
                 default:
                     return false;
@@ -76,6 +86,7 @@ public readonly struct Token
                 case TokenType.LessThanOrEqual:
                 case TokenType.And:
                 case TokenType.Or:
+                case TokenType.Alias:
                     return true;
                 default: 
                     return false;

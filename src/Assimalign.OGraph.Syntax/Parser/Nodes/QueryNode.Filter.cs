@@ -5,15 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
-public enum QueryNodeType
+
+public class FilterQueryNode : QueryNode
 {
-    Select,
-    Filter,
-    Sort,
-    Page,
-
-    Function,
-
-    Binary,
+    public override QueryNodeType NodeType => QueryNodeType.Filter;
 }
-

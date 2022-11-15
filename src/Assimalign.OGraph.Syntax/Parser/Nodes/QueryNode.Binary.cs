@@ -5,15 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
-public enum QueryNodeType
+
+public sealed class BinaryQueryNode
 {
-    Select,
-    Filter,
-    Sort,
-    Page,
 
-    Function,
-
-    Binary,
 }
-

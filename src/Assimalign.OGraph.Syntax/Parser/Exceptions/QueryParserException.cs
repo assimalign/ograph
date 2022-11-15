@@ -5,15 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
-public enum QueryNodeType
+
+public abstract class QueryParserException : Exception
 {
-    Select,
-    Filter,
-    Sort,
-    Page,
-
-    Function,
-
-    Binary,
 }
-

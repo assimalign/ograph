@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
 
-internal class TokenLexerOptions
+public struct TokenLexerOptions
 {
+    public bool SkipTabs { get; set; }
+    public bool SkipWhiteSpace { get; set; }
+    public bool SkipLineFeed { get; set; }
+    public bool SkipCarriageReturn { get; set; }
 }

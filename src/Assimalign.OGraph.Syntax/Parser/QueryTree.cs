@@ -11,10 +11,16 @@ namespace Assimalign.OGraph.Syntax;
 /// </summary>
 public sealed class QueryTree
 {
-    private IEnumerable<QueryNode> nodes = new List<QueryNode>();
+    private IList<QueryNode> nodes = new List<QueryNode>();
 
     /// <summary>
     /// Represents the root nodes of the expression tree.
     /// </summary>
     public IEnumerable<QueryNode> Nodes => this.nodes;
+
+
+    internal void AddNode(QueryNode node)
+    {
+        nodes.Add(node);
+    }
 }

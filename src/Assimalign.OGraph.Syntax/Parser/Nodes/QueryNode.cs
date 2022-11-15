@@ -9,10 +9,7 @@ namespace Assimalign.OGraph.Syntax;
 
 public abstract class QueryNode
 {
-
     public abstract QueryNodeType NodeType { get; }
-
-
     public virtual T Accept<T>(IQueryNodeVisitor<T> visitor)
     {
         return visitor.Visit(this);

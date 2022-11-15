@@ -11,7 +11,7 @@ namespace Assimalign.OGraph.Syntax;
 /// Tokens can be grouped into multiple categorization. 
 /// For example the 'and' operator is also a keyword as it is reserved.
 /// </remarks>
-public enum TokenType
+public enum TokenType 
 {
     #region Other
     /// <summary>
@@ -26,7 +26,7 @@ public enum TokenType
 
     #region Separators
     Tab,
-    NewLine,
+    LineFeed,
     CarriageReturn,    
     Comma,
     Slash,
@@ -100,5 +100,10 @@ public enum TokenType
     Filter,
     Sort,
     Page,
+    Descending,
+    Ascending,
+    Take,
+    Skip,
+    Token
     #endregion
 }
