@@ -24,25 +24,7 @@ public enum TokenType
     Identifier,
     #endregion
 
-    #region Separators
-    Tab,
-    LineFeed,
-    CarriageReturn,    
-    Comma,
-    Slash,
-    Question,
-    Dot,
-    Colon,
-    Semicolon,
-    WhiteSpace,
-    Exclamation,
-    OpenParenthesis,
-    CloseParenthesis,
-    OpenBracket,
-    CloseBracket,
-    OpenSquareBracket,
-    CloseSquareBracket,
-    #endregion
+    
 
     #region Literals (are constant values that are used for performing various operations and calculations)
     Null, // Also a keyword
@@ -93,6 +75,29 @@ public enum TokenType
     All,
     Alias,
     In,
+    #endregion
+
+    #region Separators
+    Tab,
+    LineFeed,
+    CarriageReturn,
+    Comma,
+    Slash,
+    Question,
+    Dot,
+    Colon,
+    Semicolon,
+    WhiteSpace,
+    Exclamation,
+    
+    
+    OpenSquareBracket,
+    CloseSquareBracket,
+
+    OpenBracket,
+    CloseBracket,
+    OpenParenthesis,
+    CloseParenthesis,
     #endregion
 
     #region Keywords

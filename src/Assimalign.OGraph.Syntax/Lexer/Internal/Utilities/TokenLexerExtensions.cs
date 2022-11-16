@@ -27,6 +27,8 @@ internal static class TokenLexerExtensions
         new KeyValuePair<TokenType, byte[]>(TokenType.Slash, new byte[] {(byte)'/' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Dot,new byte[] { (byte)'.' })
     };
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsSeparator(this ref SequenceReader<byte> sequenceReader, out TokenType tokenType)
     {
         tokenType = default;
@@ -50,6 +52,8 @@ internal static class TokenLexerExtensions
 
         return false;
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsSeparatorNext(this ref SequenceReader<byte> sequenceReader)
     {
         if (sequenceReader.TryPeek(out var value))
@@ -67,6 +71,8 @@ internal static class TokenLexerExtensions
 
         return false;
     }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsSeparatorNext(this ref SequenceReader<byte> sequenceReader, params byte[] omit)
     {
         if (sequenceReader.TryPeek(out var value))
@@ -104,6 +110,8 @@ internal static class TokenLexerExtensions
         new KeyValuePair<TokenType, byte[]>(TokenType.Skip, new byte[] { (byte)'s', (byte)'k', (byte)'i', (byte)'p' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Token, new byte[] { (byte)'t', (byte)'o', (byte)'k', (byte)'e', (byte)'n' })
     };
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsKeyword(this ref SequenceReader<byte> sequenceReader, out TokenType tokenType)
     {
         tokenType = default;
@@ -146,6 +154,8 @@ internal static class TokenLexerExtensions
         new KeyValuePair<TokenType, byte[]>(TokenType.Or, new byte[] { (byte)'o', (byte)'r' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.In, new byte[] { (byte)'i', (byte)'n' }),
     };
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsOperator(this ref SequenceReader<byte> sequenceReader, out TokenType tokenType)
     {
         tokenType = default;
@@ -177,6 +187,8 @@ internal static class TokenLexerExtensions
         new KeyValuePair<TokenType, byte[]>(TokenType.Boolean, new byte[] { (byte)'f', (byte)'a', (byte)'l', (byte)'s', (byte)'e' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Null, new byte[] { (byte)'n', (byte)'u', (byte)'l', (byte)'l' }),
     };
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsLiteral(this ref SequenceReader<byte> sequenceReader, out TokenType tokenType)
     {
         tokenType = default;
@@ -241,6 +253,7 @@ internal static class TokenLexerExtensions
 
     #region Identifier
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsIdentifer(this ref SequenceReader<byte> sequenceReader, out TokenType tokenType)
     {
         tokenType = default;
@@ -260,11 +273,18 @@ internal static class TokenLexerExtensions
     #endregion
 
     #region Other
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsAlphaNumericCharNext(this ref SequenceReader<byte> sequenceReader) => sequenceReader.TryPeek(out var value) && char.IsLetterOrDigit((char)value);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsEndNext(this ref SequenceReader<byte> sequenceReader) => sequenceReader.Remaining <= 0;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ReadOnlySpan<byte> Slice(this ref SequenceReader<byte> sequenceReader) => sequenceReader.CurrentSpan.Slice(0, (int)sequenceReader.Consumed);
 
     // Slices current consumed sequence as span and convert all alpha-characters to lower case if not already
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static ReadOnlySpan<byte> SliceToLowerChar(this ref SequenceReader<byte> sequenceReader)
     {
         var buffer = new byte[sequenceReader.Consumed];

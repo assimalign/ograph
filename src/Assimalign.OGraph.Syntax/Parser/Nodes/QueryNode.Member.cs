@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
 
-public sealed class FilterQueryNode : QueryNode
+public sealed class MemberQueryNode : QueryNode
 {
-    public QueryNode Predicate { get; init; }
-    public override QueryNodeType NodeType => QueryNodeType.Filter;
+    /// <summary>
+    /// Represents the name of the member.
+    /// </summary>
+    public string Name { get; init; }
+    public override QueryNodeType NodeType => QueryNodeType.Member;
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)
     {
         return visitor.Visit(this);

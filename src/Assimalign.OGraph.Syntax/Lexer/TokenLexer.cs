@@ -40,8 +40,7 @@ public ref partial struct TokenLexer
     /// <returns></returns>
     public Token Peek()
     {
-        var sequence = remaining;
-        forward:
+        var sequence = remaining; // Need to copy sequence into variable since we do not want to advance to the next sequence
         var sequenceReader = new SequenceReader<byte>(sequence);
 
         while (!sequenceReader.End)
@@ -58,10 +57,11 @@ public ref partial struct TokenLexer
                     case TokenType.LineFeed when options.SkipLineFeed:
                     case TokenType.WhiteSpace when options.SkipWhiteSpace:
                     case TokenType.CarriageReturn when options.SkipCarriageReturn:
-                        goto forward;
+                        sequenceReader = new(sequence); // Reset sequence
+                        break;
+                    default:
+                        return token;
                 }
-
-                return token;
             }
         }
         // If we reached here something is wrong within the syntax
@@ -74,7 +74,6 @@ public ref partial struct TokenLexer
     /// <exception cref="Exception"></exception>
     public Token Next()
     {
-        forward:
         var sequenceReader = new SequenceReader<byte>(remaining);
 
         while (!sequenceReader.End)
@@ -93,10 +92,11 @@ public ref partial struct TokenLexer
                     case TokenType.LineFeed when options.SkipLineFeed:
                     case TokenType.WhiteSpace when options.SkipWhiteSpace:
                     case TokenType.CarriageReturn when options.SkipCarriageReturn:
-                        goto forward;
+                        sequenceReader = new(remaining); // Reset sequence
+                        break;
+                    default:
+                        return current;
                 }
-
-                return current;
             }
         }
 
@@ -141,29 +141,24 @@ public ref partial struct TokenLexer
         token = default;
         TokenType tokenType;
 
-        // NOTE: Do not change this order
+        // NOTE: Do not change this order. Conditional evaluation is from left to right on purpose
         if (sequenceReader.IsSeparator(out tokenType) ||
-            sequenceReader.IsOperator(out tokenType)  ||
             sequenceReader.IsKeyword(out tokenType)   ||
             sequenceReader.IsLiteral(out tokenType)   ||
+            sequenceReader.IsOperator(out tokenType)  ||
             sequenceReader.IsIdentifer(out tokenType)) // Identifier needs be checked last
         {
-            token = GetToken(ref sequenceReader, tokenType);
+            token = new Token()
+            {
+                Value = sequenceReader.Slice().ToArray(),
+                TokenType = tokenType,
+                Start = currentPosition,
+                End = (currentPosition + sequenceReader.Consumed) - 1
+            };
             return true;
         }
 
         return false;
-    }
-
-    private Token GetToken(ref SequenceReader<byte> sequenceReader, TokenType tokenType)
-    {
-        return new Token()
-        {
-            Value = sequenceReader.Slice().ToArray(),
-            TokenType = tokenType,
-            Start = currentPosition,
-            End = (currentPosition + sequenceReader.Consumed) - 1
-        };
     }
     #endregion
 }

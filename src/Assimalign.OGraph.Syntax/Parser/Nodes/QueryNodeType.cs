@@ -12,8 +12,10 @@ public enum QueryNodeType
     Sort,
     Page,
 
+    Member,
     Function,
-
+    Parameter,
+    Constant,
     Binary,
 }
 

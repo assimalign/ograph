@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Assimalign.OGraph.Syntax.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,119 +35,178 @@ public sealed class QueryParser
             switch (token.TokenType)
             {
                 case TokenType.Sort:
-                    {
-
-                        break;
-                    }
+                    nodes.Add(ParseSortNode(ref lexer));
+                    break;
                 case TokenType.Page:
-                    {
-
-                        break;
-                    }
+                    nodes.Add(ParsePageNode(ref lexer));
+                    break;
                 case TokenType.Select:
-                    {
-
-                        break;
-                    }
+                    nodes.Add(ParseSelectNode(ref lexer));
+                    break;
                 case TokenType.Filter:
-                    {
-                        nodes.Add(ParseFilter(ref lexer));
-                        break;
-                    }
-                case TokenType.Dot:
+                    nodes.Add(ParseFilterNode(ref lexer));
+                    break;
+                case TokenType.Dot: // Currently Dot is not considered as part of the keywords on each root expression.
                     continue;
                 default:
-                    {
-                        // If any other token is generated then what is in switch statement above,
-                        // then it is safe to assume 
-                        throw new Exception();
-                    }
+                    // If any other token is generated then what is in switch statement above,
+                    // then it is safe to assume 
+                    throw new Exception();
             }
         }
 
         return tree;
     }
-    private void SkipFormatting(ref TokenLexer lexer)
+
+
+
+
+    private QueryNode ParseFilterNode(ref TokenLexer lexer)
     {
-        var token = lexer.Peek();
+        var left = lexer.Current;
 
-        switch (token.TokenType)
+        // Translation: While the next token's binding power is less than the current (left) token's binding power continue
+        while (lexer.Peek().TokenType < left.TokenType)
         {
-            case TokenType.WhiteSpace:
-            case TokenType.Tab:
-            case TokenType.LineFeed:
-            case TokenType.CarriageReturn:
-                {
-                    lexer.Next();
-                    SkipFormatting(ref lexer);
-                    break;
-                }
-            default:
-                break;
-        }
-    }
+            var right = lexer.Next();
 
+            switch (right.TokenType)
+            {
+                case TokenType.OpenParenthesis:
+                    {
+                        if (ParseParanthesisNode(ref lexer, right) is not BinaryQueryNode binary || !binary.IsPredeicate)
+                        {
+                            throw new Exception();
+                        }
 
-    private FilterQueryNode ParseFilter(ref TokenLexer lexer)
-    {
-        var token = lexer.Next();
-
-        switch (token.TokenType)
-        {
-            case TokenType.Sort:
-                {
-
-                    break;
-                }
-            case TokenType.Page:
-                {
-
-                    break;
-                }
-            case TokenType.Select:
-                {
-
-                    break;
-                }
-            case TokenType.Filter:
-                {
-                    
-                    break;
-                }
-            default:
-                {
-                    // If any other token is generated then what is in switch statement above,
-                    // then it is safe to assume 
+                        return binary;
+                    }
+                default:
                     throw new Exception();
-                }
+            }
         }
-
-        var openParan = lexer.Next();
-        SkipFormatting(ref lexer);
-        var openBlock = lexer.Next();
-
-        if (openParan.TokenType != TokenType.OpenParenthesis || openBlock.TokenType != TokenType.OpenBracket)
+        throw new Exception();
+    }
+    private QueryNode ParseSelectNode(ref TokenLexer lexer)
+    {
+        return default;
+    }
+    private QueryNode ParseSortNode(ref TokenLexer lexer)
+    {
+        return default;
+    }
+    private QueryNode ParsePageNode(ref TokenLexer lexer)
+    {
+        return default;
+    }
+    private QueryNode ParseParanthesisNode(ref TokenLexer lexer, Token left)
+    {
+        // Translation: While the next token's binding power is less than the current (left) token's binding power continue
+        while (lexer.Peek().TokenType != TokenType.CloseParenthesis)
         {
-            throw new Exception("Invalid query format");
+            var right = lexer.Next();
+
+            switch (right.TokenType)
+            {
+                case TokenType.Identifier:
+                    return ParseIdentifierNode(ref lexer, right);
+
+                case TokenType.OpenBracket:
+                    return ParseBracketNode(ref lexer, right);
+
+                case TokenType.OpenParenthesis:
+                    return ParseParanthesisNode(ref lexer, right);
+
+                default:
+                    throw new Exception();
+            }
         }
 
+        throw new Exception();
+    }
+    private QueryNode ParseBracketNode(ref TokenLexer lexer, Token left)
+    {
+        var leftNode = default(QueryNode);
+
+        // Translation: While the next token's binding power is less than the current (left) token's binding power continue
+        while (lexer.Peek().TokenType < TokenType.CloseBracket)
+        {
+            var right = lexer.Next();
+
+            switch (right.TokenType)
+            {
+                case TokenType.OpenParenthesis:
+                    return ParseParanthesisNode(ref lexer, right);
+
+                case TokenType.Identifier:
+                    {
+                        if (lexer.Peek().IsOperator)
+                        {
+                            return ParseBinaryNode(ref lexer, right);
+                        }
+                        else
+                        {
+                            return ParseIdentifierNode(ref lexer, right);
+                        }
+                    }
+                case TokenType.And:
+                case TokenType.Or:
+                    {
+                        break;
+                    }
+                default:
+                    throw new Exception();
+            }
+        }
+
+        throw new Exception();
+    }
+
+    private QueryNode ParseBinaryNode(ref TokenLexer lexer, Token left)
+    {
+        var operandLeft = ParseIdentifierNode(ref lexer, left);
+        var operat = lexer.Next().TokenType switch
+        {
+            TokenType.Equal => BinaryOperatorType.Equal
+        };
+        var operandRight = 
+
 
 
 
         return default;
     }
+    private QueryNode ParseOperatorNode(ref TokenLexer lexer)
+    {
+        if (lexer.Peek().TokenType == TokenType.Integer)
+        {
 
-    private QueryNode ParseFilterBlock(ref TokenLexer lexer)
+        }
+
+        return default;
+    }
+    private QueryNode ParseConstantNode()
+    {
+        return default;
+    }
+
+    private QueryNode ParseIdentifierNode(ref TokenLexer lexer, Token left)
+    {
+        // An identifier node can only ever be a Member or Function
+        return left.IsIdentifierFunction() ?
+            ParseFunctionNode(ref lexer, left) :
+            ParseMemberNode(ref lexer, left);
+    }
+
+    private QueryNode ParseMemberNode(ref TokenLexer lexer, Token left)
+    {
+        return default;
+    }
+    private FunctionCallQueryNode ParseFunctionNode(ref TokenLexer lexer, Token left)
     {
 
 
         return default;
     }
 
-    private FunctionCallQueryNode ParseFunctionCall(ref TokenLexer lexer)
-    {
-
-
-        return default;
-    }
 }
