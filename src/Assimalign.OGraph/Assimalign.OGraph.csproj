@@ -1,13 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
-		<Nullable>enable</Nullable>
 		<Description>
 			Open Graph Data is a protocol that allows for the creation and 
 			consumption of queryable and interoperable REST APIs similar to OData
 			but flexible enough of graph entity resolution like GraphQL.
 		</Description>
 	</PropertyGroup>
-
 </Project>

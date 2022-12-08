@@ -29,7 +29,9 @@ public readonly struct Token
     /// Represents the token kind.
     /// </summary>
     public TokenType TokenType { get; init; }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public bool IsKeyword
     {
         get
@@ -56,6 +58,9 @@ public readonly struct Token
             }
         }
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public bool IsLiteral
     {
         get
@@ -72,6 +77,9 @@ public readonly struct Token
             }
         }
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public bool IsOperator
     {
         get
@@ -93,13 +101,19 @@ public readonly struct Token
             }
         }
     }
-
     /// <summary>
     /// Parses the given token data as <see cref="DateOnly"/>.
     /// </summary>
     /// <returns></returns>
     public DateOnly GetDate() => DateOnly.Parse(ValueAsText);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public DateTime GetDateTime() => DateTime.Parse(ValueAsText);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public DateTimeOffset GetDateTimeOffset() => DateTimeOffset.Parse(ValueAsText);
-
 }

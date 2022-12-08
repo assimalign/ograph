@@ -10,10 +10,7 @@ namespace Assimalign.OGraph.Syntax;
 
 public sealed class QueryParser
 {
-    public QueryParser()
-    {
-
-    }
+    public QueryParser() { }
 
     public QueryTree Parse(string query) => Parse(Encoding.Default.GetBytes(query));
     public QueryTree Parse(byte[] query)
@@ -26,7 +23,6 @@ public sealed class QueryParser
             SkipWhiteSpace = true,
         });
         var nodes = new List<QueryNode>();
-        var tree = new QueryTree();
 
         while (lexer.HasNext)
         {
@@ -51,127 +47,222 @@ public sealed class QueryParser
                 default:
                     // If any other token is generated then what is in switch statement above,
                     // then it is safe to assume 
-                    throw new Exception();
+                    throw QueryParserException.UnexpectedToken(token);
             }
         }
 
-        return tree;
+        return new QueryTree()
+        {
+            Nodes = nodes
+        };
     }
 
 
-
+    #region Keyword Parse Methods
 
     private QueryNode ParseFilterNode(ref TokenLexer lexer)
     {
-        var left = lexer.Current;
+        var current = default(QueryNode);
 
-        // Translation: While the next token's binding power is less than the current (left) token's binding power continue
-        while (lexer.Peek().TokenType < left.TokenType)
+        while (lexer.HasNext)
         {
-            var right = lexer.Next();
-
-            switch (right.TokenType)
+            switch (lexer.Next().TokenType)
             {
                 case TokenType.OpenParenthesis:
-                    {
-                        if (ParseParanthesisNode(ref lexer, right) is not BinaryQueryNode binary || !binary.IsPredeicate)
-                        {
-                            throw new Exception();
-                        }
+                case TokenType.OpenBracket:
+                    continue;
 
-                        return binary;
-                    }
+                case TokenType.Identifier:
+                    current = ParseIdentifierNode(ref lexer, current);
+                    break;
+
+                case TokenType.Equal:
+                case TokenType.NotEqual:
+                case TokenType.LessThan:
+                case TokenType.LessThanOrEqual:
+                case TokenType.GreaterThan:
+                case TokenType.GreaterThanOrEqual:
+                case TokenType.And:
+                case TokenType.Or:
+                    current = ParseBinaryNode(ref lexer, current);
+                    break;
+
                 default:
-                    throw new Exception();
+                    throw QueryParserException.UnexpectedToken(default);
+
             }
         }
-        throw new Exception();
+
+        return current;
     }
     private QueryNode ParseSelectNode(ref TokenLexer lexer)
     {
-        return default;
+        var current = default(QueryNode);
+
+        while (lexer.HasNext)
+        {
+            switch (lexer.Next().TokenType)
+            {
+                case TokenType.OpenParenthesis:
+                case TokenType.OpenBracket:
+                    continue;
+
+                case TokenType.Identifier:
+                    current = ParseIdentifierNode(ref lexer, current);
+                    break;
+
+                case TokenType.Equal:
+                case TokenType.NotEqual:
+                case TokenType.LessThan:
+                case TokenType.LessThanOrEqual:
+                case TokenType.GreaterThan:
+                case TokenType.GreaterThanOrEqual:
+                case TokenType.And:
+                case TokenType.Or:
+                    current = ParseBinaryNode(ref lexer, current);
+                    break;
+
+                default:
+                    throw QueryParserException.UnexpectedToken(default);
+
+            }
+        }
+
+        return current;
     }
     private QueryNode ParseSortNode(ref TokenLexer lexer)
     {
+       
         return default;
     }
     private QueryNode ParsePageNode(ref TokenLexer lexer)
     {
         return default;
     }
-    private QueryNode ParseParanthesisNode(ref TokenLexer lexer, Token left)
-    {
-        // Translation: While the next token's binding power is less than the current (left) token's binding power continue
-        while (lexer.Peek().TokenType != TokenType.CloseParenthesis)
-        {
-            var right = lexer.Next();
+    #endregion
 
-            switch (right.TokenType)
+    private QueryNode ParseParanthesisNode(ref TokenLexer lexer, QueryNode left)
+    {
+        var current = default(QueryNode);
+
+        // Translation: While the next token's binding power is less than the current (left) token's binding power continue
+        while (lexer.Peek().TokenType < TokenType.CloseParenthesis)
+        {
+
+            switch (lexer.Next().TokenType)
             {
                 case TokenType.Identifier:
-                    return ParseIdentifierNode(ref lexer, right);
+                    {
+                        current = ParseIdentifierNode(ref lexer, current);
+                        break;
+                    }
 
                 case TokenType.OpenBracket:
-                    return ParseBracketNode(ref lexer, right);
+                    left = ParseBracketNode(ref lexer, left);
+                    break;
 
                 case TokenType.OpenParenthesis:
-                    return ParseParanthesisNode(ref lexer, right);
+                    left = ParseParanthesisNode(ref lexer, left);
+                    break;
+
+                // Parse Operator
+                case TokenType.Equal:
+                case TokenType.NotEqual:
+                case TokenType.LessThan:
+                case TokenType.LessThanOrEqual:
+                case TokenType.GreaterThan:
+                case TokenType.GreaterThanOrEqual:
+                case TokenType.And:
+                case TokenType.Or:
+                    left = ParseBinaryNode(ref lexer, left);
+                    break;
+
+                // Parse Literal or Constant
+                case TokenType.String:
+                case TokenType.Boolean:
+                case TokenType.Null:
+                case TokenType.Integer:
+                    left = ParseConstantNode(ref lexer);
+                    break;
+
 
                 default:
                     throw new Exception();
             }
         }
 
-        throw new Exception();
+        return left;
     }
-    private QueryNode ParseBracketNode(ref TokenLexer lexer, Token left)
+    private QueryNode ParseBracketNode(ref TokenLexer lexer, QueryNode left)
     {
-        var leftNode = default(QueryNode);
+        var current = default(QueryNode);
 
         // Translation: While the next token's binding power is less than the current (left) token's binding power continue
         while (lexer.Peek().TokenType < TokenType.CloseBracket)
         {
-            var right = lexer.Next();
-
-            switch (right.TokenType)
+            switch (lexer.Next().TokenType)
             {
-                case TokenType.OpenParenthesis:
-                    return ParseParanthesisNode(ref lexer, right);
-
                 case TokenType.Identifier:
-                    {
-                        if (lexer.Peek().IsOperator)
-                        {
-                            return ParseBinaryNode(ref lexer, right);
-                        }
-                        else
-                        {
-                            return ParseIdentifierNode(ref lexer, right);
-                        }
-                    }
+                    current = ParseIdentifierNode(ref lexer, current);
+                    break;
+
+                case TokenType.OpenBracket:
+                    left = ParseBracketNode(ref lexer, left);
+                    break;
+
+                case TokenType.OpenParenthesis:
+                    left = ParseParanthesisNode(ref lexer, left);
+                    break;
+
+                // Parse Operator
+                case TokenType.Equal:
+                case TokenType.NotEqual:
+                case TokenType.LessThan:
+                case TokenType.LessThanOrEqual:
+                case TokenType.GreaterThan:
+                case TokenType.GreaterThanOrEqual:
                 case TokenType.And:
                 case TokenType.Or:
-                    {
-                        break;
-                    }
+                    left = ParseBinaryNode(ref lexer, left);
+                    break;
+
+                // Parse Literal or Constant
+                case TokenType.String:
+                case TokenType.Boolean:
+                case TokenType.Null:
+                case TokenType.Integer:
+                    left = ParseConstantNode(ref lexer);
+                    break;
+
+
                 default:
                     throw new Exception();
             }
         }
 
-        throw new Exception();
+        return left;
     }
 
-    private QueryNode ParseBinaryNode(ref TokenLexer lexer, Token left)
+    private QueryNode ParseBinaryNode(ref TokenLexer lexer, QueryNode left)
     {
-        var operandLeft = ParseIdentifierNode(ref lexer, left);
+        if (left is not MemberQueryNode || left is not FunctionCallQueryNode)
+        {
+            throw new Exception();
+        }
+
         var operat = lexer.Next().TokenType switch
         {
             TokenType.Equal => BinaryOperatorType.Equal
         };
-        var operandRight = 
 
+        while (lexer.HasNext)
+        {
+            switch (lexer.Next().TokenType)
+            {
 
+            }
+        }
+        //var operandRight = 
 
 
         return default;
@@ -185,24 +276,68 @@ public sealed class QueryParser
 
         return default;
     }
-    private QueryNode ParseConstantNode()
+    private QueryNode ParseConstantNode(ref TokenLexer lexer)
     {
+        var token = lexer.Current;
+
+
         return default;
     }
 
-    private QueryNode ParseIdentifierNode(ref TokenLexer lexer, Token left)
+
+    private QueryNode ParseIdentifierNode(ref TokenLexer lexer, QueryNode left)
     {
-        // An identifier node can only ever be a Member or Function
-        return left.IsIdentifierFunction() ?
-            ParseFunctionNode(ref lexer, left) :
-            ParseMemberNode(ref lexer, left);
+        var currentToken = lexer.Current;
+        var currentNode = default(QueryNode);
+
+        // Translation: While the next token's binding power is less than the current (left) token's binding power continue
+        while (lexer.Peek().TokenType < currentToken.TokenType)
+        {
+            switch (lexer.Next().TokenType)
+            {
+
+            }
+        }
+
+        if (currentToken.IsIdentifierFunction())
+        {
+            return ParseFunctionNode(ref lexer);
+        }
+        else
+        {
+            return ParseMemberNode(ref lexer, left);
+        }
     }
 
-    private QueryNode ParseMemberNode(ref TokenLexer lexer, Token left)
+
+
+
+
+
+
+    private QueryNode ParseMemberNode(ref TokenLexer lexer, QueryNode left)
     {
-        return default;
+        var node = new MemberQueryNode()
+        {
+            Name = lexer.Current.ValueAsText
+        };
+
+        if (left is MemberQueryNode member)
+        {
+            left = new MemberQueryNode()
+            {
+                Children = member.Children.Concat(new[]
+                {
+                    node
+                })
+            };
+        }
+
+        return left = node;
     }
-    private FunctionCallQueryNode ParseFunctionNode(ref TokenLexer lexer, Token left)
+
+
+    private FunctionCallQueryNode ParseFunctionNode(ref TokenLexer lexer)
     {
 
 

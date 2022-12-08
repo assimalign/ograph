@@ -56,11 +56,19 @@ public class QueryParserTests
     public void Test1()
     {
 		var parser = new QueryParser();
-
-		parser.Parse(query);
+		var tree = parser.Parse(query);
         
 
 
 
+    }
+
+	[Fact]
+	public void TestNestedChildrenSelect()
+	{
+		var query1 = ".select({ firstName addresses { streetOne streetTwo }})";
+
+        var parser = new QueryParser();
+        var tree = parser.Parse(query1);
     }
 }

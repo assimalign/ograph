@@ -24,7 +24,6 @@ internal static class TokenLexerExtensions
         new KeyValuePair<TokenType, byte[]>(TokenType.Colon,new byte[] { (byte)':' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Semicolon, new byte[] {(byte)';' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Comma,new byte[] { (byte)',' }),
-        new KeyValuePair<TokenType, byte[]>(TokenType.Slash, new byte[] {(byte)'/' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Dot,new byte[] { (byte)'.' })
     };
     
@@ -101,7 +100,7 @@ internal static class TokenLexerExtensions
     private static ReadOnlySpan<KeyValuePair<TokenType, byte[]>> keywords => new KeyValuePair<TokenType, byte[]>[]
     {
         new KeyValuePair<TokenType, byte[]>(TokenType.Filter, new byte[] { (byte)'f', (byte)'i', (byte)'l', (byte)'t', (byte)'e', (byte)'r' }),
-        new KeyValuePair<TokenType, byte[]>(TokenType.Select, new byte[] { (byte)'s', (byte)'e', (byte)'l', (byte)'e', (byte)'t' }),
+        new KeyValuePair<TokenType, byte[]>(TokenType.Select, new byte[] { (byte)'s', (byte)'e', (byte)'l', (byte)'e', (byte)'c', (byte)'t' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Sort, new byte[] { (byte)'s', (byte)'o', (byte)'r', (byte)'t' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Page, new byte[] { (byte)'p', (byte)'a', (byte)'g', (byte)'e' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Ascending, new byte[] { (byte)'a', (byte)'s', (byte)'c' }),
@@ -140,6 +139,7 @@ internal static class TokenLexerExtensions
     #region Operators
     private static ReadOnlySpan<KeyValuePair<TokenType, byte[]>> operators => new KeyValuePair<TokenType, byte[]>[]
     {
+        new KeyValuePair<TokenType, byte[]>(TokenType.Slash, new byte[] {(byte)'/' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Plus, new byte[] { (byte)'+' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Minus, new byte[] { (byte)'-' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Star, new byte[] { (byte)'*' }),
@@ -151,8 +151,7 @@ internal static class TokenLexerExtensions
         new KeyValuePair<TokenType, byte[]>(TokenType.LessThanOrEqual, new byte[] { (byte)'l', (byte)'t', (byte)'e' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Alias, new byte[] { (byte)'a', (byte)'s' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.And, new byte[] { (byte)'a', (byte)'n', (byte)'d' }),
-        new KeyValuePair<TokenType, byte[]>(TokenType.Or, new byte[] { (byte)'o', (byte)'r' }),
-        new KeyValuePair<TokenType, byte[]>(TokenType.In, new byte[] { (byte)'i', (byte)'n' }),
+        new KeyValuePair<TokenType, byte[]>(TokenType.Or, new byte[] { (byte)'o', (byte)'r' })
     };
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

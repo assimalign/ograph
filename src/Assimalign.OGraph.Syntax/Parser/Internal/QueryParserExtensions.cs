@@ -11,9 +11,17 @@ internal static class QueryParserExtensions
 {
     private static ReadOnlySpan<string> functions => new string[]
     {
+        // string functions
         "startswith",
         "endswith",
-        "any"
+        "tolower",
+        "toupper",
+        "concat",
+        "contains", // contains(identifier arg1, string arg2)
+
+        "any",
+        "in",
+
     };
     internal static bool IsIdentifierFunction(this Token token)
     {

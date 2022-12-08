@@ -60,7 +60,8 @@ public enum TokenType
     #endregion
 
     #region Operators (A operator returns a binary expression)
-    Star, // 
+    Star, //
+    Slash,
     Plus,
     Minus,
     Equal,
@@ -81,19 +82,15 @@ public enum TokenType
     Tab,
     LineFeed,
     CarriageReturn,
-    Comma,
-    Slash,
+    Comma,    
     Question,
     Dot,
     Colon,
     Semicolon,
     WhiteSpace,
-    Exclamation,
-    
-    
+    Exclamation,    
     OpenSquareBracket,
     CloseSquareBracket,
-
     OpenBracket,
     CloseBracket,
     OpenParenthesis,

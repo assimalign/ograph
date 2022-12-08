@@ -11,18 +11,16 @@ using Assimalign.OGraph.Syntax.Internal;
 public ref partial struct TokenLexer
 {
     private readonly TokenLexerOptions options;
-    private ReadOnlySequence<byte> sequence; // Maintain Original Sequence
-    private ReadOnlySequence<byte> remaining; //
+    private ReadOnlySequence<byte> remaining;
 
     private Token current = default;
-    private long currentPosition = default;
+    private long position = default;
 
     public TokenLexer(byte[] query) : this(query, new()) { }
     public TokenLexer(byte[] query, TokenLexerOptions options)
     {
         this.options = options;
-        this.sequence = new ReadOnlySequence<byte>(query);
-        this.remaining = sequence;
+        this.remaining = new ReadOnlySequence<byte>(query); ;
     }
 
     #region Public Methods
@@ -83,7 +81,7 @@ public ref partial struct TokenLexer
             if (TryParse(ref sequenceReader, out var token))
             {
                 remaining = sequenceReader.UnreadSequence;
-                currentPosition += sequenceReader.Consumed;
+                position += sequenceReader.Consumed;
                 current = token;
 
                 switch (token.TokenType)
@@ -152,8 +150,8 @@ public ref partial struct TokenLexer
             {
                 Value = sequenceReader.Slice().ToArray(),
                 TokenType = tokenType,
-                Start = currentPosition,
-                End = (currentPosition + sequenceReader.Consumed) - 1
+                Start = position,
+                End = (position + sequenceReader.Consumed) - 1
             };
             return true;
         }

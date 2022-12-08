@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
-		<Nullable>enable</Nullable>
 		<RootNamespace>Assimalign.OGraph.Syntax</RootNamespace>
 	</PropertyGroup>
+	
 
 </Project>

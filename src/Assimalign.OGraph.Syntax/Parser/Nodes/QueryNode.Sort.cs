@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
 
-public sealed class FilterQueryNode : QueryNode
+public sealed class SortQueryNode : QueryNode
 {
     /// <summary>
     /// 
     /// </summary>
-    public QueryNode Predicate { get; init; }
+    public IEnumerable<QueryNode> Paths { get; init; }
 
     /// <inheritdoc />
-    public override QueryNodeType NodeType => QueryNodeType.Filter;
+    public override QueryNodeType NodeType => QueryNodeType.Sort;
 
     /// <inheritdoc />
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)

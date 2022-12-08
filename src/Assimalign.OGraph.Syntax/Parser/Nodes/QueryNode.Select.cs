@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
 
-public sealed class FilterQueryNode : QueryNode
+public sealed class SelectQueryNode : QueryNode
 {
+    private readonly List<QueryNode> paths = new();
+
     /// <summary>
     /// 
     /// </summary>
-    public QueryNode Predicate { get; init; }
+    public IEnumerable<QueryNode> Paths => this.paths;
 
     /// <inheritdoc />
-    public override QueryNodeType NodeType => QueryNodeType.Filter;
+    public override QueryNodeType NodeType => QueryNodeType.Select;
 
     /// <inheritdoc />
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)
     {
         return visitor.Visit(this);
     }
+
+    internal void AddPath(QueryNode path) => paths.Add(path);
 }

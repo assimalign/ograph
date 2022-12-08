@@ -8,4 +8,29 @@ namespace Assimalign.OGraph.Syntax;
 
 public abstract class QueryParserException : Exception
 {
+
+    public QueryParserException(string message) : base(message)
+    {
+
+    }
+
+
+    internal static QueryParserException UnexpectedToken(Token Token)
+    {
+        return new QueryParserExceptionDefault(
+            $"An unexpected token was found at location: {Token.Start}");
+    }
+
+    internal static QueryParserException InvalidSelect()
+    {
+        return new QueryParserExceptionDefault("");
+    }
+}
+
+internal class QueryParserExceptionDefault : QueryParserException
+{
+    public QueryParserExceptionDefault(string message) : base(message)
+    {
+
+    }
 }
