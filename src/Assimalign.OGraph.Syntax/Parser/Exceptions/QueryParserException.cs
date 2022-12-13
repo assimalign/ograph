@@ -9,10 +9,7 @@ namespace Assimalign.OGraph.Syntax;
 public abstract class QueryParserException : Exception
 {
 
-    public QueryParserException(string message) : base(message)
-    {
-
-    }
+    public QueryParserException(string message) : base(message) { }
 
 
     internal static QueryParserException UnexpectedToken(Token Token)
@@ -22,6 +19,16 @@ public abstract class QueryParserException : Exception
     }
 
     internal static QueryParserException InvalidSelect()
+    {
+        return new QueryParserExceptionDefault("");
+    }
+
+    internal static QueryParserException InvalidBinary()
+    {
+        return new QueryParserExceptionDefault("The ");
+    }
+
+    internal static QueryParserException InvalidPage()
     {
         return new QueryParserExceptionDefault("");
     }

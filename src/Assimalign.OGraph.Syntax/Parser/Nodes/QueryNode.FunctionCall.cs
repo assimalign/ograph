@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
 
@@ -16,8 +13,9 @@ public sealed class FunctionCallQueryNode : QueryNode
     /// The function parameters
     /// </summary>
     public IEnumerable<QueryNode> Parameters { get; init; }
-
+    /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Function;
+    /// <inheritdoc />
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)
     {
         return visitor.Visit(this);

@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
+
 public enum QueryNodeType
 {
+    Root,
     Select,
     Filter,
     Sort,

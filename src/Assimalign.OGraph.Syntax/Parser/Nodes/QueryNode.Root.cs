@@ -1,25 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
+using System.Linq;
 
 namespace Assimalign.OGraph.Syntax;
 
-/// <summary>
-/// The query tree represents the complete parsed expression tree.
-/// </summary>
-public sealed class QueryTree
+public sealed class RootQueryNode : QueryNode
 {
-    internal QueryTree() { }
+    private readonly IList<QueryNode> nodes = new List<QueryNode>();
 
-    internal QueryTree(IEnumerable<QueryNode> nodes)
-    {
-        this.Nodes = nodes;
-    }
+    internal RootQueryNode() { }
 
     /// <summary>
     /// Represents the root nodes of the expression tree.
     /// </summary>
-    public IEnumerable<QueryNode> Nodes { get; init; }
+    public IEnumerable<QueryNode> Nodes => this.nodes;
     /// <summary>
     /// 
     /// </summary>
@@ -40,7 +34,15 @@ public sealed class QueryTree
     /// </summary>
     /// <returns></returns>
     public bool TryGetPageNode(out PageQueryNode node) => TryGetNode(out node);
+    
+    /// <inheritdoc />
+    public override QueryNodeType NodeType => QueryNodeType.Root;
 
+    /// <inheritdoc />
+    public override T Accept<T>(IQueryNodeVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
 
     private bool TryGetNode<TNode>(out TNode node)
     {
@@ -55,5 +57,19 @@ public sealed class QueryTree
             }
         }
         return false;
+    }
+
+
+    internal void AddNode(QueryNode node)
+    {
+        if (node is not FilterQueryNode ||
+            node is not SelectQueryNode ||
+            node is not SortQueryNode ||
+            node is not PageQueryNode)
+        {
+            throw new Exception("");
+        }
+
+        nodes.Add(node);
     }
 }

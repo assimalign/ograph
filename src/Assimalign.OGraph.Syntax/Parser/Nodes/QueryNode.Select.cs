@@ -7,6 +7,11 @@ public sealed class SelectQueryNode : QueryNode
 {
     private readonly List<QueryNode> paths = new();
 
+    public SelectQueryNode()
+    {
+
+    }
+
     /// <summary>
     /// 
     /// </summary>

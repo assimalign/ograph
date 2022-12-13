@@ -11,9 +11,17 @@ public sealed class MemberQueryNode : QueryNode
     /// </summary>
     public string? Name { get; init; }
     /// <summary>
+    /// 
+    /// </summary>
+    public string? Alias { get; init; }
+    /// <summary>
     /// Represents nested Identifiers
     /// </summary>
-    public IEnumerable<QueryNode>? Children { get; init; } = new QueryNode[0];
+    public IEnumerable<MemberQueryNode>? Children { get; init; } = new MemberQueryNode[0];
+    /// <summary>
+    /// 
+    /// </summary>
+    public FunctionCallQueryNode? Function { get; init; }
     /// <summary>
     /// Specifies whether there are child identifiers.
     /// </summary>

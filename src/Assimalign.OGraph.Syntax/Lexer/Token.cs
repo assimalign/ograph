@@ -101,6 +101,8 @@ public readonly struct Token
             }
         }
     }
+
+    public string GetString() => ValueAsText;
     /// <summary>
     /// Parses the given token data as <see cref="DateOnly"/>.
     /// </summary>
@@ -116,4 +118,9 @@ public readonly struct Token
     /// </summary>
     /// <returns></returns>
     public DateTimeOffset GetDateTimeOffset() => DateTimeOffset.Parse(ValueAsText);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public long GetLong() => long.Parse(ValueAsText);
 }
