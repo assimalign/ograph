@@ -22,6 +22,7 @@ public enum TokenType
     /// The parser is responsible for identifying what 
     /// </remarks>
     Identifier,
+    Parameter,
     #endregion
 
     
@@ -98,7 +99,7 @@ public enum TokenType
     #endregion
 
     #region Keywords
-    Select,
+    Project,
     Filter,
     Sort,
     Page,

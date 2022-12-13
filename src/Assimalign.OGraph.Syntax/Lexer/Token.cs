@@ -39,7 +39,7 @@ public readonly struct Token
             switch (TokenType)
             {
                 case TokenType.Filter:
-                case TokenType.Select:
+                case TokenType.Project:
                 case TokenType.Sort:
                 case TokenType.Page:
                 case TokenType.Null:

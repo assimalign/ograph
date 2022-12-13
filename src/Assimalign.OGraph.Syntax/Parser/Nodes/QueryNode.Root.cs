@@ -23,7 +23,7 @@ public sealed class RootQueryNode : QueryNode
     /// 
     /// </summary>
     /// <returns></returns>
-    public bool TryGetSelectNode(out SelectQueryNode node) => TryGetNode(out node);
+    public bool TryGetSelectNode(out ProjectionQueryNode node) => TryGetNode(out node);
     /// <summary>
     /// 
     /// </summary>
@@ -62,9 +62,9 @@ public sealed class RootQueryNode : QueryNode
 
     internal void AddNode(QueryNode node)
     {
-        if (node is not FilterQueryNode ||
-            node is not SelectQueryNode ||
-            node is not SortQueryNode ||
+        if (node is not FilterQueryNode &&
+            node is not ProjectionQueryNode &&
+            node is not SortQueryNode &&
             node is not PageQueryNode)
         {
             throw new Exception("");

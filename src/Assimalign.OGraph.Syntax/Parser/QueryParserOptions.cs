@@ -15,6 +15,7 @@ public sealed class QueryParserOptions
 
     }
 
+
     /// <summary>
     /// 
     /// </summary>
@@ -34,5 +35,11 @@ public sealed class QueryParserOptions
         }
         
         this.visitors.Add(visitor);
+    }
+
+
+    public void AddDateFormat(string format)
+    {
+
     }
 }

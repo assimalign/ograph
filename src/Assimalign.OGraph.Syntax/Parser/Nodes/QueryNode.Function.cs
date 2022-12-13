@@ -3,16 +3,21 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax;
 
-public sealed class FunctionCallQueryNode : QueryNode
+public sealed class FunctionQueryNode : QueryNode
 {
-    /// <summary>
-    /// The name of the function being called.
-    /// </summary>
-    public string Name { get; init; }
+
+    public FunctionQueryNode() { }
+    public FunctionQueryNode(string name, IEnumerable<ParameterQueryNode> parameters)
+    {
+        this.Name = name;
+        this.Parameters = parameters;
+    }
+
+
     /// <summary>
     /// The function parameters
     /// </summary>
-    public IEnumerable<QueryNode> Parameters { get; init; }
+    public IEnumerable<ParameterQueryNode> Parameters { get; init; }
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Function;
     /// <inheritdoc />

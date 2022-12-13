@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assimalign.OGraph.Syntax;
+﻿namespace Assimalign.OGraph.Syntax;
 
 public enum QueryNodeType
 {
     Root,
-    Select,
+    Projection,
     Filter,
     Sort,
     Page,
-
+    Skip,
+    Take,
+    Token,
+    Field,
     Member,
     Function,
     Parameter,

@@ -4,22 +4,22 @@ namespace Assimalign.OGraph.Syntax;
 
 public sealed class PageQueryNode : QueryNode
 {
-    private long? take;
-    private long? skip;
-    private string? token;
+    private ConstantQueryNode? take;
+    private ConstantQueryNode? skip;
+    private ConstantQueryNode? token;
 
     /// <summary>
     /// 
     /// </summary>
-    public long? Take => this.take;
+    public ConstantQueryNode? Take => this.take;
     /// <summary>
     ///
     /// </summary>
-    public long? Skip => this.skip;
+    public ConstantQueryNode? Skip => this.skip;
     /// <summary>
     /// 
     /// </summary>
-    public string? Token => this.token;
+    public ConstantQueryNode? Token => this.token;
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Page;
@@ -30,7 +30,7 @@ public sealed class PageQueryNode : QueryNode
         return visitor.Visit(this);
     }
 
-    internal void SetTake(long? take) => this.take = take;
-    internal void SetSkip(long? skip) => this.skip = skip;
-    internal void SetToken(string token) => this.token = token;
+    internal void SetTake(ConstantQueryNode? take) => this.take = take;
+    internal void SetSkip(ConstantQueryNode? skip) => this.skip = skip;
+    internal void SetToken(ConstantQueryNode token) => this.token = token;
 }

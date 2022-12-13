@@ -100,7 +100,7 @@ internal static class TokenLexerExtensions
     private static ReadOnlySpan<KeyValuePair<TokenType, byte[]>> keywords => new KeyValuePair<TokenType, byte[]>[]
     {
         new KeyValuePair<TokenType, byte[]>(TokenType.Filter, new byte[] { (byte)'f', (byte)'i', (byte)'l', (byte)'t', (byte)'e', (byte)'r' }),
-        new KeyValuePair<TokenType, byte[]>(TokenType.Select, new byte[] { (byte)'s', (byte)'e', (byte)'l', (byte)'e', (byte)'c', (byte)'t' }),
+        new KeyValuePair<TokenType, byte[]>(TokenType.Project, new byte[] { (byte)'p', (byte)'r', (byte)'o', (byte)'j', (byte)'e', (byte)'c', (byte)'t' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Sort, new byte[] { (byte)'s', (byte)'o', (byte)'r', (byte)'t' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Page, new byte[] { (byte)'p', (byte)'a', (byte)'g', (byte)'e' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Ascending, new byte[] { (byte)'a', (byte)'s', (byte)'c' }),

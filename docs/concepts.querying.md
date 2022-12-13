@@ -4,6 +4,12 @@
 |--------------|-------------|
 | OGQL0078     | The Select and Summarize clause cannot be used together
 
+
+```
+
+```
+
+
 ```
 
 https://endpoint?$query=(

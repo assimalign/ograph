@@ -12,6 +12,10 @@ public abstract class QueryParserException : Exception
     public QueryParserException(string message) : base(message) { }
 
 
+    internal static QueryParserException UnexpectedNode()
+    {
+        return new QueryParserExceptionDefault("");
+    }
     internal static QueryParserException UnexpectedToken(Token Token)
     {
         return new QueryParserExceptionDefault(
