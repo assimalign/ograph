@@ -1,8 +1,8 @@
 ﻿namespace Assimalign.OGraph.Syntax;
 
-public enum MemberType
+public enum FieldType
 {
     None = 0,
-    Property = 1,
+    Member = 1,
     Function = 2
 }

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax;
 
@@ -33,11 +29,11 @@ public sealed partial class QueryParser
             SkipWhiteSpace = true,
         });
 
-        var rootNode = new RootQueryNode();
+        var rootNode = default(QueryNode);
 
         while (lexer.HasNext)
         {
-            Parse(ref lexer, rootNode);
+            rootNode = Parse(ref lexer, new RootQueryNode());
         }
 
         return rootNode;
@@ -52,6 +48,7 @@ public sealed partial class QueryParser
         return lexer.Next().TokenType switch
         {
             TokenType.Dot => Parse(ref lexer, node),
+            TokenType.QueryRoot => ParseRoot(ref lexer, node),
             TokenType.Filter => ParseFilter(ref lexer, node),
             TokenType.Project => ParseProject(ref lexer, node),
             TokenType.Page => ParsePage(ref lexer, node),
@@ -85,14 +82,43 @@ public sealed partial class QueryParser
             TokenType.CloseBracket => node
         };
     }
+    private QueryNode ParseRoot(ref TokenLexer lexer, QueryNode node)
+    {
+        if (node is not RootQueryNode root)
+        {
+            throw QueryParserException.UnexpectedNode();
+        }
+
+        while (lexer.Next().TokenType != TokenType.CloseParenthesis)
+        {
+            switch (lexer.Current.TokenType)
+            {
+                case TokenType.OpenParenthesis:
+                case TokenType.OpenBracket:
+                case TokenType.CloseBracket:
+                    continue;
+                default:
+                    throw QueryParserException.UnexpectedToken(default);
+            }
+        }
+
+        return node;
+    }
     private QueryNode ParseSort(ref TokenLexer lexer, QueryNode node)
     {
-        if (node is not RootQueryNode)
+        if (node is not RootQueryNode root)
         {
             throw QueryParserException.InvalidPage();
         }
 
-        return default;
+        var sortNode = new SortQueryNode();
+
+
+        // TODO: Add Sort Parsing logic
+
+        root.AddNode(sortNode);
+
+        return root;
     }
     private QueryNode ParsePage(ref TokenLexer lexer, QueryNode node)
     {
@@ -100,8 +126,10 @@ public sealed partial class QueryParser
         {
             throw QueryParserException.InvalidPage();
         }
-
-        var pageNode = Parse(ref lexer, new PageQueryNode());
+        if (Parse(ref lexer, new PageQueryNode()) is not PageQueryNode pageNode)
+        {
+            throw QueryParserException.InvalidPage();
+        }
 
         root.AddNode(pageNode);
 
@@ -159,18 +187,18 @@ public sealed partial class QueryParser
             throw QueryParserException.InvalidPage();
         }
 
-        var binaryNode = Parse(ref lexer, default);
+        var binaryNode = Parse(ref lexer, default) as BinaryQueryNode;
 
 
-        var filterNode = new FilterQueryNode()
-        {
-            Predicate = binaryNode,
-        };
+        //var filterNode = new FilterQueryNode()
+        //{
+        //    Predicate = binaryNode,
+        //};
 
-        root.AddNode(filterNode);
+        //root.AddNode(filterNode);
 
 
-        return filterNode;
+        return root;
     }
     private QueryNode ParseProject(ref TokenLexer lexer, QueryNode node)
     {
@@ -198,7 +226,6 @@ public sealed partial class QueryParser
                 case PageQueryNode:
                     node = Parse(ref lexer, node);
                     break;
-
             }
         }
 
@@ -210,14 +237,13 @@ public sealed partial class QueryParser
         {
             switch (node)
             {
-                case MemberQueryNode member:
+                case FieldQueryNode member:
                     {
                         member.AddChild(Parse(ref lexer, member));
 
                         break;
                     }
-                case ProjectionQueryNode select:
-                case PageQueryNode:     
+                case PageQueryNode:
                     node = Parse(ref lexer, node);
                     break;
             }
@@ -246,12 +272,10 @@ public sealed partial class QueryParser
 
             var rightOperand = Parse(ref lexer, default);
 
-            return new BinaryQueryNode()
-            {
-                Left = leftOperand,
-                Right = rightOperand,
-                OperatorType = operatorType
-            };
+            return new BinaryQueryNode(
+                leftOperand,
+                rightOperand,
+                operatorType);
         }
 
         // Parse Predicate Binary
@@ -269,15 +293,12 @@ public sealed partial class QueryParser
                 throw QueryParserException.InvalidBinary();
             }
 
-
             var rightOperand = Parse(ref lexer, default);
 
-            return new BinaryQueryNode()
-            {
-                Left = node,
-                Right = rightOperand,
-                OperatorType = operatorType
-            };
+            return new BinaryQueryNode(
+                node,
+                rightOperand,
+                operatorType);
 
         }
 
@@ -290,20 +311,34 @@ public sealed partial class QueryParser
     }
     private QueryNode ParseIdentifier(ref TokenLexer lexer, QueryNode node)
     {
+        if (node is RootQueryNode && lexer.Current.GetString().Equals("variables", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return ParseVariables(ref lexer, node);
+        }
+        return default;
+    }
+    private QueryNode ParseVariables(ref TokenLexer lexer, QueryNode node)
+    {
+
+
+        return default;
+    }
+    private QueryNode ParseField(ref TokenLexer lexer, QueryNode node)
+    {
         return default;
     }
     private QueryNode ParseFunction(ref TokenLexer lexer, QueryNode node)
     {
 
-        
+
         if (!lexer.TryPeek(out var token) || token.TokenType != TokenType.OpenParenthesis)
         {
             throw QueryParserException.InvalidBinary();
         }
 
-        var parameters = new Queue<ParameterQueryNode>(); 
+        var parameters = new Queue<ParameterQueryNode>();
 
-        while (lexer.Current.TokenType!= TokenType.CloseParenthesis)
+        while (lexer.Current.TokenType != TokenType.CloseParenthesis)
         {
             switch (lexer.Current.TokenType)
             {
@@ -332,7 +367,7 @@ public sealed partial class QueryParser
     private QueryNode ParseFunctionArgument(ref TokenLexer lexer, QueryNode node)
     {
 
-        
+
         return default;
     }
     private QueryNode ParseMember(ref TokenLexer lexer, QueryNode node)
@@ -352,7 +387,6 @@ public sealed partial class QueryParser
         }
 
         return default;
-
     }
     private QueryNode ParseAlias(ref TokenLexer lexer, QueryNode node)
     {
@@ -363,7 +397,6 @@ public sealed partial class QueryParser
     {
         var token = lexer.Current;
         var constantNode = new ConstantQueryNode();
-
 
         if (token.TokenType == TokenType.String)
         {
@@ -383,6 +416,5 @@ public sealed partial class QueryParser
 
         return constantNode;
     }
-
     #endregion
 }

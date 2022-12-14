@@ -6,7 +6,7 @@ namespace Assimalign.OGraph.Syntax;
 
 public sealed class MemberQueryNode : QueryNode
 {
-    internal MemberQueryNode() { }
+    ~MemberQueryNode() { }
     public MemberQueryNode(string name)
     {
         this.Name = name;
@@ -15,13 +15,14 @@ public sealed class MemberQueryNode : QueryNode
     /// <summary>
     /// Represents the name of the member.
     /// </summary>
-    public string? Name { get; }
+    public string Name { get; }
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Member;
 
-    internal void AddChild(QueryNode node)
+    /// <inheritdoc />
+    public override T Accept<T>(IQueryNodeVisitor<T> visitor)
     {
-
+        return visitor.Visit(this);
     }
 }

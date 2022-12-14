@@ -5,17 +5,39 @@ namespace Assimalign.OGraph.Syntax;
 
 public sealed class FieldQueryNode : QueryNode
 {
+    private string alias;
+    private QueryNode value;
+
     private readonly List<FieldQueryNode> children = new();
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public string? Alias { get; set; }
+    internal FieldQueryNode() { }
+    public FieldQueryNode(QueryNode value, string? alias)
+    {
+        this.alias = alias;
+        this.value = value;
+    }
+    public FieldQueryNode(QueryNode value, IEnumerable<FieldQueryNode> children)
+    {
+        this.children.AddRange(children);
+        this.value = value;
+    }
+    public FieldQueryNode(QueryNode value, IEnumerable<FieldQueryNode> children, string? alias)
+    {
+        this.children.AddRange(children);
+        this.alias = alias;
+        this.value = value;
+    }
+
 
     /// <summary>
     /// 
     /// </summary>
-    public QueryNode Value { get; set; }
+    public string? Alias => this.alias;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public QueryNode Value => this.value;
 
     /// <summary>
     /// Represents nested Identifiers
@@ -29,5 +51,11 @@ public sealed class FieldQueryNode : QueryNode
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)
     {
         return visitor.Visit(this);
+    }
+
+
+    internal void AddChild(QueryNode child)
+    {
+
     }
 }

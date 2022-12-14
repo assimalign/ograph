@@ -22,10 +22,8 @@ public enum TokenType
     /// The parser is responsible for identifying what 
     /// </remarks>
     Identifier,
-    Parameter,
+    Variable,
     #endregion
-
-    
 
     #region Literals (are constant values that are used for performing various operations and calculations)
     Null, // Also a keyword
@@ -73,10 +71,7 @@ public enum TokenType
     LessThanOrEqual,
     And,
     Or,
-    Any,
-    All,
-    Alias,
-    In,
+    
     #endregion
 
     #region Separators
@@ -89,9 +84,7 @@ public enum TokenType
     Colon,
     Semicolon,
     WhiteSpace,
-    Exclamation,    
-    OpenSquareBracket,
-    CloseSquareBracket,
+    Exclamation,
     OpenBracket,
     CloseBracket,
     OpenParenthesis,
@@ -99,6 +92,8 @@ public enum TokenType
     #endregion
 
     #region Keywords
+    Alias,
+    QueryRoot,
     Project,
     Filter,
     Sort,

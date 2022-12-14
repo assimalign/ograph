@@ -4,36 +4,36 @@ namespace Assimalign.OGraph.Syntax;
 
 public sealed class ParameterQueryNode : QueryNode
 {
-    private QueryNode argument;
+    private QueryNode parameterValue;
 
     internal ParameterQueryNode() { }
-    public ParameterQueryNode(QueryNode argument)
+    public ParameterQueryNode(MemberQueryNode parameterValue)
     {
-        if (argument is not MemberQueryNode &&
-            argument is not ConstantQueryNode && 
-            argument is not FunctionQueryNode)
-        {
-            throw new ArgumentException("");
-        }
-
-        this.argument = argument;
+        this.parameterValue = parameterValue;
     }
+    public ParameterQueryNode(ConstantQueryNode parameterValue)
+    {
+        this.parameterValue = parameterValue;
+    }
+    public ParameterQueryNode(FunctionQueryNode parameterValue)
+    {
+        this.parameterValue = parameterValue;
+    }
+
     /// <summary>
     /// 
     /// </summary>
-    public QueryNode Argument => this.argument;
-    /// <summary>
-    /// Identifies whether the Argument is a Constant Value (Literal).
-    /// </summary>
-    public bool IsConstant => Argument is ConstantQueryNode;
-    /// <summary>
-    /// Identifies whether the Argument is a nested function
-    /// </summary>
-    public bool IsFunction => Argument is FunctionQueryNode;
+    public QueryNode ParameterValue => this.parameterValue;
+
     /// <summary>
     /// 
     /// </summary>
-    public bool IsMember => Argument is MemberQueryNode;
+    public ParameterType ParameterType => this.parameterValue switch
+    {
+        ConstantQueryNode => ParameterType.Constant,
+        FunctionQueryNode => ParameterType.Function,
+        MemberQueryNode => ParameterType.Member
+    };
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Parameter;
@@ -45,5 +45,5 @@ public sealed class ParameterQueryNode : QueryNode
     }
 
 
-    internal void SetArgument(QueryNode argument) => this.argument = argument;
+    internal void SetParameterValue(QueryNode parameterValue) => this.parameterValue = parameterValue;
 }

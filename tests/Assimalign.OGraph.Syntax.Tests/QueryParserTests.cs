@@ -63,12 +63,5 @@ public class QueryParserTests
 
     }
 
-	[Fact]
-	public void TestNestedChildrenSelect()
-	{
-		var query1 = ".page({ take 25 skip 50})";
-
-        var parser = new QueryParser();
-        var node = parser.Parse(query1);
-    }
+	
 }

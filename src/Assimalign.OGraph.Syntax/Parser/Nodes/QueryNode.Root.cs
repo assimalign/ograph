@@ -1,15 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Immutable;
 
 namespace Assimalign.OGraph.Syntax;
 
 public sealed class RootQueryNode : QueryNode
 {
-    private readonly IList<QueryNode> nodes = new List<QueryNode>();
+    private readonly List<QueryNode> nodes = new();
+    private readonly IDictionary<string, object> variables = new Dictionary<string, object>();
 
     internal RootQueryNode() { }
+    public RootQueryNode(IEnumerable<QueryNode> nodes)
+    {
+        this.nodes.AddRange(nodes);
+    }
+    public RootQueryNode(IEnumerable<QueryNode> nodes, IDictionary<string, object> variables)
+    {
+        this.nodes.AddRange( nodes);
+        this.variables = variables;
+    }
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public IReadOnlyDictionary<string, object> Variables => this.variables.ToImmutableDictionary();
     /// <summary>
     /// Represents the root nodes of the expression tree.
     /// </summary>
@@ -58,7 +73,6 @@ public sealed class RootQueryNode : QueryNode
         }
         return false;
     }
-
 
     internal void AddNode(QueryNode node)
     {

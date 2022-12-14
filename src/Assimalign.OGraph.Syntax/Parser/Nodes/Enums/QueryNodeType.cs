@@ -7,9 +7,7 @@ public enum QueryNodeType
     Filter,
     Sort,
     Page,
-    Skip,
-    Take,
-    Token,
+
     Field,
     Member,
     Function,

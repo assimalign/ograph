@@ -1,21 +1,28 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax;
 
 public sealed class ProjectionQueryNode : QueryNode
 {
-    private readonly List<FieldQueryNode> members = new();
+    private readonly List<FieldQueryNode> fields = new();
 
-    public ProjectionQueryNode()
+    internal ProjectionQueryNode() { }
+    public ProjectionQueryNode(IEnumerable<FieldQueryNode> nodes)
     {
+        if (!nodes.Any())
+        {
+            // TODO: Throw an exception
+        }
 
+        this.fields.AddRange(nodes);
     }
 
     /// <summary>
-    /// 
+    /// A collection of fields to project in the query.
     /// </summary>
-    public IEnumerable<FieldQueryNode> Projections => this.members;
+    public IEnumerable<FieldQueryNode> Fields => this.fields;
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Projection;
@@ -30,7 +37,7 @@ public sealed class ProjectionQueryNode : QueryNode
     {
         if (node is FieldQueryNode member)
         {
-            members.Add(member);
+            fields.Add(member);
         }
     }
 }

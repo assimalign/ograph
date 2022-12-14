@@ -11,8 +11,8 @@ using Assimalign.OGraph.Syntax.Internal;
 public ref partial struct TokenLexer
 {
     private readonly TokenLexerOptions options;
+    
     private ReadOnlySequence<byte> remaining;
-
     private Token current = default;
     private long position = default;
 

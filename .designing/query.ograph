@@ -1,33 +1,32 @@
-endpoint: 
-parameters: {
-    take: 20
-    skip: 40
-}
-query: {
-    .project({
-        userId
-        firstName
-        lastName
-        middleName
-        concat(firstName, ' ', middleName, ' ', lastName) as fullName
-        addresses as locations {
-            streetOne
-            streetTwo
-            streetThree
-        }
-    })
-    .filter({
-        startsWith(firstName, 'c', true) and 
-        (
-            endsWith(lastName, 'e', true) or 
-            endsWith(middleName, 'e', true)
-        )
-    })
-    .page({
-        take @take
-        skip @skip
-    })
-    .sort({
-        toLower(firstName) desc
-    })
-}
+query({
+    label ''
+    variable {
+        take: 20
+        skip: 40
+    }
+})
+.project({
+    userId
+    firstName
+    lastName
+    middleName
+    concat(firstName, ' ', middleName, ' ', lastName) as fullName
+    addresses as locations {
+        streetOne
+        streetTwo
+        streetThree
+    }
+})
+.filter({
+    startsWith(firstName, 'c', true) and (
+        endsWith(lastName, 'e', true) or 
+        endsWith(middleName, 'e', true)
+    )
+})
+.page({
+    take @take
+    skip @skip
+})
+.sort({
+    toLower(firstName) desc
+})

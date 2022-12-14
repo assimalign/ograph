@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
 
@@ -19,9 +15,5 @@ public enum BinaryOperatorType
     LessThan            = TokenType.LessThan,
     LessThanOrEqual     = TokenType.LessThanOrEqual,
     And                 = TokenType.And,
-    Or                  = TokenType.Or,
-    Any                 = TokenType.Any,
-    All                 = TokenType.All,
-    Alias               = TokenType.Alias,
-    In                  = TokenType.In,
+    Or                  = TokenType.Or
 }

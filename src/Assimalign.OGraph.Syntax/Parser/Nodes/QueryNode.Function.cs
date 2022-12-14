@@ -5,21 +5,28 @@ namespace Assimalign.OGraph.Syntax;
 
 public sealed class FunctionQueryNode : QueryNode
 {
+    private readonly List<ParameterQueryNode> parameters = new();
 
-    public FunctionQueryNode() { }
+    ~FunctionQueryNode() { }
     public FunctionQueryNode(string name, IEnumerable<ParameterQueryNode> parameters)
     {
         this.Name = name;
-        this.Parameters = parameters;
+        this.parameters.AddRange(parameters);
     }
 
+    /// <summary>
+    /// The name of the function call.
+    /// </summary>
+    public string Name { get; }
 
     /// <summary>
     /// The function parameters
     /// </summary>
-    public IEnumerable<ParameterQueryNode> Parameters { get; init; }
+    public IEnumerable<ParameterQueryNode> Parameters => this.parameters;
+
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Function;
+
     /// <inheritdoc />
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)
     {

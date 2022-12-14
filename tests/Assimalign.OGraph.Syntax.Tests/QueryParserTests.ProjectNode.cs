@@ -4,11 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Syntax;
+namespace Assimalign.OGraph.Syntax.Tests;
 
-public enum FunctionType
+public partial class QueryParserTests
 {
-    None,
-    StartsWith,
-    EndWiths
 }

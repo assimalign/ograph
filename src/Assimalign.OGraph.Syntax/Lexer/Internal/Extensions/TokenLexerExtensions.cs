@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Text;
+using System.Linq;
 using System.Buffers;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax.Internal;
@@ -99,6 +99,7 @@ internal static class TokenLexerExtensions
     #region Keywords
     private static ReadOnlySpan<KeyValuePair<TokenType, byte[]>> keywords => new KeyValuePair<TokenType, byte[]>[]
     {
+        new KeyValuePair<TokenType, byte[]>(TokenType.QueryRoot, new byte[] { (byte)'q', (byte)'u', (byte)'e', (byte)'r', (byte)'y' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Filter, new byte[] { (byte)'f', (byte)'i', (byte)'l', (byte)'t', (byte)'e', (byte)'r' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Project, new byte[] { (byte)'p', (byte)'r', (byte)'o', (byte)'j', (byte)'e', (byte)'c', (byte)'t' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Sort, new byte[] { (byte)'s', (byte)'o', (byte)'r', (byte)'t' }),
@@ -258,10 +259,15 @@ internal static class TokenLexerExtensions
         tokenType = default;
 
         // As the lexer loops through the sequence of bytes
-        if (sequenceReader.IsSeparatorNext() || 
-            sequenceReader.IsEndNext() || 
-            !sequenceReader.IsAlphaNumericCharNext()) // This is to account for any unknown char
+        if (sequenceReader.IsSeparatorNext() || sequenceReader.IsEndNext() || !sequenceReader.IsAlphaNumericCharNext()) // This is to account for any unknown char
         {
+            // Let's check if the span starts with a variable identifier
+            if (sequenceReader.CurrentSpan[0] == '@')
+            {
+                tokenType = TokenType.Variable;
+                return true;
+            }
+
             tokenType = TokenType.Identifier;
             return true;
         }

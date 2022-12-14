@@ -8,6 +8,20 @@ public sealed class PageQueryNode : QueryNode
     private ConstantQueryNode? skip;
     private ConstantQueryNode? token;
 
+    internal PageQueryNode() { }
+    public PageQueryNode(ConstantQueryNode token)
+    {
+        this.token = token;
+    }
+    public PageQueryNode(ConstantQueryNode? take, ConstantQueryNode? skip)
+    {
+        this.take = take;
+        this.skip = skip;
+    }
+
+    
+
+
     /// <summary>
     /// 
     /// </summary>
