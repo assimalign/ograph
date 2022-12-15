@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
+using Assimalign.OGraph.Syntax.Internal;
 
 namespace Assimalign.OGraph.Syntax;
 
@@ -27,13 +28,19 @@ public sealed partial class QueryParser
             SkipLineFeed = true,
             SkipTabs = true,
             SkipWhiteSpace = true,
+            SkipComments = true
         });
 
-        var rootNode = default(QueryNode);
+        var rootNode = new RootQueryNode();
 
         while (lexer.HasNext)
         {
-            rootNode = Parse(ref lexer, new RootQueryNode());
+            if (Parse(ref lexer, rootNode) is not RootQueryNode node)
+            {
+                throw QueryParserException.UnexpectedNode();
+            }
+
+            rootNode = node;
         }
 
         return rootNode;
@@ -89,18 +96,11 @@ public sealed partial class QueryParser
             throw QueryParserException.UnexpectedNode();
         }
 
-        while (lexer.Next().TokenType != TokenType.CloseParenthesis)
+        if (Parse(ref lexer, node) is not RootQueryNode)
         {
-            switch (lexer.Current.TokenType)
-            {
-                case TokenType.OpenParenthesis:
-                case TokenType.OpenBracket:
-                case TokenType.CloseBracket:
-                    continue;
-                default:
-                    throw QueryParserException.UnexpectedToken(default);
-            }
+            throw QueryParserException.UnexpectedNode();
         }
+
 
         return node;
     }
@@ -206,12 +206,14 @@ public sealed partial class QueryParser
         {
             throw QueryParserException.InvalidPage();
         }
+        if (Parse(ref lexer, new ProjectionQueryNode()) is not ProjectionQueryNode projectionNode)
+        {
+            throw QueryParserException.UnexpectedNode();
+        }
 
-        var selectNode = new ProjectionQueryNode();
+        root.AddNode(projectionNode);
 
-        root.AddNode(selectNode);
-
-        return Parse(ref lexer, selectNode);
+        return root;
     }
     private QueryNode ParseParnthesisBlock(ref TokenLexer lexer, QueryNode node)
     {
@@ -226,6 +228,11 @@ public sealed partial class QueryParser
                 case PageQueryNode:
                     node = Parse(ref lexer, node);
                     break;
+
+                case RootQueryNode:
+                    node = Parse(ref lexer, node);
+                    break;
+
             }
         }
 
@@ -239,16 +246,26 @@ public sealed partial class QueryParser
             {
                 case FieldQueryNode member:
                     {
-                        member.AddChild(Parse(ref lexer, member));
-
+                        node = Parse(ref lexer, member);
                         break;
                     }
+
+                case ProjectionQueryNode projection when Parse(ref lexer, new FieldQueryNode()) is FieldQueryNode field:
+                    projection.AddProjection(field);
+                    break;
+
                 case PageQueryNode:
                     node = Parse(ref lexer, node);
                     break;
+
+                case RootQueryNode:
+                    node = Parse(ref lexer, node);
+                    break;
+
+                default:
+                    throw QueryParserException.UnexpectedNode();
             }
         }
-
         return node;
     }
     private QueryNode ParseBinary(ref TokenLexer lexer, QueryNode node)
@@ -311,10 +328,35 @@ public sealed partial class QueryParser
     }
     private QueryNode ParseIdentifier(ref TokenLexer lexer, QueryNode node)
     {
-        if (node is RootQueryNode && lexer.Current.GetString().Equals("variables", StringComparison.InvariantCultureIgnoreCase))
+        //if (node is RootQueryNode && lexer.Current.GetString().Equals("variables", StringComparison.InvariantCultureIgnoreCase))
+        //{
+        //    return ParseVariables(ref lexer, node);
+        //}
+
+
+        var identifierNode = lexer.Current.ValueAsText.ToLower() switch
         {
-            return ParseVariables(ref lexer, node);
+            "any" => ParseFunctionAny(ref lexer, node),
+
+            _ => ParseMember(ref lexer, node),
+        };
+
+        return identifierNode;
+        if (lexer.Current.IsIdentifierFunction())
+        {
+
         }
+        else
+        {
+
+        }
+
+
+        if (node is FieldQueryNode field)
+        {
+            return field;
+        }
+
         return default;
     }
     private QueryNode ParseVariables(ref TokenLexer lexer, QueryNode node)
@@ -324,6 +366,26 @@ public sealed partial class QueryParser
         return default;
     }
     private QueryNode ParseField(ref TokenLexer lexer, QueryNode node)
+    {
+        var fieldNode = new FieldQueryNode();
+
+        if (node is ProjectionQueryNode projectionNode)
+        {
+            var result = Parse(ref lexer, fieldNode);
+
+            //projectionNode.AddProjection()
+        }
+        if (node is SortQueryNode sortNode)
+        {
+
+        }
+        if (node is FieldQueryNode field)
+        {
+
+        }
+        throw QueryParserException.UnexpectedNode();
+    }
+    private QueryNode ParseFunctionAny(ref TokenLexer lexer, QueryNode node)
     {
         return default;
     }
@@ -372,18 +434,13 @@ public sealed partial class QueryParser
     }
     private QueryNode ParseMember(ref TokenLexer lexer, QueryNode node)
     {
+        var value = lexer.Current.ValueAsText;
 
-
-        if (node is ProjectionQueryNode select)
+       
+        if (node is FieldQueryNode field)
         {
-
-
-
-        }
-        // After parsing function check if there is an alias
-        if (lexer.TryPeek(out var next) && next.TokenType == TokenType.Alias)
-        {
-            return ParseAlias(ref lexer, default);
+            field.SetValue(new MemberQueryNode(value));
+            return field;
         }
 
         return default;

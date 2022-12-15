@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Assimalign.OGraph.Syntax.Tests;
 
-public class QueryParserTests
+public partial class QueryParserTests
 {
     private const string query = @"
 	.filtER({
@@ -52,16 +52,31 @@ public class QueryParserTests
 		firstName desc
 		lastName asc
 	})";
+
+
     [Fact]
     public void Test1()
     {
+
+		//var bytes = Encoding.UTF8.GetBytes(query);
+		//var lexer = new TokenLexer(bytes);
+		//var tokens = new List<Token>();
+
+		//while (lexer.HasNext)
+		//{
+		//	tokens.Add(lexer.Next());
+		//}
+
+
+		//Assert.Contains(tokens, token => token.TokenType == TokenType.Identifier && token.ValueAsText.Equals("firstName"));
+
 		var parser = new QueryParser();
-		var tree = parser.Parse(query);
-        
+		var node = parser.Parse(query);
 
 
 
-    }
 
-	
+	}
+
+
 }

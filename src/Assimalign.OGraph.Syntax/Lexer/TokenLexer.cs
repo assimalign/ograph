@@ -27,7 +27,43 @@ public ref partial struct TokenLexer
     /// <summary>
     /// Specifies whether the Lexer has another token within the sequence.
     /// </summary>
-    public bool HasNext => !remaining.IsEmpty;
+    public bool HasNext
+    {
+        get
+        {
+            var sequence = remaining; // Need to copy sequence into variable since we do not want to advance to the next sequence
+            var sequenceReader = new SequenceReader<byte>(sequence);
+
+            while (!sequenceReader.End)
+            {
+                sequenceReader.Advance(1);
+
+                if (TryParse(ref sequenceReader, out var token))
+                {
+                    sequence = sequenceReader.UnreadSequence;
+                    
+                    switch (token.TokenType)
+                    {
+                        case TokenType.Tab when options.SkipTabs:
+                        case TokenType.LineFeed when options.SkipLineFeed:
+                        case TokenType.WhiteSpace when options.SkipWhiteSpace:
+                        case TokenType.CarriageReturn when options.SkipCarriageReturn:
+                        case TokenType.Comment when options.SkipComments:
+                            if (sequence.IsEmpty)
+                            {
+                                return false;
+                            }
+                            sequenceReader = new(sequence); // Reset sequence
+                            break;
+                        default:
+                            return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+    }
     /// <summary>
     /// Is the current token that has been parsed.
     /// </summary>
@@ -55,6 +91,7 @@ public ref partial struct TokenLexer
                     case TokenType.LineFeed when options.SkipLineFeed:
                     case TokenType.WhiteSpace when options.SkipWhiteSpace:
                     case TokenType.CarriageReturn when options.SkipCarriageReturn:
+                    case TokenType.Comment when options.SkipComments:
                         sequenceReader = new(sequence); // Reset sequence
                         break;
                     default:
@@ -90,6 +127,7 @@ public ref partial struct TokenLexer
                     case TokenType.LineFeed when options.SkipLineFeed:
                     case TokenType.WhiteSpace when options.SkipWhiteSpace:
                     case TokenType.CarriageReturn when options.SkipCarriageReturn:
+                    case TokenType.Comment when options.SkipComments:
                         sequenceReader = new(remaining); // Reset sequence
                         break;
                     default:
@@ -143,6 +181,7 @@ public ref partial struct TokenLexer
         if (sequenceReader.IsSeparator(out tokenType) ||
             sequenceReader.IsKeyword(out tokenType)   ||
             sequenceReader.IsLiteral(out tokenType)   ||
+            sequenceReader.IsComment(out tokenType)   ||
             sequenceReader.IsOperator(out tokenType)  ||
             sequenceReader.IsIdentifer(out tokenType)) // Identifier needs be checked last
         {

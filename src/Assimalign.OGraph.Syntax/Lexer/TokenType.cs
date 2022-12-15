@@ -14,6 +14,7 @@ namespace Assimalign.OGraph.Syntax;
 public enum TokenType 
 {
     #region Other
+    Comment,
     /// <summary>
     /// Identifier is the name given to different programming elements. 
     /// It can be either a name given to a variable or a function or any other programming element which follow some basic naming conventions

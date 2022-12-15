@@ -1,5 +1,4 @@
 query({
-    label ''
     variable {
         take: 20
         skip: 40

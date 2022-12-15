@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
 		<RootNamespace>Assimalign.OGraph.Syntax</RootNamespace>
 	</PropertyGroup>
-	
 
+	<ItemGroup>
+	  <Folder Include="Diagnostics\" />
+	</ItemGroup>
 </Project>

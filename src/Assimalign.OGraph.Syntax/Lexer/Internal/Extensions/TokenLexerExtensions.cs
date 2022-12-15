@@ -30,6 +30,7 @@ internal static class TokenLexerExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsSeparator(this ref SequenceReader<byte> sequenceReader, out TokenType tokenType)
     {
+
         tokenType = default;
 
         // Separators are one byte long 
@@ -252,6 +253,33 @@ internal static class TokenLexerExtensions
     #endregion
 
     #region Identifier
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsComment(this ref SequenceReader<byte> sequenceReader, out TokenType tokenType)
+    {
+        tokenType = default;
+
+        if (sequenceReader.Consumed == 1 && sequenceReader.CurrentSpan[0] == '#') 
+        {
+            tokenType = TokenType.Comment;
+
+            while (!sequenceReader.End)
+            {
+                sequenceReader.Advance(1);
+
+                // Check if New Line
+                if (sequenceReader.Slice().EndsWith(new ReadOnlySpan<byte>(new byte[] { (byte)'\r', (byte)'\n' })))
+                {
+                    sequenceReader.Rewind(2);
+                    break;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsIdentifer(this ref SequenceReader<byte> sequenceReader, out TokenType tokenType)

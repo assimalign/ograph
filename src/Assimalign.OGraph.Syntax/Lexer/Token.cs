@@ -102,7 +102,25 @@ public readonly struct Token
         }
     }
 
+
+    #region Helper Functions
+
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public string GetString() => ValueAsText;
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public TimeOnly GetTimeOnly() => TimeOnly.Parse(ValueAsText);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public TimeSpan GetTimeSpan() => TimeSpan.Parse(ValueAsText);
     /// <summary>
     /// Parses the given token data as <see cref="DateOnly"/>.
     /// </summary>
@@ -122,5 +140,27 @@ public readonly struct Token
     /// 
     /// </summary>
     /// <returns></returns>
+    public short GetShort() => short.Parse(ValueAsText);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public int GetInt() => int.Parse(ValueAsText);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public long GetLong() => long.Parse(ValueAsText);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public decimal GetDecimal() => decimal.Parse(ValueAsText);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public Single GetSingle() => Single.Parse(ValueAsText);
+
+    #endregion
 }

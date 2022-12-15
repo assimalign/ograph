@@ -12,4 +12,5 @@ public struct TokenLexerOptions
     public bool SkipWhiteSpace { get; set; }
     public bool SkipLineFeed { get; set; }
     public bool SkipCarriageReturn { get; set; }
+    public bool SkipComments { get; set; }
 }
