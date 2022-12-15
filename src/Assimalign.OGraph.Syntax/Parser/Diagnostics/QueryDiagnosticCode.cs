@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Assimalign.OGraph.Syntax;
 
-namespace Assimalign.OGraph.Syntax;
-
-internal enum QueryDiagnosticCode
+public enum QueryDiagnosticCode
 {
-    G0001, 
+    /// <summary>
+    /// 
+    /// </summary>
+    G0000,
+    /// <summary>
+    /// G0001 - Expected Open Parenthesis Block '('
+    /// </summary>
+    G0001,
+    /// <summary>
+    /// G0002 - Expected Close Parenthesis Block ')'
+    /// </summary>
     G0002, 
     G0003, 
     G0004,
-    OpenParantheisisExpected,
+    /// <summary>
+    /// Unexpected EOF (End-of-File)
+    /// </summary>
+    G0005,
 }
-
-
-/*
-    Syntax Parsing QueryErrors
-    - G0001 - Expected Open Parenthesis Block '('
-    - G0002 - Expected Close Parenthesis Block ')'
- 
- 
- */

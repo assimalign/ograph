@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
 
+[System.Diagnostics.DebuggerDisplay("{Severity}: ({Start}..{Start+Length}): {Message}")]
 public sealed class QueryDiagnostic
 {
-    private QueryDiagnostic(string code, string? message, int start, int end, QueryDiagnosticSeverity severity)
+    public QueryDiagnostic(QueryDiagnosticCode code, string? message, int start, int end, QueryDiagnosticSeverity severity)
     {
         Code = code;
         Message = message;
@@ -21,13 +22,13 @@ public sealed class QueryDiagnostic
     /// <summary>
     /// The diagnostic code.
     /// </summary>
-    public string Code { get; }
+    public QueryDiagnosticCode Code { get; }
     /// <summary>
     /// 
     /// </summary>
     public string? Message { get; }
     /// <summary>
-    /// 
+    /// The length of the error.
     /// </summary>
     public int Length => End - Start;
     /// <summary>

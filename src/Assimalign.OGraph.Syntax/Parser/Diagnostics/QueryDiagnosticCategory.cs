@@ -8,5 +8,5 @@ namespace Assimalign.OGraph.Syntax;
 
 internal static class QueryDiagnosticCategory
 {
-    private static readonly string Correctness => "Correctness";
+    //private static readonly string Correctness => "Correctness";
 }

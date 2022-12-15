@@ -12,11 +12,11 @@ public readonly struct Token
     /// <summary>
     /// Specifies the start position for the given token within a sequence.
     /// </summary>
-    public long Start { get; init; }
+    public int Start { get; init; }
     /// <summary>
     /// Specifies the end position for the given token within a sequence.
     /// </summary>
-    public long End { get; init; }
+    public int End { get; init; }
     /// <summary>
     /// The raw value as bytes.
     /// </summary>

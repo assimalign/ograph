@@ -189,8 +189,8 @@ public ref partial struct TokenLexer
             {
                 Value = sequenceReader.Slice().ToArray(),
                 TokenType = tokenType,
-                Start = position,
-                End = (position + sequenceReader.Consumed) - 1
+                Start = (int)position,
+                End = (int)(position + sequenceReader.Consumed) - 1
             };
             return true;
         }

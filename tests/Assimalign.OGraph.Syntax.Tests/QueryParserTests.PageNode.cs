@@ -16,8 +16,8 @@ public partial class QueryParserTests
     {
         var query = "query().page({ take 25 skip 50})";
         var parser = new QueryParser();
-        var node = parser.Parse(query);
-        var rootNode = Assert.IsType<RootQueryNode>(node);
+        var document = parser.Parse(query);
+        var rootNode = Assert.IsType<RootQueryNode>(document.Node);
 
         Assert.Single(rootNode.Nodes);
 
@@ -38,8 +38,8 @@ public partial class QueryParserTests
     {
         var query = "query().page({ take 25 skip 50})";
         var parser = new QueryParser();
-        var node = parser.Parse(query);
-        var rootNode = Assert.IsType<RootQueryNode>(node);
+        var document = parser.Parse(query);
+        var rootNode = Assert.IsType<RootQueryNode>(document.Node);
 
         Assert.Single(rootNode.Nodes);
 
