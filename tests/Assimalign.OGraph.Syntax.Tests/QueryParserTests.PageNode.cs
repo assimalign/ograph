@@ -25,13 +25,18 @@ public partial class QueryParserTests
 
         Assert.NotNull(pageNode.Take);
         Assert.NotNull(pageNode.Skip);
+
+        var skipConstant = Assert.IsType<ConstantQueryNode>(pageNode.Skip);
+        var takeConstant = Assert.IsType<ConstantQueryNode>(pageNode.Take);
+
+        //Assert.Equal(skipConstant.V)
     }
 
 
     [Fact]
     public void TestSkipTakeParsedFailure()
     {
-        var query = "query().page({ take 25 t skip 50})";
+        var query = "query().page({ take 25 skip 50})";
         var parser = new QueryParser();
         var node = parser.Parse(query);
         var rootNode = Assert.IsType<RootQueryNode>(node);

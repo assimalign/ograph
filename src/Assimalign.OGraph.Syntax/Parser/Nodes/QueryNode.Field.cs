@@ -53,13 +53,19 @@ public sealed class FieldQueryNode : QueryNode
         return visitor.Visit(this);
     }
 
-    internal void SetValue(QueryNode node)
-    {
-        this.value = node;
-    }
+    internal void SetValue(QueryNode node) => this.value = node;
+    internal void SetAlias(string alias) => this.alias = alias;
+    
 
     internal void AddChild(QueryNode child)
     {
-
+        if (child is FieldQueryNode field)
+        {
+            this.children.Add(field);   
+        }
+        else
+        {
+            throw new Exception();
+        }
     }
 }

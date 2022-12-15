@@ -21,4 +21,20 @@ public sealed class ConstantQueryNode : QueryNode
     }
 
     internal void SetValue(object value) => this.value = value;
+
+
+
+    public int GetInt()
+    {
+        if (value is int number)
+        {
+            return number;
+        }
+        if (value is string str)
+        {
+            return int.Parse(str);
+        }
+
+        throw new Exception();
+    }
 }

@@ -12,7 +12,7 @@ public partial class QueryParserTests
     [Fact]
     public void SelectTest()
     {
-        var query = "query().project({ firstName lastName })";
+        var query = "query().project({ firstName lastName addresses as locations { streetOne as mainStreet streetTwo } })";
         var parser = new QueryParser();
         var node = parser.Parse(query);
     }

@@ -102,10 +102,16 @@ public readonly struct Token
         }
     }
 
+    #region Overloads
+    public override string ToString()
+    {
+        return $"{TokenType} - {ValueAsText}";
+    }
+    #endregion
 
     #region Helper Functions
 
-    
+
     /// <summary>
     /// 
     /// </summary>

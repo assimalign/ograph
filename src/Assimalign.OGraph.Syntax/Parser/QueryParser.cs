@@ -16,11 +16,11 @@ public sealed partial class QueryParser
     }
 
 
-    public QueryNode Parse(string query)
+    public QueryDocument Parse(string query)
     {
         return Parse(Encoding.UTF8.GetBytes(query));
     }
-    public QueryNode Parse(byte[] query)
+    public QueryDocument Parse(byte[] query)
     {
         var lexer = new TokenLexer(query, new()
         {
@@ -31,11 +31,15 @@ public sealed partial class QueryParser
             SkipComments = true
         });
 
+        var context = new QueryParserContext();
+        var errors = new List<QueryError>();
         var rootNode = new RootQueryNode();
 
         while (lexer.HasNext)
         {
-            if (Parse(ref lexer, rootNode) is not RootQueryNode node)
+            lexer.Next();
+
+            if (Parse(ref lexer, context, rootNode) is not RootQueryNode node)
             {
                 throw QueryParserException.UnexpectedNode();
             }
@@ -43,67 +47,139 @@ public sealed partial class QueryParser
             rootNode = node;
         }
 
-        return rootNode;
+        return new QueryDocument(
+            rootNode,
+            errors);
     }
 
 
     #region Private Methods
-    private QueryNode Parse(ref TokenLexer lexer, QueryNode node)
+    private QueryNode? Parse(ref TokenLexer lexer, QueryParserContext context, QueryNode node)
     {
-        var previous = lexer.Current;
-
-        return lexer.Next().TokenType switch
+        // This recursive switch statement can be interpreted as Parse node for the given token when the left node is 
+        return lexer.Current.TokenType switch
         {
-            TokenType.Dot => Parse(ref lexer, node),
-            TokenType.QueryRoot => ParseRoot(ref lexer, node),
-            TokenType.Filter => ParseFilter(ref lexer, node),
-            TokenType.Project => ParseProject(ref lexer, node),
-            TokenType.Page => ParsePage(ref lexer, node),
-            TokenType.Sort => ParseSort(ref lexer, node),
-            TokenType.Skip => ParseSkip(ref lexer, node),
-            TokenType.Take => ParseTake(ref lexer, node),
-            TokenType.Token => ParseToken(ref lexer, node),
-            TokenType.Identifier => ParseIdentifier(ref lexer, node),
+            TokenType.Dot                                                   => node,
+            TokenType.QueryRoot         when node is RootQueryNode          => ParseRoot(ref lexer, context, node),
+            TokenType.OpenBracket       when node is RootQueryNode          => ParseRootBracketBlock(ref lexer, context, node),
+            TokenType.OpenParenthesis   when node is RootQueryNode          => ParseRootParanthesisBlock(ref lexer, context, node),
+            // Filter Block Parsing
+            TokenType.Filter                                                => ParseFilter(ref lexer, node),
+
+            // Projection Block Parsing
+            TokenType.Project           when node is RootQueryNode          => ParseProjections(ref lexer, context, node),                   // Only Parse the Project Keyword when the left node is Root
+            TokenType.OpenBracket       when node is ProjectionQueryNode    => ParseProjectionsBracketBlock(ref lexer, node),
+            TokenType.OpenBracket       when node is FieldQueryNode         => ParseProjectionsBracketBlock(ref lexer, node),
+            TokenType.OpenParenthesis   when node is ProjectionQueryNode    => ParseProjectionsParanthesisBlock(ref lexer, node),
+            TokenType.Identifier        when node is ProjectionQueryNode    => ParseProjectionsIdentifier(ref lexer, node),
+            TokenType.Identifier        when node is FieldQueryNode         => ParseIdentifier(ref lexer, node),
+            TokenType.Alias             when node is FieldQueryNode         => ParseProjectionsAlias(ref lexer, node),
+
+
+            // Page Block Parsing
+            TokenType.Page              when node is RootQueryNode          => ParsePage(ref lexer, node),
+            TokenType.OpenBracket       when node is PageQueryNode          => ParsePageBracketBlock(ref lexer, node),
+            TokenType.OpenParenthesis   when node is PageQueryNode          => ParsePageParanthesisBlock(ref lexer, node),
+            TokenType.Skip              when node is PageQueryNode          => ParsePageSkip(ref lexer, node),
+            TokenType.Take              when node is PageQueryNode          => ParsePageTake(ref lexer, node),
+            TokenType.Token             when node is PageQueryNode          => ParseToken(ref lexer, node),
+
+            // Sort Block Parsing
+            TokenType.Sort                                                  => ParseSort(ref lexer, node),
+            
+
             // Binary Parse
-            TokenType.Equal => ParseBinary(ref lexer, node),
-            TokenType.NotEqual => ParseBinary(ref lexer, node),
-            TokenType.LessThan => ParseBinary(ref lexer, node),
-            TokenType.LessThanOrEqual => ParseBinary(ref lexer, node),
-            TokenType.GreaterThan => ParseBinary(ref lexer, node),
-            TokenType.GreaterThanOrEqual => ParseBinary(ref lexer, node),
-            TokenType.And => ParseBinary(ref lexer, node),
-            TokenType.Or => ParseBinary(ref lexer, node),
+            TokenType.Equal                                                 => ParseBinary(ref lexer, node),
+            TokenType.NotEqual                                              => ParseBinary(ref lexer, node),
+            TokenType.LessThan                                              => ParseBinary(ref lexer, node),
+            TokenType.LessThanOrEqual                                       => ParseBinary(ref lexer, node),
+            TokenType.GreaterThan                                           => ParseBinary(ref lexer, node),
+            TokenType.GreaterThanOrEqual                                    => ParseBinary(ref lexer, node),
+            TokenType.And                                                   => ParseBinary(ref lexer, node),
+            TokenType.Or                                                    => ParseBinary(ref lexer, node),
 
             // Unary Parsing (Currently only Negative numbers are supported unary)
-            TokenType.Minus when previous.TokenType != TokenType.Integer => ParseUnary(ref lexer, node),
+            //TokenType.Minus when previous.TokenType != TokenType.Integer    => ParseUnary(ref lexer, node),
 
             // Literal Parsing
-            TokenType.String => ParseConstant(ref lexer, node),
-            TokenType.Integer => ParseConstant(ref lexer, node),
-            TokenType.FloatingPoint => ParseConstant(ref lexer, node),
-            TokenType.OpenParenthesis => ParseParnthesisBlock(ref lexer, node),
-            TokenType.OpenBracket => ParseBracketBlock(ref lexer, node),
+            TokenType.String                                                => ParseConstant(ref lexer, node),
+            TokenType.Integer                                               => ParseConstant(ref lexer, node),
+            TokenType.FloatingPoint                                         => ParseConstant(ref lexer, node),
+            
+
+            //TokenType.OpenParenthesis => ParseParnthesisBlock(ref lexer, node),
+            //TokenType.OpenBracket => ParseBracketBlock(ref lexer, node),
 
 
             TokenType.CloseParenthesis => node,
-            TokenType.CloseBracket => node
+            TokenType.CloseBracket => node,
+            _ => default
         };
     }
-    private QueryNode ParseRoot(ref TokenLexer lexer, QueryNode node)
+
+    #region Root Parsing
+    private QueryNode ParseRoot(ref TokenLexer lexer, QueryParserContext context, QueryNode node)
     {
-        if (node is not RootQueryNode root)
+        if (node is RootQueryNode root)
         {
             throw QueryParserException.UnexpectedNode();
         }
 
-        if (Parse(ref lexer, node) is not RootQueryNode)
+        if (lexer.TryPeek(out var peek))
         {
-            throw QueryParserException.UnexpectedNode();
-        }
+            if (peek.TokenType != TokenType.OpenParenthesis)
+            {
+                context.AddError(new QueryError()
+            }
 
+            var token = lexer.Next();
+
+            if (Parse(ref lexer, context, node) is not RootQueryNode)
+            {
+                context.AddError(new QueryError()
+                {
+
+                });
+            }
+        }
 
         return node;
     }
+    private QueryNode ParseRootParanthesisBlock(ref TokenLexer lexer, QueryParserContext context, QueryNode node)
+    {
+        while (lexer.HasNext)
+        {
+            var token = lexer.Next();
+
+            if (token.TokenType == TokenType.CloseParenthesis)
+            {
+                break;
+            }
+
+            node = Parse(ref lexer, context, node);
+        }
+
+        return node;
+    }
+    private QueryNode ParseRootBracketBlock(ref TokenLexer lexer, QueryParserContext context, QueryNode node)
+    {
+        while (lexer.HasNext)
+        {
+            var token = lexer.Next();
+
+            if (token.TokenType == TokenType.CloseBracket)
+            {
+                break;
+            }
+
+            node = Parse(ref lexer, context, node);
+        }
+
+        return node;
+    }
+    #endregion
+
+    #region Sort Parsing
     private QueryNode ParseSort(ref TokenLexer lexer, QueryNode node)
     {
         if (node is not RootQueryNode root)
@@ -120,12 +196,18 @@ public sealed partial class QueryParser
 
         return root;
     }
+
+    #endregion
+
+    #region Page Parsing
     private QueryNode ParsePage(ref TokenLexer lexer, QueryNode node)
     {
         if (node is not RootQueryNode root)
         {
-            throw QueryParserException.InvalidPage();
+            throw QueryParserException.UnexpectedNode();
         }
+        var token = lexer.Next();
+
         if (Parse(ref lexer, new PageQueryNode()) is not PageQueryNode pageNode)
         {
             throw QueryParserException.InvalidPage();
@@ -135,12 +217,47 @@ public sealed partial class QueryParser
 
         return root;
     }
-    private QueryNode ParseTake(ref TokenLexer lexer, QueryNode node)
+    private QueryNode ParsePageParanthesisBlock(ref TokenLexer lexer, QueryNode node)
+    {
+        while (true)
+        {
+            var token = lexer.Next();
+
+            if (token.TokenType == TokenType.CloseParenthesis)
+            {
+                break;
+            }
+
+            node = Parse(ref lexer, node);   
+        }
+
+        return node;
+    }
+    private QueryNode ParsePageBracketBlock(ref TokenLexer lexer, QueryNode node)
+    {
+        while (true)
+        {
+            var token = lexer.Next();
+
+            if (token.TokenType == TokenType.CloseBracket)
+            {
+                break;
+            }
+
+            node = Parse(ref lexer, node);
+        }
+
+        return node;
+    }
+    private QueryNode ParsePageTake(ref TokenLexer lexer, QueryNode node)
     {
         if (node is not PageQueryNode page)
         {
             throw QueryParserException.UnexpectedNode();
         }
+
+        var token = lexer.Next();
+
         if (Parse(ref lexer, default) is not ConstantQueryNode constant)
         {
             throw QueryParserException.InvalidPage();
@@ -150,12 +267,15 @@ public sealed partial class QueryParser
 
         return page;
     }
-    private QueryNode ParseSkip(ref TokenLexer lexer, QueryNode node)
+    private QueryNode ParsePageSkip(ref TokenLexer lexer, QueryNode node)
     {
         if (node is not PageQueryNode page)
         {
             throw QueryParserException.UnexpectedNode();
         }
+
+        var token = lexer.Next();
+
         if (Parse(ref lexer, default) is not ConstantQueryNode constant)
         {
             throw QueryParserException.InvalidPage();
@@ -171,6 +291,9 @@ public sealed partial class QueryParser
         {
             throw QueryParserException.UnexpectedNode();
         }
+
+        var token = lexer.Next();
+
         if (Parse(ref lexer, default) is not ConstantQueryNode constant)
         {
             throw QueryParserException.InvalidPage();
@@ -180,6 +303,9 @@ public sealed partial class QueryParser
 
         return page;
     }
+    #endregion
+
+    #region Filter Parsing
     private QueryNode ParseFilter(ref TokenLexer lexer, QueryNode node)
     {
         if (node is not RootQueryNode root)
@@ -200,13 +326,27 @@ public sealed partial class QueryParser
 
         return root;
     }
-    private QueryNode ParseProject(ref TokenLexer lexer, QueryNode node)
+
+    #endregion
+
+    #region Projection Parsing
+    private QueryNode ParseProjections(ref TokenLexer lexer, QueryParserContext context, QueryNode node)
     {
         if (node is not RootQueryNode root)
         {
             throw QueryParserException.InvalidPage();
         }
-        if (Parse(ref lexer, new ProjectionQueryNode()) is not ProjectionQueryNode projectionNode)
+
+        var token = lexer.Next();
+
+        if (token.TokenType != TokenType.OpenParenthesis) // The projection clause MUST follow an open parenthesis token
+        {
+            context.AddError(new QueryError()
+            {
+                Message = ""
+            });
+        }
+        if (Parse(ref lexer, context, new ProjectionQueryNode()) is not ProjectionQueryNode projectionNode)
         {
             throw QueryParserException.UnexpectedNode();
         }
@@ -214,60 +354,119 @@ public sealed partial class QueryParser
         root.AddNode(projectionNode);
 
         return root;
-    }
-    private QueryNode ParseParnthesisBlock(ref TokenLexer lexer, QueryNode node)
+    }    
+    private QueryNode ParseProjectionsBracketBlock(ref TokenLexer lexer, QueryNode node)
     {
-        while (lexer.Current.TokenType != TokenType.CloseParenthesis)
+        // Project should be the current left node
+        
+        while (lexer.HasNext)
         {
-            switch (node)
+            var token = lexer.Next();
+
+            if (node is ProjectionQueryNode projection) // Parsing Root
             {
-                case ProjectionQueryNode:
-                    node = Parse(ref lexer, node);
-                    break;
-
-                case PageQueryNode:
-                    node = Parse(ref lexer, node);
-                    break;
-
-                case RootQueryNode:
-                    node = Parse(ref lexer, node);
-                    break;
-
-            }
-        }
-
-        return node;
-    }
-    private QueryNode ParseBracketBlock(ref TokenLexer lexer, QueryNode node)
-    {
-        while (lexer.Current.TokenType != TokenType.CloseBracket)
-        {
-            switch (node)
-            {
-                case FieldQueryNode member:
-                    {
-                        node = Parse(ref lexer, member);
-                        break;
-                    }
-
-                case ProjectionQueryNode projection when Parse(ref lexer, new FieldQueryNode()) is FieldQueryNode field:
-                    projection.AddProjection(field);
-                    break;
-
-                case PageQueryNode:
-                    node = Parse(ref lexer, node);
-                    break;
-
-                case RootQueryNode:
-                    node = Parse(ref lexer, node);
-                    break;
-
-                default:
+                if (token.TokenType == TokenType.CloseBracket)
+                {
+                    return projection;
+                }
+                if (Parse(ref lexer, projection) is not ProjectionQueryNode)
+                {
                     throw QueryParserException.UnexpectedNode();
+                }
+            }
+            if (node is FieldQueryNode field) // Nested select
+            {
+                if (token.TokenType == TokenType.CloseBracket)
+                {
+                    return field;
+                }
+                if (Parse(ref lexer, new FieldQueryNode()) is not FieldQueryNode projectionField)
+                {
+                    throw QueryParserException.UnexpectedNode();
+                }
+            
+                field.AddChild(projectionField);
             }
         }
+
+        throw QueryParserException.UnexpectedNode();
+    }
+    private QueryNode ParseProjectionsParanthesisBlock(ref TokenLexer lexer, QueryNode node)
+    {
+        while (true)
+        {
+            var token = lexer.Next();
+
+            if (token.TokenType == TokenType.CloseParenthesis)
+            {
+                break;
+            }
+
+            node = Parse(ref lexer, node);
+        }
+
         return node;
     }
+    private QueryNode ParseProjectionsIdentifier(ref TokenLexer lexer, QueryNode node)
+    {
+        if (node is not ProjectionQueryNode projectionNode)
+        {
+            throw QueryParserException.UnexpectedNode();
+        }
+        if (Parse(ref lexer, new FieldQueryNode()) is not FieldQueryNode fieldNode)
+        {
+            throw QueryParserException.UnexpectedNode();
+        }
+
+        // Peek for Alias node
+        var token = lexer.Peek();
+
+        // Peek for Nested select
+        if (token.TokenType == TokenType.OpenBracket)
+        {
+            token = lexer.Next();
+
+            if (Parse(ref lexer, fieldNode) is not FieldQueryNode)
+            {
+                throw QueryParserException.UnexpectedNode();
+            }
+
+            token = lexer.Peek();
+        }
+        // Validate next token is closing bracket or next identifier
+        if (token.TokenType != TokenType.Identifier && token.TokenType != TokenType.CloseBracket)
+        {
+            throw QueryParserException.UnexpectedToken(token);
+        }
+
+        projectionNode.AddProjection(fieldNode);
+
+        return projectionNode;
+    }
+
+    private QueryNode ParseProjectionsAlias(ref TokenLexer lexer, QueryNode node)
+    {
+        // Alias should always follow Fields Nodes
+        if (node is not FieldQueryNode field)
+        {
+            throw QueryParserException.UnexpectedNode();
+        }
+        // Should expect an identifier following the alias operator
+        if (lexer.TryPeek(out var next) && next.TokenType != TokenType.Identifier)
+        {
+            throw QueryParserException.UnexpectedToken(next);
+        }
+
+        lexer.Next();
+
+        field.SetAlias(lexer.Current.ValueAsText);
+
+        return field;
+    }
+
+    #endregion
+
+    #region Other Parsing
     private QueryNode ParseBinary(ref TokenLexer lexer, QueryNode node)
     {
         var token = lexer.Current;
@@ -328,34 +527,35 @@ public sealed partial class QueryParser
     }
     private QueryNode ParseIdentifier(ref TokenLexer lexer, QueryNode node)
     {
-        //if (node is RootQueryNode && lexer.Current.GetString().Equals("variables", StringComparison.InvariantCultureIgnoreCase))
-        //{
-        //    return ParseVariables(ref lexer, node);
-        //}
-
-
-        var identifierNode = lexer.Current.ValueAsText.ToLower() switch
+        var identifier = lexer.Current.GetString().ToLower() switch
         {
-            "any" => ParseFunctionAny(ref lexer, node),
+            "any"           => ParseFunctionAny(ref lexer, node),
+            "startswith"    => ParseFunctionStartsWtih(ref lexer, node),
+            "endswith"      => ParseFunctionEndsWith(ref lexer, node),
 
             _ => ParseMember(ref lexer, node),
         };
 
-        return identifierNode;
-        if (lexer.Current.IsIdentifierFunction())
+        // Projection Logic 
+        if (identifier is FieldQueryNode fieldNode)
         {
+            // Alias's always follow identifiers. Let's check to see if alias is next
+            var token = lexer.Peek();
 
+            if (token.TokenType == TokenType.Alias)
+            {
+                token = lexer.Next();
+
+                if (Parse(ref lexer, fieldNode) is not FieldQueryNode)
+                {
+                    throw QueryParserException.UnexpectedNode();
+                }
+            }
+
+            return fieldNode;
         }
-        else
-        {
-
-        }
 
 
-        if (node is FieldQueryNode field)
-        {
-            return field;
-        }
 
         return default;
     }
@@ -365,30 +565,26 @@ public sealed partial class QueryParser
 
         return default;
     }
-    private QueryNode ParseField(ref TokenLexer lexer, QueryNode node)
-    {
-        var fieldNode = new FieldQueryNode();
 
-        if (node is ProjectionQueryNode projectionNode)
-        {
-            var result = Parse(ref lexer, fieldNode);
-
-            //projectionNode.AddProjection()
-        }
-        if (node is SortQueryNode sortNode)
-        {
-
-        }
-        if (node is FieldQueryNode field)
-        {
-
-        }
-        throw QueryParserException.UnexpectedNode();
-    }
+    #region Function Parsing
     private QueryNode ParseFunctionAny(ref TokenLexer lexer, QueryNode node)
     {
         return default;
     }
+
+    private QueryNode ParseFunctionEndsWith(ref TokenLexer lexer, QueryNode node)
+    {
+
+        return default;
+    }
+    private QueryNode ParseFunctionStartsWtih(ref TokenLexer lexer, QueryNode node)
+    {
+
+        return default;
+    } 
+
+    #endregion
+
     private QueryNode ParseFunction(ref TokenLexer lexer, QueryNode node)
     {
 
@@ -434,21 +630,24 @@ public sealed partial class QueryParser
     }
     private QueryNode ParseMember(ref TokenLexer lexer, QueryNode node)
     {
-        var value = lexer.Current.ValueAsText;
-
-       
-        if (node is FieldQueryNode field)
+        if (node is FieldQueryNode fieldNode)
         {
-            field.SetValue(new MemberQueryNode(value));
-            return field;
+            fieldNode.SetValue(new MemberQueryNode(lexer.Current.GetString()));
+            return fieldNode;
         }
 
         return default;
     }
     private QueryNode ParseAlias(ref TokenLexer lexer, QueryNode node)
     {
+        if (node is not FieldQueryNode fieldNode)
+        {
+            throw QueryParserException.UnexpectedNode();
+        }
 
-        return default;
+        fieldNode.SetAlias(lexer.Current.GetString());
+
+        return node;
     }
     private QueryNode ParseConstant(ref TokenLexer lexer, QueryNode node)
     {
@@ -473,5 +672,21 @@ public sealed partial class QueryParser
 
         return constantNode;
     }
+
     #endregion
+    #endregion
+
+    private class QueryParserContext
+    {
+        private readonly IList<QueryError> errors;
+
+        public QueryParserContext()
+        {
+            this.errors = new List<QueryError>();
+        }
+
+        public IEnumerable<QueryError> Errors => this.errors;
+
+        public void AddError(QueryError error) => this.errors.Add(error);
+    }
 }
