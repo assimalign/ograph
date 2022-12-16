@@ -8,22 +8,10 @@ namespace Assimalign.OGraph.Syntax.Internal;
 
 using Assimalign.OGraph.Syntax.Lexer;
 
-internal class PageBracketBlockParser : Parser
+internal class FilterBracketBlockParser : Parser
 {
     internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode node)
     {
-        while (lexer.HasNext)
-        {
-            var token = lexer.Next();
-
-            if (token.TokenType == TokenType.CloseBracket)
-            {
-                break;
-            }
-
-            node = context.Parse(ref lexer, node);
-        }
-
-        return node;
+        throw new NotImplementedException();
     }
 }

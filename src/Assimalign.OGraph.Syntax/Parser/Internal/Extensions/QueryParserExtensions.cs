@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
+using Assimalign.OGraph.Syntax.Lexer;
+
 
 internal static class QueryParserExtensions
 {

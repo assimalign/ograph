@@ -2,6 +2,8 @@
 
 namespace Assimalign.OGraph.Syntax;
 
+using Assimalign.OGraph.Syntax.Lexer;
+
 public enum BinaryOperatorType
 {
     None,

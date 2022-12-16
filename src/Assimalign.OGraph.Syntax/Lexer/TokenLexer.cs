@@ -1,9 +1,16 @@
 ﻿using System;
 using System.Buffers;
 
-namespace Assimalign.OGraph.Syntax;
+namespace Assimalign.OGraph.Syntax.Lexer;
 
-using Assimalign.OGraph.Syntax.Internal;
+using Assimalign.OGraph.Syntax.Lexer.Internal;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System;
+using System.Text;
+using System.Buffers;
+using System.Threading.Tasks;
 
 /// <summary>
 /// The Token Lexer (also known as a Tokenizer and)
@@ -137,7 +144,7 @@ public ref partial struct TokenLexer
         }
 
         // If we reached here something is wrong within the syntax
-        throw new Exception("End of Sequence");
+        throw new TokenLexerException("End of Sequence. No more tokens to available.");
     }
     /// <summary>
     /// Tries to peek at the next token in the sequence.
@@ -178,24 +185,210 @@ public ref partial struct TokenLexer
         TokenType tokenType;
 
         // NOTE: Do not change this order. Conditional evaluation is from left to right on purpose
-        if (sequenceReader.IsSeparator(out tokenType) ||
-            sequenceReader.IsKeyword(out tokenType)   ||
-            sequenceReader.IsLiteral(out tokenType)   ||
-            sequenceReader.IsComment(out tokenType)   ||
-            sequenceReader.IsOperator(out tokenType)  ||
-            sequenceReader.IsIdentifer(out tokenType)) // Identifier needs be checked last
+        if (IsSeparator(ref sequenceReader, out tokenType) ||
+            IsKeyword(ref sequenceReader, out tokenType)   ||
+            IsLiteral(ref sequenceReader, out tokenType)   ||
+            IsComment(ref sequenceReader, out tokenType)   ||
+            IsOperator(ref sequenceReader, out tokenType)  ||
+            IsIdentifer(ref sequenceReader, out tokenType)) // Identifier needs be checked last
         {
             token = new Token()
             {
                 Value = sequenceReader.Slice().ToArray(),
                 TokenType = tokenType,
-                Start = (int)position,
+                Start = (int)position, // explicit casting from long to int. If query is bigger than the max value of an int then developer needs to re-think his life decisions.
                 End = (int)(position + sequenceReader.Consumed) - 1
             };
+
             return true;
         }
 
         return false;
     }
+
+    private bool IsSeparator(ref SequenceReader<byte> sequenceReader, out TokenType tokenType)
+    {
+        tokenType = default;
+
+        // Separators are one byte long 
+        if (sequenceReader.Consumed != 1)
+        {
+            return false;
+        }
+
+        var value = sequenceReader.Slice().ToArray();
+
+        foreach (var separator in TokenSpans.Separators)
+        {
+            if (separator.Value.SequenceEqual(value))
+            {
+                tokenType = separator.Key;
+                return true;
+            }
+        }
+
+        return false;
+    }
+    private bool IsKeyword(ref SequenceReader<byte> sequenceReader, out TokenType tokenType)
+    {
+        tokenType = default;
+
+        if (sequenceReader.Consumed < 3 || sequenceReader.Consumed > 7)
+        {
+            return false;
+        }
+
+        var value = sequenceReader.SliceToLowerChar().ToArray();
+
+        foreach (var keyword in TokenSpans.Keywords)
+        {
+            if (keyword.Value.SequenceEqual(value) && (sequenceReader.IsEndOfFileNext() || sequenceReader.IsSeparatorNext()))
+            {
+                tokenType = keyword.Key;
+                return true;
+            }
+        }
+
+        return false;
+    }
+    private bool IsOperator(ref SequenceReader<byte> sequenceReader, out TokenType tokenType)
+    {
+        tokenType = default;
+        // No need to check operator since all operators are less than 4 bytes in length
+        if (sequenceReader.Consumed > 3)
+        {
+            return false;
+        }
+
+        var value = sequenceReader.SliceToLowerChar().ToArray();
+
+        foreach (var @operator in TokenSpans.Operators)
+        {
+            if (@operator.Value.SequenceEqual(value) && (sequenceReader.IsEndOfFileNext() || sequenceReader.IsSeparatorNext()))
+            {
+                tokenType = @operator.Key;
+                return true;
+            }
+        }
+
+        return false;
+    }
+    private bool IsLiteral(ref SequenceReader<byte> sequenceReader, out TokenType tokenType)
+    {
+        tokenType = default;
+
+        if (sequenceReader.Consumed == 1)
+        {
+            // Identify if string literal
+            if (sequenceReader.CurrentSpan[0] == (byte)'\'')
+            {
+                while (sequenceReader.TryRead(out var value))
+                {
+                    if (value.Equals((byte)'\''))
+                    {
+                        if (sequenceReader.ByteEquals((byte)'\''))
+                        {
+                            tokenType = TokenType.String;
+                            return true;
+                        }
+                    }
+                }                
+                throw new TokenLexerException("Invalid string format. Missing closing quote.")
+                {
+                    Position = (int)position
+                };
+            }
+
+            // Identify if current value is digit
+            if (char.IsDigit((char)sequenceReader.CurrentSpan[0]))
+            {
+                while (sequenceReader.TryRead(out var c))
+                {
+                    if (!char.IsDigit((char)c) && c != (byte)'.' && c != (byte)'e') // Lets check that the current span includes acceptable char
+                    {
+                        sequenceReader.Rewind(1);
+                        break;
+                    }
+                }
+
+                var value = sequenceReader.Slice();
+
+                foreach (var v in value)
+                {
+                    if (v == (byte)'.')
+                    {
+                        tokenType = TokenType.FloatingPoint;
+                        return true;
+                    }
+                }
+
+                tokenType = TokenType.Integer;
+                return true;
+            }
+        }
+        // Identify keyword literals
+        else
+        {
+            var value = sequenceReader.SliceToLowerChar().ToArray();
+
+            foreach (var literal in TokenSpans.Literals)
+            {
+                if (literal.Value.SequenceEqual(value) && (sequenceReader.IsEndOfFileNext() || sequenceReader.IsSeparatorNext()))
+                {
+                    tokenType = literal.Key;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+    private bool IsComment(ref SequenceReader<byte> sequenceReader, out TokenType tokenType)
+    {
+        tokenType = default;
+
+        if (sequenceReader.Consumed == 1 && sequenceReader.CurrentSpan[0] == '#')
+        {
+            tokenType = TokenType.Comment;
+
+            var previous = default(byte);
+            var current = default(byte);
+
+            while (sequenceReader.TryRead(out current))
+            {
+                if (previous == (byte)'\r' && current == '\n')
+                {
+                    sequenceReader.Rewind(2);
+                    break;
+                }
+                previous = current;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+    private bool IsIdentifer(ref SequenceReader<byte> sequenceReader, out TokenType tokenType)
+    {
+        tokenType = default;
+
+        // As the lexer loops through the sequence of bytes
+        if (sequenceReader.IsSeparatorNext() || sequenceReader.IsEndOfFileNext() || !sequenceReader.IsAlphaNumericCharNext()) // This is to account for any unknown char
+        {
+            // Let's check if the span starts with a variable identifier
+            if (sequenceReader.CurrentSpan[0] == '@')
+            {
+                tokenType = TokenType.Variable;
+                return true;
+            }
+
+            tokenType = TokenType.Identifier;
+            return true;
+        }
+
+        return false;
+    }
+
     #endregion
 }

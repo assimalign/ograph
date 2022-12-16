@@ -2,7 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Syntax;
+namespace Assimalign.OGraph.Syntax.Lexer;
 
 /// <summary>
 /// 

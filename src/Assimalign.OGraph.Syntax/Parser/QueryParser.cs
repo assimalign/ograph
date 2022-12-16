@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
-using Assimalign.OGraph.Syntax.Internal;
 using System.Runtime.CompilerServices;
 
 namespace Assimalign.OGraph.Syntax;
+
+using Assimalign.OGraph.Syntax.Lexer;
+using Assimalign.OGraph.Syntax.Internal;
 
 public sealed partial class QueryParser
 {
@@ -57,53 +59,53 @@ public sealed partial class QueryParser
     //    // This recursive switch statement can be interpreted as Parse node for the given token when the left node is 
     //    return lexer.Current.TokenType switch
     //    {
-    //        TokenType.Dot                                                   => node,
-    //        TokenType.QueryRoot         when node is RootQueryNode          => ParseRoot(ref lexer, context, node),
-    //        TokenType.OpenBracket       when node is RootQueryNode          => ParseRootBracketBlock(ref lexer, context, node),
-    //        TokenType.OpenParenthesis   when node is RootQueryNode          => ParseRootParanthesisBlock(ref lexer, context, node),
+    //        TokenType.Dot => node,
+    //        TokenType.QueryRoot when node is RootQueryNode => ParseRoot(ref lexer, context, node),
+    //        TokenType.OpenBracket when node is RootQueryNode => ParseRootBracketBlock(ref lexer, context, node),
+    //        TokenType.OpenParenthesis when node is RootQueryNode => ParseRootParanthesisBlock(ref lexer, context, node),
     //        // Filter Block Parsing
-    //        TokenType.Filter                                                => ParseFilter(ref lexer, node),
+    //        TokenType.Filter => ParseFilter(ref lexer, node),
 
     //        // Projection Block Parsing
-    //        TokenType.Project           when node is RootQueryNode          => ParseProjections(ref lexer, context, node),                   // Only Parse the Project Keyword when the left node is Root
-    //        TokenType.OpenBracket       when node is ProjectionQueryNode    => ParseProjectionsBracketBlock(ref lexer, node),
-    //        TokenType.OpenBracket       when node is FieldQueryNode         => ParseProjectionsBracketBlock(ref lexer, node),
-    //        TokenType.OpenParenthesis   when node is ProjectionQueryNode    => ParseProjectionsParanthesisBlock(ref lexer, node),
-    //        TokenType.Identifier        when node is ProjectionQueryNode    => ParseProjectionsIdentifier(ref lexer, node),
-    //        TokenType.Identifier        when node is FieldQueryNode         => ParseIdentifier(ref lexer, node),
-    //        TokenType.Alias             when node is FieldQueryNode         => ParseProjectionsAlias(ref lexer, node),
+    //        TokenType.Project when node is RootQueryNode => ParseProjections(ref lexer, context, node),                   // Only Parse the Project Keyword when the left node is Root
+    //        TokenType.OpenBracket when node is ProjectionQueryNode => ParseProjectionsBracketBlock(ref lexer, node),
+    //        TokenType.OpenBracket when node is FieldQueryNode => ParseProjectionsBracketBlock(ref lexer, node),
+    //        TokenType.OpenParenthesis when node is ProjectionQueryNode => ParseProjectionsParanthesisBlock(ref lexer, node),
+    //        TokenType.Identifier when node is ProjectionQueryNode => ParseProjectionsIdentifier(ref lexer, node),
+    //        TokenType.Identifier when node is FieldQueryNode => ParseIdentifier(ref lexer, node),
+    //        TokenType.Alias when node is FieldQueryNode => ParseProjectionsAlias(ref lexer, node),
 
 
     //        // Page Block Parsing
-    //        TokenType.Page              when node is RootQueryNode          => ParsePage(ref lexer, node),
-    //        TokenType.OpenBracket       when node is PageQueryNode          => ParsePageBracketBlock(ref lexer, node),
-    //        TokenType.OpenParenthesis   when node is PageQueryNode          => ParsePageParanthesisBlock(ref lexer, node),
-    //        TokenType.Skip              when node is PageQueryNode          => ParsePageSkip(ref lexer, node),
-    //        TokenType.Take              when node is PageQueryNode          => ParsePageTake(ref lexer, node),
-    //        TokenType.Token             when node is PageQueryNode          => ParseToken(ref lexer, node),
+    //        TokenType.Page when node is RootQueryNode => ParsePage(ref lexer, node),
+    //        TokenType.OpenBracket when node is PageQueryNode => ParsePageBracketBlock(ref lexer, node),
+    //        TokenType.OpenParenthesis when node is PageQueryNode => ParsePageParanthesisBlock(ref lexer, node),
+    //        TokenType.Skip when node is PageQueryNode => ParsePageSkip(ref lexer, node),
+    //        TokenType.Take when node is PageQueryNode => ParsePageTake(ref lexer, node),
+    //        TokenType.Token when node is PageQueryNode => ParseToken(ref lexer, node),
 
     //        // Sort Block Parsing
-    //        TokenType.Sort                                                  => ParseSort(ref lexer, node),
-            
+    //        TokenType.Sort => ParseSort(ref lexer, node),
+
 
     //        // Binary Parse
-    //        TokenType.Equal                                                 => ParseBinary(ref lexer, node),
-    //        TokenType.NotEqual                                              => ParseBinary(ref lexer, node),
-    //        TokenType.LessThan                                              => ParseBinary(ref lexer, node),
-    //        TokenType.LessThanOrEqual                                       => ParseBinary(ref lexer, node),
-    //        TokenType.GreaterThan                                           => ParseBinary(ref lexer, node),
-    //        TokenType.GreaterThanOrEqual                                    => ParseBinary(ref lexer, node),
-    //        TokenType.And                                                   => ParseBinary(ref lexer, node),
-    //        TokenType.Or                                                    => ParseBinary(ref lexer, node),
+    //        TokenType.Equal => ParseBinary(ref lexer, node),
+    //        TokenType.NotEqual => ParseBinary(ref lexer, node),
+    //        TokenType.LessThan => ParseBinary(ref lexer, node),
+    //        TokenType.LessThanOrEqual => ParseBinary(ref lexer, node),
+    //        TokenType.GreaterThan => ParseBinary(ref lexer, node),
+    //        TokenType.GreaterThanOrEqual => ParseBinary(ref lexer, node),
+    //        TokenType.And => ParseBinary(ref lexer, node),
+    //        TokenType.Or => ParseBinary(ref lexer, node),
 
     //        // Unary Parsing (Currently only Negative numbers are supported unary)
     //        //TokenType.Minus when previous.TokenType != TokenType.Integer    => ParseUnary(ref lexer, node),
 
     //        // Literal Parsing
-    //        TokenType.String                                                => ParseConstant(ref lexer, node),
-    //        TokenType.Integer                                               => ParseConstant(ref lexer, node),
-    //        TokenType.FloatingPoint                                         => ParseConstant(ref lexer, node),
-            
+    //        TokenType.String => ParseConstant(ref lexer, node),
+    //        TokenType.Integer => ParseConstant(ref lexer, node),
+    //        TokenType.FloatingPoint => ParseConstant(ref lexer, node),
+
 
     //        //TokenType.OpenParenthesis => ParseParnthesisBlock(ref lexer, node),
     //        //TokenType.OpenBracket => ParseBracketBlock(ref lexer, node),
@@ -243,7 +245,7 @@ public sealed partial class QueryParser
     //            break;
     //        }
 
-    //        node = Parse(ref lexer, node);   
+    //        node = Parse(ref lexer, node);
     //    }
 
     //    return node;
@@ -369,11 +371,11 @@ public sealed partial class QueryParser
     //    root.AddNode(projectionNode);
 
     //    return root;
-    //}    
+    //}
     //private QueryNode ParseProjectionsBracketBlock(ref TokenLexer lexer, QueryNode node)
     //{
     //    // Project should be the current left node
-        
+
     //    while (lexer.HasNext)
     //    {
     //        var token = lexer.Next();
@@ -399,7 +401,7 @@ public sealed partial class QueryParser
     //            {
     //                throw QueryParserException.UnexpectedNode();
     //            }
-            
+
     //            field.AddChild(projectionField);
     //        }
     //    }
@@ -544,9 +546,9 @@ public sealed partial class QueryParser
     //{
     //    var identifier = lexer.Current.GetString().ToLower() switch
     //    {
-    //        "any"           => ParseFunctionAny(ref lexer, node),
-    //        "startswith"    => ParseFunctionStartsWtih(ref lexer, node),
-    //        "endswith"      => ParseFunctionEndsWith(ref lexer, node),
+    //        "any" => ParseFunctionAny(ref lexer, node),
+    //        "startswith" => ParseFunctionStartsWtih(ref lexer, node),
+    //        "endswith" => ParseFunctionEndsWith(ref lexer, node),
 
     //        _ => ParseMember(ref lexer, node),
     //    };
@@ -596,7 +598,7 @@ public sealed partial class QueryParser
     //{
 
     //    return default;
-    //} 
+    //}
 
     //#endregion
 
@@ -689,6 +691,7 @@ public sealed partial class QueryParser
     //}
 
     //#endregion
+    
     //#endregion
 
     ////private class QueryParserContext
@@ -707,12 +710,12 @@ public sealed partial class QueryParser
     //private class QueryParserContext
     //{
     //    private readonly IDictionary<Func<Token, QueryNode, bool>, QueryNodeParser> parsers = new Dictionary<Func<Token, QueryNode, bool>, QueryNodeParser>();
-       
+
     //    public QueryParserContext()
     //    {
     //        parsers.Add((token, node) => token.TokenType == TokenType.QueryRoot && node is RootQueryNode, new)
     //    }
-        
+
 
 
     //    public QueryNode Parse(ref TokenLexer lexer, QueryNode node)

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
 
+using Assimalign.OGraph.Syntax.Lexer;
+
 public abstract class QueryParserException : Exception
 {
 

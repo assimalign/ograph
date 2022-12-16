@@ -2,9 +2,12 @@
 
 namespace Assimalign.OGraph.Syntax;
 
-public abstract class TokenLexerException : Exception
+public class TokenLexerException : Exception
 {
     public TokenLexerException() { }
-    public TokenLexerException(string message) : base(message) { }
-    public TokenLexerException(string message, Exception innerException) : base(message, innerException) { }
+    internal TokenLexerException(string message) : base(message) { }
+    internal TokenLexerException(string message, Exception innerException) : base(message, innerException) { }
+
+
+    public int Position { get; init; }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
+using Assimalign.OGraph.Syntax.Lexer;
 internal class PageBlockParser : Parser
 {
     internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode node)

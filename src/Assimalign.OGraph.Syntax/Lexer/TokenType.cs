@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Assimalign.OGraph.Syntax;
+namespace Assimalign.OGraph.Syntax.Lexer;
 
-// Reference for Syntax Tokens: https://codeforwin.org/2015/05/introduction-to-programming-tokens.html#separators
+// Reference for Syntax Tokens: https://codeforwin.org/2015/05/introduction-to-programming-tokens.html#Separators
 
 /// <summary>
 /// 
