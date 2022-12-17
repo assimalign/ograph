@@ -9,7 +9,14 @@ public sealed class ConstantQueryNode : QueryNode
     /// <summary>
     /// 
     /// </summary>
-    public object Value => this.value;
+    public object Value
+    {
+        get => this.value;
+        init
+        {
+            this.value = value;
+        }
+    }
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Constant;
@@ -19,8 +26,6 @@ public sealed class ConstantQueryNode : QueryNode
     {
         return visitor.Visit(this);
     }
-
-    internal void SetValue(object value) => this.value = value;
 
 
 

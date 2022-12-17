@@ -34,18 +34,8 @@ public sealed partial class QueryParser
             SkipComments = true
         });
 
-        var node = new RootQueryNode();
         var context = new ParserContext();
-
-        while (lexer.HasNext)
-        {
-            lexer.Next();
-
-            if (context.Parse(ref lexer, node) is not RootQueryNode)
-            {
-                // TODO : Add some invalid diagnostics
-            }
-        }
+        var node = Parser.Create().Parse(ref lexer, context, new RootQueryNode());
 
         return new QueryDocument(
             node,

@@ -8,7 +8,7 @@ namespace Assimalign.OGraph.Syntax;
 
 public interface IQueryNodeVisitor
 {
-
+    
 }
 
 public interface IQueryNodeVisitor<T> : IQueryNodeVisitor

@@ -14,35 +14,35 @@ internal class ProjectionBracketBlockParser : Parser
     {
         // Project should be the current left node
 
-        while (lexer.HasNext)
-        {
-            var token = lexer.Next();
+        //while (lexer.HasNext)
+        //{
+        //    var token = lexer.Next();
 
-            if (node is ProjectionQueryNode projection) // Parsing Root
-            {
-                if (token.TokenType == TokenType.CloseBracket)
-                {
-                    return projection;
-                }
-                if (context.Parse(ref lexer, projection) is not ProjectionQueryNode)
-                {
-                    throw QueryParserException.UnexpectedNode();
-                }
-            }
-            if (node is FieldQueryNode field) // Nested select
-            {
-                if (token.TokenType == TokenType.CloseBracket)
-                {
-                    return field;
-                }
-                if (context.Parse(ref lexer, new FieldQueryNode()) is not FieldQueryNode projectionField)
-                {
-                    throw QueryParserException.UnexpectedNode();
-                }
+        //    if (node is ProjectionQueryNode projection) // Parsing Root
+        //    {
+        //        if (token.TokenType == TokenType.CloseBracket)
+        //        {
+        //            return projection;
+        //        }
+        //        if (context.Parse(ref lexer, projection) is not ProjectionQueryNode)
+        //        {
+        //            throw QueryParserException.UnexpectedNode();
+        //        }
+        //    }
+        //    if (node is FieldQueryNode field) // Nested select
+        //    {
+        //        if (token.TokenType == TokenType.CloseBracket)
+        //        {
+        //            return field;
+        //        }
+        //        if (context.Parse(ref lexer, new FieldQueryNode()) is not FieldQueryNode projectionField)
+        //        {
+        //            throw QueryParserException.UnexpectedNode();
+        //        }
 
-                field.AddChild(projectionField);
-            }
-        }
+        //        field.AddChild(projectionField);
+        //    }
+        //}
 
         throw QueryParserException.UnexpectedNode();
     }

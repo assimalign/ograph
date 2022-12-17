@@ -13,18 +13,18 @@ internal class ProjectionParser : Parser
             throw QueryParserException.InvalidPage();
         }
 
-        var token = lexer.Next();
+        //var token = lexer.Next();
 
-        if (token.TokenType != TokenType.OpenParenthesis) // The projection clause MUST follow an open parenthesis token
-        {
-            
-        }
-        if (context.Parse(ref lexer, new ProjectionQueryNode()) is not ProjectionQueryNode projectionNode)
-        {
-            throw QueryParserException.UnexpectedNode();
-        }
+        //if (token.TokenType != TokenType.OpenParenthesis) // The projection clause MUST follow an open parenthesis token
+        //{
+        //    // TODO: Add diagnostic error
+        //}
+        //if (context.Parse(ref lexer, new ProjectionQueryNode()) is not ProjectionQueryNode projectionNode)
+        //{
+        //    throw QueryParserException.UnexpectedNode();
+        //}
 
-        root.AddNode(projectionNode);
+        //root.AddNode(projectionNode);
 
         return root;
     }

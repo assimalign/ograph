@@ -1,16 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Buffers;
 
 namespace Assimalign.OGraph.Syntax.Lexer;
 
 using Assimalign.OGraph.Syntax.Lexer.Internal;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System;
-using System.Text;
-using System.Buffers;
-using System.Threading.Tasks;
+
 
 /// <summary>
 /// The Token Lexer (also known as a Tokenizer and)
@@ -18,7 +13,7 @@ using System.Threading.Tasks;
 public ref partial struct TokenLexer
 {
     private readonly TokenLexerOptions options;
-    
+
     private ReadOnlySequence<byte> remaining;
     private Token current = default;
     private long position = default;
@@ -48,14 +43,14 @@ public ref partial struct TokenLexer
                 if (TryParse(ref sequenceReader, out var token))
                 {
                     sequence = sequenceReader.UnreadSequence;
-                    
+
                     switch (token.TokenType)
                     {
-                        case TokenType.Tab when options.SkipTabs:
-                        case TokenType.LineFeed when options.SkipLineFeed:
-                        case TokenType.WhiteSpace when options.SkipWhiteSpace:
-                        case TokenType.CarriageReturn when options.SkipCarriageReturn:
-                        case TokenType.Comment when options.SkipComments:
+                        case TokenType.Tab              when options.SkipTabs:
+                        case TokenType.LineFeed         when options.SkipLineFeed:
+                        case TokenType.WhiteSpace       when options.SkipWhiteSpace:
+                        case TokenType.CarriageReturn   when options.SkipCarriageReturn:
+                        case TokenType.Comment          when options.SkipComments:
                             if (sequence.IsEmpty)
                             {
                                 return false;
@@ -107,7 +102,7 @@ public ref partial struct TokenLexer
             }
         }
         // If we reached here something is wrong within the syntax
-        throw new Exception("End of Sequence");
+        throw new TokenLexerException("End of Sequence. No more tokens available.");
     }
     /// <summary>
     /// Retrieves the next token in the sequence.
@@ -144,7 +139,12 @@ public ref partial struct TokenLexer
         }
 
         // If we reached here something is wrong within the syntax
-        throw new TokenLexerException("End of Sequence. No more tokens to available.");
+        throw new TokenLexerException("End of Sequence. No more tokens available.");
+    }
+
+    public void Skip()
+    {
+        Next();
     }
     /// <summary>
     /// Tries to peek at the next token in the sequence.
@@ -185,11 +185,11 @@ public ref partial struct TokenLexer
         TokenType tokenType;
 
         // NOTE: Do not change this order. Conditional evaluation is from left to right on purpose
-        if (IsSeparator(ref sequenceReader, out tokenType) ||
-            IsKeyword(ref sequenceReader, out tokenType)   ||
-            IsLiteral(ref sequenceReader, out tokenType)   ||
-            IsComment(ref sequenceReader, out tokenType)   ||
-            IsOperator(ref sequenceReader, out tokenType)  ||
+        if (IsSeparator(ref sequenceReader, out tokenType)  ||
+            IsKeyword(ref sequenceReader, out tokenType)    ||
+            IsLiteral(ref sequenceReader, out tokenType)    ||
+            IsComment(ref sequenceReader, out tokenType)    ||
+            IsOperator(ref sequenceReader, out tokenType)   ||
             IsIdentifer(ref sequenceReader, out tokenType)) // Identifier needs be checked last
         {
             token = new Token()
@@ -205,7 +205,6 @@ public ref partial struct TokenLexer
 
         return false;
     }
-
     private bool IsSeparator(ref SequenceReader<byte> sequenceReader, out TokenType tokenType)
     {
         tokenType = default;
@@ -286,13 +285,10 @@ public ref partial struct TokenLexer
                 {
                     if (value.Equals((byte)'\''))
                     {
-                        if (sequenceReader.ByteEquals((byte)'\''))
-                        {
-                            tokenType = TokenType.String;
-                            return true;
-                        }
+                        tokenType = TokenType.String;
+                        return true;
                     }
-                }                
+                }
                 throw new TokenLexerException("Invalid string format. Missing closing quote.")
                 {
                     Position = (int)position

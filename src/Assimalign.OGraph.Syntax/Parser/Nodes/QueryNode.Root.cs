@@ -16,7 +16,7 @@ public sealed class RootQueryNode : QueryNode
     }
     public RootQueryNode(IEnumerable<QueryNode> nodes, IDictionary<string, object> variables)
     {
-        this.nodes.AddRange( nodes);
+        this.nodes.AddRange(nodes);
         this.variables = variables;
     }
 
@@ -28,7 +28,7 @@ public sealed class RootQueryNode : QueryNode
     /// <summary>
     /// Represents the root nodes of the expression tree.
     /// </summary>
-    public IEnumerable<QueryNode> Nodes => this.nodes;
+    public IEnumerable<QueryNode> Nodes { get; init; }
     /// <summary>
     /// 
     /// </summary>

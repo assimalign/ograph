@@ -12,8 +12,8 @@ using Assimalign.OGraph.Syntax.Lexer;
 public partial class TokenLexerTests
 {
 
-    [Fact]
-    public void IdentifyCommentTest()
+    [Fact(DisplayName = "Comment Test: Identify Comment Successfully")]
+    public void TestCommentIdentifiedSuccessfully()
     {
         var query = "query({}) # Some comment I am placing \r\n .filter({})";
 
@@ -27,13 +27,14 @@ public partial class TokenLexerTests
             tokens.Add(token);
         }
 
+        Assert.Equal(14, tokens.Count);
         Assert.Contains(tokens, token => token.TokenType == TokenType.Comment);
         Assert.Contains(tokens, token => token.TokenType == TokenType.QueryRoot);
         Assert.Contains(tokens, token => token.TokenType == TokenType.Filter);
     }
 
 
-    [Fact]
+    [Fact (DisplayName = "Comment Test: Identify comment with no new line")]
     public void IdentifyCommentEndOfFileTest()
     {
         var query = "query({}) # Some comment I am placing";
@@ -53,7 +54,7 @@ public partial class TokenLexerTests
     }
 
 
-    [Fact]
+    [Fact (DisplayName = "Comment Test: Skip all comments successfully")]
     public void SkipCommenTest()
     {
         var query = "query({}) # Some comment I am placing";
