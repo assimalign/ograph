@@ -7,6 +7,7 @@ namespace Assimalign.OGraph.Syntax.Internal;
 /// <summary>
 /// 
 /// </summary>
+[System.Diagnostics.DebuggerDisplay("{TokenType}: {ValueAsText} ")]
 internal readonly struct Token
 {
     /// <summary>

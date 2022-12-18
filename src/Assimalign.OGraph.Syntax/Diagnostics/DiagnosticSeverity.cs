@@ -1,6 +1,6 @@
 ﻿namespace Assimalign.OGraph.Syntax;
 
-public enum QueryDiagnosticSeverity
+public enum DiagnosticSeverity
 {
     None,
     Warning,

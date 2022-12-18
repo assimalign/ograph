@@ -6,6 +6,8 @@ namespace Assimalign.OGraph.Syntax;
 
 public sealed class RootQueryNode : QueryNode
 {
+    private IEnumerable<QueryNode> nodes;
+
     public RootQueryNode() { }
     public RootQueryNode(IEnumerable<QueryNode> nodes)
     {

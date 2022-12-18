@@ -40,7 +40,15 @@ internal class RootParser : Parser
                     continue;
                 default:
                     {
-                        // TODO: Add Diagnostic information. Unexpected token
+                        // Add Diagnostic information. Unexpected token
+                        context.Diasgnostics.Add(new Diagnostic()
+                        {
+                            Severity = DiagnosticSeverity.Error,
+                            Location = DiagnosticLocation.Relative,
+                            Start = token.Start,
+                            End = token.End,
+                            Message = $"Unexpected Token: {token}"
+                        });
                         break;
                     }
             }

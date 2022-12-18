@@ -9,7 +9,7 @@ namespace Assimalign.OGraph.Syntax;
 /// </summary>
 public sealed class QueryDocument
 {
-	internal QueryDocument(QueryNode node, IEnumerable<QueryDiagnostic> diagnostics)
+	internal QueryDocument(QueryNode node, IEnumerable<Diagnostic> diagnostics)
 	{
 		this.Node = node;
 		this.Diagnostics = diagnostics;
@@ -18,7 +18,7 @@ public sealed class QueryDocument
 	/// <summary>
 	/// 
 	/// </summary>
-	public bool IsValid => Errors.Any();
+	public bool IsValid => !Errors.Any();
 	/// <summary>
 	/// Represents the root node of the OGraph Query.
 	/// </summary>
@@ -26,9 +26,9 @@ public sealed class QueryDocument
 	/// <summary>
 	/// 
 	/// </summary>
-	public IEnumerable<QueryDiagnostic> Diagnostics { get; }
+	public IEnumerable<Diagnostic> Diagnostics { get; }
 	/// <summary>
 	/// 
 	/// </summary>
-	public IEnumerable<QueryDiagnostic> Errors => Diagnostics.Where(x => x.Severity == QueryDiagnosticSeverity.Error);
+	public IEnumerable<Diagnostic> Errors => Diagnostics.Where(x => x.Severity == DiagnosticSeverity.Error);
 }

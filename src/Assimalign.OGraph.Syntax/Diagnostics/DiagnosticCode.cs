@@ -1,6 +1,6 @@
 ﻿namespace Assimalign.OGraph.Syntax;
 
-public enum QueryDiagnosticCode
+public enum DiagnosticCode
 {
     /// <summary>
     /// 

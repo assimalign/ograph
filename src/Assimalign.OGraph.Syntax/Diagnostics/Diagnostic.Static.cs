@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
 
-internal static class QueryDiagnosticCategory
+public sealed partial class Diagnostic
 {
-    //private static readonly string Correctness => "Correctness";
+
 }

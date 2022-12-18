@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
@@ -12,9 +11,9 @@ internal class ProjectionParser : Parser
     {
         if (node is not ProjectionQueryNode projectionNode)
         {
-            throw QueryParserException.InvalidPage();
+            // This is internal error. Some dumbass messed with the code.
+            return node;
         }
-
         if (!lexer.HasNext)
         {
             // TODO: Add diagnostics unexpected EOF
@@ -56,11 +55,14 @@ internal class ProjectionParser : Parser
                     // TODO: Diagnostics error dot notation is required
                 }
 
-                break;
+                return node;
             }
 
             node = ParseBracketBlock(ref lexer, context, node);
         }
+
+        // TODO: Add diagnostics error. Missing Closing Parentheisis
+
 
         return node;
     }

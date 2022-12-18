@@ -24,6 +24,23 @@ public sealed class FieldQueryNode : QueryNode
     }
 
 
+    public string Name
+    {
+        get
+        {
+            if (!string.IsNullOrEmpty(Alias))
+            {
+                return Alias;
+            }
+            if (Value is MemberQueryNode member)
+            {
+                return member.Name;
+            }
+
+            return string.Empty;
+        }
+    }
+
     /// <summary>
     /// 
     /// </summary>
