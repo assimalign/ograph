@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax.Tests;
 
-using Assimalign.OGraph.Syntax.Lexer;
+using Assimalign.OGraph.Syntax.Internal;
 
 public partial class TokenLexerTests
 {
@@ -27,7 +27,6 @@ public partial class TokenLexerTests
             tokens.Add(token);
         }
 
-        Assert.Equal(14, tokens.Count);
         Assert.Contains(tokens, token => token.TokenType == TokenType.Comment);
         Assert.Contains(tokens, token => token.TokenType == TokenType.QueryRoot);
         Assert.Contains(tokens, token => token.TokenType == TokenType.Filter);

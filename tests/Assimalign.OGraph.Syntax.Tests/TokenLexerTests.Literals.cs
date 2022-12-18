@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax.Tests;
 
-using Assimalign.OGraph.Syntax.Lexer;
+using Assimalign.OGraph.Syntax.Internal;
 
 
 public partial class TokenLexerTests
