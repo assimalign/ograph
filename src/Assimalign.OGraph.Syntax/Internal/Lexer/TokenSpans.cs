@@ -38,10 +38,12 @@ internal static class TokenSpans
     };
     internal static ReadOnlySpan<KeyValuePair<TokenType, byte[]>> Operators => new[]
     {
+        // arithmetic operators
         new KeyValuePair<TokenType, byte[]>(TokenType.Slash, new byte[] {(byte)'/' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Plus, new byte[] { (byte)'+' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Minus, new byte[] { (byte)'-' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Star, new byte[] { (byte)'*' }),
+        // logical operators
         new KeyValuePair<TokenType, byte[]>(TokenType.Equal, new byte[] { (byte)'e', (byte)'q' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.NotEqual, new byte[] { (byte)'n', (byte)'e', (byte)'q' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.GreaterThan, new byte[] { (byte)'g', (byte)'t' }),

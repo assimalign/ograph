@@ -20,7 +20,7 @@ query({
     startsWith(firstName, 'c', true) and (
         endsWith(lastName, 'e', true) or 
         endsWith(middleName, 'e', true)
-    )
+    ) and age eq 
 })
 .page({
     take @take

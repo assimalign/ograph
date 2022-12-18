@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Xml.Linq;
+using System.Collections.Generic;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
@@ -106,26 +109,86 @@ internal class ProjectionParser : Parser
         var identifierParser = context.GetParser<IdentifierParser>();
         var identifierNode = identifierParser.Parse(ref lexer, context, node);
 
-
-        if (!lexer.HasNext)
+        node = new FieldQueryNode()
         {
-            // TODO : Add diagnostic information
-            return node;
+            Value = identifierNode
+        };
+
+        // Comma Check
+        if (lexer.TryPeek(out var next1) && next1.TokenType == TokenType.Comma)
+        {
+            lexer.Skip();
         }
-
-        if (lexer.TryPeek(out var next) && next.TokenType == TokenType.Alias)
+        // Alias Check
+        if (lexer.TryPeek(out var next2) && next2.TokenType == TokenType.Alias)
         {
-            return ParseIdentifierAlias(ref lexer, context, node);
+            lexer.Skip();
+            node = ParseIdentifierAlias(ref lexer, context, node);
+        }
+        // Nested Project Check
+        if (lexer.TryPeek(out var next3) && next3.TokenType == TokenType.OpenBracket)
+        {
+            node = ParseNestedFieldNode(ref lexer, context, node);
         }
 
 
         return node;
     }
+
+    public FieldQueryNode ParseNestedFieldNode(ref TokenLexer lexer, ParserContext context, FieldQueryNode node)
+    {
+        while (lexer.HasNext)
+        {
+            var token = lexer.Next();
+
+            if (token.TokenType == TokenType.CloseBracket)
+            {
+                break;
+            }
+            switch (token.TokenType)
+            {
+                case TokenType.Identifier:
+                    {
+                        var nodes = node.Children?.ToList() ?? new List<FieldQueryNode>();
+
+                        nodes.Add(ParseIdentifierNode(ref lexer, context, new FieldQueryNode()));
+
+                        node = new FieldQueryNode()
+                        {
+                            Alias = node.Alias,
+                            Children = nodes,
+                            Value = node.Value
+                        };
+                    }
+                    break;
+                case TokenType.String:
+                case TokenType.Integer:
+                case TokenType.FloatingPoint:
+                    {
+
+                        break;
+                    }
+                default:
+                    {
+                        // TODO: Add Diagnostic information. Unexpected token
+                        break;
+                    }
+            }
+        }
+
+        return node;
+    }
     private FieldQueryNode ParseIdentifierAlias(ref TokenLexer lexer, ParserContext context, FieldQueryNode node)
     {
-        var token = default(Token);
+        if (!lexer.HasNext)
+        {
+            // TODO: Add diagnostic error. Unexpected EOF
+            return node;
+        }
 
-        if (!lexer.HasNext && (token = lexer.Next()).TokenType != TokenType.Identifier)
+        var token  = lexer.Next();
+
+        if (token.TokenType != TokenType.Identifier)
         {
             // TODO: Add diagnostic error. Expected identifier to follow 'as' operator
             return node;
@@ -137,6 +200,13 @@ internal class ProjectionParser : Parser
             Children = node.Children,
             Value = node.Value
         };
+    }
+
+    private QueryNode ParseBinaryAsIdentifier(ref TokenLexer lexer, ParserContext context, FieldQueryNode node)
+    {
+
+
+        return default;
     }
 
 }

@@ -50,7 +50,7 @@ public partial class TokenLexerTests
         var token = lexer.Next();
 
         Assert.Equal(TokenType.Boolean, token.TokenType);
-        Assert.Equal(token.ValueAsText, "false");
+        Assert.True(token.Value.Span.SequenceEqual(new ReadOnlySpan<byte>(Encoding.UTF8.GetBytes("false"))));
     }
 
     [Fact(DisplayName = "Literal Test (Boolean): 'True' value parsed successfully")]
@@ -61,7 +61,7 @@ public partial class TokenLexerTests
         var token = lexer.Next();
 
         Assert.Equal(TokenType.Boolean, token.TokenType);
-        Assert.Equal(token.ValueAsText, "true");
+        Assert.True(token.Value.Span.SequenceEqual(new ReadOnlySpan<byte>(Encoding.UTF8.GetBytes("true"))));
     }
 
     #endregion

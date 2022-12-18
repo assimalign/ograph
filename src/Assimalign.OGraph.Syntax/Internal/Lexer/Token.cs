@@ -20,11 +20,11 @@ internal readonly struct Token
     /// <summary>
     /// The raw value as bytes.
     /// </summary>
-    public byte[] Value { get; init; }
+    public ReadOnlyMemory<byte> Value { get; init; }
     /// <summary>
     /// The Value in bytes parsed as raw text with UTF8 encoding.
     /// </summary>
-    public string ValueAsText => Encoding.UTF8.GetString(Value);
+    public string ValueAsText => Encoding.UTF8.GetString(Value.ToArray());
     /// <summary>
     /// Represents the token kind.
     /// </summary>
@@ -86,6 +86,10 @@ internal readonly struct Token
         {
             switch (TokenType)
             {
+                case TokenType.Plus: 
+                case TokenType.Minus:
+                case TokenType.Star:
+                case TokenType.Slash:
                 case TokenType.Equal:
                 case TokenType.NotEqual:
                 case TokenType.GreaterThan:
@@ -94,7 +98,6 @@ internal readonly struct Token
                 case TokenType.LessThanOrEqual:
                 case TokenType.And:
                 case TokenType.Or:
-                case TokenType.Alias:
                     return true;
                 default:
                     return false;
