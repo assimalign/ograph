@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Assimalign.OGraph.Syntax;
 
-[System.Diagnostics.DebuggerDisplay("{Severity}: ({Start}..{Start+Length}): {Message}")]
+[DebuggerDisplay("{Severity}: ({Start}..{Start+Length}): {Message}")]
 public sealed partial class Diagnostic
 {
     public Diagnostic() { }

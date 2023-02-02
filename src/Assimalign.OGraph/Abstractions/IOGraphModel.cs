@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Query;
+namespace Assimalign.OGraph;
 
-public class SelectNode : QueryNode
+public interface IOGraphModel
 {
-
 }

@@ -4,14 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph;
+namespace Assimalign.OGraph.Gdm;
 
-public class OGraphEntity<T>
+public interface IOGraphNode
 {
-
-	public OGraphEntity()
-	{
-
-	}
-
 }

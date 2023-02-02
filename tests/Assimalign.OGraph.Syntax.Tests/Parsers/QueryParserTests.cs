@@ -68,7 +68,7 @@ public partial class QueryParserTests
 		//}
 
 
-		//Assert.Contains(tokens, token => token.TokenType == TokenType.Identifier && token.ValueAsText.Equals("firstName"));
+		//Assert.Contains(tokens, token => token.TokenType == TokenType.Identifier && token.Text.Equals("firstName"));
 
 		var parser = new QueryParser();
 		var node = parser.Parse(query);

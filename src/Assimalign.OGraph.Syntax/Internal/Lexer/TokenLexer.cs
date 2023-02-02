@@ -16,11 +16,16 @@ internal ref partial struct TokenLexer
     private Token current = default;
     private long position = default;
 
+    public TokenLexer(string query)
+    {
+        this.options = new TokenLexerOptions();
+        this.remaining = new ReadOnlySequence<byte>(options.Encoding.GetBytes(query));
+    }
     public TokenLexer(byte[] query) : this(query, new()) { }
     public TokenLexer(byte[] query, TokenLexerOptions options)
     {
         this.options = options;
-        remaining = new ReadOnlySequence<byte>(query); ;
+        this.remaining = new ReadOnlySequence<byte>(query);
     }
 
     #region Public Methods
@@ -139,7 +144,9 @@ internal ref partial struct TokenLexer
         // If we reached here something is wrong within the syntax
         throw new TokenLexerException("End of Sequence. No more tokens available.");
     }
-
+    /// <summary>
+    /// Skip the next token in the queue.
+    /// </summary>
     public void Skip()
     {
         Next();
@@ -190,9 +197,18 @@ internal ref partial struct TokenLexer
             IsOperator(ref sequenceReader, out tokenType) ||
             IsIdentifer(ref sequenceReader, out tokenType)) // Identifier needs be checked last
         {
+            var value = sequenceReader.Slice().ToArray();
+
+            // Temporary Fix: Remove single/double quotes from string
+            if (tokenType == TokenType.String)
+            {
+                value = value.Skip(1).Take(value.Length - 2).ToArray();
+            }
+
             token = new Token()
             {
-                Value = sequenceReader.Slice().ToArray(),
+                Value = value,
+                Text = options.Encoding.GetString(value),
                 TokenType = tokenType,
                 Start = (int)position, // explicit casting from long to int. If query is bigger than the max value of an int then developer needs to re-think his life decisions.
                 End = (int)(position + sequenceReader.Consumed) - 1
@@ -276,7 +292,7 @@ internal ref partial struct TokenLexer
 
         if (sequenceReader.Consumed == 1)
         {
-            // Identify if string literal
+            // Identify if string literal (single quoted)
             if (sequenceReader.CurrentSpan[0] == (byte)'\'')
             {
                 while (sequenceReader.TryRead(out var value))
@@ -292,7 +308,22 @@ internal ref partial struct TokenLexer
                     Position = (int)position
                 };
             }
-
+            // Identify if string literal (double quoted)
+            if (sequenceReader.CurrentSpan[0] == (byte)'"')
+            {
+                while (sequenceReader.TryRead(out var value))
+                {
+                    if (value.Equals((byte)'"'))
+                    {
+                        tokenType = TokenType.String;
+                        return true;
+                    }
+                }
+                throw new TokenLexerException("Invalid string format. Missing closing quote.")
+                {
+                    Position = (int)position
+                };
+            }
             // Identify if current value is digit
             if (char.IsDigit((char)sequenceReader.CurrentSpan[0]))
             {
@@ -324,10 +355,11 @@ internal ref partial struct TokenLexer
         else
         {
             var value = sequenceReader.SliceToLowerChar().ToArray();
+            var split = sequenceReader.IsEndOfFileNext() || sequenceReader.IsSeparatorNext();
 
             foreach (var literal in TokenSpans.Literals)
             {
-                if (literal.Value.SequenceEqual(value) && (sequenceReader.IsEndOfFileNext() || sequenceReader.IsSeparatorNext()))
+                if (literal.Value.SequenceEqual(value) && split)
                 {
                     tokenType = literal.Key;
                     return true;

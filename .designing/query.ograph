@@ -1,4 +1,5 @@
-query({
+# Query
+https://endpoint.com/api/users?query=({
     variable {
         take: 20
         skip: 40
@@ -12,21 +13,22 @@ query({
     2.5 as ConstantValue # Constant Expression as an identifier
     (firstName eq 'chase') as isFirstNameCorrect, # Binary Expression as an identifier
     concat(firstName, ' ', middleName, ' ', lastName) as fullName
-    addresses as locations {
+    addresses as locations 
+    
         streetOne
         streetTwo
         streetThree
-        addressTypes {
+        addressTypes [
             typeId
             type
-        }
-    }
+        ]
+    ]
 })
 .filter({
     startsWith(firstName, 'c', true) and (
         endsWith(lastName, 'e', true) or 
         endsWith(middleName, 'e', true)
-    ) and age eq 
+    ) and age eq 12
 })
 .page({
     take @take

@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public class OGraphEntity<T>
+public interface IOGraphSchema
 {
 
-	public OGraphEntity()
-	{
-
-	}
-
+    /// <summary>
+    /// 
+    /// </summary>
+    IEnumerable<IOGraphModel> Models { get; }
 }

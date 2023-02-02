@@ -42,7 +42,10 @@ internal static class TokenLexerExtensions
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static ReadOnlySpan<byte> Slice(this ref SequenceReader<byte> sequenceReader) => sequenceReader.CurrentSpan.Slice(0, (int)sequenceReader.Consumed);
+    internal static ReadOnlySpan<byte> Slice(this ref SequenceReader<byte> sequenceReader)
+    {
+        return sequenceReader.CurrentSpan.Slice(0, (int)sequenceReader.Consumed);
+    }
 
 
     // Slices current consumed sequence as span and convert all alpha-characters to lower case if not already

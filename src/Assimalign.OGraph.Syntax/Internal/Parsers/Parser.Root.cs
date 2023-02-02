@@ -41,7 +41,7 @@ internal class RootParser : Parser
                 default:
                     {
                         // Add Diagnostic information. Unexpected token
-                        context.Diasgnostics.Add(new Diagnostic()
+                        context.AddDiagnostic(new Diagnostic()
                         {
                             Severity = DiagnosticSeverity.Error,
                             Location = DiagnosticLocation.Relative,

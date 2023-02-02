@@ -1,39 +1,40 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
 /// <summary>
 /// 
 /// </summary>
-[System.Diagnostics.DebuggerDisplay("{TokenType}: {ValueAsText} ")]
+[DebuggerDisplay("{TokenType}: {Text} ")]
 internal readonly struct Token
 {
     /// <summary>
     /// Specifies the start position for the given token within a sequence.
     /// </summary>
-    public int Start { get; init; }
+    internal int Start { get; init; }
     /// <summary>
     /// Specifies the end position for the given token within a sequence.
     /// </summary>
-    public int End { get; init; }
+    internal int End { get; init; }
     /// <summary>
     /// The raw value as bytes.
     /// </summary>
-    public ReadOnlyMemory<byte> Value { get; init; }
+    internal ReadOnlyMemory<byte> Value { get; init; }
     /// <summary>
     /// The Value in bytes parsed as raw text with UTF8 encoding.
     /// </summary>
-    public string ValueAsText => Encoding.UTF8.GetString(Value.ToArray());
+    internal string Text { get; init; }
     /// <summary>
     /// Represents the token kind.
     /// </summary>
-    public TokenType TokenType { get; init; }
+    internal TokenType TokenType { get; init; }
     /// <summary>
     /// 
     /// </summary>
-    public bool IsKeyword
+    internal bool IsKeyword
     {
         get
         {
@@ -62,7 +63,7 @@ internal readonly struct Token
     /// <summary>
     /// 
     /// </summary>
-    public bool IsLiteral
+    internal bool IsLiteral
     {
         get
         {
@@ -81,13 +82,13 @@ internal readonly struct Token
     /// <summary>
     /// 
     /// </summary>
-    public bool IsOperator
+    internal bool IsOperator
     {
         get
         {
             switch (TokenType)
             {
-                case TokenType.Plus: 
+                case TokenType.Plus:
                 case TokenType.Minus:
                 case TokenType.Star:
                 case TokenType.Slash:
@@ -106,10 +107,8 @@ internal readonly struct Token
         }
     }
 
-    #region Overloads
     public override string ToString()
     {
-        return $"{TokenType} - {ValueAsText}";
+        return $"{TokenType} - {Text}";
     }
-    #endregion
 }

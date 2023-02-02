@@ -18,18 +18,17 @@ Utilizes concepts of the following technologies:
 - OData
 - Stardog
 
-
-
-Most companies run into a 
+ 
 
 
 ## Limitations
 - Service-to-service query
+- **Degree of Separation**: Unlike a 
 
 
 # What does OGraph hope to achieve ?
 
-1. To allow interoperable and queryable REST APIs 
+1. To allow interoperable and queryable REST APIs
 2. To visualize your REST services in a Graph Model
 3. To structure data in terms of a Graph Data Model which can be accessible over the web
 4. To maintain REST yet allow flexible query operations and data resolution like GraphQL

@@ -198,7 +198,7 @@ internal class ProjectionParser : Parser
 
         return new FieldQueryNode()
         {
-            Alias = token.ValueAsText,
+            Alias = token.Text,
             Children = node.Children,
             Value = node.Value
         };
