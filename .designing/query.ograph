@@ -1,11 +1,10 @@
 # Query
-https://endpoint.com/api/users?query=({
-    variable {
-        take: 20
-        skip: 40
-    }
+https://endpoint.com/api/users?query=variables({
+    take: 20
+    skip: 40
 })
 .project({
+    # Queryable Fields
     userId
     firstName
     lastName
@@ -13,22 +12,26 @@ https://endpoint.com/api/users?query=({
     2.5 as ConstantValue # Constant Expression as an identifier
     (firstName eq 'chase') as isFirstNameCorrect, # Binary Expression as an identifier
     concat(firstName, ' ', middleName, ' ', lastName) as fullName
-    addresses as locations 
-    
+    addresses as locations {
         streetOne
         streetTwo
         streetThree
-        addressTypes [
+        addressTypes {
             typeId
             type
-        ]
-    ]
+        }
+    }
 })
 .filter({
-    startsWith(firstName, 'c', true) and (
-        endsWith(lastName, 'e', true) or 
-        endsWith(middleName, 'e', true)
-    ) and age eq 12
+    and(
+        startsWith(firstName, 'c', true),
+        or(
+            and(
+                endsWith(middleName, 'e', true),
+                age eq 12
+            )
+        )
+    )
 })
 .page({
     take @take
@@ -36,4 +39,20 @@ https://endpoint.com/api/users?query=({
 })
 .sort({
     toLower(firstName) desc
+})
+.project(roles, {           # Navigation Select
+    roleName
+})
+.filter(roles, {            # Navigation Filtering 
+    isActive eq true
+})
+.page(roles, {
+    take @take
+    skip @skip
+})
+.sort(roles, {
+    toLower(roleName) desc
+})
+.project(applications/roles, {
+
 })

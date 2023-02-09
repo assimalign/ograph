@@ -55,6 +55,12 @@ query({
         }
     }
 })
+.navigate({
+
+})
+.navigate({
+    
+})
 .filter({
     startsWith(firstName, 'c', true) and (
         endsWith(lastName, 'e', true) or 

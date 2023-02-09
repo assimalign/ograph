@@ -9,3 +9,18 @@
     - *Data Graph*
 - **OGraph Model Stitching:** connect other OGraph services by defining fuzzy relationships to add to the data virtualization tooling.
 - Interoperable Data Resolution:
+
+
+
+# OGraph Specifications
+
+## OGraph Model Specs
+
+- When querying data 
+
+
+## Client Specs
+- All queries MUST be hashed and encoded before sending
+
+## Server Specs
+- Queries SHOULD only be accepted on POST & GET methods of an HTTP request
