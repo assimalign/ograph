@@ -6,7 +6,15 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphVertexResolver
+public readonly struct Route
 {
 
+	public Route(string route)
+	{
+        
+	}
+
+
+	public static implicit operator Route(string route) => new Route(route);
+    
 }

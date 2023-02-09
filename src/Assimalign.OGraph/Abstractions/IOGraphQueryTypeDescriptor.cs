@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphVertex
+public interface IOGraphQueryTypeDescriptor
 {
-    /// <summary>
-    /// The name of the Entity.
-    /// </summary>
-    string Name { get; }
+}
+
+public interface IOGraphQueryTypeDescriptor<T>
+{
+    
 }

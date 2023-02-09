@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphEdgeResolver
+public interface IOGraphServerBuilder
 {
+    IOGraphServerBuilder UseOGraphModel();
+    IOGraphServerBuilder UseOGraphExecutor();
 
+    IOGraphServer Build();
 }

@@ -6,12 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public class OGraphEntity<T>
+public interface IOGraphResolverContext
 {
-
-	public OGraphEntity()
-	{
-
-	}
-
 }

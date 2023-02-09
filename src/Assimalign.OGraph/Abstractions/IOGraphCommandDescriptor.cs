@@ -6,10 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphNode
+public interface IOGraphCommandDescriptor
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    OGraphElementType ElementType { get; }
 }

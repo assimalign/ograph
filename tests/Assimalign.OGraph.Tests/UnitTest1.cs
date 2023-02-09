@@ -14,12 +14,54 @@ namespace Assimalign.OGraph.Tests
         [Fact]
         public void Test1()
         {
-            var builder = new OGraphModelBuilder();
+            var builder = default(IOGraphBuilder);
 
-            builder.AddEntity<User>(entity =>
+            builder.AddQuery("GetUsers", descriptor =>
             {
-                entity.HasLabel("");
-                entity.Prop
+                descriptor.UseMethod("GET")
+                    .UseRoute("/users")
+                    .UseFiltering()
+                    .UsePaging()
+                    .UseSorting()
+                    .UseAuthorization()
+                    .UseQueryableType<User>(type =>
+                    {
+                        type.UseName("UsersCollection");
+
+
+                    })
+                    .UseResolver(async context =>
+                    {
+
+                    });
+            });
+            builder.AddQuery("GetUserById", descriptor =>
+            {
+                descriptor.UseMethod("GET")
+                    .UseRoute("/users/{userId}")
+                    .UseFiltering()
+                    .UsePaging()
+                    .UseSorting()
+                    .UseAuthorization()
+                    .UseType<User>(type =>
+                    {
+
+                    })
+                    .UseResolver(async context =>
+                    {
+
+                    });
+            });
+            builder.AddQuery("GetUsersAppRoleAssignments", descriptor =>
+            {
+                descriptor.UseMethod("GET")
+                    .UseRoute("/users/{userId}/appRoleAssignments")
+        
+    });
+            builder.AddCommand("CreateUsers", descriptor =>
+            {
+                descriptor.UseMethod("POST")
+                    .UseRoute("/users");
             });
         }
     }

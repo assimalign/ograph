@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public class OGraphModelEntityBuilder<T>
+public readonly struct RouteSegment
 {
-
-    public OGraphModelEntityBuilder<T> HasLabel(string label)
-    {
-        return this;
-    }
 }

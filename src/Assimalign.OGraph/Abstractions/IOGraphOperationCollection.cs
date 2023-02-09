@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphSchema
+public interface IOGraphOperationCollection : IList<IOGraphOperation>
 {
-
-    /// <summary>
-    /// 
-    /// </summary>
-    IEnumerable<IOGraphModel> Models { get; }
 }

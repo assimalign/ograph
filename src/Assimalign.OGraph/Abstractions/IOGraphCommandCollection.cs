@@ -6,10 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public enum OGraphElementType
+public interface IOGraphCommandCollection : IList<IOGraphCommand>
 {
-    ValueType,
-    ReferenceType,
-    CollectionType,
-    ComplextType
 }
