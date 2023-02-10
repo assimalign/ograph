@@ -8,6 +8,12 @@ namespace Assimalign.OGraph;
         Operation 1 <--> Type
         Operation 2
 
+    IDEA: 
+    - Implement a Node Execution Strategy
+
+    Examples:
+        Resolve with Parent: This would be beneficial for IQueryable
+
  */
 
 

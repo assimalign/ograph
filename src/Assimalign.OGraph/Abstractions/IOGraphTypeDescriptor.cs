@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,15 +11,16 @@ public interface IOGraphTypeDescriptor
 {
 }
 
-public interface IOGraphTypeDescriptor<T>
+public interface IOGraphTypeDescriptor<T> 
 {
 
+   
     /// <summary>
     /// 
     /// </summary>
     /// <param name="resolver"></param>
     /// <returns></returns>
-    IOGraphTypeDescriptor<T> UseResolver(IOGraphResolver resolver);
+    IOGraphTypeDescriptor<T> UseResolver(IOGraphTypeResolver resolver);
     /// <summary>
     /// 
     /// </summary>

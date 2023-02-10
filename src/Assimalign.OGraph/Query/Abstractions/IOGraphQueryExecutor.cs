@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph;
+namespace Assimalign.OGraph.Query;
 
-public interface IOGraphNodeCollection : IList<IOGraphNode>
+public interface IOGraphQueryExecutor
 {
 }

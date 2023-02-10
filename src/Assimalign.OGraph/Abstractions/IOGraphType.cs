@@ -13,7 +13,7 @@ public interface IOGraphType
     /// <summary>
     /// 
     /// </summary>
-    OGraphTypeIdentifier TypeIdentifier { get; }
+    OGraphTypeIdentifier TypeIdentitifer { get; }
     /// <summary>
     /// 
     /// </summary>

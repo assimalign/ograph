@@ -11,9 +11,8 @@ internal abstract class OGraphOperation : IOGraphOperation
     public Name Name { get; set; }
     public Route Route { get; set; }
     public Method Method { get; set; }
-
-    public Task OnResolveAsync(IOGraphResolverContext context)
-    {
-        throw new NotImplementedException();
-    }
+    public bool IsEnabled { get; set; }
+    public IOGraphType? RequestType { get; set; }
+    public IOGraphType? ResponseType { get; set; }
+    public IOGraphOperationResolver Resolver { get; set; }
 }

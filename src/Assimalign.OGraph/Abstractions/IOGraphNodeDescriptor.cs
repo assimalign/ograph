@@ -15,12 +15,6 @@ public interface IOGraphNodeDescriptor
 public interface IOGraphNodeDescriptor<T>
 {
     /// <summary>
-    /// Overrides the default Node Name.
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    IOGraphNodeDescriptor<T> AddName(Name name);
-    /// <summary>
     /// 
     /// </summary>
     /// <param name="name"></param>
@@ -41,5 +35,12 @@ public interface IOGraphNodeDescriptor<T>
     /// <param name="descriptor"></param>
     /// <returns></returns>
     IOGraphNodeDescriptor<T> AddType(Action<IOGraphTypeDescriptor<T>> descriptor);
-        
+    /// <summary>
+    /// Builds a custom type deriving from <typeparamref name="T"/>
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="descriptor"></param>
+    /// <returns></returns>
+    IOGraphNodeDescriptor<T> AddType(Name name, Action<IOGraphTypeDescriptor<T>> descriptor);
+
 }

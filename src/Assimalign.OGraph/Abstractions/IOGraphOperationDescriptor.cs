@@ -10,7 +10,8 @@ public interface IOGraphOperationDescriptor
 
     IOGraphOperationDescriptor UseValidation();
 
-    
+    IOGraphOperationDescriptor UseQuery()
+
     IOGraphOperationDescriptor UseFiltering();  // Enables filtering
     IOGraphOperationDescriptor UseFiltering(Action<OGraphFilteringOptions> configure);
     IOGraphOperationDescriptor UseSorting();    // Enables sorting
@@ -18,30 +19,30 @@ public interface IOGraphOperationDescriptor
     IOGraphOperationDescriptor UsePaging();     // Enables paging, UseQueryableType, or UsePagingType
     IOGraphOperationDescriptor UsePaging(Action<OGraphPagingOptions> configure);
 
-    IOGraphOperationDescriptor UseEdge(Name name);
-    IOGraphOperationDescriptor UseEdge(Name name, Action<IOGraphEdgeDescriptor> descriptor);
-
-
     /// <summary>
     /// Specifies the type to expect in the Body of the request.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
+    IOGraphOperationDescriptor UseRequestType(Name typeName);
     IOGraphOperationDescriptor UseRequestType<T>();
-    IOGraphOperationDescriptor UseRequestType<T>(Action<IOGraphTypeDescriptor<T>> descriptor);
-    IOGraphOperationDescriptor UseRequestType(Type type, Action<IOGraphTypeDescriptor> descriptor);
+    IOGraphOperationDescriptor UseRequestType<T>(Action<IOGraphComplexTypeDescriptor<T>> descriptor);
+    IOGraphOperationDescriptor UseRequestType(Type type, Action<IOGraphComplexTypeDescriptor> descriptor);
 
     IOGraphOperationDescriptor UseResponseType<T>();
     IOGraphOperationDescriptor UseResponseType<T>(Action<IOGraphTypeDescriptor<T>> descriptor);
     IOGraphOperationDescriptor UseResponseType(Type type, Action<IOGraphTypeDescriptor> descriptor);
-
-
-
     IOGraphOperationDescriptor UseEnumerableResponseType<T>();
     IOGraphOperationDescriptor UseEnumerableResponseType<T>(Action<IOGraphTypeDescriptor<T>> descriptor);
     IOGraphOperationDescriptor UseEnumerableResponseType(Type type, Action<IOGraphTypeDescriptor> descriptor);
     IOGraphOperationDescriptor UseQueryableResponseType<T>();
     IOGraphOperationDescriptor UseQueryableResponseType<T>(Action<IOGraphTypeDescriptor<T>> descriptor);
     IOGraphOperationDescriptor UseQueryableResponseType(Type type, Action<IOGraphTypeDescriptor> descriptor);
+
+
+    IOGraphOperationDescriptor UseResolver(IOGraphOperationResolver resolver);
+
+    IOGraphOperationDescriptor UseResolver(OGraphOperationResolver resolver);
+
 
 }

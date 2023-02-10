@@ -13,9 +13,13 @@ namespace Assimalign.OGraph;
 public interface IOGraph
 {
     /// <summary>
+    /// The name of the graph model.
+    /// </summary>
+    Name Name { get; }
+    /// <summary>
     /// 
     /// </summary>
-    IOGraphModel Model { get; }
+    IOGraphNodeCollection Nodes { get; }
     /// <summary>
     /// 
     /// </summary>

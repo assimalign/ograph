@@ -27,4 +27,16 @@ public interface IOGraphOperation
     /// 
     /// </summary>
     bool IsEnabled { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    IOGraphType? RequestType { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    IOGraphType? ResponseType { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    IOGraphOperationResolver Resolver { get; }
 }

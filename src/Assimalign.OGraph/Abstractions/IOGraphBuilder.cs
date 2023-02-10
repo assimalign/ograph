@@ -24,14 +24,14 @@ public interface IOGraphBuilder
     /// </summary>
     /// <param name="descriptor"></param>
     /// <returns></returns>
-    IOGraphBuilder AddNode(Action<IOGraphNodeDescriptor> descriptor);
+    IOGraphBuilder AddNode(Name name, Action<IOGraphNodeDescriptor> descriptor);
     /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="descriptor"></param>
     /// <returns></returns>
-    IOGraphBuilder AddNode<T>(Action<IOGraphNodeDescriptor<T>> descriptor);
+    IOGraphBuilder AddNode<T>(Name name, Action<IOGraphNodeDescriptor<T>> descriptor);
     /// <summary>
     /// 
     /// </summary>
