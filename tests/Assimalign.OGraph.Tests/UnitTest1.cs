@@ -1,9 +1,13 @@
+using Assimalign.OGraph.Modeling;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+
 namespace Assimalign.OGraph.Tests
 {
 
     public class User
     {
-        
+        public Guid? UserId { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
@@ -11,57 +15,84 @@ namespace Assimalign.OGraph.Tests
 
     public class UnitTest1
     {
+
+
+        public void Test2()
+        {
+            var builder = default(IOGraphModelBuilder);
+
+            builder.AddNode<User>(descriptor =>
+            {
+                descriptor.AddOperation("GetUsers", operation =>
+                {
+                    operation.UseRoute("/users")
+                        .UseMethod("GET")
+                        .UseRequestType<User>(type =>
+                        {
+                            type.UseResolver()
+                        });
+                });
+
+                
+
+                
+                descriptor.AddType(descriptor =>
+                {
+
+                });
+                descriptor.AddType(descriptor =>
+                {
+                    
+                });
+            });
+        }
         [Fact]
         public void Test1()
         {
-            var builder = default(IOGraphBuilder);
+            var builder = default(IOGraphBuilder) ?? throw new Exception();
 
-            builder.AddQuery("GetUsers", descriptor =>
+            builder.AddNode<User>(descriptor =>
             {
-                descriptor.UseMethod("GET")
-                    .UseRoute("/users")
-                    .UseFiltering()
-                    .UsePaging()
-                    .UseSorting()
-                    .UseAuthorization()
-                    .UseQueryableType<User>(type =>
+                descriptor
+                    .AddName("UserName")
+                    .AddOperation("GetUsers", operation =>
                     {
-                        type.UseName("UsersCollection");
+                        operation
+                            .UseFiltering()
+                            .UseSorting()
+                            .UsePaging()
+                            .UseMethod("GET")
+                            .UseRoute("/users")
+                            .UseEdge("addresses", edge =>
+                            {
+                                edge.
+                            })
+                            .Use
+                            .UseResponseType(descriptor =>
+                            {
+                                descriptor
+                                    .UseResolver(context =>
+                                    {
 
+                                    });
+                            });
+                    })
+                    .AddOperation("GetUserById", operation =>
+                    {
 
                     })
-                    .UseResolver(async context =>
-                    {
-
-                    });
-            });
-            builder.AddQuery("GetUserById", descriptor =>
-            {
-                descriptor.UseMethod("GET")
-                    .UseRoute("/users/{userId}")
-                    .UseFiltering()
-                    .UsePaging()
-                    .UseSorting()
-                    .UseAuthorization()
-                    .UseType<User>(type =>
+                    .AddOperation("CreateUser", operation =>
                     {
 
                     })
-                    .UseResolver(async context =>
+                    .AddOperation("UpdateUser", operation =>
                     {
 
+                    })
+                    .AddType(descriptor=>
+                    {
+                        descriptor.
                     });
-            });
-            builder.AddQuery("GetUsersAppRoleAssignments", descriptor =>
-            {
-                descriptor.UseMethod("GET")
-                    .UseRoute("/users/{userId}/appRoleAssignments")
-        
-    });
-            builder.AddCommand("CreateUsers", descriptor =>
-            {
-                descriptor.UseMethod("POST")
-                    .UseRoute("/users");
             });
         }
     }

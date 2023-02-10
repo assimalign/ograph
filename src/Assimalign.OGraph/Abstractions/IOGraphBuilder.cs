@@ -1,18 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
+/// <summary>
+/// 
+/// </summary>
 public interface IOGraphBuilder
 {
-    IOGraphBuilder AddFormatter(string format, IOGraphContentFormatter formatter);
-    IOGraphBuilder AddQuery(IOGraphQuery query);
-    IOGraphBuilder AddQuery(string name, Action<IOGraphQueryDescriptor> descriptor);
-    IOGraphBuilder AddCommand(IOGraphCommand command);
-    IOGraphBuilder AddCommand(string name, Action<IOGraphCommandDescriptor> descriptor);
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TNode"></typeparam>
+    /// <returns></returns>
+    IOGraphBuilder AddNode<TNode>() where TNode : IOGraphNode, new();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
+    IOGraphBuilder AddNode(IOGraphNode node);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="descriptor"></param>
+    /// <returns></returns>
+    IOGraphBuilder AddNode(Action<IOGraphNodeDescriptor> descriptor);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="descriptor"></param>
+    /// <returns></returns>
+    IOGraphBuilder AddNode<T>(Action<IOGraphNodeDescriptor<T>> descriptor);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     IOGraph Build();
 }

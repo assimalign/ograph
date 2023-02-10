@@ -6,15 +6,16 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphCommand : IOGraphOperation
+/// <summary>
+/// 
+/// </summary>
+/// <remarks>
+/// An Edge is also referred to as a Link.
+/// </remarks>
+public interface IOGraphEdge
 {
-   
     /// <summary>
     /// 
     /// </summary>
-    IOGraphCommandType CommandType { get; }
-    /// <summary>
-    /// 
-    /// </summary>
-    IOGraphResolver Resolver { get; }
+    IOGraphNode Node { get; }
 }

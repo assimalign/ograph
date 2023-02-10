@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-
-public delegate Task<T> OGraphResolver<T>(IOGraphResolverContext context);
-
-
+public interface IOGraphNodeCollection
+{
+}

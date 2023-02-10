@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
+/// <summary>
+/// Represents a single HTTP REST operation.
+/// </summary>
 public interface IOGraphOperation
 {
     /// <summary>
@@ -13,7 +16,7 @@ public interface IOGraphOperation
     /// </summary>
     Name Name { get; }
     /// <summary>
-    /// 
+    /// The route associated with this operation.
     /// </summary>
     Route Route { get; }
     /// <summary>
@@ -23,7 +26,5 @@ public interface IOGraphOperation
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="context"></param>
-    /// <returns></returns>
-    Task OnResolveAsync(IOGraphResolverContext context);
+    bool IsEnabled { get; }
 }

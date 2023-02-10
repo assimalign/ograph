@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphQueryTypeDescriptor
+public sealed class OGraphSortingOptions
 {
-}
-
-public interface IOGraphQueryTypeDescriptor<T>
-{
-    
 }

@@ -6,6 +6,4 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphQueryCollection : IList<IOGraphQuery>
-{
-}
+public delegate Task<T> OGraphTypeResolver<T>(IOGraphResolverContext context);

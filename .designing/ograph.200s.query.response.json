@@ -1,0 +1,20 @@
+{
+    "@ograph.lable": "",
+    "pageInfo": {
+
+    },
+    "@ograph.totalCount": 4568,
+    "data": [
+        {
+            "@ograph.entity": "User",
+
+
+            "roles": {
+                "data": [
+
+                ]
+            }
+
+        }
+    ]
+}

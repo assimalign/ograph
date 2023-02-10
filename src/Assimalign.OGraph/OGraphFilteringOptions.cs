@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphCommandType
+public sealed class OGraphFilteringOptions
 {
 }

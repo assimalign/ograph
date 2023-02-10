@@ -3,22 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
-namespace Assimalign.OGraph;
+namespace Assimalign.OGraph.Modeling;
 
-public interface IOGraphQueryType
+public interface IOGraphModel
 {
     /// <summary>
     /// 
     /// </summary>
-    Type Type { get; }
+    IOGraphNodeCollection Nodes { get; }
     /// <summary>
     /// 
     /// </summary>
-    Name TypeName { get; }
-}
-public interface IOGraphQueryType<T> : IOGraphQueryType
-{
-
+    IOGraphTypeCollection Types { get; }
 }

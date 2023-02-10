@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphCommandCollection : IList<IOGraphCommand>
+public interface IOGraphEventSubscriber
 {
 }

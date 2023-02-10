@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assimalign.OGraph;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,20 +8,21 @@ using System.Threading.Tasks;
 namespace Assimalign.OGraph;
 
 /// <summary>
-/// 
+/// Represents a single Graph Model.
 /// </summary>
 public interface IOGraph
 {
     /// <summary>
-    /// A collection of queries added to the OGraph Model.
+    /// 
     /// </summary>
-    IOGraphQueryCollection Queries { get; }
-    /// <summary>
-    /// A collection of commands added to the OGraph Model.
-    /// </summary>
-    IOGraphCommandCollection Commands { get;  }
+    IOGraphModel Model { get; }
     /// <summary>
     /// 
     /// </summary>
+    IOGraphEventCollection Events { get; }
+    /// <summary>
+    /// Represents a collection of HTTP Operations
+    /// </summary>
     IOGraphOperationCollection Operations { get; }
+    
 }

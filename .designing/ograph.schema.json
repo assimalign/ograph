@@ -1,0 +1,38 @@
+{
+    "operations": {
+        "GetUsers": {
+
+        },
+        "GetUserById": {
+
+        },
+        "CreateUser": {
+
+        }
+    },
+    "events": {
+
+    },
+    "schema": {
+        "User": {
+            "type": "entity",
+            "members": {
+                "firstName": {
+                    "type": "string"
+                },
+                "addresses": {
+                    "$ref": "#/schema/UserAddress"
+                }
+            }
+        },
+        "UserAddress": {
+
+        },
+        "AddressType": {
+            "type": "enum",
+            "values": {
+                
+            }
+        }
+    }
+}

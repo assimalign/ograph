@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphQuery : IOGraphOperation
+/// <summary>
+/// 
+/// </summary>
+public interface IOGraphTypeResolver
 {
     /// <summary>
     /// 
     /// </summary>
-    IOGraphQueryType QueryType { get; }
-    /// <summary>
-    /// 
-    /// </summary>
-    IOGraphResolver Resolver { get;  }
+    /// <param name="context"></param>
+    /// <returns></returns>
+    object Invoke(IOGraphTypeResolverContext context);
 }

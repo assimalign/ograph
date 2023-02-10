@@ -1,0 +1,102 @@
+<ograph xmlns="https://">
+
+    <domain-name>UsersDomain</domain-name>
+
+    <operations>
+        <operation name="GetUsers" method="GET" route="/users" node="User" event="null" request-type="null" response-type="Collection(User)">
+        </operation>
+        <operation name="GetUserById" method="GET" route="/users/{userId}" node="User" event="null" request-type="null" response-type="User">
+            <route name="userId" type="Guid" />
+        </operation>
+        <operation name="CreateUser" method="POST" route="/users" node="User" event="UserCreated" request-type="UserInput" response-type="User">
+        </operation>
+        <operation name="UpdateUser" method="PUT" route="/users/{userId}" node="User" event="UserUpdated" request-type="UserInput" response-type="User">
+        </operation>
+    </operations>
+    <events>
+        <!-- External Events: Often times a domain subscribes events outside the scope of the domain -->
+        <event name="OnBoardingStarted" is-external="true">
+            <subscriber name="CreateShellUser" downstream-event="null" />
+        </event>
+        <!-- Internal Events: -->
+        <event name="UserCreated" is-external="false">
+            <!-- Subscribers can spawn off other events -->
+            <subscriber name="" downstream-event="null" />
+        </event>
+        <event name="UserUpdated" is-external="false">
+            <subscriber name="" downstream-event="null"/>
+        </event>
+    </events>
+    <model>
+        <node name="User" is-root="true" type="User">
+            <edge name="addresses" node="UserAddress" />
+            <edge name="interest" node="UserInterest" />
+        </node>
+        <node name="UserAddress" type="UserAddress" />
+        <node name="UserInterest" type="UserInterest" />
+        <!-- 
+            Types should just represent arbitrary structures. Nodes will give meaning to the types by
+        associating
+        
+        -->
+        <!-- Complex & Collection Types -->
+        <type name="User" descriptor="Complex">
+            <property name="userId" type="Guid" is-nullable="false" />
+            <property name="firstName" type="String" is-nullable="false" />
+            <property name="lastName" type="String" is-nullable="false" />
+            <property name="middleName" type="String" is-nullable="true" />
+            <property name="birthDate" type="DateTime" is-nullable="true" />
+            <property name="tags" type="UserTagCollection" is-nullable="true" />
+        </type>
+        <type name="UserInput">
+            <property name="firstName" type="String" is-nullable="false" />
+            <property name="lastName" type="String" is-nullable="false" />
+            <property name="middleName" type="String" is-nullable="true" />
+            <property name="birthDate" type="DateTime" is-nullable="true" />
+            <property name="tags" type="UserTagCollection" is-nullable="true" />
+        </type>
+        <type name="UserAddress" descriptor="Complex">
+            <property name="addressId" type="Guid" />
+            <property name="addressType" type="UserAddressType" />
+            <property name="streetOne" type="String" />
+            <property name="streetTwo" type="String" />
+            <property name="streetThree" type="String" />
+        </type>
+        <type name="UserTagCollection" descriptor="Collection">
+            <collection type="UserTag" />
+        </type>
+        <type name="UserTag" descriptor="complex">
+            <property name="key" type="String" />
+            <property name="value" type="String" />
+        </type>
+
+        <!-- Enum Types -->
+        <type name="UserAddressType" descriptor="Enum">
+            <value name="Primary" type="Int" />
+            <value name="Secondary" type="Int" />
+        </type>
+
+
+        <!-- Primitive types either have nested values or are native. -->
+        <type name="DateOnly" descriptor="Primitive">
+            <value name="year" type="Int" />
+            <value name="month" type="Int" />
+            <value name="day" type="Int" />
+        </type>
+        <type name="DateTime" descriptor="Primitive">
+            <value name="year" type="Int" />
+            <value name="month" type="Int" />
+            <value name="day" type="Int" />
+            <value name="hour" type="Long" />
+            <value name="minute" type="Long" />
+            <value name="second" type="Long" />
+        </type>
+        <type name="String" descriptor="Primitive" />
+        <type name="Long" descriptor="Primitive" />
+        <type name="Int" descriptor="Primitive" />
+
+        <!-- OGraph Special Types -->
+
+
+    </model>
+</ograph>

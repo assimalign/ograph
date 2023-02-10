@@ -15,7 +15,6 @@
 # OGraph Specifications
 
 ## OGraph Model Specs
-
 - When querying data 
 
 
