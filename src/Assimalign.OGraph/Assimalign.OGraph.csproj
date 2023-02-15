@@ -11,6 +11,7 @@
 	<ItemGroup>
 	  <Folder Include="Extensions\" />
 	  <Folder Include="Execution\" />
+	  <Folder Include="Internal\ILEmit\" />
 	  <Folder Include="Internal\Validators\" />
 	</ItemGroup>
 </Project>

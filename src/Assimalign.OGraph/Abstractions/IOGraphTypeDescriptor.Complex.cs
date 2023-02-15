@@ -21,6 +21,7 @@ public interface IOGraphComplexTypeDescriptor : IOGraphTypeDescriptor
 
 public interface IOGraphComplexTypeDescriptor<T> : IOGraphTypeDescriptor<T>
 {
+    
     /// <summary>
     /// 
     /// </summary>

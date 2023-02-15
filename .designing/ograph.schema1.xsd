@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="./ograph.schema.xsd">
+    <xs:element name="ograph">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="model" maxOccurs="unbounded">
+                    <xs:complexType mixed="true">
+                        <xs:sequence minOccurs="0">
+                            <xs:element name="node" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="operation" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:sequence minOccurs="0">
+                                                    <xs:element name="query" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:attribute name="name" use="required" />
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="response" minOccurs="0"
+                                                        type="xs:string" />
+                                                    <xs:element name="request" minOccurs="0">
+                                                        <xs:complexType mixed="true">
+                                                            <xs:sequence minOccurs="0">
+                                                                <xs:element name="type"
+                                                                    minOccurs="0" type="xs:string" />
+                                                            </xs:sequence>
+                                                            <xs:attribute name="is-required"
+                                                                type="xs:boolean" />
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="endpoint" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:simpleContent>
+                                                                <xs:extension base="xs:string">
+                                                                    <xs:attribute name="method"
+                                                                        use="required" />
+                                                                    <xs:attribute name="route"
+                                                                        use="required" />
+                                                                </xs:extension>
+                                                            </xs:simpleContent>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="route" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:attribute name="name" use="required" />
+                                                            <xs:attribute name="type" use="required" />
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="event" minOccurs="0">
+                                                        <xs:complexType mixed="true">
+                                                            <xs:sequence minOccurs="0">
+                                                                <xs:element name="subscriber"
+                                                                    minOccurs="0">
+                                                                    <xs:complexType>
+                                                                        <xs:attribute name="name"
+                                                                            use="required" />
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                            <xs:attribute name="name" use="required" />
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="request-type" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="property">
+                                                                    <xs:complexType>
+                                                                        <xs:attribute name="name"
+                                                                            use="required" />
+                                                                        <xs:attribute
+                                                                            name="is-nullable"
+                                                                            type="xs:boolean"
+                                                                            use="required" />
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="response-type" minOccurs="0"
+                                                        type="xs:string" />
+                                                    <xs:element name="route-parameter" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:attribute name="name" use="required" />
+                                                            <xs:attribute name="type" use="required" />
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="query-parameter" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:attribute name="name" use="required" />
+                                                            <xs:attribute name="type" use="required" />
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                                <xs:attribute name="name" use="required" />
+                                                <xs:attribute name="method" />
+                                                <xs:attribute name="route" />
+                                                <xs:attribute name="request-type" />
+                                                <xs:attribute name="response-type" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="entity">
+                                            <xs:complexType mixed="true">
+                                                <xs:sequence minOccurs="0">
+                                                    <xs:element name="property" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:attribute name="name" type="xs:ID"
+                                                                use="required" />
+                                                            <xs:attribute name="type" use="required" />
+                                                            <xs:attribute name="is-nullable"
+                                                                type="xs:boolean" />
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                                <xs:attribute name="name" use="required" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="entity-type" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:sequence minOccurs="0">
+                                                    <xs:element name="collection" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:attribute name="type" use="required" />
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="property" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:attribute name="name" use="required" />
+                                                            <xs:attribute name="type" use="required" />
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                                <xs:attribute name="name" use="required" />
+                                                <xs:attribute name="descriptor" use="required" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="type" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="value" maxOccurs="unbounded">
+                                                        <xs:complexType>
+                                                            <xs:attribute name="name" use="required" />
+                                                            <xs:attribute name="type" use="required" />
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                                <xs:attribute name="name" use="required" />
+                                                <xs:attribute name="descriptor" use="required" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="label" use="required" />
+                                    <xs:attribute name="is-root" type="xs:boolean" />
+                                    <xs:attribute name="type" />
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="edge" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence minOccurs="0">
+                                        <xs:element name="link" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:attribute name="from" />
+                                                <xs:attribute name="to" />
+                                                <xs:attribute name="node" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="label" use="required" />
+                                    <xs:attribute name="node" />
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="domain" use="required" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

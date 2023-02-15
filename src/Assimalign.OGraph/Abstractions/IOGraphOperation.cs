@@ -14,7 +14,7 @@ public interface IOGraphOperation
     /// <summary>
     /// The name of the command.
     /// </summary>
-    Name Name { get; }
+    Label Name { get; }
     /// <summary>
     /// The route associated with this operation.
     /// </summary>

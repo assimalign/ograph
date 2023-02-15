@@ -7,14 +7,20 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
+
 /// <summary>
 /// Represents a single Graph Model.
 /// </summary>
 public interface IOGraph
 {
+    
+
     /// <summary>
     /// The name of the graph model.
     /// </summary>
+    /// <remarks>
+    /// TODO:
+    /// </remarks>
     Name Name { get; }
     /// <summary>
     /// 

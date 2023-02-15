@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public readonly struct Name : IEquatable<Name>, IEqualityComparer<Name>
+/// <summary>
+/// Represents a name value with the standard naming convention for OGraph objects.
+/// </summary>
+public readonly struct Label : IEquatable<Label>, IEqualityComparer<Label>
 {
     private const string allowedCharacters = "abcdefghijklmnopqrstuvwxwzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567980";
 
-    public Name(string value)
+    public Label(string value)
     {
         if (string.IsNullOrEmpty(value))
         {
             throw new ArgumentNullException(nameof(value));
         }
-
+        
         foreach (var character in value)
         {
             if (!allowedCharacters.Contains(character))
@@ -36,7 +36,7 @@ public readonly struct Name : IEquatable<Name>, IEqualityComparer<Name>
 
     public override bool Equals([NotNullWhen(true)] object? instance)
     {
-        if (instance is not Name name)
+        if (instance is not  Label  name)
         {
             return false;
         }
@@ -48,21 +48,21 @@ public readonly struct Name : IEquatable<Name>, IEqualityComparer<Name>
         return Value.GetHashCode();
     }
 
-    public bool Equals(Name other)
+    public bool Equals(Label other)
     {
         return this.Value.Equals(other.Value, StringComparison.InvariantCultureIgnoreCase);
     }
 
-    public bool Equals(Name left, Name right)
+    public bool Equals(Label left, Label right)
     {
         return left.Equals(right);
     }
 
-    public int GetHashCode([DisallowNull] Name instance)
+    public int GetHashCode([DisallowNull] Label instance)
     {
         return instance.GetHashCode();
     }
 
-    public static implicit operator Name(string value) => new Name(value);
-    public static implicit operator string(Name name) => name.Value;
+    public static implicit operator Label(string value) => new Label(value);
+    public static implicit operator string(Label name) => name.Value;
 }

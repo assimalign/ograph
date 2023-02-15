@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="ograph">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="model"  maxOccurs="unbounded">
+                   
+                    <xs:annotation>
+
+                    </xs:annotation>
+
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

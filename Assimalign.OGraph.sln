@@ -36,8 +36,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmark", "benchmark", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph.AspNetCore", "benchmark\Assimalign.OGraph.AspNetCore\Assimalign.OGraph.AspNetCore.csproj", "{92A96D2F-2C94-4A8E-8B73-D243C71EF6AD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph.Gdm", "src\Assimalign.OGraph.Gdm\Assimalign.OGraph.Gdm.csproj", "{51459093-8F07-4A10-88A1-EC2058166556}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,10 +78,6 @@ Global
 		{92A96D2F-2C94-4A8E-8B73-D243C71EF6AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92A96D2F-2C94-4A8E-8B73-D243C71EF6AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92A96D2F-2C94-4A8E-8B73-D243C71EF6AD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{51459093-8F07-4A10-88A1-EC2058166556}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{51459093-8F07-4A10-88A1-EC2058166556}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{51459093-8F07-4A10-88A1-EC2058166556}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{51459093-8F07-4A10-88A1-EC2058166556}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,7 +92,6 @@ Global
 		{76BC8885-697B-4D37-9B02-AFC45E457E44} = {C48C651D-1687-49A6-905B-11C5579FDCFB}
 		{016343ED-448C-4084-A649-6D7A65E104CB} = {A7772D96-73BB-4CA9-AA56-A6083767F27F}
 		{92A96D2F-2C94-4A8E-8B73-D243C71EF6AD} = {BB314F4C-A0B7-4861-BA8A-DA7C9831566E}
-		{51459093-8F07-4A10-88A1-EC2058166556} = {A7772D96-73BB-4CA9-AA56-A6083767F27F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {64E79EA5-8DCB-4919-BA27-1A5EB89F839B}

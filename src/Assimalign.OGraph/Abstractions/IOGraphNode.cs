@@ -2,23 +2,9 @@
 
 namespace Assimalign.OGraph;
 
-/*
-    
-    Mode -> 
-        Operation 1 <--> Type
-        Operation 2
-
-    IDEA: 
-    - Implement a Node Execution Strategy
-
-    Examples:
-        Resolve with Parent: This would be beneficial for IQueryable
-
- */
-
 
 /// <summary>
-/// 
+/// Represents a single entity and it's structure within the Graph Model.
 /// </summary>
 /// <remarks>
 /// A Node is also referred to as a Vertex.
@@ -26,28 +12,17 @@ namespace Assimalign.OGraph;
 public interface IOGraphNode
 {
     /// <summary>
-    /// 
+    /// Represents the label each node should contain.
     /// </summary>
-    bool IsRoot { get; }
+    Label Label { get; }
     /// <summary>
-    /// 
-    /// </summary>
-    Name Name { get; }
-    /// <summary>
-    /// The associated type of the node.
-    /// </summary>
-    /// <remarks>
-    /// Nodes tend to be associated to multiple operations.
-    /// </remarks>
-    IOGraphTypeCollection Types { get; }
-    /// <summary>
-    /// 
+    /// A collection of edges that are connected to this node.
     /// </summary>
     IOGraphEdgeCollection Edges { get; set; }
     /// <summary>
-    /// 
+    /// The set of key value pairs that are associated with this node.
     /// </summary>
-    IOGraphOperationCollection Operations { get; }
+    IOGraphNodePropertyCollection Properties { get; }
     /// <summary>
     /// 
     /// </summary>

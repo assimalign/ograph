@@ -26,13 +26,11 @@ public sealed class OGraphBuilder : IOGraphBuilder
         this.actions.Add(graph => graph.Nodes.Add(node));
         return this;
     }
-
-    IOGraphBuilder IOGraphBuilder.AddNode(Name name, Action<IOGraphNodeDescriptor> descriptor)
+    IOGraphBuilder IOGraphBuilder.AddNode(Label name, Action<IOGraphNodeDescriptor> descriptor)
     {
         throw new NotImplementedException();
     }
-
-    IOGraphBuilder IOGraphBuilder.AddNode<T>(Name name, Action<IOGraphNodeDescriptor<T>> descriptor)
+    IOGraphBuilder IOGraphBuilder.AddNode<T>(Label name, Action<IOGraphNodeDescriptor<T>> descriptor)
     {
         throw new NotImplementedException();
     }
@@ -76,6 +74,11 @@ public sealed class OGraphBuilder : IOGraphBuilder
     }
 
     IOGraphBuilder IOGraphBuilder.AddNode<TNode>()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IOGraphBuilder AddOperation(Name name, Action<IOGraphOperationDescriptor> descriptor)
     {
         throw new NotImplementedException();
     }

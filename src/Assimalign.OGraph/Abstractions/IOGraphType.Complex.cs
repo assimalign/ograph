@@ -8,4 +8,12 @@ namespace Assimalign.OGraph;
 
 public interface IOGraphComplexType : IOGraphType
 {
+    IEnumerable<IOGraphComplexTypeProperty> Properties { get; }
+}
+
+
+public interface IOGraphComplexTypeProperty
+{
+    Label PropertyName { get; }
+    IOGraphType PropertyType { get; }
 }

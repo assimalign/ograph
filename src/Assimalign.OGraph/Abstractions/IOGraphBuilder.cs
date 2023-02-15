@@ -7,31 +7,45 @@ namespace Assimalign.OGraph;
 /// </summary>
 public interface IOGraphBuilder
 {
+
+
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TNode"></typeparam>
+    /// <typeparam label="TNode"></typeparam>
     /// <returns></returns>
     IOGraphBuilder AddNode<TNode>() where TNode : IOGraphNode, new();
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="node"></param>
+    /// <param label="node"></param>
     /// <returns></returns>
     IOGraphBuilder AddNode(IOGraphNode node);
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="descriptor"></param>
+    /// <param label="descriptor"></param>
     /// <returns></returns>
-    IOGraphBuilder AddNode(Name name, Action<IOGraphNodeDescriptor> descriptor);
+    IOGraphBuilder AddNode(Label label, Action<IOGraphNodeDescriptor> descriptor);
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam label="T"></typeparam>
+    /// <param label="descriptor"></param>
+    /// <returns></returns>
+    IOGraphBuilder AddNode<T>(Label label, Action<IOGraphNodeDescriptor<T>> descriptor);
+
+
+   
+    /// <summary>
+    /// Define HTTP operations and link them to nodes.
+    /// </summary>
+    /// <param name="name"></param>
     /// <param name="descriptor"></param>
     /// <returns></returns>
-    IOGraphBuilder AddNode<T>(Name name, Action<IOGraphNodeDescriptor<T>> descriptor);
+    IOGraphBuilder AddOperation(Name name, Action<IOGraphOperationDescriptor> descriptor);
+
+
     /// <summary>
     /// 
     /// </summary>

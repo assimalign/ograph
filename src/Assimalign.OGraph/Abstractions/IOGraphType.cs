@@ -9,11 +9,15 @@ public interface IOGraphType
     /// <summary>
     /// The name of the type.
     /// </summary>
-    Name TypeName { get; }
+    Label TypeName { get; }
     /// <summary>
     /// 
     /// </summary>
-    OGraphTypeIdentifier TypeIdentitifer { get; }
+    string? TypeDescription { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    OGraphTypeIdentifier TypeIdentifier { get; }
     /// <summary>
     /// 
     /// </summary>

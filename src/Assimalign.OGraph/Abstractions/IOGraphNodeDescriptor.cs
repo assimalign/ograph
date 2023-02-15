@@ -9,38 +9,42 @@ namespace Assimalign.OGraph;
 
 public interface IOGraphNodeDescriptor
 {
-    IOGraphNodeDescriptor AddName(Name name);
+   
 }
 
 public interface IOGraphNodeDescriptor<T>
 {
+
+    /// <summary>
+    /// Specify a property to be ignored.
+    /// </summary>
+    /// <typeparam name="TProperty"></typeparam>
+    /// <param name="expression"></param>
+    /// <returns></returns>
+    IOGraphNodeDescriptor<T> Ignore<TProperty>(Expression<Func<T, TProperty>> expression);
+
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="descriptor"></param>
+    /// <typeparam name="TProperty"></typeparam>
+    /// <param name="expression"></param>
     /// <returns></returns>
-    IOGraphNodeDescriptor<T> AddOperation(Name name, Action<IOGraphOperationDescriptor> descriptor);
+    IOGraphNodeDescriptor<T> HasKey<TProperty>(Expression<Func<T, TProperty>> expression);
+
+    IOGraphNodePropertyDescriptor HasProperty(Name name);
+
+
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TEdge"></typeparam>
-    /// <param name="name"></param>
-    /// <param name="descriptor"></param>
+    /// <typeparam name="TProperty"></typeparam>
+    /// <param name="expression"></param>
     /// <returns></returns>
-    IOGraphNodeDescriptor<T> AddEdge<TEdge>(Name name, Action<IOGraphEdgeDescriptor<TEdge>> descriptor);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="descriptor"></param>
-    /// <returns></returns>
-    IOGraphNodeDescriptor<T> AddType(Action<IOGraphTypeDescriptor<T>> descriptor);
-    /// <summary>
-    /// Builds a custom type deriving from <typeparamref name="T"/>
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="descriptor"></param>
-    /// <returns></returns>
-    IOGraphNodeDescriptor<T> AddType(Name name, Action<IOGraphTypeDescriptor<T>> descriptor);
+    IOGraphNodePropertyDescriptor<TProperty> HasProperty<TProperty>(Expression<Func<T, TProperty>> expression);
+
+
+    IOGraphEdgeDescriptor<TProperty> HasEdge<TProperty>(Expression<Func<T, TProperty>> expression);
+
+
 
 }

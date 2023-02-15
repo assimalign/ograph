@@ -9,7 +9,7 @@ namespace Assimalign.OGraph.Internal;
 internal class OGraph : IOGraph
 {
     public Name Name { get; set; }
-    public IOGraphNodeCollection Nodes { get; set; }
+    public IOGraphNodeCollection Nodes { get; set; } = new OGraphNodeCollection();
     public IOGraphEventCollection Events { get; set; }
     public IOGraphOperationCollection Operations { get; set; }
 }

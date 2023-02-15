@@ -14,7 +14,7 @@ public interface IOGraphOperationResolverContext
     /// <typeparam name="T"></typeparam>
     /// <param name="headerName"></param>
     /// <returns></returns>
-    T GetHeader<T>(string headerName);
+    T GetHeaderValue<T>(string headerName);
     /// <summary>
     /// Returns the route parameter
     /// </summary>
@@ -22,4 +22,11 @@ public interface IOGraphOperationResolverContext
     /// <param name="parameterName"></param>
     /// <returns></returns>
     T GetRouteValue<T>(string parameterName);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="parameterName">The name of the query parameter.</param>
+    /// <returns></returns>
+    T GetQueryValue<T>(string parameterName);
 }

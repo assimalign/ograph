@@ -49,14 +49,14 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/specifications/events.md",
+                "file": "docs/terminology.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -184,12 +184,16 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "cc527b620b8ecc5a",
+  "active": "7856e3c193442a91",
   "lastOpenFiles": [
-    "docs/specifications/types.md",
     "docs/specifications/events.md",
+    "docs/terminology.md",
+    "docs/concepts.data.resolving.md",
+    "docs/overview.md",
+    "docs/concepts.modeling.md",
+    "docs/concepts.md",
+    "docs/specifications/types.md",
     "README.md",
-    "docs/features.md",
-    "docs/overview.md"
+    "docs/features.md"
   ]
 }

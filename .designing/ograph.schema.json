@@ -1,22 +1,57 @@
 {
-    "operations": {
-        "GetUsers": {
+    "domainName": "UsersDomain",
+    "model": {
+        "nodes": {
+            "User": {
+                "name": "User",
+                "properties": {
 
-        },
-        "GetUserById": {
+                },
+                "types": {
+                    "UserCollection": {
+                        "type": "collection",
+                        "properties": {
+                            "data": {
+                               
+                            }
+                        }
+                    },
+                    "User": {
+                        "type": "complex",
+                        "properties": {
+                            "firstName": {
+                                "type": "string"
+                            },
+                            "lastName": {
+                                "type": ""
+                            }
+                        }
+                    },
+                    "UserUpdateInput": {
 
-        },
-        "CreateUser": {
+                    }
+                },
+                "edges": {
+                    "addresses": {
+                        "$ref": "#/model/nodes/UserAddresses"
+                    },
+                    "interests": {
+                        "$ref": "#/model/nodes/UserInterests"
+                    }
+                }
+            },
+            "UserAddresses": {
 
+            },
+            "UserInterests": {
+
+            }
         }
-    },
-    "events": {
-
     },
     "schema": {
         "User": {
             "type": "entity",
-            "members": {
+            "properties": {
                 "firstName": {
                     "type": "string"
                 },
@@ -25,14 +60,10 @@
                 }
             }
         },
-        "UserAddress": {
-
-        },
+        "UserAddress": {},
         "AddressType": {
             "type": "enum",
-            "values": {
-                
-            }
+            "values": {}
         }
     }
 }

@@ -17,7 +17,7 @@ public interface IOGraphEdge
     /// <summary>
     /// The name of the Edge.
     /// </summary>
-    Name Name { get; }
+    Label Name { get; }
     /// <summary>
     /// 
     /// </summary>

@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphTypeCollection : IDictionary<Name, IOGraphType>
+public interface IOGraphTypeCollection : IDictionary<Label, IOGraphType>
 {
 }
