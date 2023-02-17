@@ -8,7 +8,12 @@ namespace Assimalign.OGraph;
 
 public interface IOGraphEntityBuilder
 {
+<<<<<<< Updated upstream:src/Assimalign.OGraph/Abstractions/IOGraphEntityBuilder.cs
 
 
     IOGraphEntity Build();
+=======
+    IOGraphEdge this[Name name] { get; set; }
+    
+>>>>>>> Stashed changes:src/Assimalign.OGraph/Abstractions/IOGraphEdgeCollection.cs
 }
