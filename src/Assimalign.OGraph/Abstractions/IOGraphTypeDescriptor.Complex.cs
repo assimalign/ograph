@@ -20,7 +20,6 @@ public interface IOGraphComplexTypeDescriptor : IOGraphTypeDescriptor
 
 
 public interface IOGraphComplexTypeDescriptor<T> : IOGraphTypeDescriptor<T>
-    where T : class
 {
     
     /// <summary>

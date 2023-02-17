@@ -1,0 +1,83 @@
+# Query
+https://endpoint.com/api/users?query=variables({
+    take: 20
+    skip: 40
+})
+.project({
+    # Queryable Fields
+    userId
+    firstName
+    lastName
+    middleName
+    2.5 as ConstantValue # Constant Expression as an identifier
+    (firstName eq 'chase') as isFirstNameCorrect, # Binary Expression as an identifier
+    concat(firstName, ' ', middleName, ' ', lastName) as fullName
+    addresses as locations {
+        streetOne
+        streetTwo
+        streetThree
+        addressTypes {
+            typeId
+            type
+        }
+    }
+})
+.filter({
+    and(
+        startsWith(firstName, 'c', true),
+        or(
+            and(
+                endsWith(middleName, 'e', true),
+                age eq 12
+            )
+        ),
+        any(addresses, {
+            startsWith(streetOne, '10')
+        })
+    )
+})
+.page({
+    take @take
+    skip @skip
+})
+.sort({
+    toLower(firstName) desc
+})
+.project(roles, {           # Navigation Select
+    roleName
+})
+.filter(roles, {            # Navigation Filtering 
+    isActive eq true
+})
+.page(roles, {
+    take @take
+    skip @skip
+})
+.sort(roles, {
+    toLower(roleName) desc
+})
+.project(applications/roles, {
+
+})
+
+
+
+
+
+
+
+-   [Raw string literals](##Raw string literals)
+-   [Generic math support](##Generic math support)
+-   [Generic attributes](##Generic attributes)
+-   [UTF-8 string literals](##UTF-8 string literals)
+-   [Newlines in string interpolation expressions](##Newlines in string interpolation expressions)
+-   [List patterns](##List patterns)
+-   [File-local types](##File-local types)
+-   [Required members](##Required members)
+-   [Auto-default structs](##Auto-default structs)
+-   [Pattern match `Span<char>` on a constant `string`](##Pattern match `Span<char>` on a constant `string`)
+-   [Extended `nameof` scope](##Extended `nameof` scope)
+-   [Numeric IntPtr](##Numeric IntPtr)
+-   [`ref` fields and `scoped ref`](##`ref` fields and `scoped ref`)
+-   [Improved method group conversion to delegate](##Improved method group conversion to delegate)
+-   [Warning wave 7](##Warning wave 7)

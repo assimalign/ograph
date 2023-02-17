@@ -1,0 +1,46 @@
+﻿using System;
+
+namespace Assimalign.OGraph.Syntax;
+
+public sealed class ParameterQueryNode : QueryNode
+{
+    private QueryNode parameterValue;
+
+    internal ParameterQueryNode() { }
+    public ParameterQueryNode(MemberQueryNode parameterValue)
+    {
+        this.parameterValue = parameterValue;
+    }
+    public ParameterQueryNode(ConstantQueryNode parameterValue)
+    {
+        this.parameterValue = parameterValue;
+    }
+    public ParameterQueryNode(FunctionQueryNode parameterValue)
+    {
+        this.parameterValue = parameterValue;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public QueryNode ParameterValue => this.parameterValue;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public ParameterType ParameterType => this.parameterValue switch
+    {
+        ConstantQueryNode => ParameterType.Constant,
+        FunctionQueryNode => ParameterType.Function,
+        MemberQueryNode => ParameterType.Member
+    };
+
+    /// <inheritdoc />
+    public override QueryNodeType NodeType => QueryNodeType.Parameter;
+
+    /// <inheritdoc />
+    public override T Accept<T>(IQueryNodeVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
+}

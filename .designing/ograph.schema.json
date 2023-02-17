@@ -1,0 +1,69 @@
+{
+    "domainName": "UsersDomain",
+    "model": {
+        "nodes": {
+            "User": {
+                "name": "User",
+                "properties": {
+
+                },
+                "types": {
+                    "UserCollection": {
+                        "type": "collection",
+                        "properties": {
+                            "data": {
+                               
+                            }
+                        }
+                    },
+                    "User": {
+                        "type": "complex",
+                        "properties": {
+                            "firstName": {
+                                "type": "string"
+                            },
+                            "lastName": {
+                                "type": ""
+                            }
+                        }
+                    },
+                    "UserUpdateInput": {
+
+                    }
+                },
+                "edges": {
+                    "addresses": {
+                        "$ref": "#/model/nodes/UserAddresses"
+                    },
+                    "interests": {
+                        "$ref": "#/model/nodes/UserInterests"
+                    }
+                }
+            },
+            "UserAddresses": {
+
+            },
+            "UserInterests": {
+
+            }
+        }
+    },
+    "schema": {
+        "User": {
+            "type": "entity",
+            "properties": {
+                "firstName": {
+                    "type": "string"
+                },
+                "addresses": {
+                    "$ref": "#/schema/UserAddress"
+                }
+            }
+        },
+        "UserAddress": {},
+        "AddressType": {
+            "type": "enum",
+            "values": {}
+        }
+    }
+}
