@@ -21,11 +21,11 @@ public interface IOGraphEdge
     /// <summary>
     /// 
     /// </summary>
-    IOGraphNode TargetNode { get; }
+    IOGraphNode SourceNode { get; }
     /// <summary>
     /// 
     /// </summary>
-    IOGraphNode SourceNode { get;  }
+    IOGraphNode TargetNode { get; }    
     /// <summary>
     /// 
     /// </summary>
@@ -33,18 +33,5 @@ public interface IOGraphEdge
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="descriptor"></param>
-    void Configure(IOGraphEdgeDescriptor descriptor);
-}
-/// <summary>
-/// 
-/// </summary>
-/// <typeparam name="T"></typeparam>
-public interface IOGraphEdge<T> : IOGraphEdge
-{
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="descriptor"></param>
-    void Configure(IOGraphEdgeDescriptor<T> descriptor);
+    IOGraphEdgeMiddlewareCollection Middleware { get; }
 }

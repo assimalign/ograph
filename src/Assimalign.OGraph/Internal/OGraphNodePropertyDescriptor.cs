@@ -9,17 +9,17 @@ namespace Assimalign.OGraph.Internal;
 
 internal class OGraphNodePropertyDescriptor : IOGraphNodePropertyDescriptor
 {
-    public IOGraphNodePropertyDescriptor HasResolver(IOGraphTypeResolver resolver)
+    public IOGraphNodePropertyDescriptor UseResolver(IOGraphTypeResolver resolver)
     {
         throw new NotImplementedException();
     }
 
-    public IOGraphNodePropertyDescriptor HasResolver(OGraphTypeResolver resolver)
+    public IOGraphNodePropertyDescriptor UseResolver(OGraphTypeResolver resolver)
     {
         throw new NotImplementedException();
     }
 
-    public IOGraphNodePropertyDescriptor HasType<TType>() where TType : IOGraphType, new()
+    public IOGraphNodePropertyDescriptor UseType<TType>() where TType : IOGraphType, new()
     {
         throw new NotImplementedException();
     }
@@ -31,12 +31,12 @@ internal class OGraphNodePropertyDescriptor<T> : IOGraphNodePropertyDescriptor<T
    
     public OGraphNodeProperty Property { get; init; }
 
-    public IOGraphNodePropertyDescriptor<T> HasName(Name name)
+    public IOGraphNodePropertyDescriptor<T> UseName(Name name)
     {
         return this;
     }
 
-    public IOGraphNodePropertyDescriptor<T> HasResolver(IOGraphTypeResolver resolver)
+    public IOGraphNodePropertyDescriptor<T> UseResolver(IOGraphTypeResolver resolver)
     {
 
 
@@ -44,12 +44,12 @@ internal class OGraphNodePropertyDescriptor<T> : IOGraphNodePropertyDescriptor<T
         return this;
     }
 
-    public IOGraphNodePropertyDescriptor<T> HasResolver(OGraphTypeResolver<T> resolver)
+    public IOGraphNodePropertyDescriptor<T> UseResolver(OGraphTypeResolver<T> resolver)
     {
         return this;
     }
 
-    public IOGraphNodePropertyDescriptor<T> HasType<TType>() where TType : IOGraphType, new()
+    public IOGraphNodePropertyDescriptor<T> UseType<TType>() where TType : IOGraphType, new()
     {
         return this;
     }

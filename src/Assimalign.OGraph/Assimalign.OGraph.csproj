@@ -10,9 +10,11 @@
 
 	<ItemGroup>
 	  <Folder Include="Extensions\" />
-	  <Folder Include="Execution\" />
 	  <Folder Include="Internal\ILEmit\" />
 	  <Folder Include="Internal\Exceptions\" />
+	  <Folder Include="Internal\Exceptions\" />
+	  <Folder Include="Internal\ILEmit\" />
+	  <Folder Include="Internal\Validators\" />
 	  <Folder Include="Internal\Validators\" />
 	</ItemGroup>
 </Project>

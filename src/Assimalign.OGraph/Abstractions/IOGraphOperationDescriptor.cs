@@ -9,9 +9,15 @@ public interface IOGraphOperationDescriptor
     IOGraphOperationDescriptor UseMethod(Method method);
     IOGraphOperationDescriptor UseQuery(QueryParam query);
 
+    /// <summary>
+    /// Binds the operation to a specific node.
+    /// </summary>
+    /// <remarks></remarks>
+    /// <param name="label"></param>
+    /// <returns></returns>
     IOGraphOperationDescriptor UseNodes(Label label);
 
-    IOGraphOperationDescriptor UseAuthorization();
+    IOGraphOperationDescriptor UseMiddleware(IOGraphOperationMiddleware middleware);
 
     /// <summary>
     /// 
@@ -47,6 +53,12 @@ public interface IOGraphOperationDescriptor<T>
     /// <param name="query"></param>
     /// <returns></returns>
     IOGraphOperationDescriptor<T> UseQuery(QueryParam query);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="middleware"></param>
+    /// <returns></returns>
+    IOGraphOperationDescriptor<T> UseMiddleware(IOGraphOperationMiddleware middleware);
 
 
 

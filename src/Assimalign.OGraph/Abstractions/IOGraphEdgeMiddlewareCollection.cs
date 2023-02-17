@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphSerializer
+public interface IOGraphEdgeMiddlewareCollection : IOrderedEnumerable<IOGraphEdgeMiddleware>
 {
 }

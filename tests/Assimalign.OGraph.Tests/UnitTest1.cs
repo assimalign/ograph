@@ -16,9 +16,10 @@ namespace Assimalign.OGraph.Tests
              * 
                 There three types of Resolvers: 
             
-                1. Node Property Resolver
-                2. Edge Resolver
-                3. Operation Resolver
+                1. Operation Resolver
+                2. Property Resolver
+                3. Edge Resolver
+                3.1 Edge Property Resolver
 
                 Execution Pipeline:
 
@@ -40,19 +41,20 @@ namespace Assimalign.OGraph.Tests
                 builder.AddNode<User>("users", descriptor =>
                 {
                     descriptor.HasProperty("FullName")
-                        .HasType<StringType>()
-                        .HasResolver(async context =>
+                        .UseType<StringType>()
+                        .UseResolver(async context =>
                         {
                             var user = context.GetParent<User>();
 
 
                             return $"{user.LastName}, {user.FirstName} {user.MiddleName}";
                         });
-                    
+
                     descriptor.HasProperty(p => p.Password)
-                        .HasName("UserPassword")
-                        .HasType<StringType>()
-                        .HasResolver(async context =>
+                        .UseName("UserPassword")
+                        .UseType<StringType>()
+                        .UseMetadata("description", "")
+                        .UseResolver(async context =>
                         {
 
 
@@ -60,30 +62,29 @@ namespace Assimalign.OGraph.Tests
                         });
 
                     descriptor.HasProperty(p => p.Profile)
-                        .HasName("UserProfile");
+                        .UseName("UserProfile");
 
 
                     //// Define Edges:
                     //// One-to-One Relationship: /users/{userId}/profiles/{profileId} 
-                    //descriptor.HasEdge(p => p.Profile)
-                    //    .HasResolver(async context =>
-                    //    {
-                    //        return default;
-                    //    });
+                    descriptor.HasEdge(p => p.Profile)
+                        .UseMiddleware(default)
+                        .UseResolver(async context =>
+                        {
+                            return default;
+                        });
 
                     //// One-to-Many Relationship: /users/{userId}/addresses
                     //descriptor.HasEdge(p => p.Addresses)
-                    //    .HasResolver(async context =>
+                    //    .UseResolver(async context =>
                     //    {
                     //        return default;
                     //    });
                 });
-
                 builder.AddNode<UserAddress>("addresses", descriptor =>
                 {
 
                 });
-
                 builder.AddNode("settings", descriptor =>
                 {
                     descriptor.HasProperty("addressType")
@@ -96,6 +97,11 @@ namespace Assimalign.OGraph.Tests
 
                 });
                 
+
+                builder.AddOperation("CreateUser", descriptor =>
+                {
+                    descriptor.UseMiddleware()
+                })
                 //// Inheritance Implementation
                 //builder.AddNode<UserAddressNode>();
                 
@@ -109,7 +115,7 @@ namespace Assimalign.OGraph.Tests
                 //{
                 //    descriptor
                 //        .HasProperty("interestId")
-                //        .HasResolver(async context =>
+                //        .UseResolver(async context =>
                 //        {
 
                 //        });

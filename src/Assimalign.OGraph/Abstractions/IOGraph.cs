@@ -13,14 +13,9 @@ namespace Assimalign.OGraph;
 /// </summary>
 public interface IOGraph
 {
-    
-
     /// <summary>
     /// The name of the graph model.
     /// </summary>
-    /// <remarks>
-    /// TODO:
-    /// </remarks>
     Name Name { get; }
     /// <summary>
     /// 

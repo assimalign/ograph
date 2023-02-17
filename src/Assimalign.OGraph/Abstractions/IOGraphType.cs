@@ -13,10 +13,6 @@ public interface IOGraphType
     /// <summary>
     /// 
     /// </summary>
-    IOGraphNodePropertyMetadata Metadata { get; }
-    /// <summary>
-    /// 
-    /// </summary>
     OGraphTypeIdentifier TypeIdentifier { get; }
     /// <summary>
     /// 

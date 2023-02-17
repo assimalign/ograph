@@ -16,6 +16,10 @@ public interface IOGraphNode
     /// </summary>
     Label Label { get; }
     /// <summary>
+    /// 
+    /// </summary>
+    IOGraphNodeMetadata Metadata { get; }
+    /// <summary>
     /// A collection of edges that are connected to this node.
     /// </summary>
     IOGraphEdgeCollection Edges { get; }
@@ -23,10 +27,7 @@ public interface IOGraphNode
     /// The set of key value pairs that are associated with this node.
     /// </summary>
     IOGraphNodePropertyCollection Properties { get; }
-    /// <summary>
-    /// 
-    /// </summary>
-    IOGraphNodeMetadata Metadata { get; }
+    
 
     Type RuntimeType { get; }
 }

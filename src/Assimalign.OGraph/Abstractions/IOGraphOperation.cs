@@ -9,6 +9,10 @@ namespace Assimalign.OGraph;
 /// <summary>
 /// Represents a single HTTP REST operation.
 /// </summary>
+/// <remarks>
+/// An OGraph Operation represent the root 
+/// Operation -- resolves --> Node(s) -- resolves --> Edge(s) -- resolves --> Node(s) -- resolves --> Operation(s)
+/// </remarks>
 public interface IOGraphOperation
 {
     /// <summary>
@@ -28,15 +32,15 @@ public interface IOGraphOperation
     /// </summary>
     bool IsEnabled { get; }
     /// <summary>
-    /// 
+    /// Represents the node that is binded to this operation.
     /// </summary>
-    IOGraphType? RequestType { get; }
-    /// <summary>
-    /// 
-    /// </summary>
-    IOGraphType? ResponseType { get; }
+    IOGraphNode Node { get; }
     /// <summary>
     /// 
     /// </summary>
     IOGraphOperationResolver Resolver { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    IOGraphOperationMiddlewareCollection Middleware { get; }
 }

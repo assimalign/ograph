@@ -13,3 +13,4 @@ public interface IOGraphOperationResult
     /// </summary>
     int StatusCode { get; }
 }
+

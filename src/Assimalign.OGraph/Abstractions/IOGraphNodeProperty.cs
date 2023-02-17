@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
@@ -18,13 +14,17 @@ public interface IOGraphNodeProperty
     /// </summary>
     Name PropertyName { get; }
     /// <summary>
-    /// 
+    /// The OGraph Property Type.
     /// </summary>
     IOGraphType PropertyType { get; }
     /// <summary>
     /// 
     /// </summary>
     IOGraphNodePropertyMetadata Metadata { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    IOGraphNodePropertyMiddlewareCollection Middleware { get; }
 
 
 

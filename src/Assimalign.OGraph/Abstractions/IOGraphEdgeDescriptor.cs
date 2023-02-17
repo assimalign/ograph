@@ -8,10 +8,11 @@ namespace Assimalign.OGraph;
 
 public interface IOGraphEdgeDescriptor
 {
-    
+    IOGraphEdgeDescriptor UseMiddleware(IOGraphEdgeMiddleware middleware);
 }
 
 public interface IOGraphEdgeDescriptor<T>
 {
-    IOGraphEdgeDescriptor<T> HasResolver(OGraphEdgeResolver<T> resolver);
+    IOGraphEdgeDescriptor<T> UseMiddleware(IOGraphEdgeMiddleware middleware);
+    IOGraphEdgeDescriptor<T> UseResolver(OGraphEdgeResolver<T> resolver);
 }

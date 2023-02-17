@@ -11,6 +11,9 @@ namespace Assimalign.OGraph;
 /// </summary>
 public interface IOGraphOperationResolver
 {
+
+
+
     /// <summary>
     /// 
     /// </summary>
