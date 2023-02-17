@@ -8,8 +8,6 @@
 		</Description>
 	</PropertyGroup>
 
-<<<<<<< Updated upstream
-=======
 	<ItemGroup>
 	  <Folder Include="Extensions\" />
 	  <Folder Include="Execution\" />
@@ -17,5 +15,4 @@
 	  <Folder Include="Internal\Exceptions\" />
 	  <Folder Include="Internal\Validators\" />
 	</ItemGroup>
->>>>>>> Stashed changes
 </Project>

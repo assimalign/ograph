@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Query;
+namespace Assimalign.OGraph;
 
-public interface IOGraphQueryExecutor
+public interface IOGraphNodeMetadata : IEnumerable<KeyValuePair<string, object>>
 {
 }

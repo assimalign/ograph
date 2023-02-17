@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Query;
-
-public interface IOGraphQueryExecutor
+namespace Assimalign.OGraph
 {
+    public abstract class OGraphEdge
+    {
+    }
 }
