@@ -7,7 +7,6 @@ namespace Assimalign.OGraph;
 /// </summary>
 public interface IOGraphBuilder
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,13 +20,13 @@ public interface IOGraphBuilder
     /// <returns></returns>
     IOGraphBuilder AddNode(IOGraphNode node);
     /// <summary>
-    /// This is a description
+    /// 
     /// </summary>
     /// <param label="descriptor"></param>
     /// <returns></returns>
     IOGraphBuilder AddNode(Label label, Action<IOGraphNodeDescriptor> descriptor);
     /// <summary>
-    /// This is a description
+    /// 
     /// </summary>
     /// <typeparam label="T"></typeparam>
     /// <param label="descriptor"></param>
@@ -40,11 +39,11 @@ public interface IOGraphBuilder
     /// <param name="descriptor"></param>
     /// <returns></returns>
     IOGraphBuilder AddOperation(Name name, Action<IOGraphOperationDescriptor> descriptor);
-
-
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     IOGraphBuilder AddSubscriber();
-
 
     /// <summary>
     /// 

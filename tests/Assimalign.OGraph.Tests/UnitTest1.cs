@@ -32,7 +32,6 @@ namespace Assimalign.OGraph.Tests
              
              */
 
-            var query = default(QueryDocument);
             var graph = OGraphBuilder.Create("UsersDomain", builder =>
             {
                 // Define Node Structures
@@ -41,7 +40,6 @@ namespace Assimalign.OGraph.Tests
                 builder.AddNode<User>("users", descriptor =>
                 {
                     descriptor.HasProperty("FullName")
-                        .UseType<StringType>()
                         .UseResolver(async context =>
                         {
                             var user = context.GetParent<User>();
@@ -52,7 +50,6 @@ namespace Assimalign.OGraph.Tests
 
                     descriptor.HasProperty(p => p.Password)
                         .UseName("UserPassword")
-                        .UseType<StringType>()
                         .UseMetadata("description", "")
                         .UseResolver(async context =>
                         {
@@ -87,21 +84,13 @@ namespace Assimalign.OGraph.Tests
                 });
                 builder.AddNode("settings", descriptor =>
                 {
-                    descriptor.HasProperty("addressType")
-                        .HasResolver(async context =>
-                        {
-
-                            
-
-                        });
+                    descriptor.HasProperty("addressType");
 
                 });
-                
-
                 builder.AddOperation("CreateUser", descriptor =>
                 {
-                    descriptor.UseMiddleware()
-                })
+                   
+                });
                 //// Inheritance Implementation
                 //builder.AddNode<UserAddressNode>();
                 
@@ -155,20 +144,19 @@ namespace Assimalign.OGraph.Tests
 
             //    foreach (var property in node.Properties)
             //    {
-            //        property.PropertyType.TypeResolver.Invoke()
+            //        property.Type.Resolver.Invoke()
             //    }
 
-            //    node.Edges[0].EdgeResolver.
+            //    node.Edges[0].Resolver.
             //}
 
-            
         }
 
         public class UserAddressNode : OGraphNode<UserAddress>
         {
             protected override void Configure(IOGraphNodeDescriptor<UserAddress> descriptor)
             {
-                descriptor.HasKey(p => p.AddressId);
+               // descriptor.HasKey(p => p.AddressId);
             }
         }
     }

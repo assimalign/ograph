@@ -2,7 +2,6 @@
 
 namespace Assimalign.OGraph;
 
-
 /// <summary>
 /// Represents a single entity and it's structure within the Graph Model.
 /// </summary>
@@ -14,20 +13,18 @@ public interface IOGraphNode
     /// <summary>
     /// Represents the label each node should contain.
     /// </summary>
-    Label Label { get; }
+    Label Label { get; }    
     /// <summary>
     /// 
     /// </summary>
-    IOGraphNodeMetadata Metadata { get; }
+    IOGraphMetadata Metadata { get; }    
     /// <summary>
     /// A collection of edges that are connected to this node.
     /// </summary>
-    IOGraphEdgeCollection Edges { get; }
+    IOGraphEdgeCollection Edges { get; }    
     /// <summary>
     /// The set of key value pairs that are associated with this node.
     /// </summary>
-    IOGraphNodePropertyCollection Properties { get; }
-    
+    IOGraphPropertyCollection Properties { get; }
 
-    Type RuntimeType { get; }
 }

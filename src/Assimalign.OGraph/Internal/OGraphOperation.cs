@@ -15,5 +15,9 @@ internal abstract class OGraphOperation : IOGraphOperation
     public IOGraphType? ResponseType { get; set; }
     public IOGraphOperationResolver? Resolver { get; set; }
 
+    public IOGraphNode Node => throw new NotImplementedException();
+
+    public IOGraphOperationMiddlewareQueue Middleware => throw new NotImplementedException();
+
     Name IOGraphOperation.Name => throw new NotImplementedException();
 }

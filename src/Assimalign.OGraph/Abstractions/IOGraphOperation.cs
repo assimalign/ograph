@@ -42,5 +42,5 @@ public interface IOGraphOperation
     /// <summary>
     /// 
     /// </summary>
-    IOGraphOperationMiddlewareCollection Middleware { get; }
+    IOGraphOperationMiddlewareQueue Middleware { get; }
 }

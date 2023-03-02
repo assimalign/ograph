@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphComplexType : IOGraphType
+public interface IOGraphPropertyCollection : IEnumerable<IOGraphProperty>
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    IOGraphPropertyCollection Properties { get; }
+
+    void Add(IOGraphProperty property);
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
@@ -11,13 +12,12 @@ namespace Assimalign.OGraph;
 /// </summary>
 public interface IOGraphOperationResolver
 {
-
-
-
+    
     /// <summary>
     /// 
     /// </summary>
     /// <param name="context"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IOGraphOperationResult> InvokeAsync(IOGraphOperationResolverContext context);
+    Task<IOGraphOperationResult> InvokeAsync(IOGraphOperationResolverContext context, CancellationToken cancellationToken = default);
 }

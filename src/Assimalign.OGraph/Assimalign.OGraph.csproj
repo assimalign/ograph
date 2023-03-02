@@ -16,5 +16,6 @@
 	  <Folder Include="Internal\ILEmit\" />
 	  <Folder Include="Internal\Validators\" />
 	  <Folder Include="Internal\Validators\" />
+	  <Folder Include="Serialization\" />
 	</ItemGroup>
 </Project>

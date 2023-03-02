@@ -1,4 +1,4 @@
-﻿using Assimalign.OGraph.Syntax;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Execution;
 
+using Assimalign.OGraph.Syntax;
+
 
 public abstract class OGraphExecutor : IOGraphExecutor
 {
-
-
     protected QueryParser QueryParser { get; }
 
     protected IOGraph GraphModel { get; }
@@ -25,7 +25,7 @@ public abstract class OGraphExecutor : IOGraphExecutor
         var node = operation.Node;
 
         // Parse Query
-        if (QueryParser.Parse())
+        
 
 
 
@@ -53,10 +53,10 @@ public abstract class OGraphExecutor : IOGraphExecutor
 
         foreach (var property in node.Properties)
         {
-            var propertyType = property.PropertyType;
-            var propertyValue = propertyType.TypeResolver.Invoke(default);
+            var propertyType = property.Type;
+           // var propertyValue = propertyType.Resolver.Invoke(default);
 
-            propertyType.
+           
         }
 
 

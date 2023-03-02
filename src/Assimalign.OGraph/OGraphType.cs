@@ -8,8 +8,8 @@ namespace Assimalign.OGraph;
 
 public abstract class OGraphType : IOGraphType
 {
-    public Label TypeName => throw new NotImplementedException();
-    public string? Description => throw new NotImplementedException();
+    public Name TypeName => throw new NotImplementedException();
     public OGraphTypeIdentifier TypeIdentifier => throw new NotImplementedException();
-    public IOGraphTypeResolver TypeResolver => throw new NotImplementedException();
+
+
 }

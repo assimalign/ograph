@@ -36,7 +36,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
         {
             var node = new OGraphNodeDefault<T>()
             {
-                Label = name,
+                
             };
 
             node.Configure(configure);

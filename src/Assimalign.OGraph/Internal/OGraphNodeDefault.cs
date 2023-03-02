@@ -16,4 +16,9 @@ internal class OGraphNodeDefault<T> : OGraphNode
 
         configure.Invoke(descriptor);
     }
+
+    protected override void Configure(IOGraphNodeDescriptor descriptor)
+    {
+        throw new NotImplementedException();
+    }
 }

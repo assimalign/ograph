@@ -76,3 +76,16 @@ $select(
 $where(
 
 )
+
+
+
+# OGraph Model
+
+
+## Resolvers
+
+There are three types of resolvers 
+
+- Operation Resolver
+- Property Resolver(s)
+- Edge Resolver(s)

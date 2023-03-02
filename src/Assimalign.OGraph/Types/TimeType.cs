@@ -6,10 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphComplexType : IOGraphType
+internal class TimeType
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    IOGraphPropertyCollection Properties { get; }
 }

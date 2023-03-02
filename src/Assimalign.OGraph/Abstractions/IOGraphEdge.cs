@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assimalign.OGraph;
+﻿namespace Assimalign.OGraph;
 
 /// <summary>
 /// An edge links to nodes together.
@@ -25,13 +19,17 @@ public interface IOGraphEdge
     /// <summary>
     /// 
     /// </summary>
-    IOGraphNode TargetNode { get; }    
+    IOGraphNode TargetNode { get; }
     /// <summary>
     /// 
     /// </summary>
-    IOGraphEdgeResolver EdgeResolver { get; }
+    IOGraphMetadata Metadata { get; }
     /// <summary>
     /// 
     /// </summary>
-    IOGraphEdgeMiddlewareCollection Middleware { get; }
+    IOGraphEdgeResolver Resolver { get; }
+    /// <summary>
+    /// A collection of middleware that will be executed before the edge is resolved.
+    /// </summary>
+    IOGraphEdgeMiddlewareQueue Middleware { get; }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,9 +9,12 @@ namespace Assimalign.OGraph;
 
 using Assimalign.OGraph.Internal;
 
+
 /// <inheritdoc />
-public abstract class OGraphNode : IOGraphNode
+public abstract class OGraphNode<T> : IOGraphNode
 {
+    private static readonly ConcurrentDictionary<Type, string> cache = new();
+
     private readonly IOGraphEdgeCollection edges;
     private readonly IOGraphPropertyCollection properties;
     private readonly IOGraphMetadata metadata;
@@ -24,7 +28,6 @@ public abstract class OGraphNode : IOGraphNode
         Initialize();
     }
 
-
     /// <inheritdoc />
     public Label Label { get; }
 
@@ -37,13 +40,15 @@ public abstract class OGraphNode : IOGraphNode
     /// <inheritdoc />
     public IOGraphMetadata Metadata => this.metadata;
 
-    protected abstract void Configure(IOGraphNodeDescriptor descriptor);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="descriptor"></param>
+    protected abstract void Configure(IOGraphNodeDescriptor<T> descriptor);
 
 
     private void Initialize()
     {
-        Configure(new OGraphNodeDescriptor(this));
+        Configure(new OGraphNodeDescriptor<T>(this));
     }
 }
-
-

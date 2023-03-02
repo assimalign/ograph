@@ -37,9 +37,11 @@
         <node label="Profiles">
 
         </node>
+
+        <operation name="GetUsers">
+            
+
+
+        </operation>
     </model>
-    <operations>
-
-    </operations>
-
 </ograph>

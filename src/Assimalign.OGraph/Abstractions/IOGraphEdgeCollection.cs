@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphEdgeCollection : IList<IOGraphEdge>
+public interface IOGraphEdgeCollection : IEnumerable<IOGraphEdge>
 {
+
+    void Add(IOGraphEdge edge);
 }
