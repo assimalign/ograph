@@ -10,17 +10,18 @@ using Assimalign.OGraph.Internal;
 
 public sealed class OGraphBuilder : IOGraphBuilder
 {
-
     // These are our build actions
     private readonly IList<Action<OGraph>> actions;
-
 
     private OGraphBuilder()
     {
         this.actions = new List<Action<OGraph>>();
     }
 
-
+    IOGraphBuilder IOGraphBuilder.AddNode<TNode>()
+    {
+        throw new NotImplementedException();
+    }
     IOGraphBuilder IOGraphBuilder.AddNode(IOGraphNode node)
     {
         this.actions.Add(graph => graph.Nodes.Add(node));
@@ -46,7 +47,14 @@ public sealed class OGraphBuilder : IOGraphBuilder
         });
         return this;
     }
-
+    IOGraphBuilder IOGraphBuilder.AddOperation(Name name, Action<IOGraphOperationDescriptor> descriptor)
+    {
+        throw new NotImplementedException();
+    }
+    IOGraphBuilder IOGraphBuilder.AddSubscriber()
+    {
+        throw new NotImplementedException();
+    }
     IOGraph IOGraphBuilder.Build()
     {
         var graph = new OGraph();
@@ -83,25 +91,5 @@ public sealed class OGraphBuilder : IOGraphBuilder
         configure.Invoke(builder);
 
         return ((IOGraphBuilder)builder).Build();
-    }
-
-    IOGraphBuilder IOGraphBuilder.AddNode<TNode>()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IOGraphBuilder AddOperation(Name name, Action<IOGraphOperationDescriptor> descriptor)
-    {
-        throw new NotImplementedException();
-    }
-
-    IOGraphBuilder IOGraphBuilder.AddOperation(Name name, Action<IOGraphOperationDescriptor> descriptor)
-    {
-        throw new NotImplementedException();
-    }
-
-    IOGraphBuilder IOGraphBuilder.AddSubscriber()
-    {
-        throw new NotImplementedException();
     }
 }

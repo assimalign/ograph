@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 namespace Assimalign.OGraph.Execution;
 
 using Assimalign.OGraph.Syntax;
+using Assimalign.OGraph.Internal;
 
 
 public abstract class OGraphExecutor : IOGraphExecutor
@@ -21,12 +22,22 @@ public abstract class OGraphExecutor : IOGraphExecutor
 
     public virtual async Task<IOGraphResponse> ExecuteAsync(IOGraphRequest request, CancellationToken cancellationToken = default)
     {
-        var operation = GraphModel.Operations.First();
+        if (!TryGetOperation(request, out var operation))
+        {
+            // TODO: Response 404 - Not Found
+        }
+        if (!TryGetQuery(request, out var query))
+        {
+            // TODO: Response 400 - Bad Request
+        }
+
+
         var node = operation.Node;
 
         // Parse Query
         
 
+        var context = new OGraphResolverContext();
 
 
 
@@ -35,7 +46,7 @@ public abstract class OGraphExecutor : IOGraphExecutor
         {
             foreach (var middleware in operation.Middleware)
             {
-                await middleware.InvokeAsync(default);
+                await middleware.InvokeAsync(context);
             }
         }
         catch(Exception exception) // TODO: Add a OGraph specific Callback cancellation exception. This will give the middleware a handle to invoke cancellation
@@ -54,6 +65,12 @@ public abstract class OGraphExecutor : IOGraphExecutor
         foreach (var property in node.Properties)
         {
             var propertyType = property.Type;
+
+            
+
+            //property.Resolver.
+
+
            // var propertyValue = propertyType.Resolver.Invoke(default);
 
            
@@ -65,12 +82,25 @@ public abstract class OGraphExecutor : IOGraphExecutor
     }
 
 
-
-
-
-    internal abstract class OGraphQueryExecutionStrategy
+    private bool TryGetOperation(IOGraphRequest request, out IOGraphOperation operation)
     {
+        operation = default;
 
+
+
+
+        return false;
     }
+
+    private bool TryGetQuery(IOGraphRequest request, out QueryDocument document)
+    {
+        document = default;
+
+
+
+        return false;
+    }
+
+
 
 }

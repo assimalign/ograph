@@ -6,27 +6,30 @@ namespace Assimalign.OGraph.Syntax;
 
 public sealed class SortQueryNode : QueryNode
 {
-    private readonly List<FieldQueryNode> fields = new();
-
     internal SortQueryNode() { }
-    public SortQueryNode(IEnumerable<FieldQueryNode> nodes)
+    public SortQueryNode(IEnumerable<AttributeQueryNode> attributes)
     {
-        if (!nodes.Any())
+        if (!attributes.Any())
         {
             // TODO: Throw an exception
         }
 
-        this.fields.AddRange(nodes);
+        this.Attributes = attributes;
+    }
+    public SortQueryNode(EdgeQueryNode edge, IEnumerable<AttributeQueryNode> attributes)
+    {
+        this.Edge = edge;
+        this.Attributes = attributes;
     }
 
     /// <summary>
     /// Represents the edge, if any, to apply sorting.
     /// </summary>
-    public string? Edge { get; init; }
+    public EdgeQueryNode? Edge { get; init; }
     /// <summary>
-    /// A collection of fields to project in the query.
+    /// A collection of attributes to project in the query.
     /// </summary>
-    public IEnumerable<FieldQueryNode> Fields => this.fields;
+    public IEnumerable<AttributeQueryNode> Attributes { get; init; }
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Sort;

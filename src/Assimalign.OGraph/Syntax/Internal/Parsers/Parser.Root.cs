@@ -8,18 +8,18 @@ namespace Assimalign.OGraph.Syntax.Internal;
 
 internal class RootParser : Parser
 {
-    internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode node)
+    internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryToken)
     {
-        if (node is not RootQueryNode root)
+        if (queryToken is not RootQueryNode root)
         {
             // TODO: Add diagnostic information 
-            return node;
+            return queryToken;
         }
         while (lexer.HasNext)
         {
-            var token = lexer.Next();
+            var lexerToken = lexer.Next();
 
-            switch (token.TokenType)
+            switch (lexerToken.TokenType)
             {
                 case TokenType.Page:
                     root = ParsePage(ref lexer, context, root);
@@ -33,27 +33,16 @@ internal class RootParser : Parser
                 case TokenType.Sort:
                     root = ParseSort(ref lexer, context, root);
                     break;
-                case TokenType.QueryRoot:
-                    root = ParseRoot(ref lexer, context, root);
-                    break;
                 case TokenType.Dot:
                     continue;
                 default:
                     {
-                        // Add Diagnostic information. Unexpected token
-                        context.AddDiagnostic(new Diagnostic()
-                        {
-                            Severity = DiagnosticSeverity.Error,
-                            Location = DiagnosticLocation.Relative,
-                            Start = token.Start,
-                            End = token.End,
-                            Message = $"Unexpected Token: {token}"
-                        });
+                        // Add Diagnostic information. Unexpected lexerToken
+                        context.AddUnexptedTokenDiagnosticError(ref lexerToken);
                         break;
                     }
             }
         }
-
         return root;
     }
 
@@ -133,7 +122,7 @@ internal class RootParser : Parser
                     break;
                 default:
                     {
-                        // TODO: Add Diagnostic information. Unexpected token
+                        // TODO: Add Diagnostic information. Unexpected lexerToken
                         break;
                     }
             }
@@ -141,6 +130,7 @@ internal class RootParser : Parser
 
         return node;
     }
+    
     private RootQueryNode ParsePage(ref TokenLexer lexer, ParserContext context, RootQueryNode node)
     {
         var nodes = node.Nodes.ToList();

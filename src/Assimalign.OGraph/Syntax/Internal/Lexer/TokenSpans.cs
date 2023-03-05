@@ -11,6 +11,7 @@ internal static class TokenSpans
     internal static ReadOnlySpan<KeyValuePair<TokenType, byte[]>> Separators => new[]
     {
         new KeyValuePair<TokenType, byte[]>(TokenType.WhiteSpace, new byte[] {(byte)' ' }),
+        new KeyValuePair<TokenType, byte[]>(TokenType.Slash, new byte[] {(byte)'/' }), // This is a type of separator used for edge paths
         new KeyValuePair<TokenType, byte[]>(TokenType.Tab, new byte[] {(byte)'\t' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.LineFeed, new byte[] {(byte)'\n' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.CarriageReturn, new byte[] {(byte)'\r' }),
@@ -25,7 +26,7 @@ internal static class TokenSpans
     };
     internal static ReadOnlySpan<KeyValuePair<TokenType, byte[]>> Keywords => new[]
     {
-        new KeyValuePair<TokenType, byte[]>(TokenType.QueryRoot, new byte[] { (byte)'q', (byte)'u', (byte)'e', (byte)'r', (byte)'y' }),
+        //new KeyValuePair<TokenType, byte[]>(TokenType.QueryRoot, new byte[] { (byte)'q', (byte)'u', (byte)'e', (byte)'r', (byte)'y' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Filter, new byte[] { (byte)'f', (byte)'i', (byte)'l', (byte)'t', (byte)'e', (byte)'r' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Project, new byte[] { (byte)'p', (byte)'r', (byte)'o', (byte)'j', (byte)'e', (byte)'c', (byte)'t' }),
         new KeyValuePair<TokenType, byte[]>(TokenType.Sort, new byte[] { (byte)'s', (byte)'o', (byte)'r', (byte)'t' }),

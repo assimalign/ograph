@@ -163,12 +163,12 @@ internal class OGraphNodeDescriptor<T> : IOGraphNodeDescriptor<T>
         {
             throw new ArgumentNullException(nameof(expression));
         }
-        // Check that expression is a Member Expression
+        // Check that expression is a Property Expression
         if (expression is not LambdaExpression lambda || lambda.Body is not MemberExpression member)
         {
             throw new InvalidOperationException($"'{expression}' must be a member expression");
         }
-        // Check that the Member is of type T
+        // Check that the Property is of type T
         if (member.Member.DeclaringType.IsAssignableTo(typeof(T)))
         {
             throw new InvalidOperationException($"'{expression}' must be a member of {typeof(T).Name}");

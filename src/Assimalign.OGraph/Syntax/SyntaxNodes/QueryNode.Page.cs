@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Text;
 
 namespace Assimalign.OGraph.Syntax;
 
 public sealed class PageQueryNode : QueryNode
 {
-    public PageQueryNode() { }
+    internal PageQueryNode() { }
     public PageQueryNode(string token)
     {
         if (string.IsNullOrEmpty(token))
@@ -13,27 +14,31 @@ public sealed class PageQueryNode : QueryNode
         }
         Token = new ConstantQueryNode()
         {
-            Value = token
+            Value = Encoding.UTF8.GetBytes(token)
         };
     }
     public PageQueryNode(long take, long skip)
     {
-        Skip = new ConstantQueryNode()
+        this.Skip = new ConstantQueryNode()
         {
-            Value = skip
+            Value = new byte[1] { (byte)skip }
         };
-        Take = new ConstantQueryNode()
+        this.Take = new ConstantQueryNode()
         {
-            Value = take
+            Value = new byte[1] { (byte)take }
         };
+    }
+    public PageQueryNode(EdgeQueryNode edge, long take, long skip) 
+        : this(take, skip)
+    {
+        this.Edge = edge;   
     }
 
 
     /// <summary>
     /// Represents the edge, if any, to apply paging.
     /// </summary>
-    public string? Edge { get; init; }
-
+    public EdgeQueryNode? Edge { get; init; }
     /// <summary>
     /// 
     /// </summary>

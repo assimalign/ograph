@@ -8,7 +8,8 @@ With the world moving towards ***micro-everything***, the push for Graph based s
 ## Key Features
 
 ## Comparisons
-::
+
+
 ### OData vs OGraph
 
 **Data Modeling** 

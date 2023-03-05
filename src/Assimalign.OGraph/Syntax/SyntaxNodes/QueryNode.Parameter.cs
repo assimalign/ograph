@@ -7,7 +7,7 @@ public sealed class ParameterQueryNode : QueryNode
     private QueryNode parameterValue;
 
     internal ParameterQueryNode() { }
-    public ParameterQueryNode(MemberQueryNode parameterValue)
+    public ParameterQueryNode(PropertyQueryNode parameterValue)
     {
         this.parameterValue = parameterValue;
     }
@@ -32,7 +32,7 @@ public sealed class ParameterQueryNode : QueryNode
     {
         ConstantQueryNode => ParameterType.Constant,
         FunctionQueryNode => ParameterType.Function,
-        MemberQueryNode => ParameterType.Member
+        PropertyQueryNode => ParameterType.Member
     };
 
     /// <inheritdoc />

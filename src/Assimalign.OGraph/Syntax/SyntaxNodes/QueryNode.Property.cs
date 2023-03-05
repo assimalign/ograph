@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax;
 
-public sealed class MemberQueryNode : QueryNode
+public sealed class PropertyQueryNode : QueryNode
 {
-    public MemberQueryNode() { }
-    public MemberQueryNode(string name)
+    internal PropertyQueryNode() { }
+
+    public PropertyQueryNode(string name)
     {
         this.Name = name;
     }
@@ -15,10 +14,10 @@ public sealed class MemberQueryNode : QueryNode
     /// <summary>
     /// Represents the name of the member.
     /// </summary>
-    public string Name { get; init; }
+    public string? Name { get; init; }
 
     /// <inheritdoc />
-    public override QueryNodeType NodeType => QueryNodeType.Member;
+    public override QueryNodeType NodeType => QueryNodeType.Property;
 
     /// <inheritdoc />
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)

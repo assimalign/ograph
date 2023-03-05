@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Xml.Linq;
 
 namespace Assimalign.OGraph.Syntax;
 
@@ -27,26 +28,14 @@ public sealed class RootQueryNode : QueryNode
     /// Represents the root nodes of the expression tree.
     /// </summary>
     public IEnumerable<QueryNode> Nodes { get; init; } = new QueryNode[0];
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public bool TryGetFilterNode(out FilterQueryNode node) => TryGetNode(out node);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public bool TryGetSelectNode(out ProjectionQueryNode node) => TryGetNode(out node);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public bool TryGetSortNode(out SortQueryNode node) => TryGetNode(out node);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public bool TryGetPageNode(out PageQueryNode node) => TryGetNode(out node);
+
+
+
+    public bool TryGetProjections(out IEnumerable<ProjectionQueryNode> nodes) => TryGetNodes(out nodes);
+    public bool TryGetFilters(out IEnumerable<FilterQueryNode> nodes) => TryGetNodes(out nodes);
+    public bool TryGetSorts(out IEnumerable<SortQueryNode> nodes) => TryGetNodes(out nodes);
+    public bool TryGetPages(out IEnumerable<PageQueryNode> nodes) => TryGetNodes(out nodes);
+
     
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Root;
@@ -57,18 +46,25 @@ public sealed class RootQueryNode : QueryNode
         return visitor.Visit(this);
     }
 
-    private bool TryGetNode<TNode>(out TNode node)
-    {
-        node = default;
 
+    private bool TryGetNodes<TNode>(out IEnumerable<TNode> nodes)
+    {
+        nodes = default;
+
+        var list = new List<TNode>();
         foreach (var n in Nodes)
         {
             if (n is TNode tn)
             {
-                node = tn;
-                return true;
+                list.Add(tn);
             }
         }
+        if (list.Count > 0)
+        {
+            nodes = list.ToArray();
+            return true;
+        }
+
         return false;
     }
 }

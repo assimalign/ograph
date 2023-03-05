@@ -11,8 +11,6 @@
 	<ItemGroup>
 	  <Folder Include="Extensions\" />
 	  <Folder Include="Internal\ILEmit\" />
-	  <Folder Include="Internal\Exceptions\" />
-	  <Folder Include="Internal\Exceptions\" />
 	  <Folder Include="Internal\ILEmit\" />
 	  <Folder Include="Internal\Validators\" />
 	  <Folder Include="Internal\Validators\" />

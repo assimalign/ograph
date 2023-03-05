@@ -12,13 +12,9 @@ internal class ParserContext
     internal ParserContext() { }
 
     internal IEnumerable<Diagnostic> Diasgnostics => this.diagnostics;
-
     internal TParser GetParser<TParser>() where TParser : Parser, new() => (TParser)parsers.GetOrAdd(typeof(TParser), type => new TParser());
-
-
     internal void AddDiagnostic(Diagnostic diagnostic)
     {
         diagnostics.Enqueue(diagnostic);
     }
-    
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Assimalign.OGraph;
+﻿namespace Assimalign.OGraph;
 
 /// <summary>
 /// Represents a single entity and it's structure within the Graph Model.
@@ -15,7 +13,7 @@ public interface IOGraphNode
     /// </summary>
     Label Label { get; }    
     /// <summary>
-    /// 
+    /// Represents arbitrary metadata that can be associated with this node.
     /// </summary>
     IOGraphMetadata Metadata { get; }    
     /// <summary>

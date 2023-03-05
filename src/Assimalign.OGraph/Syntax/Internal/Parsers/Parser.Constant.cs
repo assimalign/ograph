@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
@@ -10,7 +11,7 @@ internal class ConstantParser : Parser
 
         return new ConstantQueryNode()
         {
-            Value = token.Value,
+            Value = token.Value.ToArray()
         };
     }
 }

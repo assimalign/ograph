@@ -9,7 +9,7 @@ namespace Assimalign.OGraph.Execution;
 
 public interface IOGraphResponse
 {
-
+    int StatusCode { get; }
     IOGraphHeaderCollection Headers { get; }
     Stream Body { get; }
 }

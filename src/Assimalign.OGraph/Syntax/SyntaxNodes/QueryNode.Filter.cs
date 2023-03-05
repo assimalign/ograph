@@ -9,7 +9,7 @@ public sealed class FilterQueryNode : QueryNode
     {
         Predicate = predicate;
     }
-    public FilterQueryNode(string? edge, BinaryQueryNode predicate)
+    public FilterQueryNode(EdgeQueryNode? edge, BinaryQueryNode predicate)
     {
         Edge = edge;
         Predicate = predicate;
@@ -19,7 +19,7 @@ public sealed class FilterQueryNode : QueryNode
     /// <summary>
     /// Represents the edge, if any, to apply filter.
     /// </summary>
-    public string? Edge { get; init; }
+    public EdgeQueryNode? Edge { get; init; }
     /// <summary>
     /// 
     /// </summary>

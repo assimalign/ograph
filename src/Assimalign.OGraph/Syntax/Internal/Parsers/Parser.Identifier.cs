@@ -12,7 +12,7 @@ internal class IdentifierParser : Parser
     {
 
 
-        return new MemberQueryNode(Encoding.UTF8.GetString(lexer.Current.Value.Span));
+        return new PropertyQueryNode(Encoding.UTF8.GetString(lexer.Current.Value.Span));
         //var token = lexer.Current;
 
         //var identifier = lexer.Current switch
@@ -24,7 +24,7 @@ internal class IdentifierParser : Parser
         //};
 
         //// Projection Logic 
-        //if (identifier is FieldQueryNode fieldNode)
+        //if (identifier is AttributeQueryNode fieldNode)
         //{
         //    // Alias's always follow identifiers. Let's check to see if alias is next
         //    var token = lexer.Peek();
@@ -33,7 +33,7 @@ internal class IdentifierParser : Parser
         //    {
         //        token = lexer.Next();
 
-        //        //if (context.Parse(ref lexer, fieldNode) is not FieldQueryNode)
+        //        //if (context.Parse(ref lexer, fieldNode) is not AttributeQueryNode)
         //        //{
         //        //    throw QueryParserException.UnexpectedNode();
         //        //}
@@ -49,7 +49,7 @@ internal class IdentifierParser : Parser
 
     private QueryNode ParseMember(ref TokenLexer lexer, ParserContext context, QueryNode fieldNode)
     {
-        return new MemberQueryNode(default);
+        return new PropertyQueryNode(default);
     }
 
     private QueryNode ParseFunctionAny(ref TokenLexer lexer, ParserContext context, QueryNode node)

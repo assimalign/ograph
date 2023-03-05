@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection.Metadata;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
@@ -29,17 +30,41 @@ internal sealed class PageParser : Parser
         return ParseParenthesisBlock(ref lexer, context, pageNode);
     }
 
-    private QueryNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, QueryNode node)
+    private QueryNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
     {
-        if (!lexer.TryPeek(out var next))
+        var next = default(Token);
+
+        if (!lexer.TryPeek(out next))
         {
             // TODO: Add Diagnostic error. Unexpected EOF
-            return node;
+            return queryNode;
+        }
+        // Check if projection is followed by an edge identifier
+        if (next.TokenType == TokenType.Identifier)
+        {
+            var edgeParser = context.GetParser<EdgeParser>();
+
+            if (edgeParser.Parse(ref lexer, context, new EdgeQueryNode()) is not EdgeQueryNode edge)
+            {
+                // TODO: 
+            }
+            else
+            {
+                queryNode = new ProjectionQueryNode()
+                {
+                    Edge = edge,
+                };
+            }
+            if (!lexer.TryPeek(out next))
+            {
+                // TODO: Add Diagnostic error. Unexpected EOF
+                return queryNode;
+            }
         }
         if (next.TokenType != TokenType.OpenBracket)
         {
             // TODO: Add diagnostic error. Expected starting bracket block
-            return node;
+            return queryNode;
         }
         while (lexer.HasNext)
         {
@@ -55,10 +80,10 @@ internal sealed class PageParser : Parser
                 break;
             }
 
-            node = ParseBracketBlock(ref lexer, context, node);
+            queryNode = ParseBracketBlock(ref lexer, context, queryNode);
         }
 
-        return node;
+        return queryNode;
     }
     private QueryNode ParseBracketBlock(ref TokenLexer lexer, ParserContext context, QueryNode node)
     {

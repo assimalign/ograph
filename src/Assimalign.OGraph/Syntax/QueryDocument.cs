@@ -9,14 +9,15 @@ namespace Assimalign.OGraph.Syntax;
 /// </summary>
 public sealed class QueryDocument
 {
+	private readonly IList<Diagnostic> diagnostics;
 	internal QueryDocument(QueryNode node, IEnumerable<Diagnostic> diagnostics)
 	{
 		this.Node = node;
-		this.Diagnostics = diagnostics;
+		this.diagnostics = diagnostics.ToList();
 	}
 
 	/// <summary>
-	/// 
+	/// Specifies whether the query has any errors.
 	/// </summary>
 	public bool IsValid => !Errors.Any();
 	/// <summary>
@@ -26,9 +27,20 @@ public sealed class QueryDocument
 	/// <summary>
 	/// 
 	/// </summary>
-	public IEnumerable<Diagnostic> Diagnostics { get; }
+	public IEnumerable<Diagnostic> Diagnostics => this.diagnostics;
 	/// <summary>
-	/// 
+	/// Represents a collection of diagnostic errors.
 	/// </summary>
 	public IEnumerable<Diagnostic> Errors => Diagnostics.Where(x => x.Severity == DiagnosticSeverity.Error);
+
+
+
+	public void AddDiagnostic(Diagnostic diagnostic)
+	{
+		if (diagnostics is null)
+		{
+			throw new ArgumentNullException(nameof(diagnostic));
+		}
+		diagnostics.Add(diagnostic);
+	}
 }

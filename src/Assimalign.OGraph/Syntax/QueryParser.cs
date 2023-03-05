@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
-//using System.Runtime.CompilerServices;
 
 namespace Assimalign.OGraph.Syntax;
 
@@ -23,7 +22,7 @@ public sealed partial class QueryParser
     {
         try
         {
-            var lexer = new TokenLexer(query, new()
+            var lexer   = new TokenLexer(query, new()
             {
                 SkipCarriageReturn = true,
                 SkipLineFeed = true,

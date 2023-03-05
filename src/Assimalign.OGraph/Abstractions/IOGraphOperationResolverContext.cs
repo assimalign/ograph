@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace Assimalign.OGraph;
 
 
-
 public interface IOGraphOperationResolverContext
 {
     /// <summary>
@@ -31,7 +30,10 @@ public interface IOGraphOperationResolverContext
     /// <param name="parameterName">The name of the query parameter.</param>
     /// <returns></returns>
     T GetQueryValue<T>(string parameterName);
-
-
-    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    T GetBodyValue<T>();
 }

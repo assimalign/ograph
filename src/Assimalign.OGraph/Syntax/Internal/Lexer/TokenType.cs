@@ -72,7 +72,6 @@ internal enum TokenType
     LessThanOrEqual,
     And,
     Or,
-
     #endregion
 
     #region Separators
@@ -94,7 +93,6 @@ internal enum TokenType
 
     #region Keywords
     Alias,
-    QueryRoot,
     Project,
     Filter,
     Sort,

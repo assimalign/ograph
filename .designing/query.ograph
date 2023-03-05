@@ -9,9 +9,9 @@ https://endpoint.com/api/users?query=variables({
     firstName
     lastName
     middleName
-    2.5 as ConstantValue # Constant Expression as an identifier
-    (firstName eq 'chase') as isFirstNameCorrect, # Binary Expression as an identifier
-    concat(firstName, ' ', middleName, ' ', lastName) as fullName
+    2.5 as ConstantValue                                            # Constant Expression as an identifier
+    (firstName eq 'chase') as hasFirstName,                         # Binary Expression as an identifier
+    concat(firstName, ' ', middleName, ' ', lastName) as fullName   # Function Return as an identifier
     addresses as locations {
         streetOne
         streetTwo
