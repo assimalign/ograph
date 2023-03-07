@@ -28,7 +28,7 @@ internal class RootParser : Parser
                     root = ParseFilter(ref lexer, context, root);
                     break;
                 case TokenType.Project:
-                    root = ParseProject(ref lexer, context, root);
+                    root = ParseProjections(ref lexer, context, root);
                     break;
                 case TokenType.Sort:
                     root = ParseSort(ref lexer, context, root);
@@ -44,91 +44,6 @@ internal class RootParser : Parser
             }
         }
         return root;
-    }
-
-    private RootQueryNode ParseRoot(ref TokenLexer lexer, ParserContext context, RootQueryNode node)
-    {
-        if (!lexer.HasNext)
-        {
-            // TODO: Add diagnostics unexpected EOF
-            return node;
-        }
-
-        var token = lexer.Next();
-
-        if (token.TokenType != TokenType.OpenParenthesis)
-        {
-            // TODO: Add diagnostic error. Expected starting parenthesis block
-            return node;
-        }
-
-        return ParseParenthesisBlock(ref lexer, context, node);
-    }
-    private RootQueryNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, RootQueryNode node)
-    {
-        if (!lexer.TryPeek(out var next))
-        {
-            // TODO: Add Diagnostic error. Unexpected EOF
-            return node;
-        }
-        if (next.TokenType != TokenType.OpenBracket && next.TokenType != TokenType.CloseParenthesis)
-        {
-            // TODO: Add diagnostic error. Expected starting bracket block
-            return node;
-        }
-        while (lexer.HasNext)
-        {
-            var token = lexer.Next();
-
-            if (token.TokenType == TokenType.CloseParenthesis)
-            {
-                if (lexer.TryPeek(out var peek) && peek.TokenType != TokenType.Dot)
-                {
-                    // TODO: Diagnostics error dot notation is required
-                }
-
-                break;
-            }
-
-            node = ParseBracketBlock(ref lexer, context, node);
-        }
-
-        return node;
-    }
-    private RootQueryNode ParseBracketBlock(ref TokenLexer lexer, ParserContext context, RootQueryNode node)
-    {
-        
-        while (lexer.HasNext)
-        {
-            var token = lexer.Next();
-
-            if (token.TokenType == TokenType.CloseBracket)
-            {
-                break;
-            }
-            switch (token.TokenType)
-            {
-                case TokenType.Page:
-                    node = ParsePage(ref lexer, context, node);
-                    break;
-                case TokenType.Filter:
-                    node = ParseFilter(ref lexer, context, node);
-                    break;
-                case TokenType.Project:
-                    node = ParseProject(ref lexer, context, node);
-                    break;
-                case TokenType.Sort:
-                    node = ParseSort(ref lexer, context, node);
-                    break;
-                default:
-                    {
-                        // TODO: Add Diagnostic information. Unexpected lexerToken
-                        break;
-                    }
-            }
-        }
-
-        return node;
     }
     
     private RootQueryNode ParsePage(ref TokenLexer lexer, ParserContext context, RootQueryNode node)
@@ -152,7 +67,7 @@ internal class RootParser : Parser
     private RootQueryNode ParseSort(ref TokenLexer lexer, ParserContext context, RootQueryNode node)
     {
         var nodes = node.Nodes.ToList();
-        var sortParser = context.GetParser<ProjectionParser>();
+        var sortParser = context.GetParser<SortParser>();
         var sortNode = sortParser.Parse(ref lexer, context, new FilterQueryNode());
 
         if (sortNode is not ProjectionQueryNode)
@@ -167,7 +82,7 @@ internal class RootParser : Parser
             Nodes = nodes
         };
     }
-    private RootQueryNode ParseProject(ref TokenLexer lexer, ParserContext context, RootQueryNode node)
+    private RootQueryNode ParseProjections(ref TokenLexer lexer, ParserContext context, RootQueryNode node)
     {
         var nodes = node.Nodes.ToList();
         var projectionParser = context.GetParser<ProjectionParser>();
@@ -188,7 +103,7 @@ internal class RootParser : Parser
     private RootQueryNode ParseFilter(ref TokenLexer lexer, ParserContext context, RootQueryNode node)
     {
         var nodes = node.Nodes.ToList();
-        var filterParser = context.GetParser<ProjectionParser>();
+        var filterParser = context.GetParser<FilterParser>();
         var filterNode = filterParser.Parse(ref lexer, context, new FilterQueryNode());
 
         if (filterNode is not ProjectionQueryNode)

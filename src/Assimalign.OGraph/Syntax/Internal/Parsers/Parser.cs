@@ -9,9 +9,9 @@ internal abstract class Parser
     /// 
     /// </summary>
     /// <param name="lexer"></param>
-    /// <param name="node">Represents the left recursive node currently being parsed.</param>
+    /// <param name="queryNode">Represents the left recursive queryNode currently being parsed.</param>
     /// <returns></returns>
-    internal abstract QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode node);
+    internal abstract QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode);
 
 
     internal static Parser Create() => new RootParser();

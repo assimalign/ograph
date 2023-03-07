@@ -8,49 +8,69 @@ namespace Assimalign.OGraph.Syntax.Internal;
 
 internal class IdentifierParser : Parser
 {
-    internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode node)
+    
+
+    /* Should return either a:
+     * - property node 
+     * - function node 
+     
+     */
+    internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
     {
+        var token = lexer.Current;
+
+        if (lexer.Current.TokenType != TokenType.Identifier)
+        {
+            // TODO: Add diagnostics 
+            return queryNode;
+        }
+        if (queryNode is FunctionQueryNode functionNode)
+        {
+            queryNode = new FunctionQueryNode()
+            {
+
+            };
+            if (token.Value.IsFunction(out var functionType))
+            {
+
+            }
+            else
+            {
+
+            }
+                queryNode = new Function
+        }
+
+        
+
+        if (token.Value.IsFunction(out var functionType)) 
+        {
+             
+        }
+        else
+        {
+            return ParseProperty(ref lexer, context, queryNode);
+        }
 
 
-        return new PropertyQueryNode(Encoding.UTF8.GetString(lexer.Current.Value.Span));
-        //var token = lexer.Current;
 
-        //var identifier = lexer.Current switch
-        //{
-        //    //"any"           => ParseFunctionAny(ref lexer, context, node),
-        //    //"startswith"    => ParseFunctionStartsWtih(ref lexer, context, node),
-        //    //"endswith"      => ParseFunctionEndsWith(ref lexer, context, node),
-        //    _               => ParseMember(ref lexer, context, node),
-        //};
-
-        //// Projection Logic 
-        //if (identifier is AttributeQueryNode fieldNode)
-        //{
-        //    // Alias's always follow identifiers. Let's check to see if alias is next
-        //    var token = lexer.Peek();
-
-        //    if (token.TokenType == TokenType.Alias)
-        //    {
-        //        token = lexer.Next();
-
-        //        //if (context.Parse(ref lexer, fieldNode) is not AttributeQueryNode)
-        //        //{
-        //        //    throw QueryParserException.UnexpectedNode();
-        //        //}
-        //    }
-
-        //    return fieldNode;
-        //}
-
-
-
-        //return default;
+        QueryNode ParseFunction(FunctionType functionType)
+        {
+            return functionType switch
+            {
+                FunctionType.SubString => ParseSubStringFunctionNode(ref lexer, context, new FunctionQueryNode())
+            };
+        }
     }
 
-    private QueryNode ParseMember(ref TokenLexer lexer, ParserContext context, QueryNode fieldNode)
+
+
+
+    private QueryNode ParseProperty(ref TokenLexer lexer, ParserContext context, QueryNode fieldNode)
     {
         return new PropertyQueryNode(default);
     }
+
 
     private QueryNode ParseFunctionAny(ref TokenLexer lexer, ParserContext context, QueryNode node)
     {
@@ -65,6 +85,10 @@ internal class IdentifierParser : Parser
     private QueryNode ParseFunctionStartsWtih(ref TokenLexer lexer, ParserContext context, QueryNode node)
     {
 
+        return default;
+    }
+    private QueryNode ParseSubStringFunctionNode(ref TokenLexer lexer, ParserContext context, QueryNode node)
+    {
         return default;
     }
 }

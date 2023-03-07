@@ -13,7 +13,7 @@ public sealed class EdgeQueryNode : QueryNode
     /// <summary>
     /// 
     /// </summary>
-    public string Path { get; init; }
+    public string? Path { get; init; }
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => throw new NotImplementedException();
@@ -30,6 +30,6 @@ public sealed class EdgeQueryNode : QueryNode
     /// <returns></returns>
     public string[] GetSegments()
     {
-        return Path.Split('/');
+        return Path?.Split('/') ?? new string[0];
     }
 }

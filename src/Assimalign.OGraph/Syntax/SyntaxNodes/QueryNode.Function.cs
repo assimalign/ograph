@@ -5,7 +5,7 @@ namespace Assimalign.OGraph.Syntax;
 
 public sealed class FunctionQueryNode : QueryNode
 {
-    public FunctionQueryNode() { }
+    internal FunctionQueryNode() { }
     public FunctionQueryNode(string name, IEnumerable<ParameterQueryNode> parameters)
     {
         this.Name = name;
@@ -15,12 +15,11 @@ public sealed class FunctionQueryNode : QueryNode
     /// <summary>
     /// The name of the function call.
     /// </summary>
-    public string Name { get; init; }
-
+    public string? Name { get; init; }
     /// <summary>
     /// The function parameters
     /// </summary>
-    public IEnumerable<ParameterQueryNode> Parameters { get; init; } = new ParameterQueryNode[0];
+    public IEnumerable<ParameterQueryNode>? Parameters { get; init; } = new ParameterQueryNode[0];
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Function;

@@ -4,7 +4,7 @@ namespace Assimalign.OGraph.Syntax;
 
 public sealed class FilterQueryNode : QueryNode
 {
-    public FilterQueryNode() { }
+    internal FilterQueryNode() { }
     public FilterQueryNode(BinaryQueryNode predicate)
     {
         Predicate = predicate;
@@ -23,7 +23,7 @@ public sealed class FilterQueryNode : QueryNode
     /// <summary>
     /// 
     /// </summary>
-    public BinaryQueryNode Predicate { get; init; }
+    public BinaryQueryNode? Predicate { get; init; }
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Filter;

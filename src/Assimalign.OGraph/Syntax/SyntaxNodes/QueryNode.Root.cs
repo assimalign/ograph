@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Xml.Linq;
 
 namespace Assimalign.OGraph.Syntax;
 
 public sealed class RootQueryNode : QueryNode
 {
-    private IEnumerable<QueryNode> nodes;
-
-    public RootQueryNode() { }
+    internal RootQueryNode() { }
     public RootQueryNode(IEnumerable<QueryNode> nodes)
     {
         this.Nodes = nodes;
@@ -20,21 +17,39 @@ public sealed class RootQueryNode : QueryNode
         this.Variables = variables.ToImmutableDictionary();
     }
 
+   
+    /// <summary>
+    /// Represents the root nodes of the expression tree.
+    /// </summary>
+    public IEnumerable<QueryNode> Nodes { get; init; } = new QueryNode[0];
     /// <summary>
     /// 
     /// </summary>
     public IReadOnlyDictionary<string, object> Variables { get; init; } = new Dictionary<string, object>();
     /// <summary>
-    /// Represents the root nodes of the expression tree.
+    /// 
     /// </summary>
-    public IEnumerable<QueryNode> Nodes { get; init; } = new QueryNode[0];
-
-
-
-    public bool TryGetProjections(out IEnumerable<ProjectionQueryNode> nodes) => TryGetNodes(out nodes);
-    public bool TryGetFilters(out IEnumerable<FilterQueryNode> nodes) => TryGetNodes(out nodes);
-    public bool TryGetSorts(out IEnumerable<SortQueryNode> nodes) => TryGetNodes(out nodes);
-    public bool TryGetPages(out IEnumerable<PageQueryNode> nodes) => TryGetNodes(out nodes);
+    /// <param name="nodes"></param>
+    /// <returns></returns>
+    public bool TryGetProjections(out IEnumerable<ProjectionQueryNode>? nodes) => TryGetNodes(out nodes);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="nodes"></param>
+    /// <returns></returns>
+    public bool TryGetFilters(out IEnumerable<FilterQueryNode>? nodes) => TryGetNodes(out nodes);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="nodes"></param>
+    /// <returns></returns>
+    public bool TryGetSorts(out IEnumerable<SortQueryNode>? nodes) => TryGetNodes(out nodes);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="nodes"></param>
+    /// <returns></returns>
+    public bool TryGetPages(out IEnumerable<PageQueryNode>? nodes) => TryGetNodes(out nodes);
 
     
     /// <inheritdoc />
@@ -47,7 +62,7 @@ public sealed class RootQueryNode : QueryNode
     }
 
 
-    private bool TryGetNodes<TNode>(out IEnumerable<TNode> nodes)
+    private bool TryGetNodes<TNode>(out IEnumerable<TNode>? nodes)
     {
         nodes = default;
 

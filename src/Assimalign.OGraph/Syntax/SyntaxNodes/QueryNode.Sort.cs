@@ -29,7 +29,7 @@ public sealed class SortQueryNode : QueryNode
     /// <summary>
     /// A collection of attributes to project in the query.
     /// </summary>
-    public IEnumerable<AttributeQueryNode> Attributes { get; init; }
+    public IEnumerable<AttributeQueryNode>? Attributes { get; init; }
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Sort;

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
@@ -112,6 +113,7 @@ internal class ProjectionParser : Parser
                 case TokenType.Integer:
                 case TokenType.FloatingPoint:
                 case TokenType.Boolean:
+                case TokenType.Null:
                     {
                         attributes.Add(ParseConstantAsIdentifier(ref lexer, context, new AttributeQueryNode()));
                         break;
@@ -160,6 +162,7 @@ internal class ProjectionParser : Parser
             queryNode = ParseNestedAttributeNode(ref lexer, context, queryNode);
         }
 
+        
         return queryNode;
     }
     private AttributeQueryNode ParseNestedAttributeNode(ref TokenLexer lexer, ParserContext context, AttributeQueryNode queryNode)
@@ -228,15 +231,38 @@ internal class ProjectionParser : Parser
             Value = node.Value
         };
     }
-    private AttributeQueryNode ParseBinaryAsIdentifier(ref TokenLexer lexer, ParserContext context, AttributeQueryNode node)
-    {
-
-
-        return default;
-    }
     private AttributeQueryNode ParseConstantAsIdentifier(ref TokenLexer lexer, ParserContext context, AttributeQueryNode queryNode)
     {
+        var next = default(Token);
+        var constantNode = context.GetParser<ConstantParser>()
+            .Parse(ref lexer, context, new ConstantQueryNode());
 
+        // Comma Check
+        if (lexer.TryPeek(out next) && next.TokenType == TokenType.Comma)
+        {
+            lexer.Skip();
+        }
+        // Alias Check
+        if (lexer.TryPeek(out next) && next.TokenType == TokenType.Alias)
+        {
+            lexer.Skip();
+            queryNode = ParseIdentifierAlias(ref lexer, context, queryNode);
+        }
+        else
+        {
+            var random = new Random();
+            queryNode = new AttributeQueryNode()
+            {
+                Alias = $"fd{random.Next(999)}",
+                Children = queryNode.Children,
+                Value = queryNode.Value
+            };
+        }
+
+        return queryNode;
+    }
+    private AttributeQueryNode ParseBinaryAsIdentifierNode(ref TokenLexer lexer, ParserContext context, AttributeQueryNode queryNode)
+    {
 
         return queryNode;
     }

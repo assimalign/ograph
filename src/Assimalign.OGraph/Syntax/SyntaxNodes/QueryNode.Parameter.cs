@@ -4,7 +4,7 @@ namespace Assimalign.OGraph.Syntax;
 
 public sealed class ParameterQueryNode : QueryNode
 {
-    private QueryNode parameterValue;
+    private QueryNode? parameterValue;
 
     internal ParameterQueryNode() { }
     public ParameterQueryNode(PropertyQueryNode parameterValue)
@@ -23,7 +23,27 @@ public sealed class ParameterQueryNode : QueryNode
     /// <summary>
     /// 
     /// </summary>
-    public QueryNode ParameterValue => this.parameterValue;
+    public QueryNode? ParameterValue => this.parameterValue;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="constant"></param>
+    /// <returns></returns>
+    public bool IsConstant(out ConstantQueryNode? constant)
+    {
+        constant = default;
+
+        if (constant is ConstantQueryNode node)
+        {
+            constant = node;
+            return true;
+        }
+
+        return false;
+    }
+
+
 
     /// <summary>
     /// 
@@ -32,7 +52,8 @@ public sealed class ParameterQueryNode : QueryNode
     {
         ConstantQueryNode => ParameterType.Constant,
         FunctionQueryNode => ParameterType.Function,
-        PropertyQueryNode => ParameterType.Member
+        PropertyQueryNode => ParameterType.Member,
+        _                 => ParameterType.None
     };
 
     /// <inheritdoc />
