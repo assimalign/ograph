@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace Assimalign.OGraph.Syntax.Internal;
+﻿namespace Assimalign.OGraph.Syntax.Internal;
 
 internal class ConstantParser : Parser
 {

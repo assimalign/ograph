@@ -12,37 +12,42 @@ internal class EdgeParser : Parser
     {
         if (queryNode is not EdgeQueryNode edgeNode)
         {
-            return queryNode;
+            throw QueryParserException.UnexpectedQueryNode(
+                typeof(EdgeQueryNode),
+                queryNode.GetType());
         }
+
         var edgePath = string.Empty;
 
         while (lexer.HasNext)
         {
-            var lexerToken = lexer.Next();
+            var token = lexer.Next();
 
-            if (lexerToken.TokenType == TokenType.Comma)
+            if (token.TokenType == TokenType.Comma)
             {
                 break;
             }
-            if (lexerToken.TokenType != TokenType.Identifier)
+            if (token.TokenType != TokenType.Identifier)
             {
                 // TODO: Expected Identifier
             }
             else
             {
-                edgePath = string.IsNullOrEmpty(edgePath) ? lexerToken.Text : string.Join('/', edgePath, lexerToken.Text);
+                edgePath = string.IsNullOrEmpty(edgePath) ?
+                    token.Text : 
+                    string.Join('/', edgePath, token.Text);
             }
             if (!lexer.TryPeek(out var next))
             {
-                context.AddUnexptedTokenDiagnosticError(ref lexerToken);
+                context.AddUnexpectedEOFError(ref lexer);
             }
-            if (next.TokenType != TokenType.Slash)
+            if (next.TokenType != TokenType.Slash && next.TokenType != TokenType.Comma)
             {
-                // TODO: Expected Slash or comma
+                context.AddExpectedCommaSeparatorDiagnosticError(ref next);   
             }
         }
 
-        return new EdgeQueryNode()
+        return edgeNode = new EdgeQueryNode()
         {
             Path = edgePath,
         };

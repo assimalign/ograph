@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Text;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
@@ -11,6 +12,8 @@ internal class ParserContext
 
     internal ParserContext() { }
 
+    internal bool ThrowExceptionOnDiagnosticError { get; init; }
+    internal Encoding Encoding { get; init; } = Encoding.UTF8;
     internal IEnumerable<Diagnostic> Diasgnostics => this.diagnostics;
     internal TParser GetParser<TParser>() where TParser : Parser, new() => (TParser)parsers.GetOrAdd(typeof(TParser), type => new TParser());
     internal void AddDiagnostic(Diagnostic diagnostic)

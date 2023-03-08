@@ -30,7 +30,7 @@ internal sealed class PageParser : Parser
         return ParseParenthesisBlock(ref lexer, context, pageNode);
     }
 
-    private QueryNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
+    private PageQueryNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, PageQueryNode queryNode)
     {
         var next = default(Token);
 
@@ -43,18 +43,13 @@ internal sealed class PageParser : Parser
         if (next.TokenType == TokenType.Identifier)
         {
             var edgeParser = context.GetParser<EdgeParser>();
+            var edgeNode = edgeParser.Parse<EdgeQueryNode>(ref lexer, context);
 
-            if (edgeParser.Parse(ref lexer, context, new EdgeQueryNode()) is not EdgeQueryNode edge)
+            queryNode = new PageQueryNode()
             {
-                // TODO: 
-            }
-            else
-            {
-                queryNode = new ProjectionQueryNode()
-                {
-                    Edge = edge,
-                };
-            }
+                Edge = edgeNode
+            };
+
             if (!lexer.TryPeek(out next))
             {
                 // TODO: Add Diagnostic error. Unexpected EOF
@@ -85,7 +80,7 @@ internal sealed class PageParser : Parser
 
         return queryNode;
     }
-    private QueryNode ParseBracketBlock(ref TokenLexer lexer, ParserContext context, QueryNode node)
+    private PageQueryNode ParseBracketBlock(ref TokenLexer lexer, ParserContext context, PageQueryNode queryNode)
     {
         while (lexer.HasNext)
         {
@@ -98,13 +93,13 @@ internal sealed class PageParser : Parser
             switch (token.TokenType)
             {
                 case TokenType.Skip:
-                    node = ParseSkip(ref lexer, context, node);
+                    queryNode = ParseSkip(ref lexer, context, queryNode);
                     break;
                 case TokenType.Take:
-                    node = ParseTake(ref lexer, context, node);
+                    queryNode = ParseTake(ref lexer, context, queryNode);
                     break;
                 case TokenType.Token:
-                    node = ParseToken(ref lexer, context, node);
+                    queryNode = ParseToken(ref lexer, context, queryNode);
                     break;
                 default:
                     {
@@ -114,14 +109,14 @@ internal sealed class PageParser : Parser
             }
         }
 
-        return node;
+        return queryNode;
     }
-    private QueryNode ParseSkip(ref TokenLexer lexer, ParserContext context, QueryNode node)
+    private PageQueryNode ParseSkip(ref TokenLexer lexer, ParserContext context, PageQueryNode queryNode)
     {
-        if (node is not PageQueryNode pageNode)
+        if (queryNode is not PageQueryNode pageNode)
         {
             // TODO: 
-            return node;
+            return queryNode;
         }
 
         var token = lexer.Next();
@@ -141,14 +136,14 @@ internal sealed class PageParser : Parser
             // TODO: Add diagnostic information
         }
 
-        return node;
+        return queryNode;
     }
-    private QueryNode ParseTake(ref TokenLexer lexer, ParserContext context, QueryNode node)
+    private PageQueryNode ParseTake(ref TokenLexer lexer, ParserContext context, PageQueryNode queryNode)
     {
-        if (node is not PageQueryNode pageNode)
+        if (queryNode is not PageQueryNode pageNode)
         {
             // TODO: 
-            return node;
+            return queryNode;
         }
 
         var token = lexer.Next();
@@ -168,14 +163,14 @@ internal sealed class PageParser : Parser
             // TODO: Add diagnostic information
         }
 
-        return node;
+        return queryNode;
     }
-    private QueryNode ParseToken(ref TokenLexer lexer, ParserContext context, QueryNode node)
+    private PageQueryNode ParseToken(ref TokenLexer lexer, ParserContext context, PageQueryNode queryNode)
     {
-        if (node is not PageQueryNode pageNode)
+        if (queryNode is not PageQueryNode pageNode)
         {
             // TODO: 
-            return node;
+            return queryNode;
         }
 
         var token = lexer.Next();
@@ -195,6 +190,6 @@ internal sealed class PageParser : Parser
             // TODO: Add diagnostic information
         }
 
-        return node;
+        return queryNode;
     }
 }

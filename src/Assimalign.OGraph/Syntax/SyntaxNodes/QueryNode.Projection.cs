@@ -12,15 +12,15 @@ namespace Assimalign.OGraph.Syntax;
 /// </remarks>
 public sealed class ProjectionQueryNode : QueryNode
 {
-    internal ProjectionQueryNode() { }
-    public ProjectionQueryNode(IEnumerable<AttributeQueryNode> attributes)
+    public ProjectionQueryNode() { }
+    public ProjectionQueryNode(IEnumerable<PropertyQueryNode> properties)
     {
-        this.Attributes = attributes;
+        this.Properties = properties;
     }
-    public ProjectionQueryNode(EdgeQueryNode edge, IEnumerable<AttributeQueryNode> attributes)
+    public ProjectionQueryNode(EdgeQueryNode edge, IEnumerable<PropertyQueryNode> properties)
     {
         this.Edge = edge;
-        this.Attributes = attributes;
+        this.Properties = properties;
     }
     /// <summary>
     /// Represents the edge, if any, to apply projections.
@@ -31,9 +31,9 @@ public sealed class ProjectionQueryNode : QueryNode
     /// </summary>
     public bool IsRoot => Edge is null;
     /// <summary>
-    /// A collection of attributes to project in the query.
+    /// A collection of properties to project in the query.
     /// </summary>
-    public IEnumerable<AttributeQueryNode> Attributes { get; init; } = new AttributeQueryNode[0];
+    public IEnumerable<PropertyQueryNode> Properties { get; init; } = new PropertyQueryNode[0];
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Projection;

@@ -17,7 +17,7 @@ internal class FilterParser : Parser
         }
         if (!lexer.HasNext)
         {
-            context.AddUnexpectedEOFDiagnosticError(lexer.Current.End);
+            context.AddUnexpectedEOFError(ref lexer);
             return queryNode;
         }
 
@@ -31,7 +31,6 @@ internal class FilterParser : Parser
 
         return ParseParenthesisBlock(ref lexer, context, filterNode);
     }
-
     private FilterQueryNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, FilterQueryNode queryNode)
     {
         var next = default(Token);
@@ -45,18 +44,13 @@ internal class FilterParser : Parser
         if (next.TokenType == TokenType.Identifier)
         {
             var edgeParser = context.GetParser<EdgeParser>();
+            var edgeNode = edgeParser.Parse<EdgeQueryNode>(ref lexer, context);
 
-            if (edgeParser.Parse(ref lexer, context, new EdgeQueryNode()) is not EdgeQueryNode edge)
+            queryNode = new FilterQueryNode()
             {
-                // TODO: 
-            }
-            else
-            {
-                queryNode = new FilterQueryNode()
-                {
-                    Edge = edge,
-                };
-            }
+                Edge = edgeNode
+            };
+
             if (!lexer.TryPeek(out next))
             {
                 // TODO: Add Diagnostic error. Unexpected EOF
@@ -104,87 +98,63 @@ internal class FilterParser : Parser
             }
             switch (token.TokenType)
             {
-                case TokenType.Identifier:
+                case TokenType.Identifier when token.Value.IsFunction(out var functionType):
                     {
-                        leftOperand = ParseIdentifierNode(ref lexer, context, new FilterQueryNode());
+                        leftOperand = context.GetParser<FunctionParser>().Parse(ref lexer, context, new FunctionQueryNode()
+                        {
+                            FunctionType = functionType
+                        });
                     }
                     break;
+                case TokenType.Identifier:
+                    {
+                        break;
+                    }
                 case TokenType.String:
                 case TokenType.Integer:
                 case TokenType.FloatingPoint:
                 case TokenType.Boolean:
                     {
-                        //attributes.Add(ParseConstantAsIdentifier(ref lexer, context, new AttributeQueryNode()));
+                        leftOperand = context.GetParser<ConstantParser>().Parse(ref lexer, context, queryNode);
+                        break;
+                    }
+                case TokenType.Equal:
+                case TokenType.NotEqual:
+                case TokenType.GreaterThan:
+                case TokenType.GreaterThanOrEqual:
+                case TokenType.LessThan:
+                case TokenType.LessThanOrEqual:
+                case TokenType.And:
+                case TokenType.Or:
+                    {
+                        var parser = context.GetParser<BinaryParser>();
+                        if (parser.Parse(ref lexer, context, new BinaryQueryNode() {  LeftOperand = leftOperand }) is not BinaryQueryNode binaryNode1)
+                        {
+                            // TODO: Add diagnostic
+                            continue;
+                        }
+                        leftOperand = binaryNode1;
                         break;
                     }
                 default:
                     {
-                        // TODO: Add Diagnostic information. Unexpected token
+                        // TODO: Add Diagnostic information. Unexpected next
                         break;
                     }
             }
         }
 
+        if (leftOperand is not BinaryQueryNode binaryNode)
+        {
+            // TODO: 
+            return queryNode;
+        }
+
         queryNode = new FilterQueryNode()
         {
             Edge = queryNode.Edge,
-            //Attributes = attributes
+            Predicate = binaryNode
         };
-
-        return queryNode;
-    }
-
-    private FilterQueryNode ParseBinaryNode(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
-    {
-
-
-
-        return queryNode as FilterQueryNode;
-    }
-
-    private FilterQueryNode ParseIdentifierNode(ref TokenLexer lexer, ParserContext context, FilterQueryNode queryNode)
-    {
-        var next = default(Token);
-        var identifier = context.GetParser<IdentifierParser>().Parse(ref lexer, context, queryNode);
-
-        // Comma for Binary Expression
-        if (!lexer.TryNext(out next))
-        {
-            // TODO: Diagnostic 
-        }
-
-        // Identifiers in the Filter block should always follow a binary expression
-        switch (next.TokenType)
-        {
-            case TokenType.Equal:
-            case TokenType.NotEqual:
-            case TokenType.GreaterThan:
-            case TokenType.GreaterThanOrEqual:
-            case TokenType.LessThan:
-            case TokenType.LessThanOrEqual:
-            case TokenType.And:
-            case TokenType.Or:
-                {
-
-                    break;
-                }
-            default:
-                {
-                    break;
-                }
-        }
-
-        //// Alias Check
-        //if (lexer.TryPeek(out next) && next.TokenType == TokenType.Alias)
-        //{
-        //    lexer.Skip();
-        //    queryNode = ParseIdentifierAlias(ref lexer, context, queryNode);
-        //}
-        //// Nested Project Check
-        //if (lexer.TryPeek(out next) && next.TokenType == TokenType.OpenBracket)
-        //{
-        //    queryNode = ParseNestedAttributeNode(ref lexer, context, queryNode);
-        //}
 
         return queryNode;
     }

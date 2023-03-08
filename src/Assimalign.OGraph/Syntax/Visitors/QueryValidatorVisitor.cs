@@ -23,40 +23,42 @@ internal class QueryValidatorVisitor : IQueryNodeVisitor<QueryDocument>
 
     public QueryDocument Visit(RootQueryNode node)
     {
-        if (node.TryGetProjections(out var projections))
-        {
-            foreach (var projection in projections)
-            {
-                if (projection.IsRoot)
-                {
-                    projection.Accept(this);
-                }
-                else
-                {
-                    var edge = default(IOGraphEdge);
-                    var paths = projection.Edge.Split('/');
+        //if (node.TryGetProjections(out var projections))
+        //{
+        //    foreach (var projection in projections)
+        //    {
+        //        if (projection.IsRoot)
+        //        {
+        //            projection.Accept(this);
+        //        }
+        //        else
+        //        {
+        //            var edge = default(IOGraphEdge);
+        //            var paths = projection.Edge.Split('/');
 
-                    foreach (var path in paths)
-                    {
-                        edge = this.node.Edges.FirstOrDefault(x => x.Name == path);
+        //            foreach (var path in paths)
+        //            {
+        //                edge = this.node.Edges.FirstOrDefault(x => x.Name == path);
 
-                        if (edge is null)
-                        {
-                            document.AddDiagnostic(new()
-                            {
+        //                if (edge is null)
+        //                {
+        //                    document.AddDiagnostic(new()
+        //                    {
 
-                            });
-                        }
-                    }
+        //                    });
+        //                }
+        //            }
 
-                    var visitor = new QueryValidatorVisitor(edge.TargetNode, document);
+        //            var visitor = new QueryValidatorVisitor(edge.TargetNode, document);
 
-                    visitor.Visit(projection);
-                }
-            }
-        }
+        //            visitor.Visit(projection);
+        //        }
+        //    }
+        //}
 
-        return document;
+        //return document;
+
+        throw new NotImplementedException();
     }
 
     public QueryDocument Visit(FilterQueryNode node)

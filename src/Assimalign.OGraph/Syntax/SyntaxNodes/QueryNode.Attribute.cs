@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Reflection.Metadata;
 
 namespace Assimalign.OGraph.Syntax;
 
@@ -53,7 +52,7 @@ public sealed class AttributeQueryNode : QueryNode
     public override QueryNodeType NodeType => QueryNodeType.Attribute;
 
     /// <summary>
-    /// 
+    /// Specifies whether the Attribute has nested Identifiers.
     /// </summary>
     public bool HasChildren => Children is not null && Children.Any();
 

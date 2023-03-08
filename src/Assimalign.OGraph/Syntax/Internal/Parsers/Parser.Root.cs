@@ -1,25 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
 internal class RootParser : Parser
 {
-    internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryToken)
+    internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
     {
-        if (queryToken is not RootQueryNode root)
+        if (queryNode is not RootQueryNode root)
         {
-            // TODO: Add diagnostic information 
-            return queryToken;
+            // This should never happen, but here for safety.
+            throw QueryParserException.UnexpectedQueryNode(
+                typeof(RootQueryNode),
+                queryNode.GetType());
         }
         while (lexer.HasNext)
         {
-            var lexerToken = lexer.Next();
-
-            switch (lexerToken.TokenType)
+            var token = lexer.Next();
+            
+            switch (token.TokenType)
             {
                 case TokenType.Page:
                     root = ParsePage(ref lexer, context, root);
@@ -36,26 +35,18 @@ internal class RootParser : Parser
                 case TokenType.Dot:
                     continue;
                 default:
-                    {
-                        // Add Diagnostic information. Unexpected lexerToken
-                        context.AddUnexptedTokenDiagnosticError(ref lexerToken);
-                        break;
-                    }
+                    context.AddUnexptedTokenError(ref lexer); // Add Diagnostic information. Unexpected lexerToken
+                    break;
             }
         }
         return root;
     }
-    
-    private RootQueryNode ParsePage(ref TokenLexer lexer, ParserContext context, RootQueryNode node)
-    {
-        var nodes = node.Nodes.ToList();
-        var pageParser = context.GetParser<PageParser>();
-        var pageNode = pageParser.Parse(ref lexer, context, new PageQueryNode());
 
-        if (pageNode is not PageQueryNode)
-        {
-            // TODO: Add diagnositic information
-        }
+    private RootQueryNode ParsePage(ref TokenLexer lexer, ParserContext context, RootQueryNode queryNode)
+    {
+        var nodes = queryNode.Nodes.ToList();
+        var pageParser = context.GetParser<PageParser>();
+        var pageNode = pageParser.Parse<PageQueryNode>(ref lexer, context);
 
         nodes.Add(pageNode);
 
@@ -68,12 +59,7 @@ internal class RootParser : Parser
     {
         var nodes = node.Nodes.ToList();
         var sortParser = context.GetParser<SortParser>();
-        var sortNode = sortParser.Parse(ref lexer, context, new FilterQueryNode());
-
-        if (sortNode is not ProjectionQueryNode)
-        {
-            // TODO: Add diagnositic information
-        }
+        var sortNode = sortParser.Parse<SortQueryNode>(ref lexer, context);
 
         nodes.Add(sortNode);
 
@@ -86,12 +72,7 @@ internal class RootParser : Parser
     {
         var nodes = node.Nodes.ToList();
         var projectionParser = context.GetParser<ProjectionParser>();
-        var projectionNode = projectionParser.Parse(ref lexer, context, new ProjectionQueryNode());
-
-        if (projectionNode is not ProjectionQueryNode)
-        {
-            // TODO: Add diagnositic information
-        }
+        var projectionNode = projectionParser.Parse<ProjectionQueryNode>(ref lexer, context);
 
         nodes.Add(projectionNode);
 
@@ -104,12 +85,7 @@ internal class RootParser : Parser
     {
         var nodes = node.Nodes.ToList();
         var filterParser = context.GetParser<FilterParser>();
-        var filterNode = filterParser.Parse(ref lexer, context, new FilterQueryNode());
-
-        if (filterNode is not ProjectionQueryNode)
-        {
-            // TODO: Add diagnositic information
-        }
+        var filterNode = filterParser.Parse<FilterQueryNode>(ref lexer, context);
 
         nodes.Add(filterNode);
 

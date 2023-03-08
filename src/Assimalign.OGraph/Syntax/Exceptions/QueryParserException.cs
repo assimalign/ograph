@@ -18,5 +18,9 @@ public sealed class QueryParserException : Exception
     }
 
 
-    
+
+    internal static QueryParserException UnexpectedQueryNode(Type expected, Type actual)
+    {
+        throw new QueryParserException($"An invalid token was passed while paring. Expected '{expected}'. Actual '{actual}'.");
+    }
 }

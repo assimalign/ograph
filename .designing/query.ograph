@@ -9,9 +9,6 @@ https://endpoint.com/api/users?query=variables({
     firstName
     lastName
     middleName
-    2.5 as ConstantValue                                            # Constant Expression as an identifier
-    eq(firstName, 'Chase') as hasFirstName,                         # Binary Expression as an identifier
-    concat(firstName, ' ', middleName, ' ', lastName) as fullName   # Function Return as an identifier
     addresses as locations {
         streetOne
         streetTwo
@@ -22,8 +19,22 @@ https://endpoint.com/api/users?query=variables({
         }
     }
 })
-.filter({and(startsWith(firstName,'c',true),or(and(endsWith(middleName,'e',true), eq(age, 12))),
-        any(addresses, {
+.filter({
+    and(
+        eq(
+            add(
+
+            ),
+            12
+        ),
+        subtract(
+
+        )
+    )
+    startsWith(firstName,'c',true) and ((
+        endsWith(middleName,'e',true) and 
+        age eq 12
+    ) or any(addresses, {
             startsWith(streetOne, '10')
         })
     )

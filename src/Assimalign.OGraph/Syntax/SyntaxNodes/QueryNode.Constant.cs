@@ -35,11 +35,8 @@ public sealed class ConstantQueryNode : QueryNode
         return visitor.Visit(this);
     }
 
-    private string GetString() => Encoding.UTF8.GetString(Value);
-
-
-
     #region Parse
+    public string GetString() => Encoding.UTF8.GetString(Value);
     public DateOnly GetDate() => DateOnly.Parse(GetString());
     public bool TryGetDate(out DateOnly date) => DateOnly.TryParse(GetString(), out date);
     public DateTime GetDateTime() => DateTime.Parse(GetString());

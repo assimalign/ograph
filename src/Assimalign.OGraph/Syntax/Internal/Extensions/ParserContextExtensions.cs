@@ -10,25 +10,25 @@ namespace Assimalign.OGraph.Syntax.Internal;
 internal static class ParserContextExtensions
 {
 
-    internal static void AddUnexptedTokenDiagnosticError(this ParserContext context,ref Token lexerToken)
+    internal static void AddUnexptedTokenError(this ParserContext context, ref TokenLexer lexer)
     {
         context.AddDiagnostic(new Diagnostic()
         {
             Severity = DiagnosticSeverity.Error,
             Location = DiagnosticLocation.Relative,
-            Start = lexerToken.Start,
-            End = lexerToken.End,
-            Message = $"Unexpected Token: {lexerToken}"
+            Start = lexer.Current.Start,
+            End = lexer.Current.End,
+            Message = $"Unexpected Token: {lexer.Current}"
         });
     }
-    internal static void AddUnexpectedEOFDiagnosticError(this ParserContext context, int end)
+    internal static void AddUnexpectedEOFError(this ParserContext context, ref TokenLexer lexer)
     {
         context.AddDiagnostic(new Diagnostic()
         {
             Code = DiagnosticCode.G0005,
-            Message = $"Unexpected EOF (end-of-file) at '{end}'.",
-            Start = end,
-            End = end,
+            Message = $"Unexpected EOF (end-of-file) at '{lexer.Current.End}'.",
+            Start = lexer.Current.End,
+            End = lexer.Current.End,
             Location = DiagnosticLocation.Relative,
             Severity = DiagnosticSeverity.Error,
         });
@@ -38,5 +38,17 @@ internal static class ParserContextExtensions
     internal static void AddExpectedParenthesisDiagnosticError(this ParserContext context, int end)
     {
 
+    }
+
+    internal static void AddExpectedCommaSeparatorDiagnosticError(this ParserContext context, ref Token lexerToken)
+    {
+        context.AddDiagnostic(new Diagnostic()
+        {
+            Severity = DiagnosticSeverity.Error,
+            Location = DiagnosticLocation.Absolute,
+            Start = lexerToken.Start,
+            End = lexerToken.End,
+            Message = $"Expected Comma"
+        });
     }
 }

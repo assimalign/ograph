@@ -32,22 +32,6 @@ public sealed class BinaryQueryNode : QueryNode
     /// </summary>
     public BinaryOperatorType OperatorType { get; init; }
 
-    //public bool IsPredeicate
-    //{
-    //    get 
-    //    {
-    //        return OperatorType == BinaryOperatorType.Equal || 
-    //               OperatorType == BinaryOperatorType.NotEqual || 
-    //               OperatorType == BinaryOperatorType.LessThan ||
-    //               OperatorType == BinaryOperatorType.LessThanOrEqual ||
-    //               OperatorType == BinaryOperatorType.GreaterThan || 
-    //               OperatorType == BinaryOperatorType.GreaterThanOrEqual ||
-    //               OperatorType == BinaryOperatorType.And ||
-    //               OperatorType == BinaryOperatorType.Or || 
-    //               OperatorType == BinaryOperatorType.Any;    
-    //    }
-    //}
-
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Binary;
 

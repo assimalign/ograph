@@ -5,7 +5,7 @@ namespace Assimalign.OGraph.Syntax;
 
 public sealed class PageQueryNode : QueryNode
 {
-    internal PageQueryNode() { }
+    public PageQueryNode() { }
     public PageQueryNode(string token)
     {
         if (string.IsNullOrEmpty(token))

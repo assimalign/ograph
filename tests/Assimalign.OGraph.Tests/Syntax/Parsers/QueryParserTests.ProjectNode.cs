@@ -51,7 +51,7 @@ public partial class QueryParserTests
                 streetThree
                 addressTypes {
                     typeId
-                    type
+                    type as addressType
                 }
             })
         """;
@@ -67,7 +67,6 @@ public partial class QueryParserTests
 
         Assert.Equal("employees/addresses", projection.Edge.Path);
         Assert.False(projection.IsRoot);
-
     }
 
     [Fact]
@@ -89,7 +88,7 @@ public partial class QueryParserTests
         var parser = new QueryParser();
         var document = parser.Parse(query);
 
-        // Assert No Errors
+        // Assert Errors: Missing single comma
         Assert.Single(document.Errors);
 
         var root = Assert.IsType<RootQueryNode>(document.Node);

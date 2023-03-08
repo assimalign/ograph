@@ -17,6 +17,10 @@ public sealed class FunctionQueryNode : QueryNode
     /// </summary>
     public string? Name { get; init; }
     /// <summary>
+    /// 
+    /// </summary>
+    public FunctionType FunctionType { get; init; }
+    /// <summary>
     /// The function parameters
     /// </summary>
     public IEnumerable<ParameterQueryNode>? Parameters { get; init; } = new ParameterQueryNode[0];

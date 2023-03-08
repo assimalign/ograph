@@ -1,5 +1,8 @@
 ﻿namespace Assimalign.OGraph.Syntax; 
 
+/// <summary>
+/// 
+/// </summary>
 public abstract class QueryNode
 {
     /// <summary>

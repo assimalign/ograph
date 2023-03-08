@@ -4,7 +4,7 @@ namespace Assimalign.OGraph.Syntax;
 
 public sealed class EdgeQueryNode : QueryNode
 {
-    internal EdgeQueryNode() { }
+    public EdgeQueryNode() { }
     public EdgeQueryNode(string path)
     {
         this.Path = path;
@@ -16,7 +16,7 @@ public sealed class EdgeQueryNode : QueryNode
     public string? Path { get; init; }
 
     /// <inheritdoc />
-    public override QueryNodeType NodeType => throw new NotImplementedException();
+    public override QueryNodeType NodeType => QueryNodeType.Edge;
 
     /// <inheritdoc />
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)

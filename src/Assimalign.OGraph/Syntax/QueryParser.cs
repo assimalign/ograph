@@ -31,7 +31,11 @@ public sealed partial class QueryParser
                 SkipComments = true,
                 Encoding = options.Encoding
             });
-            var context = new ParserContext();
+            var context = new ParserContext()
+            {
+                Encoding = options.Encoding,
+                ThrowExceptionOnDiagnosticError = options.ThrowExceptionOnDiagnosticError
+            };
             var parser  = Parser.Create();
             var node    = parser.Parse(ref lexer, context, new RootQueryNode());
 
