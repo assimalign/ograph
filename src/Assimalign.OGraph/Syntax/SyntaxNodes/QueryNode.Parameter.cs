@@ -23,7 +23,7 @@ public sealed class ParameterQueryNode : QueryNode
     /// <summary>
     /// 
     /// </summary>
-    public QueryNode? ParameterValue => this.parameterValue;
+    public QueryNode? ParameterValue { get; init; }
 
     /// <summary>
     /// 

@@ -31,7 +31,7 @@ public abstract class QueryNodeVisitor<T> : IQueryNodeVisitor<T>
         {
             foreach (var projection in projections)
             {
-                if (projection.IsRoot)
+                if (projection.HasEdge)
                 {
 
                 }

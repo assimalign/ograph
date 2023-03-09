@@ -108,14 +108,16 @@ internal class FilterParser : Parser
                     break;
                 case TokenType.Identifier:
                     {
+                        leftOperand = context.GetParser<PropertyParser>().Parse<PropertyQueryNode>(ref lexer, context);
                         break;
                     }
+                case TokenType.Null:
                 case TokenType.String:
                 case TokenType.Integer:
                 case TokenType.FloatingPoint:
                 case TokenType.Boolean:
                     {
-                        leftOperand = context.GetParser<ConstantParser>().Parse(ref lexer, context, queryNode);
+                        leftOperand = context.GetParser<ConstantParser>().Parse(ref lexer, context, new ConstantQueryNode());
                         break;
                     }
                 case TokenType.Equal:
@@ -128,11 +130,13 @@ internal class FilterParser : Parser
                 case TokenType.Or:
                     {
                         var parser = context.GetParser<BinaryParser>();
+
                         if (parser.Parse(ref lexer, context, new BinaryQueryNode() {  LeftOperand = leftOperand }) is not BinaryQueryNode binaryNode1)
                         {
                             // TODO: Add diagnostic
                             continue;
                         }
+
                         leftOperand = binaryNode1;
                         break;
                     }

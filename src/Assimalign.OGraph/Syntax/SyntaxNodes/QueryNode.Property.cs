@@ -6,8 +6,7 @@ namespace Assimalign.OGraph.Syntax;
 
 public sealed class PropertyQueryNode : QueryNode
 {
-    internal PropertyQueryNode() { }
-
+    public PropertyQueryNode() { }
     public PropertyQueryNode(string name)
     {
         this.Name = name;

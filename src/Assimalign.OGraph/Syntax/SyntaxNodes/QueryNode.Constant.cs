@@ -8,7 +8,7 @@ public sealed class ConstantQueryNode : QueryNode
 {
     private byte[] value = new byte[0];
 
-    internal ConstantQueryNode() { }
+    public ConstantQueryNode() { }
     public ConstantQueryNode(byte[] value)
     {
         this.Value = value;
@@ -54,4 +54,6 @@ public sealed class ConstantQueryNode : QueryNode
     public float GetSingle() => float.Parse(GetString());
     public bool TryGetSingle(out float single) => float.TryParse(GetString(), out single);
     #endregion
+
+    
 }

@@ -66,7 +66,7 @@ public partial class QueryParserTests
         var projection = Assert.IsType<ProjectionQueryNode>(root.Nodes.First());
 
         Assert.Equal("employees/addresses", projection.Edge.Path);
-        Assert.False(projection.IsRoot);
+        Assert.False(projection.HasEdge);
     }
 
     [Fact]
@@ -95,7 +95,7 @@ public partial class QueryParserTests
         var projection = Assert.IsType<ProjectionQueryNode>(root.Nodes.First());
 
         Assert.Equal("employees/addresses", projection.Edge.Path);
-        Assert.False(projection.IsRoot);
+        Assert.False(projection.HasEdge);
     }
 
     #endregion

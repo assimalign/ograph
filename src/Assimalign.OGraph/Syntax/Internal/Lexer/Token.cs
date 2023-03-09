@@ -73,6 +73,7 @@ internal readonly struct Token
                 case TokenType.FloatingPoint:
                 case TokenType.Boolean:
                 case TokenType.Integer:
+                case TokenType.Null:
                     return true;
                 default:
                     return false;
@@ -106,6 +107,10 @@ internal readonly struct Token
             }
         }
     }
+
+    internal bool IsIdentifier => TokenType == TokenType.Identifier;
+
+    internal bool IsFunction => this.Value.IsFunction();
 
     public override string ToString()
     {

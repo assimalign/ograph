@@ -46,10 +46,7 @@ public sealed class OGraphQueryVisitor<T> : IQueryNodeVisitor<Expression>
     }
     public Expression Visit(SortQueryNode node)
     {
-        foreach (var field in node.Attributes)
-        {
-            
-        }
+        
         throw new NotImplementedException();
     }
     public Expression Visit(BinaryQueryNode node)

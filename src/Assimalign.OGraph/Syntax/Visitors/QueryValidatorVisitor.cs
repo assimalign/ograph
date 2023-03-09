@@ -27,7 +27,7 @@ internal class QueryValidatorVisitor : IQueryNodeVisitor<QueryDocument>
         //{
         //    foreach (var projection in projections)
         //    {
-        //        if (projection.IsRoot)
+        //        if (projection.HasEdge)
         //        {
         //            projection.Accept(this);
         //        }

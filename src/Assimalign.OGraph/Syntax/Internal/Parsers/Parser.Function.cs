@@ -26,7 +26,8 @@ internal class FunctionParser : Parser
 
         return functionNode.FunctionType switch
         {
-            FunctionType.SubString => ParseSubStringFunctionNode(ref lexer, context, new FunctionQueryNode())
+            FunctionType.StartsWith => ParseFunctionStartsWtih(ref lexer, context, functionNode),
+            FunctionType.SubString => ParseSubStringFunctionNode(ref lexer, context, functionNode)
         };
     }
 
@@ -41,10 +42,77 @@ internal class FunctionParser : Parser
 
         return default;
     }
-    private QueryNode ParseFunctionStartsWtih(ref TokenLexer lexer, ParserContext context, QueryNode node)
+    private QueryNode ParseFunctionStartsWtih(ref TokenLexer lexer, ParserContext context, FunctionQueryNode queryNode)
     {
+        var parameters = new Queue<ParameterQueryNode>();
 
-        return default;
+        if (!lexer.TryPeek(out var peek) || peek.TokenType != TokenType.OpenParenthesis)
+        {
+            // TODO: Add Diagnostic
+            return queryNode;
+        }
+        while (lexer.HasNext)
+        {
+            var token = lexer.Next();
+
+            if (token.TokenType == TokenType.CloseParenthesis)
+            {
+                break;
+            }
+            switch (token.TokenType)
+            {
+                case TokenType.Identifier:
+                    {
+                        if (token.Value.IsFunction(out var functionType))
+                        {
+
+                        }
+                        else
+                        {
+                            parameters.Enqueue(new ParameterQueryNode()
+                            {
+                                ParameterValue = context.GetParser<PropertyParser>().Parse<PropertyQueryNode>(ref lexer, context)
+                            });
+                        }
+                        break;
+                    }
+                case TokenType.String:
+                    {
+                        parameters.Enqueue(new ParameterQueryNode()
+                        {
+                            ParameterValue = context.GetParser<ConstantParser>().Parse<ConstantQueryNode>(ref lexer, context)
+                        });
+                        break;
+                    }
+                default:
+                    {
+                        // TODO: Unexpected Token
+                        break;
+                    }
+            }
+            if (token.IsIdentifier) 
+            {
+                
+            }
+            
+            if (!lexer.TryPeek(out var next) || (next.TokenType != TokenType.Comma || next.TokenType != TokenType.CloseParenthesis))
+            {
+                // TODO: Add Diagnostics
+            }
+        }
+        if (parameters.Count > 2 || parameters.Count < 2)
+        {
+            // TODO : Add Diagnostics
+        }
+
+        queryNode = new FunctionQueryNode()
+        {
+            FunctionType = queryNode.FunctionType,
+            Name = "startswith",
+            Parameters = parameters,
+        };
+
+        return queryNode;
     }
     private QueryNode ParseSubStringFunctionNode(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
     {

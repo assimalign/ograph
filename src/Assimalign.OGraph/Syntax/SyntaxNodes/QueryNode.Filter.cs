@@ -24,6 +24,10 @@ public sealed class FilterQueryNode : QueryNode
     /// 
     /// </summary>
     public BinaryQueryNode? Predicate { get; init; }
+    /// <summary>
+    /// 
+    /// </summary>
+    public bool HasEdge => Edge is not null;
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Filter;

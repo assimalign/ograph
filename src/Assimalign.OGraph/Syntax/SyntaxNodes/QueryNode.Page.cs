@@ -51,6 +51,10 @@ public sealed class PageQueryNode : QueryNode
     /// 
     /// </summary>
     public ConstantQueryNode? Token { get; init; }
+    /// <summary>
+    /// 
+    /// </summary>
+    public bool HasEdge => Edge is not null;
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Page;

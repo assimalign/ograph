@@ -29,7 +29,7 @@ public sealed class ProjectionQueryNode : QueryNode
     /// <summary>
     /// Specifies whether the projection is the root of the query.
     /// </summary>
-    public bool IsRoot => Edge is null;
+    public bool HasEdge => Edge is not null;
     /// <summary>
     /// A collection of properties to project in the query.
     /// </summary>
