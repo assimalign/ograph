@@ -1,20 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 
 namespace Assimalign.OGraph.Syntax;
 
 public sealed class RootQueryNode : QueryNode
 {
-    internal RootQueryNode() { }
+    public RootQueryNode() { }
     public RootQueryNode(IEnumerable<QueryNode> nodes)
     {
         this.Nodes = nodes;
-    }
-    public RootQueryNode(IEnumerable<QueryNode> nodes, IDictionary<string, object> variables)
-    {
-        this.Nodes = nodes;
-        this.Variables = variables.ToImmutableDictionary();
     }
 
    
@@ -22,10 +16,6 @@ public sealed class RootQueryNode : QueryNode
     /// Represents the root nodes of the expression tree.
     /// </summary>
     public IEnumerable<QueryNode> Nodes { get; init; } = new QueryNode[0];
-    /// <summary>
-    /// 
-    /// </summary>
-    public IReadOnlyDictionary<string, object> Variables { get; init; } = new Dictionary<string, object>();
     /// <summary>
     /// 
     /// </summary>
@@ -61,12 +51,28 @@ public sealed class RootQueryNode : QueryNode
         return visitor.Visit(this);
     }
 
+    /// <inheritdoc />
+    public override IEnumerable<TNode> GetNodesOfType<TNode>()
+    {
+        if (this is TNode node1)
+        {
+            yield return node1;
+        }
+        foreach (var node in Nodes)
+        {
+            foreach (var node2 in node.GetNodesOfType<TNode>())
+            {
+                yield return node2;
+            }
+        }
+    }
 
     private bool TryGetNodes<TNode>(out IEnumerable<TNode>? nodes)
     {
         nodes = default;
 
         var list = new List<TNode>();
+
         foreach (var n in Nodes)
         {
             if (n is TNode tn)

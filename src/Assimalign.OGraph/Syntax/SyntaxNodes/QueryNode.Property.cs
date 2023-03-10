@@ -37,4 +37,20 @@ public sealed class PropertyQueryNode : QueryNode
     {
         return visitor.Visit(this);
     }
+
+    /// <inheritdoc />
+    public override IEnumerable<TNode> GetNodesOfType<TNode>()
+    {
+        if (this is TNode node)
+        {
+            yield return node;
+        }
+        if (Children is not null)
+        {
+            foreach (var node1 in Children.SelectMany(x => x.GetNodesOfType<TNode>()))
+            {
+                yield return node1;
+            }
+        }
+    }
 }

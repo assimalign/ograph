@@ -7,8 +7,8 @@ namespace Assimalign.OGraph.Syntax;
 public sealed class SortQueryNode : QueryNode
 {
     public SortQueryNode() { }
-   
 
+    //public override int Depth { get; }
     /// <summary>
     /// Represents the edge, if any, to apply sorting.
     /// </summary>
@@ -59,5 +59,35 @@ public sealed class SortQueryNode : QueryNode
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)
     {
         return visitor.Visit(this);
+    }
+
+    /// <inheritdoc />
+    public override IEnumerable<TNode> GetNodesOfType<TNode>()
+    {
+        if (this is TNode node)
+        {
+            yield return node;
+        }
+        if (Edge is not null)
+        {
+            foreach (var node1 in Edge.GetNodesOfType<TNode>())
+            {
+                yield return node1;
+            }
+        }
+        if (SortBy is not null)
+        {
+            foreach (var node1 in SortBy.GetNodesOfType<TNode>())
+            {
+                yield return node1;
+            }
+        }
+        if (ThenBy is not null)
+        {
+            foreach (var node1 in ThenBy.GetNodesOfType<TNode>())
+            {
+                yield return node1;
+            }
+        }
     }
 }

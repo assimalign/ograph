@@ -16,4 +16,10 @@ internal class OGraphPropertyCollection : List<IOGraphProperty>,
         set => this.Add(value);
     }
 
+
+    public IOGraphProperty Find(Name name)
+    {
+        return default;
+    }
+
 }

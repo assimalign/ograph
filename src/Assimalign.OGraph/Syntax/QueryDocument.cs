@@ -53,4 +53,5 @@ public sealed class QueryDocument
 		}
 		diagnostics.Add(diagnostic);
 	}
+
 }

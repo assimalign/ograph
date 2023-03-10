@@ -43,4 +43,24 @@ public sealed class ProjectionQueryNode : QueryNode
     {
         return visitor.Visit(this);
     }
+
+    /// <inheritdoc />
+    public override IEnumerable<TNode> GetNodesOfType<TNode>()
+    {
+        if (this is TNode node)
+        {
+            yield return node;
+        }
+        if (Edge is not null)
+        {
+            foreach (var node1 in Edge.GetNodesOfType<TNode>())
+            {
+                yield return node1;
+            }
+        }
+        foreach (var node2 in Properties.SelectMany(x => x.GetNodesOfType<TNode>()))
+        {
+            yield return node2;
+        }
+    }
 }

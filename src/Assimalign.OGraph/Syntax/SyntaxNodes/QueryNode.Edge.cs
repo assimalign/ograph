@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax;
 
@@ -22,6 +23,15 @@ public sealed class EdgeQueryNode : QueryNode
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)
     {
         return visitor.Visit(this);
+    }
+
+    /// <inheritdoc />
+    public override IEnumerable<TNode> GetNodesOfType<TNode>()
+    {
+        if (this is TNode node)
+        {
+            yield return node;
+        }
     }
 
     /// <summary>

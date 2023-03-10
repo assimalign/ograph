@@ -10,4 +10,6 @@ public interface IOGraphPropertyCollection : IEnumerable<IOGraphProperty>
 {
 
     void Add(IOGraphProperty property);
+
+    IOGraphProperty Find(Name name);
 }

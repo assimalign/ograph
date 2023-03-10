@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -33,6 +34,15 @@ public sealed class ConstantQueryNode : QueryNode
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)
     {
         return visitor.Visit(this);
+    }
+
+    /// <inheritdoc />
+    public override IEnumerable<TNode> GetNodesOfType<TNode>()
+    {
+        if (this is TNode node)
+        {
+            yield return node;
+        }
     }
 
     #region Parse

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Assimalign.OGraph.Syntax;
@@ -28,10 +29,10 @@ public sealed class PageQueryNode : QueryNode
             Value = new byte[1] { (byte)take }
         };
     }
-    public PageQueryNode(EdgeQueryNode edge, long take, long skip) 
+    public PageQueryNode(EdgeQueryNode edge, long take, long skip)
         : this(take, skip)
     {
-        this.Edge = edge;   
+        this.Edge = edge;
     }
 
 
@@ -42,7 +43,7 @@ public sealed class PageQueryNode : QueryNode
     /// <summary>
     /// 
     /// </summary>
-    public ConstantQueryNode? Take {get; init;}
+    public ConstantQueryNode? Take { get; init; }
     /// <summary>
     ///
     /// </summary>
@@ -63,5 +64,42 @@ public sealed class PageQueryNode : QueryNode
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)
     {
         return visitor.Visit(this);
+    }
+
+    /// <inheritdoc />
+    public override IEnumerable<TNode> GetNodesOfType<TNode>()
+    {
+        if (this is TNode node)
+        {
+            yield return node;
+        }
+        if (Edge is not null)
+        {
+            foreach (var item in Edge.GetNodesOfType<TNode>())
+            {
+                yield return item;
+            }
+        }
+        if (Take is not null)
+        {
+            foreach (var item in Take.GetNodesOfType<TNode>())
+            {
+                yield return item;
+            }
+        }
+        if (Skip is not null)
+        {
+            foreach (var item in Skip.GetNodesOfType<TNode>())
+            {
+                yield return item;
+            }
+        }
+        if (Token is not null)
+        {
+            foreach (var item in Token.GetNodesOfType<TNode>())
+            {
+                yield return item;
+            }
+        }
     }
 }

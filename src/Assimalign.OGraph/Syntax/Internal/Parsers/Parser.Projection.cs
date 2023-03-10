@@ -36,9 +36,9 @@ internal class ProjectionParser : Parser
     }
     private ProjectionQueryNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, ProjectionQueryNode queryNode)
     {
-        var next = default(Token);
+        var token = default(Token);
 
-        if (!lexer.TryPeek(out next))
+        if (!lexer.TryPeek(out token))
         {
             context.AddDiagnostic(Diagnostic.UnexpectedEOF(
                 lexer.Current.End));
@@ -46,7 +46,7 @@ internal class ProjectionParser : Parser
             return queryNode;
         }
         // Check if projection is followed by an edge identifier
-        if (next.TokenType == TokenType.Identifier)
+        if (token.TokenType == TokenType.Identifier)
         {
             var parser = context.GetParser<EdgeParser>();
 
@@ -55,7 +55,7 @@ internal class ProjectionParser : Parser
                 Edge = parser.Parse<EdgeQueryNode>(ref lexer, context)
             };
 
-            if (!lexer.TryNext(out next))
+            if (!lexer.TryPeek(out token))
             {
                 context.AddDiagnostic(Diagnostic.UnexpectedEOF(
                     lexer.Current.End));
@@ -63,18 +63,18 @@ internal class ProjectionParser : Parser
                 return queryNode;
             }
         }
-        if (next.TokenType != TokenType.OpenBracket)
+        if (token.TokenType != TokenType.OpenBracket)
         {
             context.AddDiagnostic(Diagnostic.ExpectedOpeningBracket(
-                next.Start,
-                next.End));
+                token.Start,
+                token.End));
 
             return queryNode;
         }
         // Parse Parenthesis Block
         while (lexer.HasNext)
         {
-            var token = lexer.Next();
+            token = lexer.Next();
             
             if (token.TokenType == TokenType.CloseParenthesis)
             {

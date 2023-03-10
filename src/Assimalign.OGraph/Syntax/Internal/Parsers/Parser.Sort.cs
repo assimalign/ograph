@@ -40,9 +40,9 @@ internal class SortParser : Parser
 
     private SortQueryNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, SortQueryNode queryNode)
     {
-        var next = default(Token);
+        var token = default(Token);
 
-        if (!lexer.TryPeek(out next))
+        if (!lexer.TryPeek(out token))
         {
             context.AddDiagnostic(Diagnostic.UnexpectedEOF(
                 lexer.Current.End));
@@ -50,7 +50,7 @@ internal class SortParser : Parser
             return queryNode;
         }
         // Check if projection is followed by an edge identifier
-        if (next.TokenType == TokenType.Identifier)
+        if (token.TokenType == TokenType.Identifier)
         {
             var parser = context.GetParser<EdgeParser>();
 
@@ -59,7 +59,7 @@ internal class SortParser : Parser
                 Edge = parser.Parse<EdgeQueryNode>(ref lexer, context)
             };
 
-            if (!lexer.TryNext(out next))
+            if (!lexer.TryPeek(out token))
             {
                 context.AddDiagnostic(Diagnostic.UnexpectedEOF(
                     lexer.Current.End));
@@ -67,18 +67,18 @@ internal class SortParser : Parser
                 return queryNode;
             }
         }
-        if (next.TokenType != TokenType.OpenBracket)
+        if (token.TokenType != TokenType.OpenBracket)
         {
             context.AddDiagnostic(Diagnostic.ExpectedOpeningBracket(
-                next.Start,
-                next.End));
+                token.Start,
+                token.End));
 
             return queryNode;
         }
         // Parse Parenthesis Block
         while (lexer.HasNext)
         {
-            var token = lexer.Next();
+            token = lexer.Next();
 
             if (token.TokenType == TokenType.CloseParenthesis)
             {
@@ -94,6 +94,7 @@ internal class SortParser : Parser
             }
 
             queryNode = ParseBracketBlock(ref lexer, context, queryNode);
+
         }
 
         context.AddDiagnostic(Diagnostic.ExpectedClosingParenthesis(

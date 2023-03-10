@@ -36,4 +36,27 @@ public sealed class BinaryQueryNode : QueryNode
     {
         return visitor.Visit(this);
     }
+
+    /// <inheritdoc />
+    public override IEnumerable<TNode> GetNodesOfType<TNode>()
+    {
+        if (this is TNode node1)
+        {
+            yield return node1;
+        }
+        if (LeftOperand is not null)
+        {
+            foreach (var node2 in LeftOperand.GetNodesOfType<TNode>())
+            {
+                yield return node2;
+            }
+        }
+        if (RightOperand is not null)
+        {
+            foreach (var node3 in RightOperand.GetNodesOfType<TNode>())
+            {
+                yield return node3;
+            }
+        }
+    }
 }

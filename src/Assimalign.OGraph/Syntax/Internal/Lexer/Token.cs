@@ -110,8 +110,6 @@ internal readonly struct Token
 
     internal bool IsIdentifier => TokenType == TokenType.Identifier;
 
-    internal bool IsFunction => this.Value.IsFunction();
-
     public override string ToString()
     {
         return $"{TokenType} - {Text}";

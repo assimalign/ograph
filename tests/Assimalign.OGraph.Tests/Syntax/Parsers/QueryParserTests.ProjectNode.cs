@@ -136,7 +136,7 @@ public partial class QueryParserTests
     public void ProjectionMissingOpeningBracketTest()
     {
         var query = """
-            project( # Bracket is missing on this line
+            project(employees, # Bracket is missing on this line
                 firstName
                 lastName 
                 addresses as locations { 
@@ -225,7 +225,6 @@ public partial class QueryParserTests
     [Fact]
     public void TestEdgeProjectionExpectedCommaFailureTest()
     {
-
         var query = """
             project(employees/addresses, {
                 streetOne
@@ -236,7 +235,7 @@ public partial class QueryParserTests
                     type
                 }
             })
-            .sort({
+            .sort(employees/addresses, {
                 firstName desc
                 lastName
             })
@@ -245,6 +244,8 @@ public partial class QueryParserTests
 
         var parser = new QueryParser();
         var document = parser.Parse(query);
+
+        var properties = document.Root.GetNodesOfType<PropertyQueryNode>();
 
         // Assert Errors: Missing single comma
         Assert.Single(document.Errors);

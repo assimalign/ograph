@@ -61,6 +61,16 @@ public abstract class OGraphExecutor : IOGraphExecutor
         // Load Result Strategy
         // TODO: The result strategy will dictate whether to apply OGraph query
 
+        foreach (var projection in query.Root.GetNodesOfType<ProjectionQueryNode>())
+        {
+            foreach (var property in  projection.Properties)
+            {
+                
+            }
+        }
+
+
+
 
         foreach (var property in node.Properties)
         {

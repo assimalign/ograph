@@ -278,6 +278,11 @@ internal class BinaryParser : Parser
             }
         }
 
+        if (leftOperand is null)
+        {
+            throw new Exception();
+        }
+
         return leftOperand;
     }
 }

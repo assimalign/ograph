@@ -25,20 +25,21 @@ internal class FunctionParser : Parser
         return functionType switch
         {
             FunctionType.StartsWith => ParseFunctionStartsWtih(ref lexer, context, functionNode),
-            FunctionType.SubString => ParseSubStringFunctionNode(ref lexer, context, functionNode)
+            FunctionType.SubString => ParseSubStringFunctionNode(ref lexer, context, functionNode),
+            _ => throw new Exception()
         };
     }
 
 
-    private QueryNode ParseFunctionAny(ref TokenLexer lexer, ParserContext context, QueryNode node)
+    private QueryNode ParseFunctionAny(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
     {
-        return default;
+        return queryNode;
     }
 
-    private QueryNode ParseFunctionEndsWith(ref TokenLexer lexer, ParserContext context, QueryNode node)
+    private QueryNode ParseFunctionEndsWith(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
     {
 
-        return default;
+        return queryNode;
     }
     private QueryNode ParseFunctionStartsWtih(ref TokenLexer lexer, ParserContext context, FunctionQueryNode queryNode)
     {
@@ -133,6 +134,6 @@ internal class FunctionParser : Parser
         {
             // TODO: Expected comma separator
         }
-        return default;
+        return queryNode;
     }
 }

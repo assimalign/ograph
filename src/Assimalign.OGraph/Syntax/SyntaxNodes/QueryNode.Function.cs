@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Assimalign.OGraph.Syntax;
 
@@ -24,7 +23,7 @@ public sealed class FunctionQueryNode : QueryNode
     /// <summary>
     /// The function parameters
     /// </summary>
-    public IEnumerable<ParameterQueryNode>? Parameters { get; init; } = new ParameterQueryNode[0];
+    public IEnumerable<ParameterQueryNode> Parameters { get; init; } = new ParameterQueryNode[0];
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Function;
@@ -33,5 +32,21 @@ public sealed class FunctionQueryNode : QueryNode
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)
     {
         return visitor.Visit(this);
+    }
+
+    /// <inheritdoc />
+    public override IEnumerable<TNode> GetNodesOfType<TNode>()
+    {
+        if (this is TNode node)
+        {
+            yield return node;
+        }
+        foreach (var parameter in Parameters)
+        {
+            foreach (var item in parameter.GetNodesOfType<TNode>())
+            {
+                yield return item;
+            }
+        }
     }
 }
