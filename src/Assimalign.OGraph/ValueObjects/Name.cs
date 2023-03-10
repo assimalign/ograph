@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Xml.Linq;
 
 namespace Assimalign.OGraph;
 
@@ -62,4 +63,9 @@ public readonly struct Name : IEquatable<Name>, IEqualityComparer<Name>
 
     public static implicit operator Name(string value) => new Name(value);
     public static implicit operator string(Name name) => name.Value;
+
+
+
+    public static bool operator ==(Name left, Name right) => left.Equals(right);
+    public static bool operator !=(Name left, Name right) => !left.Equals(right);
 }

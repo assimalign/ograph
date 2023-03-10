@@ -16,7 +16,7 @@ internal class OGraph : IOGraph, IXmlSerializable
     public Name Name { get; set; }
     public IOGraphNodeCollection Nodes { get; set; } = new OGraphNodeCollection();
     public IOGraphEventCollection Events { get; set; }
-    public IOGraphOperationCollection Operations { get; set; }
+    public IOGraphOperationCollection Operations { get; set; } = new OGraphOperationCollection();
 
     public XmlSchema? GetSchema()
     {

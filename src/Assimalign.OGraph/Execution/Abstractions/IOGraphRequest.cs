@@ -12,5 +12,7 @@ public interface IOGraphRequest
 
 
     IOGraphHeaderCollection Headers { get; }
+
+    IOGraphRequestQueryCollection Query { get; }
     Stream Body { get; }
 }

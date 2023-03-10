@@ -15,5 +15,7 @@ public interface IOGraphOperationResult
     /// The status code of the OGraph operation to
     /// </summary>
     int StatusCode { get; }
+
+    object Data { get; }
 }
 

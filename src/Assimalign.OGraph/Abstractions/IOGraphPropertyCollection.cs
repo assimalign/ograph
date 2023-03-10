@@ -11,5 +11,7 @@ public interface IOGraphPropertyCollection : IEnumerable<IOGraphProperty>
 
     void Add(IOGraphProperty property);
 
+    void Remove(IOGraphProperty property);
+
     IOGraphProperty Find(Name name);
 }

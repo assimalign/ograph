@@ -29,7 +29,7 @@ public abstract class OGraphNode<T> : IOGraphNode
     }
 
     /// <inheritdoc />
-    public Label Label { get; }
+    public Label Label { get; set;  }
 
     /// <inheritdoc />
     public IOGraphEdgeCollection Edges => this.edges;

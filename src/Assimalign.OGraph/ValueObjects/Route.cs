@@ -11,10 +11,12 @@ public readonly struct Route
 
 	public Route(string route)
 	{
-        
+		Value = route;
 	}
 
+	public string Value { get; }
 
 	public static implicit operator Route(string route) => new Route(route);
+	public static implicit operator string(Route route) => route.Value;
     
 }

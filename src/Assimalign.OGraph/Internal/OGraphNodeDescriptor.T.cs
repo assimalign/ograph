@@ -42,6 +42,14 @@ internal class OGraphNodeDescriptor<T> : IOGraphNodeDescriptor<T>
                     });
                 }
             }
+            if (property.PropertyType.IsStringType())
+            {
+                node.Properties.Add(new OGraphProperty()
+                {
+                    Name = property.Name,
+                    Resolver = GetResolver<String>(property)
+                });
+            }
 
             //if (property.PropertyType.IsValueType() || property.PropertyType.IsStringType() || property.PropertyType.IsEnum)
             //{

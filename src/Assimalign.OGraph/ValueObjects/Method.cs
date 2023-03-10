@@ -16,4 +16,5 @@ public readonly struct Method
 	public string Value { get; }
 
     public static implicit operator Method(string value) => new Method(value);
+	public static implicit operator string(Method method) => method.Value;
 }

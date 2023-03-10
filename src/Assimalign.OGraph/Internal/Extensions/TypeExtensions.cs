@@ -836,6 +836,8 @@ internal static class TypeExtensions
     {
         implementation = null;
 
+        var isValueType = type.IsValueType;
+
         // Will use this array of types to check for nullable value and enum types
         var valueTypes = new Type[]
         {
@@ -859,6 +861,12 @@ internal static class TypeExtensions
                 typeof(nuint),
                 typeof(string)
         };
+
+        if (!isValueType)
+        {
+            return false;
+        }
+
 
         // Let's ensure that the type is not wrapped in the Nullable<> type class
         if (checkNullable)

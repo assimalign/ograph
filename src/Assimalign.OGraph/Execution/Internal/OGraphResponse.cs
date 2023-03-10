@@ -10,9 +10,14 @@ namespace Assimalign.OGraph.Execution.Internal;
 
 internal class OGraphResponse : IOGraphResponse
 {
-    public int StatusCode => throw new NotImplementedException();
+
+    public OGraphResponse()
+    {
+        Body = new MemoryStream();
+    }
+    public int StatusCode { get; set; }
 
     public IOGraphHeaderCollection Headers => throw new NotImplementedException();
 
-    public Stream Body => throw new NotImplementedException();
+    public Stream Body {get; set; }
 }

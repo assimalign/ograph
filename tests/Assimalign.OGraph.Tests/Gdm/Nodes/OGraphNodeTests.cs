@@ -17,21 +17,12 @@ public class OGraphNodeTests
         {
             descriptor.HasProperty("fullName")
                 .UseMiddleware(default)
-                .UseMiddleware(default)
                 .UseResolver(async context =>
                 {
                     var user = context.GetParent<User>();
 
                     return $"{user.LastName}, {user.FirstName}";
                 });
-
-
-            //descriptor.HasEdge(p => p.Addresses)
-            //    .UseNode("UserAddress")
-            //    .UseResolver(resolver =>
-            //    {
-
-            //    });
         });
     }
 

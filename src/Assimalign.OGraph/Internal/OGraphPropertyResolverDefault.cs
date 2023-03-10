@@ -16,9 +16,11 @@ internal class OGraphPropertyResolverDefault<T> : IOGraphPropertyResolver
     {
         this.resolver = resolver;
     }
-    public ValueTask<IOGraphPropertyResult> InvokeAsync(IOGraphPropertyResolverContext context, CancellationToken cancellationToken = default)
+    public async ValueTask<IOGraphPropertyResult> InvokeAsync(IOGraphPropertyResolverContext context, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var result = await resolver.Invoke(context);
+
+        return new OGraphPropertyResult(result);
     }
 }
 internal class OGraphPropertyResolverDefault : IOGraphPropertyResolver

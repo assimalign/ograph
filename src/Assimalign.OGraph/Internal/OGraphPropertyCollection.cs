@@ -19,7 +19,11 @@ internal class OGraphPropertyCollection : List<IOGraphProperty>,
 
     public IOGraphProperty Find(Name name)
     {
-        return default;
+        return this[name];
     }
 
+    void IOGraphPropertyCollection.Remove(IOGraphProperty property)
+    {
+        throw new NotImplementedException();
+    }
 }

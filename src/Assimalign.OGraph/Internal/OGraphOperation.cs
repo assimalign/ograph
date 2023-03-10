@@ -6,18 +6,16 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Internal;
 
-internal abstract class OGraphOperation : IOGraphOperation
+internal class OGraphOperation : IOGraphOperation
 {
+    public Name Name { get; set; }
     public Route Route { get; set; }
     public Method Method { get; set; }
     public bool IsEnabled { get; set; }
     public IOGraphType? RequestType { get; set; }
     public IOGraphType? ResponseType { get; set; }
     public IOGraphOperationResolver? Resolver { get; set; }
+    public IOGraphNode? Node { get; set; }
 
-    public IOGraphNode Node => throw new NotImplementedException();
-
-    public IOGraphOperationMiddlewareQueue Middleware => throw new NotImplementedException();
-
-    Name IOGraphOperation.Name => throw new NotImplementedException();
+    public IOGraphOperationMiddlewareQueue? Middleware { get; set; }
 }

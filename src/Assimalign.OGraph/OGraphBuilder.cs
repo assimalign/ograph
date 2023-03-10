@@ -13,6 +13,8 @@ public sealed class OGraphBuilder : IOGraphBuilder
     // These are our build actions
     private readonly IList<Action<OGraph>> actions;
 
+    private readonly OGraph graph = new OGraph();
+
     private OGraphBuilder()
     {
         this.actions = new List<Action<OGraph>>();
@@ -31,25 +33,41 @@ public sealed class OGraphBuilder : IOGraphBuilder
     {
         throw new NotImplementedException();
     }
-    IOGraphBuilder IOGraphBuilder.AddNode<T>(Label name, Action<IOGraphNodeDescriptor<T>> configure)
+    IOGraphBuilder IOGraphBuilder.AddNode<T>(Label label, Action<IOGraphNodeDescriptor<T>> configure)
     {
         this.actions.Add(graph =>
         {
-            var node = new OGraphNodeDefault<T>()
+            var node = new OGraphNodeDefault<T>(configure)
             {
-                
+                Label = label
             };
-
-            node.Configure(configure);
 
             graph.Nodes.Add(node);
 
         });
         return this;
     }
-    IOGraphBuilder IOGraphBuilder.AddOperation(Name name, Action<IOGraphOperationDescriptor> descriptor)
+    IOGraphBuilder IOGraphBuilder.AddOperation(Name name, Action<IOGraphOperationDescriptor> configure)
     {
-        throw new NotImplementedException();
+        if (configure is null)
+        {
+            throw new ArgumentNullException(nameof(configure));
+        }
+        this.actions.Add(graph =>
+        {
+            var operation = new OGraphOperation()
+            {
+                Name = name
+            };
+
+            var descriptor = new OGraphOperationDescriptor(operation, graph);
+
+            configure.Invoke(descriptor);
+
+            graph.Operations.Add(operation);
+        });
+
+        return this;
     }
     IOGraphBuilder IOGraphBuilder.AddSubscriber()
     {
@@ -57,8 +75,6 @@ public sealed class OGraphBuilder : IOGraphBuilder
     }
     IOGraph IOGraphBuilder.Build()
     {
-        var graph = new OGraph();
-
         foreach (var action in actions)
         {
             action.Invoke(graph);
