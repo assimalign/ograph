@@ -8,13 +8,6 @@ namespace Assimalign.OGraph.Syntax.Internal;
 
 internal class FunctionParser : Parser
 {
-
-
-    /* Should return either a:
-     * - property node 
-     * - function node 
-     
-     */
     internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
     {
         if (queryNode is not FunctionQueryNode functionNode)
@@ -23,8 +16,13 @@ internal class FunctionParser : Parser
                 typeof(FunctionQueryNode),
                 queryNode.GetType());
         }
+        if (!lexer.Current.Value.IsFunction(out var functionType))
+        {
+            // TODO: Expected Function Type
+            return queryNode;
+        }
 
-        return functionNode.FunctionType switch
+        return functionType switch
         {
             FunctionType.StartsWith => ParseFunctionStartsWtih(ref lexer, context, functionNode),
             FunctionType.SubString => ParseSubStringFunctionNode(ref lexer, context, functionNode)

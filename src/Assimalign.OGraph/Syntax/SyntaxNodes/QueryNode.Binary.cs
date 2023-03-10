@@ -8,8 +8,6 @@ namespace Assimalign.OGraph.Syntax;
 
 public sealed class BinaryQueryNode : QueryNode
 {
-
-
     internal BinaryQueryNode() { }
     public BinaryQueryNode(QueryNode left, QueryNode right, BinaryOperatorType operatorType)
     {
@@ -17,8 +15,6 @@ public sealed class BinaryQueryNode : QueryNode
         RightOperand = right;
         OperatorType = operatorType;
     }
-
-
     /// <summary>
     /// 
     /// </summary>

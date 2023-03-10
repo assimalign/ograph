@@ -9,7 +9,7 @@ namespace Assimalign.OGraph.Syntax;
 public enum ParameterType
 {
     None,
-    Member,
+    Property,
     Function,
     Constant
 }

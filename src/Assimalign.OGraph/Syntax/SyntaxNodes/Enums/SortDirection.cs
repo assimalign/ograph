@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assimalign.OGraph.Syntax.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Assimalign.OGraph.Syntax;
 
 public enum SortDirection
 {
-    Ascending,
-    Descending,
+    Ascending = TokenType.Ascending,
+    Descending = TokenType.Descending,
 }

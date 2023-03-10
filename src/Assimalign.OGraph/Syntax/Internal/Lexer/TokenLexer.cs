@@ -111,7 +111,7 @@ internal ref partial struct TokenLexer
     /// Retrieves the next token in the sequence.
     /// </summary>
     /// <returns></returns>
-    /// <exception cref="Exception"></exception>
+    /// <exception cref="TokenLexerException"></exception>
     public Token Next()
     {
         var sequenceReader = new SequenceReader<byte>(remaining);
@@ -150,6 +150,17 @@ internal ref partial struct TokenLexer
     public void Skip()
     {
         Next();
+    }
+    /// <summary>
+    /// Skips a specified number of tokens in the sequence.
+    /// </summary>
+    /// <param name="count">The number of tokens to skip in the sequence</param>
+    public void Skip(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            Next();
+        }
     }
     /// <summary>
     /// Tries to peek at the next token in the sequence.

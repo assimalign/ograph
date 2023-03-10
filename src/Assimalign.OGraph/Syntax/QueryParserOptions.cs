@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
 
+using Assimalign.OGraph.Syntax.Analyzer;
+
 public sealed class QueryParserOptions
 {
-    private IList<Func<QueryNode, object>> visitors;
+    private readonly IList<QueryAnalyzer> analyzers;
 
 
     public QueryParserOptions()
     {
-        this.visitors = new List<Func<QueryNode, object>>();
+        this.analyzers = new List<QueryAnalyzer>();
     }
 
     /// <summary>
@@ -27,14 +29,21 @@ public sealed class QueryParserOptions
     public Encoding Encoding { get; set; } = Encoding.UTF8;
 
 
-    internal IList<Func<QueryNode, object>> Visitors => this.visitors;
+    internal IEnumerable<QueryAnalyzer> Analyzers => this.analyzers;
 
 
-    public void AddVisitor<T>(IQueryNodeVisitor<T> visitor)
+
+    public void AddAnalyzer(QueryAnalyzer analyzer)
     {
-        visitors.Add(node =>
+        if (analyzer is null)
         {
-            return visitor.Visit(node);
-        });
+            throw new ArgumentNullException(nameof(analyzer));
+        }
+
+        analyzers.Add(analyzer);
+    }
+    public void AddAnalyzer<TAnalyzer>() where TAnalyzer : QueryAnalyzer, new()
+    {
+        AddAnalyzer(new TAnalyzer());
     }
 }

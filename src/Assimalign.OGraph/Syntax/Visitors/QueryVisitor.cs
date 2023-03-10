@@ -9,37 +9,13 @@ namespace Assimalign.OGraph.Syntax;
 
 public abstract class QueryNodeVisitor<T> : IQueryNodeVisitor<T>
 {
-    private readonly IOGraphNode node;
-    private readonly T value;
-
-    public QueryNodeVisitor()
-    {
-        
-    }
-
-
+    
     public T Visit(QueryNode node) => node.Accept(this);
 
-    public virtual T Visit(AttributeQueryNode node)
-    {
-        throw new NotImplementedException();
-    }
 
     public virtual T Visit(RootQueryNode node)
     {
-        if (node.TryGetProjections(out var projections))
-        {
-            foreach (var projection in projections)
-            {
-                if (projection.HasEdge)
-                {
-
-                }
-            }
-        }
-
-        return value;
-        
+        throw new NotImplementedException();
     }
 
     public virtual T Visit(FilterQueryNode node)

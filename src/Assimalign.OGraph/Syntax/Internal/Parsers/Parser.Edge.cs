@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
@@ -25,31 +21,38 @@ internal class EdgeParser : Parser
 
             if (token.TokenType == TokenType.Comma)
             {
-                break;
+                return queryNode;
             }
-            if (token.TokenType != TokenType.Identifier)
+            if (token.TokenType == TokenType.Slash)
             {
-                // TODO: Expected Identifier
+                continue;
+            }
+            if (token.TokenType == TokenType.Identifier)
+            {
+                queryNode = new EdgeQueryNode()
+                {
+                    Path = edgePath = string.IsNullOrEmpty(edgePath) ? token.Text : string.Join('/', edgePath, token.Text)
+                };                
+                if (!lexer.TryPeek(out var peek))
+                {
+                    context.AddDiagnostic(Diagnostic.UnexpectedEOF(
+                        lexer.Current.End));
+
+                    return queryNode;
+                }
+                if (peek.TokenType != TokenType.Slash && peek.TokenType != TokenType.Comma)
+                {
+                    context.AddDiagnostic(Diagnostic.ExpectedCommaSeparator(
+                        peek.Start,
+                        peek.End));
+                }
             }
             else
             {
-                edgePath = string.IsNullOrEmpty(edgePath) ?
-                    token.Text : 
-                    string.Join('/', edgePath, token.Text);
-            }
-            if (!lexer.TryPeek(out var next))
-            {
-                context.AddUnexpectedEOFError(ref lexer);
-            }
-            if (next.TokenType != TokenType.Slash && next.TokenType != TokenType.Comma)
-            {
-                context.AddExpectedCommaSeparatorDiagnosticError(ref next);   
+                context.AddDiagnostic(Diagnostic.InvalidToken(ref token));
             }
         }
 
-        return edgeNode = new EdgeQueryNode()
-        {
-            Path = edgePath,
-        };
+        return edgeNode;
     }
 }

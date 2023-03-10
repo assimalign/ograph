@@ -11,7 +11,7 @@ namespace Assimalign.OGraph;
 /// </summary>
 /// <remarks>
 /// An OGraph Operation represent the root 
-/// Operation -- resolves --> Node(s) -- resolves --> Edge(s) -- resolves --> Node(s) -- resolves --> Operation(s)
+/// Operation -- resolves --> Root(s) -- resolves --> Edge(s) -- resolves --> Root(s) -- resolves --> Operation(s)
 /// </remarks>
 public interface IOGraphOperation
 {

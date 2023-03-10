@@ -25,14 +25,14 @@ public class OGraphBuilderTests
             2. Validate HTTP Request
             3. Execute OnResolve Middleware (Pre-Resolver)  
             3. Execute Operation Resolver
-            4. Execute Node Property Resolver
+            4. Execute Root Property Resolver
             5. Execute Edge Resolver
          
          */
 
         var graph = OGraphBuilder.Create("UsersDomain", builder =>
         {
-            // Define Node Structures
+            // Define Root Structures
 
             // Fluent Implementation
             builder.AddNode<User>("users", descriptor =>
@@ -129,7 +129,7 @@ public class OGraphBuilderTests
 
         //foreach (var user in list)
         //{
-        //    if (query.Node is not RootQueryNode root)
+        //    if (query.Root is not RootQueryNode root)
         //    {
         //        throw new Exception();
         //    }

@@ -15,5 +15,6 @@
 	  <Folder Include="Internal\Validators\" />
 	  <Folder Include="Internal\Validators\" />
 	  <Folder Include="Serialization\" />
+	  <Folder Include="Syntax\Internal\Visitors\" />
 	</ItemGroup>
 </Project>

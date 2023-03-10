@@ -14,6 +14,10 @@ public sealed class SortQueryNode : QueryNode
     /// </summary>
     public EdgeQueryNode? Edge { get; init; }
     /// <summary>
+    /// Specifies whether the sort is the root of the query.
+    /// </summary>
+    public bool HasEdge => Edge is not null;
+    /// <summary>
     /// 
     /// </summary>
     public SortDirection Direction { get; init; } = SortDirection.Ascending;
@@ -29,6 +33,23 @@ public sealed class SortQueryNode : QueryNode
     /// 
     /// </summary>
     public bool HasThenBy => ThenBy is not null;
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="function"></param>
+    /// <returns></returns>
+    public bool IsFunction(out FunctionQueryNode? function)
+    {
+        function = null;
+
+        if (SortBy is FunctionQueryNode functionNode)
+        {
+            function = functionNode;
+            return true;
+        }
+
+        return false;
+    }
    
 
     /// <inheritdoc />

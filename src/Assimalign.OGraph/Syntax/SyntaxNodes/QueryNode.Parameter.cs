@@ -52,7 +52,7 @@ public sealed class ParameterQueryNode : QueryNode
     {
         ConstantQueryNode => ParameterType.Constant,
         FunctionQueryNode => ParameterType.Function,
-        PropertyQueryNode => ParameterType.Member,
+        PropertyQueryNode => ParameterType.Property,
         _                 => ParameterType.None
     };
 

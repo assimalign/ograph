@@ -6,77 +6,96 @@ namespace Assimalign.OGraph.Syntax.Internal;
 
 internal sealed class PageParser : Parser
 {
-    internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode node)
+    internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
     {
-        if (node is not PageQueryNode pageNode)
+        if (queryNode is not PageQueryNode pageNode)
         {
-            // TODO: Add diagnostics information. Expected RootQueryNode to follow
-            return node;
+            throw QueryParserException.UnexpectedQueryNode(
+                typeof(PageQueryNode),
+                queryNode.GetType());
         }
         if (!lexer.HasNext)
         {
-            // TODO: Add diagnostics unexpected EOF
-            return node;
+            context.AddDiagnostic(Diagnostic.UnexpectedEOF(
+                lexer.Current.End));
+
+            return queryNode;
         }
 
         var token = lexer.Next();
 
         if (token.TokenType != TokenType.OpenParenthesis)
         {
-            // TODO: Add diagnostic error. Expected starting parenthesis block
-            return node;
+            context.AddDiagnostic(Diagnostic.ExpectedOpeningParenthesis(
+                token.Start,
+                token.End));
+
+            return queryNode;
         }
 
         return ParseParenthesisBlock(ref lexer, context, pageNode);
     }
-
     private PageQueryNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, PageQueryNode queryNode)
     {
         var next = default(Token);
 
         if (!lexer.TryPeek(out next))
         {
-            // TODO: Add Diagnostic error. Unexpected EOF
+            context.AddDiagnostic(Diagnostic.UnexpectedEOF(
+                lexer.Current.End));
+
             return queryNode;
         }
         // Check if projection is followed by an edge identifier
         if (next.TokenType == TokenType.Identifier)
         {
-            var edgeParser = context.GetParser<EdgeParser>();
-            var edgeNode = edgeParser.Parse<EdgeQueryNode>(ref lexer, context);
+            var parser = context.GetParser<EdgeParser>();
 
             queryNode = new PageQueryNode()
             {
-                Edge = edgeNode
+                Edge = parser.Parse<EdgeQueryNode>(ref lexer, context)
             };
 
-            if (!lexer.TryPeek(out next))
+            if (!lexer.TryNext(out next))
             {
-                // TODO: Add Diagnostic error. Unexpected EOF
+                context.AddDiagnostic(Diagnostic.UnexpectedEOF(
+                    lexer.Current.End));
+
                 return queryNode;
             }
         }
         if (next.TokenType != TokenType.OpenBracket)
         {
-            // TODO: Add diagnostic error. Expected starting bracket block
+            context.AddDiagnostic(Diagnostic.ExpectedOpeningBracket(
+                next.Start,
+                next.End));
+
             return queryNode;
         }
+        // Parse Parenthesis Block
         while (lexer.HasNext)
         {
             var token = lexer.Next();
 
             if (token.TokenType == TokenType.CloseParenthesis)
             {
+                // If there is more token after the closing parenthesis and no dot separator, then error
                 if (lexer.TryPeek(out var peek) && peek.TokenType != TokenType.Dot)
                 {
-                    // TODO: Diagnostics error dot notation is required
+                    context.AddDiagnostic(Diagnostic.ExpectedDotSeparator(
+                        peek.Start,
+                        peek.End));
                 }
 
-                break;
+                return queryNode;
             }
 
             queryNode = ParseBracketBlock(ref lexer, context, queryNode);
         }
+
+        context.AddDiagnostic(Diagnostic.ExpectedClosingParenthesis(
+            lexer.Current.Start,
+            lexer.Current.End));
 
         return queryNode;
     }

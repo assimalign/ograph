@@ -1,14 +1,18 @@
 ﻿using System;
-using System.Text;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax;
 
 using Assimalign.OGraph.Syntax.Internal;
 
+
 public sealed partial class QueryParser
 {
     private readonly QueryParserOptions options;
+    
 
     public QueryParser() : this(new QueryParserOptions()) { }
     public QueryParser(QueryParserOptions options)
@@ -16,13 +20,14 @@ public sealed partial class QueryParser
         this.options = options;
     }
 
+    
 
-    public QueryDocument Parse(string query) => Parse(options.Encoding.GetBytes(query));    
-    private QueryDocument Parse(byte[] query)
+    public QueryDocument Parse(string query)
     {
         try
         {
-            var lexer   = new TokenLexer(query, new()
+            var buffer = options.Encoding.GetBytes(query);
+            var lexer   = new TokenLexer(buffer, new()
             {
                 SkipCarriageReturn = true,
                 SkipLineFeed = true,
@@ -39,18 +44,38 @@ public sealed partial class QueryParser
             var parser  = Parser.Create();
             var node    = parser.Parse(ref lexer, context, new RootQueryNode());
 
-            foreach (var visitor in options.Visitors)
-            {
-                visitor.Invoke(node);
-            }
-
-            return new QueryDocument(
+            var document = new QueryDocument(
+                query,
                 node,
                 context.Diasgnostics);
+
+            var analyzers = GetAnalyzers(document, CancellationToken.None);
+
+            while (analyzers.Any())
+            {
+                var task = Task.WhenAny(analyzers);
+                task.Wait();
+                analyzers.Remove(task.Result);
+            }
+
+            return document;
         }
         catch (TokenLexerException exception)
         {
             throw new QueryParserException(exception);
         }
+    }
+
+
+    private IList<Task> GetAnalyzers(QueryDocument document, CancellationToken cancellationToken)
+    {
+        var list = new List<Task>();
+
+        foreach (var analyzer in options.Analyzers)
+        {
+            list.Add(analyzer.AnalyzeAsync(document, cancellationToken));
+        }
+
+        return list;
     }
 }

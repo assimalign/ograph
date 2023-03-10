@@ -11,9 +11,8 @@ namespace Assimalign.OGraph.Syntax;
 public partial class QueryParserTests
 {
     private const string query = """
-	.filtER({
-		firstName eq 'Chase' and
-		(
+	filtER({ # Some random capital letters to test case insensitivity
+		firstName eq 'Chase' and (
 			startsWith(
 				firstName, 'c', true
 			) and 
@@ -26,10 +25,10 @@ public partial class QueryParserTests
 			city eq 'Charlotte'
 		)
 	})
-	.select({
-		toLower(firstName) as firstName 
-		toLower(lastName) as lastName
-		concat(toUpper(firstName), ' ', toUpper(lastName)) as fullName
+	.projeCt({
+		firstName
+		lastName
+		middleName
 		addresses as userAddresses {
 			streetOne
 			streetTwo 
@@ -55,29 +54,12 @@ public partial class QueryParserTests
 	""";
 
 
-    [Fact]
-    public void Test1()
+    [Fact(DisplayName = "Parser Test: Complete Successful Parse")]
+    public void CompleteParseSuccessful()
     {
-
-		//var bytes = Encoding.UTF8.GetBytes(query);
-		//var lexer = new TokenLexer(bytes);
-		//var tokens = new List<Token>();
-
-		//while (lexer.HasNext)
-		//{
-		//	tokens.Add(lexer.Next());
-		//}
-
-
-		//Assert.Contains(tokens, token => token.TokenType == TokenType.Identifier && token.Text.Equals("firstName"));
-
 		var parser = new QueryParser();
-		var node = parser.Parse(query);
+		var document = parser.Parse(query);
 
-
-
-
+		Assert.Empty(document.Errors);
 	}
-
-
 }

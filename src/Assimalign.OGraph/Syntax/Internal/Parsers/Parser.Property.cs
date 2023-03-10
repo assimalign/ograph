@@ -10,8 +10,9 @@ internal class PropertyParser : Parser
     {
         if (queryNode is not PropertyQueryNode propertyNode)
         {
-            // TODO: Add diagnostic 
-            return queryNode;
+            throw QueryParserException.UnexpectedQueryNode(
+                typeof(PropertyQueryNode),
+                queryNode.GetType());
         }
         // Check if 
         if (lexer.Current.TokenType != TokenType.Identifier)
@@ -20,95 +21,88 @@ internal class PropertyParser : Parser
             return queryNode;
         }
 
-        return ParseIdentifier(ref lexer, context, propertyNode);
+        return ParseProperty(ref lexer, context, propertyNode);
     }
-    private PropertyQueryNode ParseIdentifier(ref TokenLexer lexer, ParserContext context, PropertyQueryNode queryNode)
+    private PropertyQueryNode ParseProperty(ref TokenLexer lexer, ParserContext context, PropertyQueryNode queryNode)
     {
-        var token = default(Token);
+        var peek = default(Token);
 
         queryNode = new PropertyQueryNode()
         {
             Name = lexer.Current.Text
         };
-
-        // Comma Check
-        if (lexer.TryPeek(out token) && token.TokenType == TokenType.Comma)
-        {
-            lexer.Skip();
-        }
         // Alias Check
-        if (lexer.TryPeek(out token) && token.TokenType == TokenType.Alias)
+        if (lexer.TryPeek(out peek) && peek.TokenType == TokenType.Alias)
         {
             lexer.Skip();
             queryNode = ParsePropertyAlias(ref lexer, context, queryNode);
         }
-        // Nested Projection Check
-        if (lexer.TryPeek(out token) && token.TokenType == TokenType.OpenBracket)
+        // Comma Check
+        if (lexer.TryPeek(out peek) && peek.TokenType == TokenType.Comma)
         {
+            lexer.Skip(); // Skip comma
+        }
+        // Nested Projection Check
+        if (lexer.TryPeek(out peek) && peek.TokenType == TokenType.OpenBracket)
+        {
+            lexer.Skip();
+
             var children = queryNode.Children?.ToList() ?? new List<PropertyQueryNode>();
 
             while (lexer.HasNext)
             {
-                if (!lexer.TryNext(out token))
-                {
-                    context.AddUnexpectedEOFError(ref lexer);
-                    return queryNode;
-                }
+                var token = lexer.Next();
 
                 if (token.TokenType == TokenType.CloseBracket)
                 {
-                    break;
+                    return queryNode = new PropertyQueryNode()
+                    {
+                        Name = queryNode.Name,
+                        Alias = queryNode.Alias,
+                        Children = children
+                    };
                 }
                 switch (token.TokenType)
                 {
                     case TokenType.Identifier:
                         {
-                            if (Parse(ref lexer, context, new PropertyQueryNode()) is not PropertyQueryNode propertyNode)
-                            {
-                                // TODO: Add Diagnostic Error
-                                continue;
-                            }
-                            children.Add(propertyNode);
+                            children.Add((PropertyQueryNode)Parse(ref lexer, context, new PropertyQueryNode()));
                         }
                         break;
                     default:
                         {
-                            // TODO: Add Diagnostic information. Unexpected token
+                            context.AddDiagnostic(Diagnostic.InvalidToken(ref token));
                             break;
                         }
                 }
             }
-
-            queryNode = new PropertyQueryNode()
-            {
-                Alias = queryNode.Alias,
-                Children = children
-            };
         }
 
         return queryNode;
     }
-    private PropertyQueryNode ParsePropertyAlias(ref TokenLexer lexer, ParserContext context, PropertyQueryNode node)
+    private PropertyQueryNode ParsePropertyAlias(ref TokenLexer lexer, ParserContext context, PropertyQueryNode queryNode)
     {
         if (!lexer.HasNext)
         {
-            // TODO: Add diagnostic error. Unexpected EOF
-            return node;
+            context.AddDiagnostic(Diagnostic.UnexpectedEOF(
+                lexer.Current.End));
+
+            return queryNode;
         }
 
         var token = lexer.Next();
 
         if (token.TokenType != TokenType.Identifier)
         {
-            // TODO: Add diagnostic error. Expected identifier to follow 'as' operator
-            return node;
+            context.AddDiagnostic(Diagnostic.InvalidToken(ref token));
+            return queryNode;
         }
 
-        return new PropertyQueryNode()
+        return queryNode = new PropertyQueryNode()
         {
-            Name = node.Name,
             Alias = token.Text,
-            Children = node.Children
+            Name = queryNode.Name,
+            Children = queryNode.Children
         };
     }
 }

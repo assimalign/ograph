@@ -25,7 +25,7 @@ internal static class ParserContextExtensions
     {
         context.AddDiagnostic(new Diagnostic()
         {
-            Code = DiagnosticCode.G0005,
+            Code = DiagnosticCode.G0005.ToString(),
             Message = $"Unexpected EOF (end-of-file) at '{lexer.Current.End}'.",
             Start = lexer.Current.End,
             End = lexer.Current.End,

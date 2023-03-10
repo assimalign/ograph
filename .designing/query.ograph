@@ -1,9 +1,5 @@
 # Query
-https://endpoint.com/api/users?query=variables({
-    take: 20
-    skip: 40
-})
-.project({
+https://endpoint.com/api/users?query=project({
     # Queryable Fields
     userId
     firstName

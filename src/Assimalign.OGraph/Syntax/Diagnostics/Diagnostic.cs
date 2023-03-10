@@ -7,9 +7,18 @@ namespace Assimalign.OGraph.Syntax;
 public sealed partial class Diagnostic
 {
     public Diagnostic() { }
-    public Diagnostic(DiagnosticCode code, string? message, int start, int end, DiagnosticSeverity severity)
+    public Diagnostic(string code, string? message, int start, int end, DiagnosticSeverity severity)
     {
         Code = code;
+        Message = message;
+        Start = start;
+        End = end;
+        Severity = severity;
+    }
+    
+    internal Diagnostic(DiagnosticCode code, string? message, int start, int end, DiagnosticSeverity severity)
+    {
+        Code = code.ToString();
         Message = message;
         Start = start;
         End = end;
@@ -20,11 +29,11 @@ public sealed partial class Diagnostic
     /// <summary>
     /// The diagnostic code.
     /// </summary>
-    public DiagnosticCode Code { get; init; }
+    public string? Code { get; init; }
     /// <summary>
     /// 
     /// </summary>
-    public DiagnosticLocation Location { get; init; }
+    public DiagnosticLocation? Location { get; init; }
     /// <summary>
     /// 
     /// </summary>
@@ -32,17 +41,17 @@ public sealed partial class Diagnostic
     /// <summary>
     /// The length of the error.
     /// </summary>
-    public int Length => End - Start;
+    public int? Length => End - Start;
     /// <summary>
     /// Start of diagnostic location in the source.
     /// </summary>
-    public int Start { get; init; }
+    public int? Start { get; init; }
     /// <summary>
     /// End of diagnostic location in the source.
     /// </summary>
-    public int End { get; init; }
+    public int? End { get; init; }
     /// <summary>
     /// 
     /// </summary>
-    public DiagnosticSeverity Severity { get; init; }
+    public DiagnosticSeverity? Severity { get; init; }
 }

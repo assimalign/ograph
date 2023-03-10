@@ -4,7 +4,7 @@
 /// Represents a single entity and it's structure within the Graph Model.
 /// </summary>
 /// <remarks>
-/// A Node is also referred to as a Vertex.
+/// A Root is also referred to as a Vertex.
 /// </remarks>
 public interface IOGraphNode
 {

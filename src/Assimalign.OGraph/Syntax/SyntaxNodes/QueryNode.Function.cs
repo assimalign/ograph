@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Assimalign.OGraph.Syntax;
 
 public sealed class FunctionQueryNode : QueryNode
 {
-    internal FunctionQueryNode() { }
+    public FunctionQueryNode() { }
     public FunctionQueryNode(string name, IEnumerable<ParameterQueryNode> parameters)
     {
         this.Name = name;

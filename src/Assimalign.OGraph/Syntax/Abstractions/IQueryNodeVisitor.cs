@@ -15,7 +15,6 @@ public interface IQueryNodeVisitor<T>
     T Visit(PageQueryNode token);
     T Visit(SortQueryNode token);
     T Visit(BinaryQueryNode token);
-    T Visit(AttributeQueryNode token);
     T Visit(PropertyQueryNode token);
     T Visit(ParameterQueryNode token);
     T Visit(FunctionQueryNode token);

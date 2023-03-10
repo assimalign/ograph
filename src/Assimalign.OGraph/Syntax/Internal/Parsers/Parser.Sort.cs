@@ -8,25 +8,31 @@ namespace Assimalign.OGraph.Syntax.Internal;
 
 internal class SortParser : Parser
 {
-    internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode node)
+    internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
     {
-        if (node is not SortQueryNode sortNode)
+        if (queryNode is not SortQueryNode sortNode)
         {
-            // TODO: Add diagnostics information. Expected RootQueryNode to follow
-            return node;
+            throw QueryParserException.UnexpectedQueryNode(
+                typeof(ProjectionQueryNode),
+                queryNode.GetType());
         }
         if (!lexer.HasNext)
         {
-            // TODO: Add diagnostics unexpected EOF
-            return node;
+            context.AddDiagnostic(Diagnostic.UnexpectedEOF(
+                lexer.Current.End));
+
+            return queryNode;
         }
 
         var token = lexer.Next();
 
         if (token.TokenType != TokenType.OpenParenthesis)
         {
-            // TODO: Add diagnostic error. Expected starting parenthesis block
-            return node;
+            context.AddDiagnostic(Diagnostic.ExpectedOpeningParenthesis(
+                token.Start,
+                token.End));
+
+            return queryNode;
         }
 
         return ParseParenthesisBlock(ref lexer, context, sortNode);
@@ -38,47 +44,61 @@ internal class SortParser : Parser
 
         if (!lexer.TryPeek(out next))
         {
-            // TODO: Add Diagnostic error. Unexpected EOF
+            context.AddDiagnostic(Diagnostic.UnexpectedEOF(
+                lexer.Current.End));
+
             return queryNode;
         }
         // Check if projection is followed by an edge identifier
         if (next.TokenType == TokenType.Identifier)
         {
-            var edgeParser = context.GetParser<EdgeParser>();
-            var edgeNode = edgeParser.Parse<EdgeQueryNode>(ref lexer, context);
+            var parser = context.GetParser<EdgeParser>();
 
             queryNode = new SortQueryNode()
             {
-                Edge = edgeNode
+                Edge = parser.Parse<EdgeQueryNode>(ref lexer, context)
             };
 
-            if (!lexer.TryPeek(out next))
+            if (!lexer.TryNext(out next))
             {
-                // TODO: Add Diagnostic error. Unexpected EOF
+                context.AddDiagnostic(Diagnostic.UnexpectedEOF(
+                    lexer.Current.End));
+
                 return queryNode;
             }
         }
         if (next.TokenType != TokenType.OpenBracket)
         {
-            // TODO: Add diagnostic error. Expected starting bracket block
+            context.AddDiagnostic(Diagnostic.ExpectedOpeningBracket(
+                next.Start,
+                next.End));
+
             return queryNode;
         }
+        // Parse Parenthesis Block
         while (lexer.HasNext)
         {
             var token = lexer.Next();
 
             if (token.TokenType == TokenType.CloseParenthesis)
             {
+                // If there is more token after the closing parenthesis and no dot separator, then error
                 if (lexer.TryPeek(out var peek) && peek.TokenType != TokenType.Dot)
                 {
-                    // TODO: Diagnostics error dot notation is required
+                    context.AddDiagnostic(Diagnostic.ExpectedDotSeparator(
+                        peek.Start,
+                        peek.End));
                 }
 
-                break;
+                return queryNode;
             }
 
             queryNode = ParseBracketBlock(ref lexer, context, queryNode);
         }
+
+        context.AddDiagnostic(Diagnostic.ExpectedClosingParenthesis(
+            lexer.Current.Start,
+            lexer.Current.End));
 
         return queryNode;
     }
@@ -90,43 +110,87 @@ internal class SortParser : Parser
 
             if (token.TokenType == TokenType.CloseBracket)
             {
-                break;
+                return queryNode;
             }
-            switch (token.TokenType)
+            if (token.TokenType != TokenType.Identifier)
             {
-                case TokenType.Identifier when token.Value.IsFunction(out var functionType):
-                    {
-                        var functionNode = context.GetParser<FunctionParser>().Parse(ref lexer, context, new FunctionQueryNode()
-                        {
-                            FunctionType = functionType
-                        });
-                        if (queryNode.SortBy is null)
-                        {
-                            queryNode = new SortQueryNode()
-                            {
-                                SortBy = functionNode,
-                                Direction = queryNode.Direction,
-                                Edge = queryNode.Edge,
-                                ThenBy = queryNode.ThenBy,
-                            };
-                        }
-                        else
-                        {
+                context.AddDiagnostic(Diagnostic.InvalidToken(ref token));
+            }
+            else
+            {
+                queryNode = ParseSortIdentifier(ref lexer, context, queryNode);
+            }            
+        }
 
-                        }
-                        break;
-                    }
-                case TokenType.Identifier:
-                    {
-                        var propertyNode = context.GetParser<PropertyParser>().Parse(ref lexer, context, new PropertyQueryNode());
+        context.AddDiagnostic(Diagnostic.ExpectedClosingBracket(
+            lexer.Current.Start,
+            lexer.Current.End));
 
-                        break;
-                    }
-                default:
-                    {
-                        // TODO: Add Diagnostic information. Unexpected token
-                        break;
-                    }
+        return queryNode;
+    }
+
+    private SortQueryNode ParseSortIdentifier(ref TokenLexer lexer, ParserContext context, SortQueryNode queryNode)
+    {
+        var token = lexer.Current;
+        var sortNode = default(QueryNode);
+
+        switch (token.TokenType)
+        {
+            case TokenType.Identifier when token.Value.IsFunction():
+                {
+                    sortNode = context.GetParser<FunctionParser>().Parse<FunctionQueryNode>(ref lexer, context);
+                    break;
+                }
+            case TokenType.Identifier:
+                {
+                    sortNode = context.GetParser<PropertyParser>().Parse<PropertyQueryNode>(ref lexer, context);
+                    break;
+                }
+            default:
+                {
+                    context.AddDiagnostic(Diagnostic.InvalidToken(ref token));
+                    return queryNode;
+                }
+        }
+        if (lexer.TryPeek(out token))
+        {
+            if (token.TokenType == TokenType.Ascending || token.TokenType == TokenType.Descending)
+            {
+                token = lexer.Next();
+
+                queryNode = new SortQueryNode()
+                {
+                    SortBy = sortNode,
+                    Direction = (SortDirection)token.TokenType,
+                    Edge = queryNode.Edge,
+                    ThenBy = queryNode.ThenBy,
+                };
+
+                if (!lexer.TryPeek(out token))
+                {
+                    context.AddDiagnostic(Diagnostic.UnexpectedEOF(lexer.Current.End));
+                }
+            }
+            if (token.TokenType == TokenType.Identifier)
+            {
+                token = lexer.Next();
+
+                queryNode = new SortQueryNode()
+                {
+                    SortBy = sortNode,
+                    Direction = queryNode.Direction,
+                    Edge = queryNode.Edge,
+                    ThenBy = ParseSortIdentifier(ref lexer, context, new SortQueryNode()),
+                };
+            }
+            else
+            {
+                queryNode = new SortQueryNode()
+                {
+                    SortBy = sortNode,
+                    Direction = queryNode.Direction,
+                    Edge = queryNode.Edge
+                };
             }
         }
 
