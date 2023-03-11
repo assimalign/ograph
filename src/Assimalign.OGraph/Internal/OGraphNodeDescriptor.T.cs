@@ -28,35 +28,37 @@ internal class OGraphNodeDescriptor<T> : IOGraphNodeDescriptor<T>
 
     private void OnInitialize()
     {
-        foreach (var property in typeof(T).GetProperties().Where(x => x.CanWrite && x.CanRead))
+        var properties = typeof(T).GetProperties().Where(x => x.CanWrite && x.CanRead);
+
+        foreach (var property in properties)
         {
             // Check if Primitive Types
-            if (property.PropertyType.IsValueType(out var valueType))
-            {
-                if (valueType == typeof(DateTime))
-                {
-                    node.Properties.Add(new OGraphProperty()
-                    {
-                        Name = property.Name,
-                        Resolver = GetResolver<DateTime>(property)
-                    });
-                }
-            }
-            if (property.PropertyType.IsStringType())
-            {
-                node.Properties.Add(new OGraphProperty()
-                {
-                    Name = property.Name,
-                    Resolver = GetResolver<String>(property)
-                });
-            }
+            //if (existing.PropertyType.IsValueType(out var valueType))
+            //{
+            //    if (valueType == typeof(DateTime))
+            //    {
+            //        node.Properties.Add(new OGraphProperty()
+            //        {
+            //            Name = existing.Name,
+            //            Resolver = GetResolver<DateTime>(existing)
+            //        });
+            //    }
+            //}
+            //if (existing.PropertyType.IsStringType())
+            //{
+            //    node.Properties.Add(new OGraphProperty()
+            //    {
+            //        Name = existing.Name,
+            //        Resolver = GetResolver<String>(existing)
+            //    });
+            //}
 
-            //if (property.PropertyType.IsValueType() || property.PropertyType.IsStringType() || property.PropertyType.IsEnum)
+            //if (existing.PropertyType.IsValueType() || existing.PropertyType.IsStringType() || existing.PropertyType.IsEnum)
             //{
             //    var resolver = OGraphEdgeResolver()
             //    node.Properties.Add(new OGraphProperty()
             //    {
-            //        Name = property.Name,
+            //        Name = existing.Name,
             //        Resolver
             //    });
             //}
@@ -70,25 +72,38 @@ internal class OGraphNodeDescriptor<T> : IOGraphNodeDescriptor<T>
             }
         }
 
-        IOGraphPropertyResolver GetResolver<TProperty>(MemberInfo memberInfo)
-        {
-            var parameter = Expression.Parameter(typeof(T));
-            var member = Expression.PropertyOrField(parameter, memberInfo.Name);
-            var lambda = Expression.Lambda<Func<T, TProperty>>(member, parameter);
-            var method = lambda.Compile();
+        //IOGraphPropertyResolver GetResolver(MemberInfo memberInfo)
+        //{
+        //    var parameter = Expression.Parameter(typeof(TProperty));
+        //    var member = Expression.PropertyOrField(parameter, memberInfo.Name);
+        //    var lambda = Expression.Lambda(member, parameter);
+        //    var method = lambda.Compile();
 
-            return new OGraphPropertyResolverDefault<TProperty>(context =>
-            {
-                var parent = context.GetParent<T>();
+        //    return new OGraphPropertyResolverDefault<object>(context =>
+        //    {
+        //        var parent = context.GetParent<TProperty>();
 
-                return ValueTask.FromResult(method.Invoke(parent));
-            });
-        }
+        //        return ValueTask.FromResult(method.Invoke(parent));
+        //    });
+        //}
     }
 
     public IOGraphNodeDescriptor<T> HasLabel(Label label)
     {
-        throw new NotImplementedException();
+        var property = node.GetType().GetProperty("Label");
+
+        if (property is null)
+        {
+            throw new Exception();
+        }
+        if (!property.CanWrite)
+        {
+            throw new Exception();
+        }
+
+        property.SetValue(node, label, null);
+
+        return this;
     }
     public IOGraphNodeDescriptor<T> HasMetadata(string key, object value)
     {
@@ -105,21 +120,16 @@ internal class OGraphNodeDescriptor<T> : IOGraphNodeDescriptor<T>
 
         return this;
     }
-
     public IOGraphEdgeDescriptor<TProperty> HasEdge<TProperty>(Expression<Func<T, TProperty>> expression)
     {
         ValidateMemberExpression(expression, out var memberInfo);
 
-        // TODO: Need to remove property from initialized collection 
+        // TODO: Need to remove existing from initialized collection 
 
-
-
-        throw new NotImplementedException();
-    }
-
-    public IOGraphNodeDescriptor<T> HasKey<TProperty>(Expression<Func<T, TProperty>> expression)
-    {
-        ValidateMemberExpression(expression, out var memberInfo);
+        if (node.Properties.TryGet(memberInfo.Name, out var existing) && existing is not null)
+        {
+            node.Properties.Remove(existing);
+        }
 
 
 
@@ -128,29 +138,62 @@ internal class OGraphNodeDescriptor<T> : IOGraphNodeDescriptor<T>
 
     public IOGraphPropertyDescriptor HasProperty(Name name)
     {
-        if (node.Properties.Any(property => property.Name == name))
+        if (node.Properties.TryGet(name, out var existing) && existing is not null)
         {
-
+            return new OGraphPropertyDescriptor(existing);
         }
-        throw new NotImplementedException();
-    }
 
-    public IOGraphPropertyDescriptor<TProperty> HasProperty<TProperty>(Expression<Func<T, TProperty>> expression)
-    {
-        ValidateMemberExpression(expression, out var memberInfo);
-
-        return new OGraphPropertyDescriptor<TProperty>(new OGraphProperty()
+        var property = new OGraphProperty()
         {
-            Name = memberInfo.Name
-        });
+            Name = name
+        };
+
+        node.Properties.Add(property);
+
+        return new OGraphPropertyDescriptor(property);
     }
 
     public IOGraphNodeDescriptor<T> Ignore<TProperty>(Expression<Func<T, TProperty>> expression)
     {
         ValidateMemberExpression(expression, out var memberInfo);
 
+        if (node.Properties.TryGet(memberInfo.Name, out var property) && property is not null)
+        {
+            node.Properties.Remove(property);
+        }
 
-        throw new NotImplementedException();
+        return this;
+    }
+    public IOGraphPropertyDescriptor<TProperty> HasProperty<TProperty>(Expression<Func<T, TProperty>> expression)
+    {
+        ValidateMemberExpression(expression, out var memberInfo);
+
+        if (node.Properties.TryGet(memberInfo.Name, out var existing) && existing is OGraphProperty cast)
+        {
+            return new OGraphPropertyDescriptor<TProperty>(cast);
+        }
+
+        var method = expression.Compile();
+
+        var property = new OGraphProperty()
+        {
+            Name = memberInfo.Name,
+            Resolver = new OGraphPropertyResolverDefault<TProperty>(context =>
+            {
+                var parent = context.GetParent<T>();
+
+                if (parent is null)
+                {
+                    return default;
+                }
+
+                return ValueTask.FromResult(method.Invoke(parent));
+            })
+        };
+
+        node.Properties.Add(property);
+
+        return new OGraphPropertyDescriptor<TProperty>(property);
     }
 
 
@@ -164,7 +207,7 @@ internal class OGraphNodeDescriptor<T> : IOGraphNodeDescriptor<T>
 
 
 
-    private void ValidateMemberExpression(Expression expression, out MemberInfo memberInfo)
+    private void ValidateMemberExpression(LambdaExpression expression, out MemberInfo memberInfo)
     {
         // Check that expression is not null
         if (expression is null)
@@ -172,11 +215,15 @@ internal class OGraphNodeDescriptor<T> : IOGraphNodeDescriptor<T>
             throw new ArgumentNullException(nameof(expression));
         }
         // Check that expression is a Property Expression
-        if (expression is not LambdaExpression lambda || lambda.Body is not MemberExpression member)
+        if (expression.Body is not MemberExpression member)
         {
             throw new InvalidOperationException($"'{expression}' must be a member expression");
         }
-        // Check that the Property is of type T
+        if (member.Member.DeclaringType is null)
+        {
+            throw new Exception();
+        }
+        // Check that the Property is of type TProperty
         if (member.Member.DeclaringType.IsAssignableTo(typeof(T)))
         {
             throw new InvalidOperationException($"'{expression}' must be a member of {typeof(T).Name}");

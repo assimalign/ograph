@@ -1,15 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-
-
-public delegate ValueTask<IOGraphPropertyResult> OGraphPropertyResolver(IOGraphPropertyResolverContext context);
+/// <summary>
+/// 
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <param name="context"></param>
+/// <returns></returns>
 
 public delegate ValueTask<T> OGraphPropertyResolver<T>(IOGraphPropertyResolverContext context);
 
+/// <summary>
+/// 
+/// </summary>
+/// <param name="context"></param>
+/// <returns></returns>
+public delegate ValueTask<IOGraphPropertyResult> OGraphPropertyResolver(IOGraphPropertyResolverContext context);

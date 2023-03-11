@@ -1,16 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphEdgeMiddlewareQueue : IOrderedEnumerable<IOGraphEdgeMiddleware>
+public interface IOGraphEdgeMiddlewareQueue : IEnumerable<IOGraphEdgeMiddleware>
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    int Count { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    bool IsReadOnly { get; }
     /// <summary>
     /// 
     /// </summary>
     /// <param name="middleware"></param>
     void Enqueue(IOGraphEdgeMiddleware middleware);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="middleware"></param>
+    void Dequeue(IOGraphEdgeMiddleware middleware);
 }

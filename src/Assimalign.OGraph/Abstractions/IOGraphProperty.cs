@@ -4,11 +4,6 @@ namespace Assimalign.OGraph;
 
 public interface IOGraphProperty
 {
-    //bool IsKey { get; }
-    //bool IsComputed { get; }
-    //bool IsPagable { get; }
-    //bool IsFilterable { get; }
-
     /// <summary>
     /// The name of the property.
     /// </summary>
@@ -35,4 +30,12 @@ public interface IOGraphProperty
     Type? RuntimeType { get; }
 
     string? RuntimeName { get; }
+
+
+
+
+    bool IsNullable { get; }
+    bool IsFilterable { get; }
+    bool IsPagable { get; }
+    bool IsSortable { get; }
 }

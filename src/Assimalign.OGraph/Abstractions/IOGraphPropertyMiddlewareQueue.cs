@@ -9,6 +9,22 @@ namespace Assimalign.OGraph;
 public interface IOGraphPropertyMiddlewareQueue : IEnumerable<IOGraphPropertyMiddleware>
 {
 
-    int Count { get;  }
-    void Add(IOGraphPropertyMiddleware middleware);
+    /// <summary>
+    /// 
+    /// </summary>
+    int Count { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    bool IsReadOnly { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="middleware"></param>
+    void Enqueue(IOGraphPropertyMiddleware middleware);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="middleware"></param>
+    void Dequeue(IOGraphPropertyMiddleware middleware);
 }

@@ -7,72 +7,41 @@ using System.Threading.Tasks;
 namespace Assimalign.OGraph;
 
 using Assimalign.OGraph.Internal;
+using System.Threading;
 
 public sealed class OGraphBuilder : IOGraphBuilder
 {
     // These are our build actions
     private readonly IList<Action<OGraph>> actions;
 
-    private readonly OGraph graph = new OGraph();
+    private readonly OGraph graph = new();
 
     private OGraphBuilder()
     {
         this.actions = new List<Action<OGraph>>();
     }
 
-    IOGraphBuilder IOGraphBuilder.AddNode<TNode>()
-    {
-        throw new NotImplementedException();
-    }
+
     IOGraphBuilder IOGraphBuilder.AddNode(IOGraphNode node)
-    {
-        this.actions.Add(graph => graph.Nodes.Add(node));
-        return this;
-    }
-    IOGraphBuilder IOGraphBuilder.AddNode(Label name, Action<IOGraphNodeDescriptor> descriptor)
-    {
-        throw new NotImplementedException();
-    }
-    IOGraphBuilder IOGraphBuilder.AddNode<T>(Label label, Action<IOGraphNodeDescriptor<T>> configure)
     {
         this.actions.Add(graph =>
         {
-            var node = new OGraphNodeDefault<T>(configure)
-            {
-                Label = label
-            };
-
             graph.Nodes.Add(node);
-
         });
         return this;
     }
-    IOGraphBuilder IOGraphBuilder.AddOperation(Name name, Action<IOGraphOperationDescriptor> configure)
+
+    IOGraphBuilder IOGraphBuilder.AddOperation(IOGraphOperation operation)
     {
-        if (configure is null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
         this.actions.Add(graph =>
         {
-            var operation = new OGraphOperation()
-            {
-                Name = name
-            };
-
-            var descriptor = new OGraphOperationDescriptor(operation, graph);
-
-            configure.Invoke(descriptor);
-
             graph.Operations.Add(operation);
         });
 
         return this;
     }
-    IOGraphBuilder IOGraphBuilder.AddSubscriber()
-    {
-        throw new NotImplementedException();
-    }
+
+
     IOGraph IOGraphBuilder.Build()
     {
         foreach (var action in actions)

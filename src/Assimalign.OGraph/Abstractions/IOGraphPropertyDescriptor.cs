@@ -19,7 +19,19 @@ public interface IOGraphPropertyDescriptor
     /// </summary>
     /// <param name="middleware"></param>
     /// <returns></returns>
+    IOGraphPropertyDescriptor UseMiddleware(OGraphPropertyMiddleware middleware);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="middleware"></param>
+    /// <returns></returns>
     IOGraphPropertyDescriptor UseMiddleware(IOGraphPropertyMiddleware middleware);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TMiddleware"></typeparam>
+    /// <returns></returns>
+    IOGraphPropertyDescriptor UseMiddleware<TMiddleware>() where TMiddleware : IOGraphPropertyMiddleware, new();
     /// <summary>
     /// 
     /// </summary>

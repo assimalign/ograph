@@ -6,10 +6,17 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphEventSubscriber
+/// <summary>
+/// 
+/// </summary>
+public interface IOGraphError
 {
     /// <summary>
     /// 
     /// </summary>
-    IOGraphEvent Event { get; }
+    string Code { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    string Message { get; }
 }

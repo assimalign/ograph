@@ -38,7 +38,19 @@ internal class OGraphNodeDescriptor : IOGraphNodeDescriptor
 
     public IOGraphPropertyDescriptor HasProperty(Name name)
     {
-        throw new NotImplementedException();
+        if (node.Properties.TryGet(name, out var existing) && existing is not null)
+        {
+            return new OGraphPropertyDescriptor(existing);
+        }
+
+        var property = new OGraphProperty()
+        {
+            Name = name
+        };
+
+        node.Properties.Add(property);
+
+        return new OGraphPropertyDescriptor(property);
     }
 }
 

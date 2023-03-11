@@ -62,10 +62,10 @@ public abstract class OGraphExecutor : IOGraphExecutor
         // Execute Operation Middleware
         try
         {
-            foreach (var middleware in operation.Middleware)
-            {
-                await middleware.InvokeAsync(context);
-            }
+            //foreach (var middleware in operation.Middleware)
+            //{
+            //    await middleware.InvokeAsync(context);
+            //}
         }
         catch (Exception exception) // TODO: Add a OGraph specific Callback cancellation exception. This will give the middleware a handle to invoke cancellation
         {
@@ -74,75 +74,75 @@ public abstract class OGraphExecutor : IOGraphExecutor
         // Build Execution Plan
 
 
-        // Execute Operation
-        var operationResult = await operation.Resolver.InvokeAsync(context);
+        //// Execute Operation
+        //var operationResult = await operation.Resolver.InvokeAsync(context);
 
-        if (operationResult.Data is IEnumerable enumerable)
-        {
-            var data = new List<Dictionary<string, object>>();
+        //if (operationResult.Data is IEnumerable enumerable)
+        //{
+        //    var data = new List<Dictionary<string, object>>();
            
-            foreach (var item in enumerable)
-            {
-                context.Parent = item;
+        //    foreach (var item in enumerable)
+        //    {
+        //        context.Parent = item;
 
 
-                var resolverTasks = new Dictionary<string, Task<IOGraphPropertyResult>>();
-                // Load Result Strategy
-                // TODO: The result strategy will dictate whether to apply OGraph query
+        //        var resolverTasks = new Dictionary<string, Task<IOGraphPropertyResult>>();
+        //        // Load Result Strategy
+        //        // TODO: The result strategy will dictate whether to apply OGraph query
 
-                foreach (var projection in query.Root.GetNodesOfType<ProjectionQueryNode>())
-                {
-                    foreach (var property in projection.Properties)
-                    {
-                        Name name = property.Name;
+        //        foreach (var projection in query.Root.GetNodesOfType<ProjectionQueryNode>())
+        //        {
+        //            foreach (var property in projection.Properties)
+        //            {
+        //                Name name = property.Name;
 
-                        var graphProperty = node.Properties.Find(property.Name);
+        //                var graphProperty = node.Properties.Find(property.Name);
 
-                        resolverTasks.Add(property.Name, graphProperty.Resolver.InvokeAsync(context).AsTask());
-                    }
-                }
-
-
-                var results = await Task.WhenAll(resolverTasks.Values);
-
-                data.Add(resolverTasks.ToDictionary(p => p.Key, p => p.Value.Result.Data));
+        //                resolverTasks.Add(property.Name, graphProperty.Resolver.InvokeAsync(context).AsTask());
+        //            }
+        //        }
 
 
-            }
+        //        var results = await Task.WhenAll(resolverTasks.Values);
+
+        //        data.Add(resolverTasks.ToDictionary(p => p.Key, p => p.Value.Result.Data));
 
 
-            var response = new OGraphResponse()
-            {
-                StatusCode = operationResult.StatusCode
-            };
+        //    }
 
 
-            await JsonSerializer.SerializeAsync(response.Body, data, cancellationToken: cancellationToken);
+        //    var response = new OGraphResponse()
+        //    {
+        //        StatusCode = operationResult.StatusCode
+        //    };
 
-            response.Body.Position = 0;
+
+        //    await JsonSerializer.SerializeAsync(response.Body, data, cancellationToken: cancellationToken);
+
+        //    response.Body.Position = 0;
 
 
-            return response;
+        //    return response;
 
-        }
+        //}
         
 
 
 
 
-        foreach (var property in node.Properties)
-        {
-            var propertyType = property.Type;
+        //foreach (var property in node.Properties)
+        //{
+        //    var propertyType = property.Type;
 
             
 
-            //property.Resolver.
+        //    //property.Resolver.
 
 
-           // var propertyValue = propertyType.Resolver.Invoke(default);
+        //   // var propertyValue = propertyType.Resolver.Invoke(default);
 
            
-        }
+        //}
 
 
 

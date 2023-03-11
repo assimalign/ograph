@@ -11,6 +11,19 @@ public interface IOGraphOperationMiddlewareQueue : IEnumerable<IOGraphOperationM
     /// <summary>
     /// 
     /// </summary>
+    int Count { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    bool IsReadOnly { get; }
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="middleware"></param>
     void Enqueue(IOGraphOperationMiddleware middleware);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="middleware"></param>
+    void Dequeue(IOGraphOperationMiddleware middleware);
 }

@@ -16,7 +16,6 @@ public class OGraphNodeTests
         var node = new UserNode(descriptor =>
         {
             descriptor.HasProperty("fullName")
-                .UseMiddleware(default)
                 .UseResolver(async context =>
                 {
                     var user = context.GetParent<User>();

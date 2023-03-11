@@ -9,11 +9,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Folder Include="Extensions\" />
 	  <Folder Include="Internal\ILEmit\" />
 	  <Folder Include="Internal\ILEmit\" />
-	  <Folder Include="Internal\Validators\" />
-	  <Folder Include="Internal\Validators\" />
 	  <Folder Include="Serialization\" />
 	  <Folder Include="Syntax\Internal\Visitors\" />
 	</ItemGroup>

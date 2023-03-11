@@ -15,11 +15,11 @@ public interface IOGraphEdge
     /// <summary>
     /// 
     /// </summary>
-    IOGraphNode SourceNode { get; }
+    IOGraphNode Source { get; }
     /// <summary>
     /// 
     /// </summary>
-    IOGraphNode TargetNode { get; }
+    IOGraphNode Target { get; }
     /// <summary>
     /// 
     /// </summary>

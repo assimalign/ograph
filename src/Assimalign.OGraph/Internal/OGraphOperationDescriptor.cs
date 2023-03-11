@@ -36,6 +36,11 @@ namespace Assimalign.OGraph.Internal
             return this;
         }
 
+        public IOGraphOperationDescriptor UseMiddleware(OGraphOperationMiddleware middleware)
+        {
+            throw new NotImplementedException();
+        }
+
         public IOGraphOperationDescriptor UseNodes(Label label)
         {
             operation.Node = graph.Nodes.FirstOrDefault(node => node.Label == label);
@@ -63,6 +68,11 @@ namespace Assimalign.OGraph.Internal
         {
             operation.Resolver = new OGraphOperationResolverDefault(resolver);
             return this;
+        }
+
+        public IOGraphOperationDescriptor UseResolver<T>(OGraphOperationResolver<T> resolver)
+        {
+            throw new NotImplementedException();
         }
 
         public IOGraphOperationDescriptor UseRoute(Route route)

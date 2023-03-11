@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphEventSubscriber
+public sealed class OGraphPropertyResult : IOGraphPropertyResult
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    IOGraphEvent Event { get; }
+    public object Data => throw new NotImplementedException();
 }

@@ -13,7 +13,7 @@ using Assimalign.OGraph.Internal;
 /// <inheritdoc />
 public abstract class OGraphNode<T> : IOGraphNode
 {
-    private static readonly ConcurrentDictionary<Type, string> cache = new();
+    //private static readonly ConcurrentDictionary<Type, Func> cache = new();
 
     private readonly IOGraphEdgeCollection edges;
     private readonly IOGraphPropertyCollection properties;

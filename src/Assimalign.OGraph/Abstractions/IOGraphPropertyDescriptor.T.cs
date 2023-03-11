@@ -23,13 +23,25 @@ public interface IOGraphPropertyDescriptor<T>
     /// </summary>
     /// <typeparam name="TType"></typeparam>
     /// <returns></returns>
-    IOGraphPropertyDescriptor<T> UseType<TType>() where TType : IOGraphType, new();
+    IOGraphPropertyDescriptor<T> UseType<TType>() where TType : IOGraphType, new();    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="middleware"></param>
+    /// <returns></returns>
+    IOGraphPropertyDescriptor<T> UseMiddleware(OGraphPropertyMiddleware middleware);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="middleware"></param>
     /// <returns></returns>
     IOGraphPropertyDescriptor<T> UseMiddleware(IOGraphPropertyMiddleware middleware);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TMiddleware"></typeparam>
+    /// <returns></returns>
+    IOGraphPropertyDescriptor<T> UseMiddleware<TMiddleware>() where TMiddleware : IOGraphPropertyMiddleware, new();
     /// <summary>
     /// 
     /// </summary>

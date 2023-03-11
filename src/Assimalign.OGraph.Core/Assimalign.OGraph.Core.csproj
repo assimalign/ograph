@@ -8,8 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Assimalign.OGraph.Execution\Assimalign.OGraph.Execution.csproj" />
-		<ProjectReference Include="..\Assimalign.OGraph.Syntax\Assimalign.OGraph.Syntax.csproj" />
 		<ProjectReference Include="..\Assimalign.OGraph\Assimalign.OGraph.csproj" />
 	</ItemGroup>
 

@@ -49,7 +49,7 @@ public class OGraphBuilderTests
                 descriptor.HasProperty(p => p.Password)
                     .UseName("UserPassword")
                     .UseMetadata("description", "")
-                    .UseResolver(async context =>
+                    .UseResolver(context =>
                     {
 
 
@@ -57,17 +57,33 @@ public class OGraphBuilderTests
                     });
 
                 descriptor.HasProperty(p => p.Profile)
-                    .UseName("UserProfile");
+                    .UseName("UserProfile")
+                    .UseMiddleware((context, next) =>
+                    {
+
+
+                        return next(context);
+                    })
+                    .UseMiddleware((context, next) =>
+                    {
+
+
+                        return next(context);
+                    })
+                    .UseResolver(context =>
+                    {   
+                        return context.GetParent<User>().Profile;
+                    });
 
 
                 //// Define Edges:
                 //// One-to-One Relationship: /users/{userId}/profiles/{profileId} 
-                descriptor.HasEdge(p => p.Profile)
-                    .UseMiddleware(default)
-                    .UseResolver(async context =>
-                    {
-                        return default;
-                    });
+                //descriptor.HasEdge(p => p.Profile)                    
+                //    .UseMiddleware(default)
+                //    .UseResolver(async context =>
+                //    {
+                //        return default;
+                //    });
 
                 //// One-to-Many Relationship: /users/{userId}/addresses
                 //descriptor.HasEdge(p => p.Addresses)
@@ -76,84 +92,44 @@ public class OGraphBuilderTests
                 //        return default;
                 //    });
             });
-            builder.AddNode<UserAddress>("addresses", descriptor =>
-            {
+            //builder.AddNode<UserAddress>("addresses", descriptor =>
+            //{
 
-            });
-            builder.AddNode("settings", descriptor =>
-            {
-                descriptor.HasProperty("addressType");
+            //});
+            //builder.AddNode("settings", descriptor =>
+            //{
+            //    descriptor.HasProperty("addressType");
 
-            });
-            builder.AddOperation("CreateUser", descriptor =>
-            {
-               
-            });
-            //// Inheritance Implementation
-            //builder.AddNode<UserAddressNode>();
+            //});
+            builder.AddNode<UserAddressNode>();
             
 
-            //builder.AddNode<UserProfile>("Profiles", descriptor =>
-            //{
+            //builder.AddOperation("CreateUser")
+            //    .UseMethod(Method.Post)
+            //    .UseRoute("/api/users");
 
-            //});
-
-            //builder.AddNode("Interests", descriptor =>
-            //{
-            //    descriptor
-            //        .HasProperty("interestId")
-            //        .UseResolver(async context =>
-            //        {
-
-            //        });
-
-            //});
+            //builder.AddOperation("GetUsers")
+            //    .UseMethod(Method.Get)
+            //    .UseRoute("/api/users")
+            //    .UseMiddleware(async (context, next) =>
+            //    {
 
 
+            //        return await next(context);
+            //    })
+            //    .UseResolver(async context =>
+            //    {
 
-            //// Link/Bind Operations (Endpoints) to Nodes Structures
-            //builder.AddOperation("UserCreate", descriptor =>
-            //{
-            //    descriptor.UseMethod("POST")
-            //        .UseRoute("/users")
-            //        .UseNodes("Users")
-            //        .UseAuthorization()
-            //        .UseResolver(async context =>
-            //        {
+            //    });
 
-            //        });
-            //});
         });
-
-        //var list = new List<User>();
-
-        //foreach (var user in list)
-        //{
-        //    if (query.Root is not RootQueryNode root)
-        //    {
-        //        throw new Exception();
-        //    }
-        //    if (root.TryGetSelectNode(out var projections))
-        //    {
-        //        projections.
-        //    }
-            
-        //    var node = graph.Nodes[0];
-
-        //    foreach (var property in node.Properties)
-        //    {
-        //        property.Type.Resolver.Invoke()
-        //    }
-
-        //    node.Edges[0].Resolver.
-        //}
-
     }
 
     public class UserAddressNode : OGraphNode<UserAddress>
     {
         protected override void Configure(IOGraphNodeDescriptor<UserAddress> descriptor)
         {
+            descriptor.HasLabel("Addresses");
            // descriptor.HasKey(p => p.AddressId);
         }
     }

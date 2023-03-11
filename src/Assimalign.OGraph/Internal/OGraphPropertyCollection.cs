@@ -4,26 +4,66 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Assimalign.OGraph.Internal;
 
-internal class OGraphPropertyCollection : List<IOGraphProperty>,
-    IOGraphPropertyCollection
+internal class OGraphPropertyCollection : IOGraphPropertyCollection
 {
-    public IOGraphProperty this[Name propertyName]
+    private readonly IList<IOGraphProperty> properties;
+    public OGraphPropertyCollection()
     {
-        get => this.First(x => x.Name == propertyName);
-        set => this.Add(value);
+        this.properties = new List<IOGraphProperty>();
+    }
+    public int Count => this.properties.Count;
+
+    public bool IsReadOnly { get; set; }
+
+    public void Add(IOGraphProperty property)
+    {
+        AssertReadOnly();
+
+        if( property is null)
+        {
+            throw new ArgumentNullException(nameof(property));
+        }
+        if (this.properties.Any(x=>x.Name == property.Name))
+        {
+            throw new ArgumentException($"The property with the name '{property.Name}' already exists.");
+        }
+        this.properties.Add(property);
+    }
+
+   
+
+    public void Remove(IOGraphProperty property)
+    {
+        AssertReadOnly();
+
+        if (property is null)
+        {
+            throw new ArgumentNullException(nameof(property));
+        }
+
+        this.properties.Remove(property);
+    }
+
+    public bool TryGet(Name name, out IOGraphProperty? property)
+    {
+        property = this.properties.FirstOrDefault(p => p.Name == name);
+
+        return property is null ? false : true;
     }
 
 
-    public IOGraphProperty Find(Name name)
-    {
-        return this[name];
-    }
+    public IEnumerator<IOGraphProperty> GetEnumerator() => this.properties.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
-    void IOGraphPropertyCollection.Remove(IOGraphProperty property)
+    private void AssertReadOnly()
     {
-        throw new NotImplementedException();
+        if (IsReadOnly)
+        {
+            throw new InvalidOperationException("The Collection is ReadOnly.");
+        }
     }
 }

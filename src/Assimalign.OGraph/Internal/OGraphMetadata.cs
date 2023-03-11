@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Internal;
 
@@ -22,13 +19,7 @@ internal class OGraphMetadata : IOGraphMetadata
         set => this.metadata[key] = value; 
     }
 
-    public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
-    {
-        throw new NotImplementedException();
-    }
+    public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => this.metadata.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        throw new NotImplementedException();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 }

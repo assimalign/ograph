@@ -22,7 +22,18 @@ internal class OGraphPropertyDescriptor<T> : IOGraphPropertyDescriptor<T>
 
     public IOGraphPropertyDescriptor<T> UseMetadata(string key, object value)
     {
-        throw new NotImplementedException();
+        if (key is null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+        if (value is null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+
+        property.Metadata[key] = value;
+
+        return this;
     }
 
     public IOGraphPropertyDescriptor<T> UseMiddleware(IOGraphPropertyMiddleware middleware)
@@ -32,13 +43,25 @@ internal class OGraphPropertyDescriptor<T> : IOGraphPropertyDescriptor<T>
             throw new ArgumentNullException(nameof(middleware));
         }
         
-        property.Middleware.Add(middleware);
+        property.Middleware.Enqueue(middleware);
 
         return this;
     }
 
+    public IOGraphPropertyDescriptor<T> UseMiddleware(OGraphPropertyMiddleware middleware)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IOGraphPropertyDescriptor<T> UseMiddleware<TMiddleware>() where TMiddleware : IOGraphPropertyMiddleware, new()
+    {
+        throw new NotImplementedException();
+    }
+
     public IOGraphPropertyDescriptor<T> UseName(Name name)
     {
+        property.Name = name;
+
         return this;
     }
 

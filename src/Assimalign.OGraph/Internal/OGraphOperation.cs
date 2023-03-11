@@ -21,8 +21,7 @@ internal class OGraphOperation : IOGraphOperation
     public bool IsEnabled { get; set; }
     public IOGraphType? RequestType { get; set; }
     public IOGraphType? ResponseType { get; set; }
-    public IOGraphOperationResolver? Resolver { get; set; }
     public IOGraphNode? Node { get; set; }
-
+    public IOGraphOperationResolver? Resolver { get; set; }
     public IOGraphOperationMiddlewareQueue Middleware => this.middleware;
 }

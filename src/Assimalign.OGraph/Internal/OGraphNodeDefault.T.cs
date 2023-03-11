@@ -1,26 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Internal;
 
-internal class OGraphNodeDefault : IOGraphNode
+internal class OGraphNodeDefault<T> : IOGraphNode
 {
     private readonly IOGraphEdgeCollection edges;
     private readonly IOGraphPropertyCollection properties;
     private readonly IOGraphMetadata metadata;
 
-    private readonly Action<IOGraphNodeDescriptor> configure;
-    public OGraphNodeDefault(Action<IOGraphNodeDescriptor> configure)
+    private readonly Action<IOGraphNodeDescriptor<T>> configure;
+    public OGraphNodeDefault(Action<IOGraphNodeDescriptor<T>> configure)
     {
         this.edges = new OGraphEdgeCollection();
         this.properties = new OGraphPropertyCollection();
         this.metadata = new OGraphMetadata();
         this.configure = configure;
 
-        Configure(new OGraphNodeDescriptor(this));
+        Configure(new OGraphNodeDescriptor<T>(this));
     }
 
     /// <inheritdoc />
@@ -35,7 +31,7 @@ internal class OGraphNodeDefault : IOGraphNode
     /// <inheritdoc />
     public IOGraphMetadata Metadata => this.metadata;
 
-    private void Configure(IOGraphNodeDescriptor descriptor)
+    private void Configure(IOGraphNodeDescriptor<T> descriptor)
     {
         if (configure is null)
         {
@@ -43,5 +39,6 @@ internal class OGraphNodeDefault : IOGraphNode
         }
 
         configure.Invoke(descriptor);
+
     }
 }

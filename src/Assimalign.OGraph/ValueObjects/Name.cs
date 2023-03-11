@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Xml.Linq;
 
 namespace Assimalign.OGraph;
 
-public readonly struct Name : IEquatable<Name>, IEqualityComparer<Name>
+public readonly struct Name : 
+    IEquatable<Name>, 
+    IEqualityComparer<Name>,
+    IComparable<Name>
 {
     private const string allowedCharacters = "abcdefghijklmnopqrstuvwxwzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567980";
 
@@ -31,6 +33,7 @@ public readonly struct Name : IEquatable<Name>, IEqualityComparer<Name>
     /// </summary>
     public string Value { get; }
 
+    /// <inheritdoc />
     public override bool Equals([NotNullWhen(true)] object? instance)
     {
         if (instance is not Name name)
@@ -40,25 +43,35 @@ public readonly struct Name : IEquatable<Name>, IEqualityComparer<Name>
 
         return this.Equals(name);
     }
+
+    /// <inheritdoc />
     public override int GetHashCode()
     {
-        
         return Value.GetHashCode();
     }
 
-    public bool Equals(Name other)
+    /// <inheritdoc />
+    public bool Equals(Name name)
     {
-        return this.Value.Equals(other.Value, StringComparison.InvariantCultureIgnoreCase);
+        return this.Value.Equals(name.Value, StringComparison.InvariantCultureIgnoreCase);
     }
 
+    /// <inheritdoc />
     public bool Equals(Name left, Name right)
     {
         return left.Equals(right);
     }
 
-    public int GetHashCode([DisallowNull] Name instance)
+    /// <inheritdoc />
+    public int GetHashCode([DisallowNull] Name name)
     {
-        return instance.GetHashCode();
+        return name.GetHashCode();
+    }
+
+    /// <inheritdoc />
+    public int CompareTo(Name name)
+    {
+        return this.Value.ToLowerInvariant().CompareTo(name.Value.ToLowerInvariant());
     }
 
     public static implicit operator Name(string value) => new Name(value);
@@ -68,4 +81,8 @@ public readonly struct Name : IEquatable<Name>, IEqualityComparer<Name>
 
     public static bool operator ==(Name left, Name right) => left.Equals(right);
     public static bool operator !=(Name left, Name right) => !left.Equals(right);
+    public static bool operator <(Name left, Name right) => left.CompareTo(right) < 0;
+    public static bool operator >(Name left, Name right) => left.CompareTo(right) > 0;
+    public static bool operator <=(Name left, Name right) => left.CompareTo(right) <= 0;
+    public static bool operator >=(Name left, Name right) => left.CompareTo(right) >= 0;
 }

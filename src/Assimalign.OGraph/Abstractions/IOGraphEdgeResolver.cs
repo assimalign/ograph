@@ -9,5 +9,5 @@ namespace Assimalign.OGraph;
 
 public interface IOGraphEdgeResolver
 {
-    Task<IOGraphEdgeResolverResult> InvokeAsync(IOGraphEdgeResolverContext context, CancellationToken cancellationToken = default);
+    Task<IOGraphEdgeResult> InvokeAsync(IOGraphEdgeResolverContext context, CancellationToken cancellationToken = default);
 }

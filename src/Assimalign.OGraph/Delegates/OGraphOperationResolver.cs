@@ -9,6 +9,15 @@ namespace Assimalign.OGraph;
 /// <summary>
 /// 
 /// </summary>
+/// <typeparam name="T"></typeparam>
+/// <param name="context"></param>
+/// <returns></returns>
+
+public delegate Task<T> OGraphOperationResolver<T>(IOGraphOperationResolverContext context);
+
+/// <summary>
+/// 
+/// </summary>
 /// <param name="context"></param>
 /// <returns></returns>
 public delegate Task<IOGraphOperationResult> OGraphOperationResolver(IOGraphOperationResolverContext context);

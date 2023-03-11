@@ -11,35 +11,25 @@ using System.Xml.Schema;
 
 namespace Assimalign.OGraph.Internal;
 
-internal class OGraph : IOGraph, IXmlSerializable
+internal class OGraph : IOGraph
 {
-    private readonly IOGraphNodeCollection nodes;
-    private readonly IOGraphOperationCollection operations;
-
     public OGraph()
     {
-        this.nodes = new OGraphNodeCollection();
-        this.operations = new OGraphOperationCollection();
+        this.Nodes = new OGraphNodeCollection();
+        this.Operations = new OGraphOperationCollection();
     }
 
 
     public Name Name { get; set; }
-    public IOGraphNodeCollection Nodes => this.nodes;
-    public IOGraphEventCollection Events { get; set; }
-    public IOGraphOperationCollection Operations => this.operations;
 
-    public XmlSchema? GetSchema()
-    {
-        throw new NotImplementedException();
-    }
+    public OGraphNodeCollection Nodes { get; }
+    IOGraphNodeCollection IOGraph.Nodes => this.Nodes;
+    
 
-    public void ReadXml(XmlReader reader)
-    {
-        throw new NotImplementedException();
-    }
+    public OGraphOperationCollection Operations { get; }
+    IOGraphOperationCollection IOGraph.Operations => this.Operations;
 
-    public void WriteXml(XmlWriter writer)
-    {
-        throw new NotImplementedException();
-    }
+
+    public IOGraphEventCollection? Events { get; }
+
 }
