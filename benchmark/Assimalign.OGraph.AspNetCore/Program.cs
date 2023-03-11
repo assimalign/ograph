@@ -8,14 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 
-builder.Services.AddOGraph("Users", graph =>
+builder.Services.AddOGraph("Users", graphBuilder =>
 {
-    graph.AddNode<User>("users", descriptor =>
+    graphBuilder.AddNode<User>("users", descriptor =>
     {
         
     });
-
-    graph.AddOperation("GetUsers", descriptor =>
+    graphBuilder.AddOperation("GetUsers", descriptor =>
     {
         descriptor.UseMethod("GET")
             .UseRoute("/api/users")
@@ -31,7 +30,66 @@ builder.Services.AddOGraph("Users", graph =>
                         {
                             FirstName = "Chase",
                             LastName = "Crawford"
+                        },
+                        new User
+                        {
+                            FirstName = "John",
+                            LastName = "Doe"
+                        },
+                        new User
+                        {
+                            FirstName = "Jane",
+                            LastName = "Doe"
                         }
+                    }
+                };
+            });
+
+    });
+    graphBuilder.AddOperation("CreateUser", descriptor =>
+    {
+        descriptor.UseMethod("POST")
+            .UseRoute("/api/users")
+            .UseNodes("users")
+            .UseResolver(async context =>
+            {
+                return new OGraphOperationResult<User>()
+                {
+                    Data = new User()
+                    {
+                        FirstName = "Chase"
+                    }
+                };
+            });
+    });
+    graphBuilder.AddOperation("UpdateUser", descriptor =>
+    {
+        descriptor.UseMethod("PUT")
+            .UseRoute("/api/users/{userId}")
+            .UseNodes("users")
+            .UseResolver(async context =>
+            {
+                return new OGraphOperationResult<User>()
+                {
+                    Data = new User()
+                    {
+                        FirstName = "Chase"
+                    }
+                };
+            });
+    });
+    graphBuilder.AddOperation("DeleteUser", descriptor =>
+    {
+        descriptor.UseMethod("DELETE")
+            .UseRoute("/api/users/{userId}")
+            .UseNodes("users")
+            .UseResolver(async context =>
+            {
+                return new OGraphOperationResult<User>()
+                {
+                    Data = new User()
+                    {
+                        FirstName = "Chase"
                     }
                 };
             });
@@ -40,21 +98,6 @@ builder.Services.AddOGraph("Users", graph =>
 
 var app = builder.Build();
 
-foreach (var operation in app.Services.GetRequiredService<IOGraph>().Operations)
-{
-    app.MapMethods(operation.Route, new string[] { operation.Method }, async context =>
-    {
-        var executor = context.RequestServices.GetRequiredService<IOGraphExecutor>();
-        var response = await executor.ExecuteAsync(operation.Name, new OGraphHttpRequest(context.Request));
-
-        context.Response.StatusCode = response.StatusCode;
-
-        if (response.Body.Length > 0)
-        {
-            await response.Body.CopyToAsync(context.Response.Body);
-        }
-    });
-}
-
+app.UseOGraph();
 
 app.Run();

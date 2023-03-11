@@ -16,21 +16,9 @@ internal class OGraphResolverContext :
     IOGraphOperationResolverContext
 {
 
-    public OGraphResolverContext()
-    {
-        
-    }
-
-
-    internal volatile object Parent;
-
-
-    internal IServiceProvider ServiceProvider { get; init; }
-    internal IOGraphHeaderCollection Headers { get; init; }
-
-
-
-
+    internal volatile object? Parent;
+    internal IServiceProvider? ServiceProvider { get; init; }
+    internal IOGraphHeaderCollection? Headers { get; init; }
 
 
     public T GetBodyValue<T>()

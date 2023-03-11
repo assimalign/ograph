@@ -12,14 +12,16 @@ internal class OGraphHttpRequest : IOGraphRequest
         this.request = request;
     }
 
+
+    public IServiceProvider ServiceProvider { get; init; }
     public IOGraphHeaderCollection Headers => throw new NotImplementedException();
 
     public Stream Body => request.Body;
 
-    public IOGraphRequestQueryCollection Query => new QueryCollection(request.Query.ToDictionary(x=>x.Key, x=>x.Value.ToString()));
+    public IOGraphQueryCollection Query => new QueryCollection(request.Query.ToDictionary(x=>x.Key, x=>x.Value.ToString()));
 
 
-    private class QueryCollection : Dictionary<string, string>, IOGraphRequestQueryCollection
+    private class QueryCollection : Dictionary<string, string>, IOGraphQueryCollection
     {
         public QueryCollection(Dictionary<string, string> values) : base(values)
         {

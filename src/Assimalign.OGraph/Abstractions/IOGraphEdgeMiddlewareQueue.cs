@@ -8,4 +8,9 @@ namespace Assimalign.OGraph;
 
 public interface IOGraphEdgeMiddlewareQueue : IOrderedEnumerable<IOGraphEdgeMiddleware>
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="middleware"></param>
+    void Enqueue(IOGraphEdgeMiddleware middleware);
 }

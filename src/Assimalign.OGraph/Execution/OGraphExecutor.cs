@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,50 +13,66 @@ namespace Assimalign.OGraph.Execution;
 using Assimalign.OGraph.Syntax;
 using Assimalign.OGraph.Internal;
 using Assimalign.OGraph.Execution.Internal;
-using System.Collections;
+
 
 public abstract class OGraphExecutor : IOGraphExecutor
 {
     protected QueryParser? QueryParser { get; init; } = new QueryParser();
 
-    protected IOGraph? GraphModel { get; init; }
+    protected IOGraph? Graph { get; init; }
+
+    protected IServiceProvider? ServiceProvider { get; init; }
+
 
 
     public virtual async Task<IOGraphResponse> ExecuteAsync(Name operationName, IOGraphRequest request, CancellationToken cancellationToken = default)
     {
+
         if (!TryGetOperation(operationName, out var operation))
         {
             // TODO: Response 404 - Not Found
-            return new OGraphResponse();
+            return new OGraphResponse()
+            {
+                StatusCode = 404
+            };
         }
-        if (!TryGetQuery(request, out var query))
+
+        var hasQuery = default(bool);
+
+        if (!(hasQuery = TryGetQuery(request, out var query)))
         {
-            // TODO: Response 400 - Bad Request
-            return new OGraphResponse();
+            if (!query.IsValid)
+            {
+                return new OGraphResponse()
+                {
+                    StatusCode = 400,
+                };
+            }
         }
 
 
         var node = operation.Node;
 
         // Parse Query
-
-
-        var context = new OGraphResolverContext();
+        var context = new OGraphResolverContext()
+        {
+            ServiceProvider = this.ServiceProvider,
+        };
 
         // Execute Operation Middleware
-        //try
-        //{
-        //    foreach (var middleware in operation.Middleware)
-        //    {
-        //        await middleware.InvokeAsync(context);
-        //    }
-        //}
-        //catch(Exception exception) // TODO: Add a OGraph specific Callback cancellation exception. This will give the middleware a handle to invoke cancellation
-        //{
-        //    // TODO: return bad result
-        //}
+        try
+        {
+            foreach (var middleware in operation.Middleware)
+            {
+                await middleware.InvokeAsync(context);
+            }
+        }
+        catch (Exception exception) // TODO: Add a OGraph specific Callback cancellation exception. This will give the middleware a handle to invoke cancellation
+        {
+            // TODO: return bad result
+        }
         // Build Execution Plan
-        
+
 
         // Execute Operation
         var operationResult = await operation.Resolver.InvokeAsync(context);
@@ -92,10 +109,6 @@ public abstract class OGraphExecutor : IOGraphExecutor
 
 
             }
-
-            using var stream = new System.IO.MemoryStream();
-
-
 
 
             var response = new OGraphResponse()
@@ -139,7 +152,7 @@ public abstract class OGraphExecutor : IOGraphExecutor
 
     private bool TryGetOperation(Name name, out IOGraphOperation? operation)
     {
-        operation = GraphModel.Operations.FirstOrDefault(x=>x.Name == name);
+        operation = Graph.Operations.FirstOrDefault(x=>x.Name == name);
 
         
 
@@ -169,9 +182,17 @@ public abstract class OGraphExecutor : IOGraphExecutor
     {
         return new OGraphExecutorDefault
         {
-            GraphModel = graph,
+            Graph = graph,
         };
     }
+
+
+
+
+
+
+
+
 }
 
 internal class OGraphExecutorDefault : OGraphExecutor

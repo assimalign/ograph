@@ -13,10 +13,20 @@ namespace Assimalign.OGraph.Internal;
 
 internal class OGraph : IOGraph, IXmlSerializable
 {
+    private readonly IOGraphNodeCollection nodes;
+    private readonly IOGraphOperationCollection operations;
+
+    public OGraph()
+    {
+        this.nodes = new OGraphNodeCollection();
+        this.operations = new OGraphOperationCollection();
+    }
+
+
     public Name Name { get; set; }
-    public IOGraphNodeCollection Nodes { get; set; } = new OGraphNodeCollection();
+    public IOGraphNodeCollection Nodes => this.nodes;
     public IOGraphEventCollection Events { get; set; }
-    public IOGraphOperationCollection Operations { get; set; } = new OGraphOperationCollection();
+    public IOGraphOperationCollection Operations => this.operations;
 
     public XmlSchema? GetSchema()
     {

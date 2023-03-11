@@ -26,6 +26,13 @@ namespace Assimalign.OGraph.Internal
 
         public IOGraphOperationDescriptor UseMiddleware(IOGraphOperationMiddleware middleware)
         {
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            operation.Middleware.Enqueue(middleware);
+
             return this;
         }
 
@@ -42,7 +49,13 @@ namespace Assimalign.OGraph.Internal
 
         public IOGraphOperationDescriptor UseResolver(IOGraphOperationResolver resolver)
         {
+            if (resolver is null)
+            {
+                throw new ArgumentNullException(nameof(resolver));
+            }
+
             operation.Resolver = resolver;
+
             return this;
         }
 

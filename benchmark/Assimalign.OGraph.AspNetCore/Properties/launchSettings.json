@@ -12,8 +12,8 @@
     "Assimalign.OGraph.AspNetCore": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchBrowser": false,
+      //"launchUrl": "weatherforecast",
       "applicationUrl": "https://localhost:7226;http://localhost:5246",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

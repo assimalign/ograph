@@ -9,10 +9,14 @@ namespace Assimalign.OGraph.Execution;
 
 public interface IOGraphRequest
 {
-
-
+    /// <summary>
+    /// 
+    /// </summary>
+    IOGraphQueryCollection Query { get; }
+    /// <summary>
+    /// 
+    /// </summary>
     IOGraphHeaderCollection Headers { get; }
-
-    IOGraphRequestQueryCollection Query { get; }
+    
     Stream Body { get; }
 }

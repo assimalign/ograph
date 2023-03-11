@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphOperationMiddlewareQueue : IOrderedEnumerable<IOGraphOperationMiddleware>
+public interface IOGraphOperationMiddlewareQueue : IEnumerable<IOGraphOperationMiddleware>
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="middleware"></param>
+    void Enqueue(IOGraphOperationMiddleware middleware);
 }

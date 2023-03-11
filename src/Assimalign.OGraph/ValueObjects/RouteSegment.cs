@@ -1,18 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assimalign.OGraph;
+﻿namespace Assimalign.OGraph;
 
 public readonly struct RouteSegment
 {
-
-    public bool IsParameter { get; }
-
+    internal RouteSegment(string value, bool isParameter = false, bool isLiteral = false)
+    {
+        this.Value = value;
+        this.IsParameter = isParameter;
+        this.IsLiteral = isLiteral;
+    }
     /// <summary>
-    /// Specifies whether the route segment is a literal.
+    /// The raw segment value.
+    /// </summary>
+    public string Value { get; }
+    /// <summary>
+    /// A
+    /// </summary>
+    public bool IsParameter { get; }
+    /// <summary>
+    /// A literal value 
     /// </summary>
     public bool IsLiteral { get; }
 }
