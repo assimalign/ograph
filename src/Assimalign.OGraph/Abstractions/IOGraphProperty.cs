@@ -24,16 +24,6 @@ public interface IOGraphProperty
     /// 
     /// </summary>
     IOGraphPropertyMiddlewareQueue Middleware { get; }
-
-
-
-    Type? RuntimeType { get; }
-
-    string? RuntimeName { get; }
-
-
-
-
     bool IsNullable { get; }
     bool IsFilterable { get; }
     bool IsPagable { get; }

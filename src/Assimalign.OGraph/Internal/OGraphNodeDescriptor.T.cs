@@ -22,71 +22,11 @@ internal class OGraphNodeDescriptor<T> : IOGraphNodeDescriptor<T>
 
         this.node = node;
 
-        OnInitialize();
+        OnInitialize(node.Properties, typeof(T));
     }
 
 
-    private void OnInitialize()
-    {
-        var properties = typeof(T).GetProperties().Where(x => x.CanWrite && x.CanRead);
-
-        foreach (var property in properties)
-        {
-            // Check if Primitive Types
-            //if (existing.PropertyType.IsValueType(out var valueType))
-            //{
-            //    if (valueType == typeof(DateTime))
-            //    {
-            //        node.Properties.Add(new OGraphProperty()
-            //        {
-            //            Name = existing.Name,
-            //            Resolver = GetResolver<DateTime>(existing)
-            //        });
-            //    }
-            //}
-            //if (existing.PropertyType.IsStringType())
-            //{
-            //    node.Properties.Add(new OGraphProperty()
-            //    {
-            //        Name = existing.Name,
-            //        Resolver = GetResolver<String>(existing)
-            //    });
-            //}
-
-            //if (existing.PropertyType.IsValueType() || existing.PropertyType.IsStringType() || existing.PropertyType.IsEnum)
-            //{
-            //    var resolver = OGraphEdgeResolver()
-            //    node.Properties.Add(new OGraphProperty()
-            //    {
-            //        Name = existing.Name,
-            //        Resolver
-            //    });
-            //}
-            if (property.PropertyType.IsEnumerableType(out var enumerableType))
-            {
-
-            }
-            if (property.PropertyType.IsComplexType())
-            {
-
-            }
-        }
-
-        //IOGraphPropertyResolver GetResolver(MemberInfo memberInfo)
-        //{
-        //    var parameter = Expression.Parameter(typeof(TProperty));
-        //    var member = Expression.PropertyOrField(parameter, memberInfo.Name);
-        //    var lambda = Expression.Lambda(member, parameter);
-        //    var method = lambda.Compile();
-
-        //    return new OGraphPropertyResolverDefault<object>(context =>
-        //    {
-        //        var parent = context.GetParent<TProperty>();
-
-        //        return ValueTask.FromResult(method.Invoke(parent));
-        //    });
-        //}
-    }
+   
 
     public IOGraphNodeDescriptor<T> HasLabel(Label label)
     {
@@ -135,7 +75,6 @@ internal class OGraphNodeDescriptor<T> : IOGraphNodeDescriptor<T>
 
         throw new NotImplementedException();
     }
-
     public IOGraphPropertyDescriptor HasProperty(Name name)
     {
         if (node.Properties.TryGet(name, out var existing) && existing is not null)
@@ -152,7 +91,6 @@ internal class OGraphNodeDescriptor<T> : IOGraphNodeDescriptor<T>
 
         return new OGraphPropertyDescriptor(property);
     }
-
     public IOGraphNodeDescriptor<T> Ignore<TProperty>(Expression<Func<T, TProperty>> expression)
     {
         ValidateMemberExpression(expression, out var memberInfo);
@@ -195,9 +133,6 @@ internal class OGraphNodeDescriptor<T> : IOGraphNodeDescriptor<T>
 
         return new OGraphPropertyDescriptor<TProperty>(property);
     }
-
-
-
     public IOGraphEdgeDescriptor<TProperty> HasEdge<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> expression)
     {
         throw new NotImplementedException();
@@ -230,5 +165,76 @@ internal class OGraphNodeDescriptor<T> : IOGraphNodeDescriptor<T>
         }
 
         memberInfo = member.Member;
+    }
+    private void OnInitialize(IOGraphPropertyCollection collection, Type type)
+    {
+        var properties = type.GetProperties().Where(x => x.CanWrite && x.CanRead);
+
+        foreach (var property in properties)
+        {
+            // Check if Primitive Types
+            if (property.PropertyType.IsValueType(out var valueType))
+            {
+                if (valueType == typeof(DateTime))
+                {
+                    collection.Add(new OGraphProperty()
+                    {
+                        Name = property.Name,
+                        Resolver = GetResolver(type, property.PropertyType),
+                        Type = new StringType()
+                    });
+                }
+            }
+            if (property.PropertyType.IsStringType())
+            {
+                collection.Add(new OGraphProperty()
+                {
+                    Name        = property.Name,
+                    Resolver    = GetResolver(type, property.PropertyType),
+                    Type        = new StringType()
+                });
+            }
+            if (property.PropertyType.IsEnumerableType(out var enumerableType))
+            {
+
+            }
+            if (property.PropertyType.IsComplexType())
+            {
+                var complexProperties = new OGraphPropertyCollection();
+
+                OnInitialize(complexProperties, property.PropertyType);
+
+                collection.Add(new OGraphProperty()
+                {
+                    Name        = property.Name,
+                    Resolver    = GetResolver(type, property.PropertyType),
+                    Type        = new ComplexType()
+                    {
+                        Properties  = complexProperties,
+                        TypeName    = property.PropertyType.Name,
+                        RuntimeType = property.PropertyType
+                    }
+                });
+            }
+        }
+
+        IOGraphPropertyResolver GetResolver(Type memberDeclaringType, MemberInfo memberInfo)
+        {
+            var parameter = Expression.Parameter(memberDeclaringType);
+            var member = Expression.PropertyOrField(parameter, memberInfo.Name);
+            var lambda = Expression.Lambda(member, parameter);
+            var method = lambda.Compile();
+
+            return new OGraphPropertyResolverDefault(context =>
+            {
+                var parent = context.GetParent<object>();
+                var value = method.DynamicInvoke(parent);
+
+                return ValueTask.FromResult<IOGraphPropertyResult>(new OGraphPropertyResult()
+                {
+                    Data = value
+                });
+            });
+        }
     }
 }

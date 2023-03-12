@@ -8,11 +8,11 @@ namespace Assimalign.OGraph;
 
 public sealed class OGraphPropertyResult : IOGraphPropertyResult
 {
-    public object Data => throw new NotImplementedException();
+    public object Data { get; init; }
 
-    public bool IsSuccess => throw new NotImplementedException();
+    public bool IsSuccess => this.Error is null;
 
-    public IOGraphError? Error => throw new NotImplementedException();
+    public IOGraphError? Error { get; init; }
 
 
 }

@@ -20,24 +20,24 @@ public interface IOGraphComplexType : IOGraphType
     /// <param name="reader"></param>
     /// <param name="value"></param>
     /// <returns></returns>
-    bool TryReadXml(XmlReader reader, out OGraphPropertyItem[] items);
+    bool TryReadXml(XmlReader reader, out OGraphObject item);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="writer"></param>
     /// <returns></returns>
-    bool TryWriteXml(XmlWriter writer, OGraphPropertyItem[] items);
+    bool TryWriteXml(XmlWriter writer, OGraphObject item);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="reader"></param>
     /// <param name="value"></param>
     /// <returns></returns>
-    bool TryReadJson(Utf8JsonReader reader, out OGraphPropertyItem[] items);
+    bool TryReadJson(Utf8JsonReader reader, out OGraphObject item);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="writer"></param>
     /// <returns></returns>
-    bool TryWriteJson(Utf8JsonWriter writer, OGraphPropertyItem[] items);
+    bool TryWriteJson(Utf8JsonWriter writer, OGraphObject item);
 }

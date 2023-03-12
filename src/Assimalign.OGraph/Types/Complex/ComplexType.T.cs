@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public sealed class EnumerableType<T> : CollectionType<IEnumerable<T>>
+internal class ComplexType<T>
 {
 }

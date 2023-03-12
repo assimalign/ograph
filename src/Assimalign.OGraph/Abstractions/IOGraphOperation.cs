@@ -42,6 +42,10 @@ public interface IOGraphOperation
     /// <summary>
     /// 
     /// </summary>
+    IOGraphType ResponseType { get; }
+    /// <summary>
+    /// 
+    /// </summary>
     IOGraphOperationResolver Resolver { get; }
     /// <summary>
     /// 

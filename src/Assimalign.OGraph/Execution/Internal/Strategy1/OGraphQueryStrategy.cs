@@ -27,7 +27,7 @@ internal class OGraphQueryStrategy
         {
             foreach (var projection in projections)
             {
-                foreach ()
+                
             }
         }
 

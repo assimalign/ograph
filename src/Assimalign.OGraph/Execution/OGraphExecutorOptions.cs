@@ -16,3 +16,11 @@ public enum OnErrorExecutionStrategy
     Partial,
 
 }
+
+public abstract class OGraphFilterProvider
+{
+
+    public Type QueryableType { get; }
+
+
+}

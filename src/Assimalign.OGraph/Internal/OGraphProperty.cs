@@ -19,8 +19,7 @@ internal class OGraphProperty : IOGraphProperty
     public IOGraphMetadata Metadata => this.metadata;
     public IOGraphPropertyResolver Resolver { get; set; } = new OGraphPropertyResolverDefault((context) => throw new Exception());
     public IOGraphPropertyMiddlewareQueue Middleware => this.middleware;
-    public Type? RuntimeType { get; set; }
-    public string? RuntimeName { get; set; }
+
     public bool IsNullable { get; set; }
     public bool IsFilterable { get; set; }
     public bool IsPagable { get; set; }

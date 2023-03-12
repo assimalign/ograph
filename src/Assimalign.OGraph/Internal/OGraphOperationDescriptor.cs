@@ -87,5 +87,27 @@ namespace Assimalign.OGraph.Internal
             operation.Route = route;
             return this;
         }
+
+        public IOGraphOperationDescriptor UseRequestType<TType>() where TType : IOGraphType, new()
+        {
+            operation.RequestType = new TType();
+            return this;
+        }
+
+        public IOGraphOperationDescriptor UseRequestType(IOGraphType type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IOGraphOperationDescriptor UseResponseType<TType>() where TType : IOGraphType, new()
+        {
+            operation.ResponseType = new TType();
+            return this;
+        }
+
+        public IOGraphOperationDescriptor UseResponseType(IOGraphType type)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

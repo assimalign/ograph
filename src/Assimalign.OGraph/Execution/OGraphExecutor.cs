@@ -37,9 +37,9 @@ public abstract class OGraphExecutor : IOGraphExecutor
             return response;
         }
 
+        // Check for OGraph Query then validate.
         var hasQuery = default(bool);
-
-        if (!(hasQuery = TryGetQuery(request, out var query)))
+        if (hasQuery = TryGetQuery(request, out var query))
         {
             if (!query.IsValid)
             {
@@ -53,6 +53,9 @@ public abstract class OGraphExecutor : IOGraphExecutor
         var context = new OGraphResolverContext()
         {
             ServiceProvider = this.ServiceProvider,
+            RequestBody = request.Body,
+            RequestQuery = request.Query,
+            RequestHeaders = request.Headers,
         };
 
         // Execute Operation
@@ -61,6 +64,13 @@ public abstract class OGraphExecutor : IOGraphExecutor
             var builder = new OGraphOperationHandlerChainBuilder(operation.Middleware);
             var chain = builder.GetChain(new OGraphOperationHandler(operation.Resolver.InvokeAsync));
             var result = await chain.Invoke(context);
+
+            if (result.IsSuccess)
+            {
+                var content = result.Data;
+
+
+            }
         }
         catch (Exception exception) // TODO: Add a OGraph specific Callback cancellation exception. This will give the middleware a handle to invoke cancellation
         {

@@ -21,14 +21,3 @@ public interface IOGraphExecutor
     /// <returns></returns>
     Task<IOGraphResponse> ExecuteAsync(IOGraphRequest request, CancellationToken cancellationToken = default);
 }
-
-
-
-internal struct Content
-{
-
-
-
-    public ICollection<KeyValuePair<string, object>> Data { get; }
-
-}

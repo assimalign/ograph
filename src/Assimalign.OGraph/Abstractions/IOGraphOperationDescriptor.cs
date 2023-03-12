@@ -5,6 +5,9 @@ namespace Assimalign.OGraph;
 
 public interface IOGraphOperationDescriptor
 {
+
+
+
     /// <summary>
     /// 
     /// </summary>
@@ -30,6 +33,33 @@ public interface IOGraphOperationDescriptor
     /// <param name="label"></param>
     /// <returns></returns>
     IOGraphOperationDescriptor UseNodes(Label label);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TType"></typeparam>
+    /// <returns></returns>
+    IOGraphOperationDescriptor UseRequestType<TType>() where TType : IOGraphType, new();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    IOGraphOperationDescriptor UseRequestType(IOGraphType type);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TType"></typeparam>
+    /// <returns></returns>
+    IOGraphOperationDescriptor UseResponseType<TType>() where TType : IOGraphType, new();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    /// <remarks>
+    /// The Execution engine internally will try
+    /// </remarks>
+    IOGraphOperationDescriptor UseResponseType(IOGraphType type);
     /// <summary>
     /// 
     /// </summary>
