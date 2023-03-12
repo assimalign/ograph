@@ -14,10 +14,8 @@
             <property name="middleName" type="String"       is-nullable="true" />
             <property name="fullName"   type="String"       is-nullable="true"      is-filterable="false" />
             <property name="birthDate"  type="DateTime"     is-nullable="true" />
-
-            <edge name="addresses"  node="Addresses" is-filterable="true" is-pageable="true"/>
-            <edge name="profile"    node="Profiles" />
-
+            <edge name="addresses"  node="addresses" is-filterable="true" is-pageable="true"/>
+            <edge name="profile"    node="profiles" />
             <type name="UserTagCollection">
                 <collection name="UserTag"/>
             </type>
@@ -26,15 +24,21 @@
                 <porperty name="value" type="String" is-nullable="false"/>
             </type>
         </node>
-        <node label="Addresses">
+        <node label="addresses">
             <property name="addressId"      type="Guid"         is-nullable="false"     is-key="true"/>
             <property name="streetOne"      type="String"       is-nullable="true" />
             <property name="streetTwo"      type="String"       is-nullable="true" />
             <property name="streetThree"    type="String"       is-nullable="true" />
             <property name="city"           type="String"       is-nullable="true"      is-filterable="false" />
             <property name="stateOrRegion"  type="String"       is-nullable="true" />
+            <property name="addressType"    type="AddressEnum"  is-nullable="false" />
+
+            <type name="AddressEnum">
+                <value>Primary</value>
+                <value>Mailing</value>
+            </type>
         </node>
-        <node label="Profiles">
+        <node label="profiles">
 
         </node>
 
@@ -42,6 +46,43 @@
             
 
 
+        </operation>
+        <operation name="CreateUser" node="users">
+            <method>POST</method>
+            <route value="/users/{userId}">
+                <segment ordinal="1">users</segment>
+                <segment ordinal="2">{userId:int}</segment>
+            </route>
+            <query>
+                
+            </query>
+            <headers>
+                <header key="" value=""/>
+            </headers>
+            <request>
+
+            </request>
+        </operation>
+        <operation name="UpdateUserAddress" node="addresses">
+            <method>PUT</method>
+            <route value="/users/{userId}/addresses/{addressId}">
+                <segment ordinal="1" is-literal="true">users</segment>
+                <segment ordinal="2" is-parameter="true">{userId:Guid}</segment>
+                <segment ordinal="3" is-literal="true">address</segment>
+                <segment ordinal="4" is-parameter="true">{addressId:Guid}</segment>
+            </route>
+            <headers>
+                <key></key>
+            </headers>
+            <query-parameters>
+                <query key="query" value-type=""/>
+            </query-parameters>
+            <request name="UserAddressUpdateType">
+
+            </request>
+            <response>
+
+            </response>
         </operation>
     </model>
 </ograph>

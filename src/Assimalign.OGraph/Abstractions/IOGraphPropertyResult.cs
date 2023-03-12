@@ -8,5 +8,16 @@ namespace Assimalign.OGraph;
 
 public interface IOGraphPropertyResult
 {
-    object Data { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    bool IsSuccess { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    object? Data { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    IOGraphError? Error { get; }
 }

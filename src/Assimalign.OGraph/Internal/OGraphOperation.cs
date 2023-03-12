@@ -8,10 +8,12 @@ namespace Assimalign.OGraph.Internal;
 
 internal class OGraphOperation : IOGraphOperation
 {
+    private readonly IOGraphMetadata metadata;
     private readonly IOGraphOperationMiddlewareQueue middleware;
 
     public OGraphOperation()
     {
+        this.metadata = new OGraphMetadata();
         this.middleware = new OGraphOperationMiddlewareQueue();
     }
 
@@ -24,4 +26,5 @@ internal class OGraphOperation : IOGraphOperation
     public IOGraphNode? Node { get; set; }
     public IOGraphOperationResolver? Resolver { get; set; }
     public IOGraphOperationMiddlewareQueue Middleware => this.middleware;
+    public IOGraphMetadata Metadata => this.metadata;
 }

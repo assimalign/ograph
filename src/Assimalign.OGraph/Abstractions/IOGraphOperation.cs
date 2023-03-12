@@ -38,9 +38,17 @@ public interface IOGraphOperation
     /// <summary>
     /// 
     /// </summary>
+    IOGraphType RequestType { get; }
+    /// <summary>
+    /// 
+    /// </summary>
     IOGraphOperationResolver Resolver { get; }
     /// <summary>
     /// 
     /// </summary>
     IOGraphOperationMiddlewareQueue Middleware { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    IOGraphMetadata Metadata { get; }
 }

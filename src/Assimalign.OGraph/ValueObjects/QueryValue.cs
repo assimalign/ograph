@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public readonly struct QueryParam
+public readonly struct QueryValue
 {
 
-	public QueryParam(string value)
+	public QueryValue(string value)
 	{
 		this.Value = value;    
 	}
@@ -17,6 +17,6 @@ public readonly struct QueryParam
 	public string Value { get; }
 
 
-    public static implicit operator QueryParam(string value) => new QueryParam(value);
+    public static implicit operator QueryValue(string value) => new QueryValue(value);
 
 }

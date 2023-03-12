@@ -1,20 +1,42 @@
 {
-    "@ograph.lable": "",
-    "pageInfo": {
-
-    },
+    "@ograph.label": "",
     "@ograph.totalCount": 4568,
+    "pageInfo": {},
     "data": [
         {
-            "@ograph.entity": "User",
-
-
-            "roles": {
+            "@ograph.label": "User",
+            "firstName": "Chase",
+            "lastName": "Crawford",
+            "addresses": {
+                "@ograph.label": "",
+                "@ograph.totalCount": 4568,
+                "pageInfo": {},
                 "data": [
+                    {
 
-                ]
+                    }
+                ],
+                "error": {
+                    "code": "",
+                    "message": "",
+                    "details": [
+                        {
+                            "code": "",
+                            "message": ""
+                        }
+                    ]
+                }
             }
-
         }
-    ]
+    ],
+    "error": {
+        "code": "",
+        "message": "",
+        "details": [
+            {
+                "code": "",
+                "message": ""
+            }
+        ]
+    }
 }

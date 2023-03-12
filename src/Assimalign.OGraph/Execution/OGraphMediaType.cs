@@ -1,0 +1,7 @@
+﻿namespace Assimalign.OGraph.Execution;
+
+public static class OGraphMediaType
+{
+    public const string Xml = "application/xml+ograph";
+    public const string Json = "application/json+ograph";
+}

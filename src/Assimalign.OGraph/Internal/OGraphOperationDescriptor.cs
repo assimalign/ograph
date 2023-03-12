@@ -54,7 +54,7 @@ namespace Assimalign.OGraph.Internal
             return this;
         }
 
-        public IOGraphOperationDescriptor UseQuery(QueryParam query)
+        public IOGraphOperationDescriptor UseQuery(QueryValue query)
         {
             return this;
         }

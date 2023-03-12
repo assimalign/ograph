@@ -13,30 +13,28 @@ namespace Assimalign.OGraph.Execution;
 using Assimalign.OGraph.Syntax;
 using Assimalign.OGraph.Internal;
 using Assimalign.OGraph.Execution.Internal;
-
+using System.Xml;
 
 public abstract class OGraphExecutor : IOGraphExecutor
 {
-    protected QueryParser? QueryParser { get; init; } = new QueryParser();
+    protected virtual QueryParser? QueryParser { get; init; } = new QueryParser();
 
-    protected IOGraph? Graph { get; init; }
+    protected virtual IOGraph? Graph { get; init; }
 
-    protected IServiceProvider? ServiceProvider { get; init; }
-
-
-    protected OGraphOperationHandler Handler { get; set; }
+    protected virtual IServiceProvider? ServiceProvider { get; init; }
 
 
-    public virtual async Task<IOGraphResponse> ExecuteAsync(Name operationName, IOGraphRequest request, CancellationToken cancellationToken = default)
+
+    public virtual async Task<IOGraphResponse> ExecuteAsync(IOGraphRequest request, CancellationToken cancellationToken = default)
     {
+        var response = new OGraphResponse();
 
-        if (!TryGetOperation(operationName, out var operation))
+        if (!TryGetOperation(request, out var operation))
         {
             // TODO: Response 404 - Not Found
-            return new OGraphResponse()
-            {
-                StatusCode = 404
-            };
+            response.StatusCode = 404;
+
+            return response;
         }
 
         var hasQuery = default(bool);
@@ -52,10 +50,6 @@ public abstract class OGraphExecutor : IOGraphExecutor
             }
         }
 
-
-        //var node = operation.Node;
-
-        // Parse Query
         var context = new OGraphResolverContext()
         {
             ServiceProvider = this.ServiceProvider,
@@ -64,47 +58,46 @@ public abstract class OGraphExecutor : IOGraphExecutor
         // Execute Operation
         try
         {
-            var middlewares = operation.Middleware;
-            var method = GetOperationChain(0, new OGraphOperationHandler(operation.Resolver.InvokeAsync));
-            var result = await method.Invoke(context);
-
-
-            OGraphOperationHandler GetOperationChain(int item, OGraphOperationHandler next)
-            {
-                var middleware = middlewares.SkipLast(item).First();
-                var handler = new OGraphOperationHandler(ctx =>
-                {
-                    return middleware.InvokeAsync(ctx, next);
-                });
-                if (item < middlewares.Count - 1)
-                {
-                    return GetOperationChain(item + 1, handler);
-                }
-
-                return handler;
-            }
-
-
-
-        
-
-            
-
+            var builder = new OGraphOperationHandlerChainBuilder(operation.Middleware);
+            var chain = builder.GetChain(new OGraphOperationHandler(operation.Resolver.InvokeAsync));
+            var result = await chain.Invoke(context);
         }
         catch (Exception exception) // TODO: Add a OGraph specific Callback cancellation exception. This will give the middleware a handle to invoke cancellation
         {
-            // TODO: return bad result
+            // TODO: return internal server error
         }
         // Build Execution Plan
 
+        var node = operation.Node;
+
+        if (query.Root.GetNodesOfType<RootQueryNode>().First().TryGetProjections(out var projections))
+        {
+            var rootProjections = projections.FirstOrDefault(x => !x.HasEdge);
+
+            foreach (var property in rootProjections.Properties)
+            {
+                if (!node.Properties.TryGet(property.Name, out var propertyValue))
+                {
+                    throw new Exception();
+                }
+                if (propertyValue.Type.TypeIdentifier == OGraphTypeIdentifier.Primitive)
+                {
+
+                }
+                var result = await propertyValue.Resolver.InvokeAsync(context);
+
+            }
+        }
+
+
 
         //// Execute Operation
-        //var operationResult = await operation.Resolver.InvokeAsync(context);
+        //var result = await operation.Resolver.InvokeAsync(context);
 
-        //if (operationResult.Data is IEnumerable enumerable)
+        //if (result.Data is IEnumerable enumerable)
         //{
         //    var data = new List<Dictionary<string, object>>();
-           
+
         //    foreach (var item in enumerable)
         //    {
         //        context.Parent = item;
@@ -137,7 +130,7 @@ public abstract class OGraphExecutor : IOGraphExecutor
 
         //    var response = new OGraphResponse()
         //    {
-        //        StatusCode = operationResult.StatusCode
+        //        StatusCode = result.StatusCode
         //    };
 
 
@@ -149,7 +142,7 @@ public abstract class OGraphExecutor : IOGraphExecutor
         //    return response;
 
         //}
-        
+
 
 
 
@@ -158,14 +151,14 @@ public abstract class OGraphExecutor : IOGraphExecutor
         //{
         //    var propertyType = property.Type;
 
-            
+
 
         //    //property.Resolver.
 
 
         //   // var propertyValue = propertyType.Resolver.Invoke(default);
 
-           
+
         //}
 
 
@@ -174,11 +167,11 @@ public abstract class OGraphExecutor : IOGraphExecutor
     }
 
 
-    private bool TryGetOperation(Name name, out IOGraphOperation? operation)
+    private bool TryGetOperation(IOGraphRequest request, out IOGraphOperation? operation)
     {
-        operation = Graph.Operations.FirstOrDefault(x=>x.Name == name);
+        operation = Graph.Operations.FirstOrDefault(x => x.Method == request.Method && x.Route == request.Route);
 
-        
+
 
 
 
@@ -203,11 +196,6 @@ public abstract class OGraphExecutor : IOGraphExecutor
 
 
 
-
-    private OGraphOperationHandler GetMiddlewareChain()
-    {
-
-    }
     public static IOGraphExecutor Create(IOGraph graph)
     {
         return new OGraphExecutorDefault

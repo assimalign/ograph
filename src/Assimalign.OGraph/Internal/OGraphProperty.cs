@@ -15,7 +15,7 @@ internal class OGraphProperty : IOGraphProperty
 
 
     public Name Name { get; set; }
-    public IOGraphType Type { get; set; }
+    public IOGraphType? Type { get; set; } 
     public IOGraphMetadata Metadata => this.metadata;
     public IOGraphPropertyResolver Resolver { get; set; } = new OGraphPropertyResolverDefault((context) => throw new Exception());
     public IOGraphPropertyMiddlewareQueue Middleware => this.middleware;

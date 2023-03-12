@@ -22,7 +22,7 @@ public interface IOGraphOperationDescriptor
     /// </summary>
     /// <param name="query"></param>
     /// <returns></returns>
-    IOGraphOperationDescriptor UseQuery(QueryParam query);
+    IOGraphOperationDescriptor UseQuery(QueryValue query);
     /// <summary>
     /// Binds the operation to a specific node.
     /// </summary>

@@ -145,7 +145,7 @@ internal ref partial struct TokenLexer
         throw new TokenLexerException("End of Sequence. No more tokens available.");
     }
     /// <summary>
-    /// Skip the next token in the queue.
+    /// Skip the next token in the collection.
     /// </summary>
     public void Skip()
     {

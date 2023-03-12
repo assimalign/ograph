@@ -1,13 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Assimalign.OGraph\Assimalign.OGraph.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+	<ItemGroup>
+		
+		<ProjectReference Include="..\..\src\Assimalign.OGraph\Assimalign.OGraph.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Exceptions\" />
+	</ItemGroup>
 
 </Project>

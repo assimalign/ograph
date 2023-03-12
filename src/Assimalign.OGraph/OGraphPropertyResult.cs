@@ -9,4 +9,10 @@ namespace Assimalign.OGraph;
 public sealed class OGraphPropertyResult : IOGraphPropertyResult
 {
     public object Data => throw new NotImplementedException();
+
+    public bool IsSuccess => throw new NotImplementedException();
+
+    public IOGraphError? Error => throw new NotImplementedException();
+
+
 }

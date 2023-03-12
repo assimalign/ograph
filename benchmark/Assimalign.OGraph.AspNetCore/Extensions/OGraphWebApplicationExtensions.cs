@@ -1,14 +1,23 @@
-﻿namespace Assimalign.OGraph.AspNetCore;
+﻿
+using System;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Assimalign.OGraph.AspNetCore;
 
 using Assimalign.OGraph.Execution;
 
-public static class WebAppExtensions
-{
 
+public static class OGraphWebApplicationExtensions
+{
     public static WebApplication UseOGraph(this WebApplication app)
     {
         var graph = app.Services.GetService<IOGraph>();
-        
+
 
         if (graph is null)
         {
@@ -19,9 +28,9 @@ public static class WebAppExtensions
             throw new Exception("");
         }
 
-        
 
-        foreach (var operation in graph.Operations.OrderBy(x=>x.Route))
+
+        foreach (var operation in graph.Operations.OrderBy(x => x.Route))
         {
             if (app.Environment.IsDevelopment())
             {
@@ -52,7 +61,7 @@ public static class WebAppExtensions
                             break;
                         }
                 }
-                
+
                 Console.Write(operation.Method.Value.PadRight(8, ' '));
 
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -65,10 +74,7 @@ public static class WebAppExtensions
                 {
                     var graphExecutor = context.RequestServices.GetRequiredService<IOGraphExecutor>();
 
-                    var graphResponse = await graphExecutor.ExecuteAsync(operation.Name, new OGraphHttpRequest(context.Request)
-                    {
-                        ServiceProvider = context.RequestServices
-                    });
+                    var graphResponse = await graphExecutor.ExecuteAsync(new OGraphRequest(context.Request));
 
                     context.Response.StatusCode = graphResponse.StatusCode;
 
@@ -84,7 +90,7 @@ public static class WebAppExtensions
                     context.Response.StatusCode = 500;
                     //context.Response.Body.C
                 }
-                
+
             }).WithDisplayName(operation.Name);
         }
 

@@ -19,4 +19,8 @@ public interface IOGraphError
     /// 
     /// </summary>
     string Message { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    IOGraphErrorDetailsCollection Details { get; }
 }

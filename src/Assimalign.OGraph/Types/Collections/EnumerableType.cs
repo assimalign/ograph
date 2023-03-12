@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-internal class TimeType
+public sealed class EnumerableType<T> : CollectionType<IEnumerable<T>>
 {
 }

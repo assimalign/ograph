@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,11 +11,21 @@ public interface IOGraphRequest
     /// <summary>
     /// 
     /// </summary>
+    Route Route { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    Method Method { get; }
+    /// <summary>
+    /// 
+    /// </summary>
     IOGraphQueryCollection Query { get; }
     /// <summary>
     /// 
     /// </summary>
     IOGraphHeaderCollection Headers { get; }
-    
+    /// <summary>
+    /// 
+    /// </summary>
     Stream Body { get; }
 }

@@ -19,5 +19,16 @@ public interface IOGraphExecutor
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IOGraphResponse> ExecuteAsync(Name operationName, IOGraphRequest request, CancellationToken cancellationToken = default);
+    Task<IOGraphResponse> ExecuteAsync(IOGraphRequest request, CancellationToken cancellationToken = default);
+}
+
+
+
+internal struct Content
+{
+
+
+
+    public ICollection<KeyValuePair<string, object>> Data { get; }
+
 }
