@@ -9,4 +9,4 @@ namespace Assimalign.OGraph;
 /// <param name="context"></param>
 /// <param name="next"></param>
 /// <returns></returns>
-public delegate Task<IOGraphEdgeResult> OGraphEdgeMiddleware(IOGraphEdgeResolverContext context, OGraphEdgeMiddlewareHandler next);
+public delegate Task<IOGraphEdgeResult> OGraphEdgeMiddleware(IOGraphEdgeResolverContext context, OGraphEdgeHandler next);

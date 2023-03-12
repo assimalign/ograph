@@ -12,13 +12,23 @@ builder.Services.AddOGraph("Users", graphBuilder =>
 {
     graphBuilder.AddNode<User>("users", descriptor =>
     {
-        
+
     });
-    graphBuilder.AddOperation("GetUsers", descriptor =>
-    {
-        descriptor.UseMethod("GET")
+    graphBuilder.AddOperation("GetUsers").UseMethod("GET")
             .UseRoute("/api/users")
-            .UseNodes("users")
+            //.UseNodes("users")
+            .UseMiddleware((context, next) =>
+            {
+                Console.WriteLine("Middleware 1 Invoked");
+
+                return next(context);
+            })
+            .UseMiddleware((context, next) =>
+            {
+                Console.WriteLine("Middleware 2 Invoked");
+
+                return next(context);
+            })
             .UseResolver(async context =>
             {
                 return new OGraphOperationResult<User[]>()
@@ -43,57 +53,11 @@ builder.Services.AddOGraph("Users", graphBuilder =>
                         }
                     }
                 };
+
             });
 
-    });
-    graphBuilder.AddOperation("CreateUser", descriptor =>
-    {
-        descriptor.UseMethod("POST")
-            .UseRoute("/api/users")
-            .UseNodes("users")
-            .UseResolver(async context =>
-            {
-                return new OGraphOperationResult<User>()
-                {
-                    Data = new User()
-                    {
-                        FirstName = "Chase"
-                    }
-                };
-            });
-    });
-    graphBuilder.AddOperation("UpdateUser", descriptor =>
-    {
-        descriptor.UseMethod("PUT")
-            .UseRoute("/api/users/{userId}")
-            .UseNodes("users")
-            .UseResolver(async context =>
-            {
-                return new OGraphOperationResult<User>()
-                {
-                    Data = new User()
-                    {
-                        FirstName = "Chase"
-                    }
-                };
-            });
-    });
-    graphBuilder.AddOperation("DeleteUser", descriptor =>
-    {
-        descriptor.UseMethod("DELETE")
-            .UseRoute("/api/users/{userId}")
-            .UseNodes("users")
-            .UseResolver(async context =>
-            {
-                return new OGraphOperationResult<User>()
-                {
-                    Data = new User()
-                    {
-                        FirstName = "Chase"
-                    }
-                };
-            });
-    });
+
+
 });
 
 var app = builder.Build();

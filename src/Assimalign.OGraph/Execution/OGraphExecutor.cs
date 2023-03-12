@@ -24,6 +24,8 @@ public abstract class OGraphExecutor : IOGraphExecutor
     protected IServiceProvider? ServiceProvider { get; init; }
 
 
+    protected OGraphOperationHandler Handler { get; set; }
+
 
     public virtual async Task<IOGraphResponse> ExecuteAsync(Name operationName, IOGraphRequest request, CancellationToken cancellationToken = default)
     {
@@ -51,7 +53,7 @@ public abstract class OGraphExecutor : IOGraphExecutor
         }
 
 
-        var node = operation.Node;
+        //var node = operation.Node;
 
         // Parse Query
         var context = new OGraphResolverContext()
@@ -59,13 +61,35 @@ public abstract class OGraphExecutor : IOGraphExecutor
             ServiceProvider = this.ServiceProvider,
         };
 
-        // Execute Operation Middleware
+        // Execute Operation
         try
         {
-            //foreach (var middleware in operation.Middleware)
-            //{
-            //    await middleware.InvokeAsync(context);
-            //}
+            var middlewares = operation.Middleware;
+            var method = GetOperationChain(0, new OGraphOperationHandler(operation.Resolver.InvokeAsync));
+            var result = await method.Invoke(context);
+
+
+            OGraphOperationHandler GetOperationChain(int item, OGraphOperationHandler next)
+            {
+                var middleware = middlewares.SkipLast(item).First();
+                var handler = new OGraphOperationHandler(ctx =>
+                {
+                    return middleware.InvokeAsync(ctx, next);
+                });
+                if (item < middlewares.Count - 1)
+                {
+                    return GetOperationChain(item + 1, handler);
+                }
+
+                return handler;
+            }
+
+
+
+        
+
+            
+
         }
         catch (Exception exception) // TODO: Add a OGraph specific Callback cancellation exception. This will give the middleware a handle to invoke cancellation
         {
@@ -178,6 +202,12 @@ public abstract class OGraphExecutor : IOGraphExecutor
     }
 
 
+
+
+    private OGraphOperationHandler GetMiddlewareChain()
+    {
+
+    }
     public static IOGraphExecutor Create(IOGraph graph)
     {
         return new OGraphExecutorDefault

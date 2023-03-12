@@ -13,5 +13,5 @@ public interface IOGraphPropertyMiddleware
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task<IOGraphPropertyResult> InvokeAsync(IOGraphPropertyResolverContext context, OGraphPropertyMiddlewareHandler next);
+    Task<IOGraphPropertyResult> InvokeAsync(IOGraphPropertyResolverContext context, OGraphPropertyHandler next);
 }

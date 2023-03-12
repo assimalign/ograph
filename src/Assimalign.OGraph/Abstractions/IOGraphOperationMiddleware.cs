@@ -12,5 +12,5 @@ public interface IOGraphOperationMiddleware
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task<IOGraphOperationResult> InvokeAsync(IOGraphOperationResolverContext context, OGraphOperationMiddlewareHandler next);
+    Task<IOGraphOperationResult> InvokeAsync(IOGraphOperationResolverContext context, OGraphOperationHandler next);
 }

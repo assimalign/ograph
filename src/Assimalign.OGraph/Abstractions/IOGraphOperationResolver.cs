@@ -19,5 +19,5 @@ public interface IOGraphOperationResolver
     /// <param name="context"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IOGraphOperationResult> InvokeAsync(IOGraphOperationResolverContext context, CancellationToken cancellationToken = default);
+    Task<IOGraphOperationResult> InvokeAsync(IOGraphOperationResolverContext context);
 }

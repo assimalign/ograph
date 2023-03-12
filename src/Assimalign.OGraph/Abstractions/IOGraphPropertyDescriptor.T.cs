@@ -66,5 +66,5 @@ public interface IOGraphPropertyDescriptor<T>
     /// </summary>
     /// <param name="resolver"></param>
     /// <returns></returns>
-    IOGraphPropertyDescriptor<T> UseResolver(OGraphPropertyResolver<T> resolver);
+    //IOGraphPropertyDescriptor<T> UseResolver(OGraphPropertyResolver<T> resolver);
 }

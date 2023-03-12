@@ -38,7 +38,14 @@ namespace Assimalign.OGraph.Internal
 
         public IOGraphOperationDescriptor UseMiddleware(OGraphOperationMiddleware middleware)
         {
-            throw new NotImplementedException();
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            operation.Middleware.Enqueue(new OGraphOperationMiddlewareDefault(middleware));
+
+            return this;
         }
 
         public IOGraphOperationDescriptor UseNodes(Label label)

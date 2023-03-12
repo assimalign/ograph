@@ -60,7 +60,7 @@ public interface IOGraphOperationDescriptor
     /// <typeparam name="T"></typeparam>
     /// <param name="resolver"></param>
     /// <returns></returns>
-    IOGraphOperationDescriptor UseResolver<T>(OGraphOperationResolver<T> resolver);
+    //IOGraphOperationDescriptor UseResolver<T>(OGraphOperationResolver<T> resolver);
 
     ///// <summary>
     ///// Builds a derived type from <typeparamref name="TProperty"/>

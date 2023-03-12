@@ -7,6 +7,7 @@ namespace Assimalign.OGraph;
 /// </summary>
 public interface IOGraphBuilder
 {
+
     /// <summary>
     /// 
     /// </summary>
