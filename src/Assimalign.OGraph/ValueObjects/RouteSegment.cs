@@ -20,4 +20,10 @@ public readonly struct RouteSegment
     /// A literal value 
     /// </summary>
     public bool IsLiteral { get; }
+
+
+    public override string ToString()
+    {
+        return IsParameter ? $"{{{Value}}}" : Value;
+    }
 }

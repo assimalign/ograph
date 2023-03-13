@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Internal;
 
@@ -8,11 +9,32 @@ internal class OGraphEdgeDescriptor : IOGraphEdgeDescriptor
 
     public OGraphEdgeDescriptor(OGraphEdge edge)
     {
+        if (edge is null)
+        {
+            throw new ArgumentNullException(nameof(edge));
+        }
         this.edge = edge;
+    }
+
+    public IList<Action<OGraph>> OnConfigure { get; init; }
+
+    public IOGraphEdgeDescriptor UseMetadata(string key, object value)
+    {
+        if (key is null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+        if (value is null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+        edge.Metadata[key] = value;
+
+        return this;
     }
     public IOGraphEdgeDescriptor UseMiddleware<TMiddleware>() where TMiddleware : IOGraphEdgeMiddleware, new()
     {
-        edge.Middleware.Enqueue(new TMiddleware()); 
+        edge.Middleware.Enqueue(new TMiddleware());
         return this;
     }
     public IOGraphEdgeDescriptor UseMiddleware(IOGraphEdgeMiddleware middleware)
@@ -47,29 +69,47 @@ internal class OGraphEdgeDescriptor : IOGraphEdgeDescriptor
         edge.Resolver = resolver;
         return this;
     }
-
     public IOGraphEdgeDescriptor UseResolver(OGraphEdgeResolver resolver)
     {
-        throw new NotImplementedException();
+        if (resolver is null)
+        {
+            throw new ArgumentNullException(nameof(resolver));
+        }
+        edge.Resolver = new OGraphEdgeResolverDefault(resolver);
+        return this;
     }
-
     public IOGraphEdgeDescriptor UseSourceNode(Label label)
     {
-        throw new NotImplementedException();
+        OnConfigure.Add(graph =>
+        {
+            if (!graph.Nodes.TryGet(label, out var node))
+            {
+                throw new Exception();
+            }
+            edge.Source = node;
+        });
+        return this;
     }
-
     public IOGraphEdgeDescriptor UseSourceNode<TNode>() where TNode : IOGraphNode, new()
     {
-        throw new NotImplementedException();
+        edge.Source = new TNode();
+        return this;
     }
-
     public IOGraphEdgeDescriptor UseTargetNode(Label label)
     {
-        throw new NotImplementedException();
+        OnConfigure.Add(graph =>
+        {
+            if (!graph.Nodes.TryGet(label, out var node))
+            {
+                throw new Exception();
+            }
+            edge.Target = node;
+        });
+        return this;
     }
-
     public IOGraphEdgeDescriptor UseTargetNode<TNode>() where TNode : IOGraphNode, new()
     {
-        throw new NotImplementedException();
+        edge.Target = new TNode();
+        return this;
     }
 }

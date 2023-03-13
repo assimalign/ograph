@@ -55,4 +55,13 @@ public interface IOGraphOperation
     /// 
     /// </summary>
     IOGraphMetadata Metadata { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    IOGraphQueryProvider QueryProvider { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    OGraphOperationHandler GetResolverChain();
 }

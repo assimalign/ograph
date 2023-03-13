@@ -11,14 +11,6 @@ public interface IOGraphRequest
     /// <summary>
     /// 
     /// </summary>
-    Route Route { get; }
-    /// <summary>
-    /// 
-    /// </summary>
-    Method Method { get; }
-    /// <summary>
-    /// 
-    /// </summary>
     IOGraphQueryCollection Query { get; }
     /// <summary>
     /// 

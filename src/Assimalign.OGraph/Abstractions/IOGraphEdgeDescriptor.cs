@@ -17,6 +17,13 @@ public interface IOGraphEdgeDescriptor
     IOGraphEdgeDescriptor UseTargetNode<TNode>() where TNode : IOGraphNode, new();
     IOGraphEdgeDescriptor UseSourceNode(Label label);
     IOGraphEdgeDescriptor UseSourceNode<TNode>() where TNode : IOGraphNode, new();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    IOGraphEdgeDescriptor UseMetadata(string key, object value);
     IOGraphEdgeDescriptor UseMiddleware<TMiddleware>() where TMiddleware : IOGraphEdgeMiddleware, new();
     IOGraphEdgeDescriptor UseMiddleware(IOGraphEdgeMiddleware middleware);
     IOGraphEdgeDescriptor UseMiddleware(OGraphEdgeMiddleware middleware);

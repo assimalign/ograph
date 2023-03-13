@@ -1,30 +1,55 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Internal;
 
 internal class OGraphOperation : IOGraphOperation
 {
-    private readonly IOGraphMetadata metadata;
-    private readonly IOGraphOperationMiddlewareQueue middleware;
+    private int chainIndex;
 
     public OGraphOperation()
     {
-        this.metadata = new OGraphMetadata();
-        this.middleware = new OGraphOperationMiddlewareQueue();
+        this.Metadata = new OGraphMetadata();
+        this.Middleware = new OGraphOperationMiddlewareQueue();
     }
 
     public Name Name { get; set; }
     public Route Route { get; set; }
     public Method Method { get; set; }
     public bool IsEnabled { get; set; }
+    public IOGraphNode? Node { get; set; }
     public IOGraphType? RequestType { get; set; }
     public IOGraphType? ResponseType { get; set; }
-    public IOGraphNode? Node { get; set; }
     public IOGraphOperationResolver? Resolver { get; set; }
-    public IOGraphOperationMiddlewareQueue Middleware => this.middleware;
-    public IOGraphMetadata Metadata => this.metadata;
+    public IOGraphOperationMiddlewareQueue Middleware { get; }
+    public IOGraphMetadata Metadata { get; }
+    public IOGraphQueryProvider QueryProvider { get; set; }
+    public OGraphOperationHandler GetResolverChain()
+    {
+        var memoise = Cacher<OGraphOperation, OGraphOperationHandler>.Memoise(operation =>
+        {
+            if (operation.Resolver is null)
+            {
+                throw new Exception();
+            } 
+            return GetResolverChain(new OGraphOperationHandler(operation.Resolver.InvokeAsync));
+        });
+
+        return memoise.Invoke(this);
+    }
+    private OGraphOperationHandler GetResolverChain(OGraphOperationHandler handler)
+    {
+        var middleware = Middleware.Reverse().Skip(chainIndex).First();
+        var next = new OGraphOperationHandler(context =>
+        {
+            return middleware.InvokeAsync(context, handler);
+        });
+        if (chainIndex < Middleware.Count - 1)
+        {
+            chainIndex++;
+            return GetResolverChain(next);
+        }
+        chainIndex = 0;
+        return next;
+    }
 }

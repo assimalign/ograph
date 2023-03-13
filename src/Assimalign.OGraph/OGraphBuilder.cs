@@ -8,9 +8,9 @@ using Assimalign.OGraph.Internal;
 public sealed class OGraphBuilder : IOGraphBuilder
 {
     // These are our build actions
-    private readonly IList<Action<OGraph>> onNodeAdd;
-    private readonly IList<Action<OGraph>> onEdgeAdd;
-    private readonly IList<Action<OGraph>> onOperationAdd;
+    internal readonly IList<Action<OGraph>> onNodeAdd;
+    internal readonly IList<Action<OGraph>> onEdgeAdd;
+    internal readonly IList<Action<OGraph>> onOperationAdd;
 
     private readonly OGraph graph = new();
 
@@ -21,19 +21,15 @@ public sealed class OGraphBuilder : IOGraphBuilder
         this.onOperationAdd = new List<Action<OGraph>>();
     }
 
-    IOGraphBuilder IOGraphBuilder.AddEdge(IOGraphEdge edge)
+
+    /// <inheritdoc />
+    public IOGraphBuilder AddNode<TNode>() where TNode : IOGraphNode, new()
     {
-        if (edge is null)
-        {
-            throw new ArgumentNullException(nameof(edge));
-        }
-        this.onEdgeAdd.Add(graph =>
-        {
-            graph.Edges.Add(edge);
-        });
-        return this;
+        return AddNode(new TNode());
     }
-    IOGraphBuilder IOGraphBuilder.AddNode(IOGraphNode node)
+
+    /// <inheritdoc />
+    public IOGraphBuilder AddNode(IOGraphNode node)
     {
         if (node is null)
         {
@@ -45,7 +41,88 @@ public sealed class OGraphBuilder : IOGraphBuilder
         });
         return this;
     }
-    IOGraphBuilder IOGraphBuilder.AddOperation(IOGraphOperation operation)
+
+    /// <inheritdoc />
+    public IOGraphNodeDescriptor AddNode(Label label)
+    {
+        var node = new OGraphNode()
+        {
+            Label = label
+        };
+
+        var descriptor = new OGraphNodeDescriptor(node)
+        {
+            OnConfigure = onNodeAdd
+        };
+
+        AddNode(node);
+
+        return descriptor;
+    }
+
+    /// <inheritdoc />
+    public IOGraphBuilder AddEdge<TEdge>() where TEdge : IOGraphEdge, new()
+    {
+        return AddEdge(new TEdge());
+    }
+
+    /// <inheritdoc />
+    public IOGraphBuilder AddEdge(IOGraphEdge edge)
+    {
+        if (edge is null)
+        {
+            throw new ArgumentNullException(nameof(edge));
+        }
+        this.onEdgeAdd.Add(graph =>
+        {
+            graph.Edges.Add(edge);
+        });
+        return this;
+    }
+
+    /// <inheritdoc />
+    public IOGraphBuilder AddEdge(Func<IOGraph, IOGraphEdge> configure)
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(nameof(configure));
+        }
+
+        this.onEdgeAdd.Add(graph =>
+        {
+            var edge = configure.Invoke(graph);
+            
+            graph.Edges.Add(edge);
+        });
+
+        return this;
+    }
+
+    /// <inheritdoc />
+    public IOGraphEdgeDescriptor AddEdge(Name name)
+    {
+        var edge = new OGraphEdge() 
+        { 
+            Name = name 
+        };
+        var descriptor = new OGraphEdgeDescriptor(edge)
+        {
+            OnConfigure = onEdgeAdd
+        };
+
+        AddEdge(edge);
+
+        return descriptor;
+    }
+
+    /// <inheritdoc />
+    public IOGraphBuilder AddOperation<TOperation>() where TOperation : IOGraphOperation, new()
+    {
+        return AddOperation(new TOperation());
+    }
+
+    /// <inheritdoc />
+    public IOGraphBuilder AddOperation(IOGraphOperation operation)
     {
         if (operation is null)
         {
@@ -59,6 +136,39 @@ public sealed class OGraphBuilder : IOGraphBuilder
         return this;
     }
 
+    /// <inheritdoc />
+    public IOGraphBuilder AddOperation(Func<IOGraph, IOGraphOperation> configure)
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(nameof(configure));
+        }
+        this.onOperationAdd.Add(graph =>
+        {
+            var operation = configure.Invoke(graph);
+
+            graph.Operations.Add(operation);
+        });
+
+        return this;
+    }
+
+    /// <inheritdoc />
+    public IOGraphOperationDescriptor AddOperation(Name name)
+    {
+        var operation = new OGraphOperation()
+        {
+            Name = name
+        };
+        var descriptor = new OGraphOperationDescriptor(operation)
+        {
+            OnConfigure = onOperationAdd
+        };
+
+        AddOperation(operation);
+
+        return descriptor;
+    }
     IOGraph IOGraphBuilder.Build()
     {
         Build(onNodeAdd);
@@ -89,7 +199,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
         {
             throw new ArgumentNullException(nameof(configure));
         }
-        
+
         var builder = new OGraphBuilder();
 
         builder.onNodeAdd.Add(graph =>
@@ -100,5 +210,5 @@ public sealed class OGraphBuilder : IOGraphBuilder
         configure.Invoke(builder);
 
         return ((IOGraphBuilder)builder).Build();
-    }    
+    }
 }

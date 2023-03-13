@@ -30,7 +30,6 @@ public class ComplexType : IOGraphComplexType
         item = default;
 
         var items = new List<OGraphObjectItem>();
-
         var currentDepth = reader.CurrentDepth;
 
         while (reader.Read())
@@ -85,8 +84,6 @@ public class ComplexType : IOGraphComplexType
                 }
             }
         }
-
-
         return true;
     }
     public bool TryWriteJson(Utf8JsonWriter writer, OGraphObject item)

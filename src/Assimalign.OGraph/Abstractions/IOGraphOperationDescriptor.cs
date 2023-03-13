@@ -69,6 +69,18 @@ public interface IOGraphOperationDescriptor
     /// <summary>
     /// 
     /// </summary>
+    /// <typeparam name="TQueryProvider"></typeparam>
+    /// <returns></returns>
+    IOGraphOperationDescriptor UseQueryProvider<TQueryProvider>() where TQueryProvider : IOGraphQueryProvider, new();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="queryProvider"></param>
+    /// <returns></returns>
+    IOGraphOperationDescriptor UseQueryProvider(IOGraphQueryProvider queryProvider);
+    /// <summary>
+    /// 
+    /// </summary>
     /// <typeparam name="TMiddleware"></typeparam>
     /// <returns></returns>
     IOGraphOperationDescriptor UseMiddleware<TMiddleware>() where TMiddleware : IOGraphOperationMiddleware, new();

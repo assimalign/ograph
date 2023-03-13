@@ -32,4 +32,9 @@ public interface IOGraphEdge
     /// A collection of middleware that will be executed before the edge is resolved.
     /// </summary>
     IOGraphEdgeMiddlewareQueue Middleware { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    OGraphEdgeHandler GetResolverChain();
 }

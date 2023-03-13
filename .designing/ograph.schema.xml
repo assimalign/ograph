@@ -8,30 +8,32 @@
     -->
     <model domain="users">
         <node label="users">
-            <property name="userId"     type="Guid"         is-nullable="false"     is-key="true"/>
-            <property name="firstName"  type="String"       is-nullable="true" />
-            <property name="lastName"   type="String"       is-nullable="true" />
-            <property name="middleName" type="String"       is-nullable="true" />
-            <property name="fullName"   type="String"       is-nullable="true"      is-filterable="false" />
-            <property name="birthDate"  type="DateTime"     is-nullable="true" />
-            <edge name="addresses"  node="addresses" is-filterable="true" is-pageable="true"/>
-            <edge name="profile"    node="profiles" />
+            <type name="User">
+                <property name="userId" type="Guid" is-nullable="false" is-key="true" />
+                <property name="firstName" type="String" is-nullable="true" />
+                <property name="lastName" type="String" is-nullable="true" />
+                <property name="middleName" type="String" is-nullable="true" />
+                <property name="fullName" type="String" is-nullable="true" is-filterable="false" />
+                <property name="birthDate" type="DateTime" is-nullable="true" />
+            </type>
             <type name="UserTagCollection">
-                <collection name="UserTag"/>
+                <collection name="UserTag" />
             </type>
             <type name="UserTag">
-                <porperty name="key" type="String" is-nullable="false"/>
-                <porperty name="value" type="String" is-nullable="false"/>
+                <porperty name="key" type="String" is-nullable="false" />
+                <porperty name="value" type="String" is-nullable="false" />
             </type>
+            <edge name="addresses" source-node="user" target-node="addresses" is-filterable="true" is-pageable="true" />
+            <edge name="profile"   source-node="user" target-node="profiles" />
         </node>
         <node label="addresses">
-            <property name="addressId"      type="Guid"         is-nullable="false"     is-key="true"/>
-            <property name="streetOne"      type="String"       is-nullable="true" />
-            <property name="streetTwo"      type="String"       is-nullable="true" />
-            <property name="streetThree"    type="String"       is-nullable="true" />
-            <property name="city"           type="String"       is-nullable="true"      is-filterable="false" />
-            <property name="stateOrRegion"  type="String"       is-nullable="true" />
-            <property name="addressType"    type="AddressEnum"  is-nullable="false" />
+            <property name="addressId" type="Guid" is-nullable="false" is-key="true" />
+            <property name="streetOne" type="String" is-nullable="true" />
+            <property name="streetTwo" type="String" is-nullable="true" />
+            <property name="streetThree" type="String" is-nullable="true" />
+            <property name="city" type="String" is-nullable="true" is-filterable="false" />
+            <property name="stateOrRegion" type="String" is-nullable="true" />
+            <property name="addressType" type="AddressEnum" is-nullable="false" />
 
             <type name="AddressEnum">
                 <value>Primary</value>
@@ -43,7 +45,6 @@
         </node>
 
         <operation name="GetUsers">
-            
 
 
         </operation>
@@ -54,10 +55,10 @@
                 <segment ordinal="2">{userId:int}</segment>
             </route>
             <query>
-                
+
             </query>
             <headers>
-                <header key="" value=""/>
+                <header key="" value="" />
             </headers>
             <request>
 
@@ -75,7 +76,7 @@
                 <key></key>
             </headers>
             <query-parameters>
-                <query key="query" value-type=""/>
+                <query key="query" value-type="" />
             </query-parameters>
             <request name="UserAddressUpdateType">
 

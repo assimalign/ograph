@@ -11,35 +11,40 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOGraph("Users", builder =>
 {
     builder.AddNode("users")
-        .HasMetadata("", "")
-        .HasType<User>(descriptor =>
-        {
-            descriptor.HasProperty(p => p.Details)
-                .UseName("UserDetails")
-                .UseType(descriptor =>
-                {
-                    descriptor.HasProperty("test")
-                        .UseResolver(context =>
-                        {
-                            return string.Empty;
-                        });
+        .UseMetadata("description", "");
+    //.UseType<User>(descriptor =>
+    //{
+    //    descriptor.HasProperty(p => p.Details)
+    //        .UseName("UserDetails")
+    //        .UseType(descriptor =>
+    //        {
+    //            descriptor.HasProperty("test")
+    //                .UseResolver(context =>
+    //                {
+    //                    return string.Empty;
+    //                });
 
-                    descriptor.HasProperty(p => p.Ssn)
-                        .UseName("socialSecurityNumber")
-                        .UseResolver(context =>
-                        {
-                            return string.Empty;
-                        });
-                });
-        });
+    //            descriptor.HasProperty(p => p.Ssn)
+    //                .UseName("socialSecurityNumber")
+    //                .UseResolver(context =>
+    //                {
+    //                    return string.Empty;
+    //                });
+    //        });
+    //});
 
-    builder.AddEdge("user_has_addresses")
-        .UseSourceNode("users")
-        .UseTargetNode("addresses")
-        .UseResolver(context =>
-        {
-            return default;
-        });
+    //builder.AddEdge("userAddresses")
+    //    .UseMetadata("description", "Returns a collection of addresses associated with a single user object.")
+    //    .UseSourceNode("users")
+    //    .UseTargetNode("addresses")
+    //    .UseResolver(context =>
+    //    {
+    //        var parent = context.GetParent<User>();
+
+
+    //        return default;
+    //    });
+
 
     builder.AddOperation("GetUsers")
         .UseMethod("GET")

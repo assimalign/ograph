@@ -28,4 +28,10 @@ public interface IOGraphProperty
     bool IsFilterable { get; }
     bool IsPagable { get; }
     bool IsSortable { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    OGraphPropertyHandler GetResolverChain();
 }

@@ -14,14 +14,14 @@ public interface IOGraphNodeDescriptor
     /// </summary>
     /// <param name="label"></param>
     /// <returns></returns>
-    IOGraphNodeDescriptor HasLabel(Label label);
+    IOGraphNodeDescriptor UseLabel(Label label);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="key"></param>
     /// <param name="value"></param>
     /// <returns></returns>
-    IOGraphNodeDescriptor HasMetadata(string key, object value);
+    IOGraphNodeDescriptor UseMetadata(string key, object value);
     /// <summary>
     /// 
     /// </summary>
@@ -30,26 +30,26 @@ public interface IOGraphNodeDescriptor
     /// <remarks>
     /// The type being binded to the node should be a complex type.
     /// </remarks>
-    IOGraphNodeDescriptor HasType(IOGraphType type);
+    IOGraphNodeDescriptor UseType(IOGraphType type);
     /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="TType"></typeparam>
     /// <returns></returns>
-    IOGraphNodeDescriptor HasType<TType>() where TType : IOGraphType, new();
+    IOGraphNodeDescriptor UseType<TType>() where TType : IOGraphType, new();
     /// <summary>
     /// 
     /// </summary>
     /// <param name="configure"></param>
     /// <returns></returns>
-    IOGraphNodeDescriptor HasType(Action<IOGraphComplexTypeDescriptor> configure);
+    IOGraphNodeDescriptor UseType(Action<IOGraphComplexTypeDescriptor> configure);
     /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="configure"></param>
     /// <returns></returns>
-    IOGraphNodeDescriptor HasType<T>(Action<IOGraphComplexTypeDescriptor<T>> configure);
+    IOGraphNodeDescriptor UseType<T>(Action<IOGraphComplexTypeDescriptor<T>> configure);
 }
 
 

@@ -11,4 +11,9 @@
     <ProjectReference Include="..\Assimalign.OGraph.AspNetCore\Assimalign.OGraph.AspNetCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Operations\" />
+    <Folder Include="Nodes\" />
+  </ItemGroup>
+
 </Project>

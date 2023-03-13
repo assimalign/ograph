@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Internal;
 
@@ -15,12 +17,15 @@ internal class OGraphNodeDescriptor : IOGraphNodeDescriptor
         this.node = node;
     }
 
-    public IOGraphNodeDescriptor HasLabel(Label label)
+
+    public IList<Action<OGraph>> OnConfigure { get; init; }
+
+    public IOGraphNodeDescriptor UseLabel(Label label)
     {
         node.Label = label;
         return this;
     }
-    public IOGraphNodeDescriptor HasMetadata(string key, object value)
+    public IOGraphNodeDescriptor UseMetadata(string key, object value)
     {
         if (key is null)
         {
@@ -35,7 +40,7 @@ internal class OGraphNodeDescriptor : IOGraphNodeDescriptor
 
         return this;
     }
-    public IOGraphNodeDescriptor HasType(IOGraphType type)
+    public IOGraphNodeDescriptor UseType(IOGraphType type)
     {
         if (type is null)
         {
@@ -44,7 +49,7 @@ internal class OGraphNodeDescriptor : IOGraphNodeDescriptor
         node.Type = type;
         return this;
     }
-    public IOGraphNodeDescriptor HasType<TType>() where TType : IOGraphType, new()
+    public IOGraphNodeDescriptor UseType<TType>() where TType : IOGraphType, new()
     {
         node.Type = new TType();
         return this;
@@ -53,11 +58,11 @@ internal class OGraphNodeDescriptor : IOGraphNodeDescriptor
     {
         throw new NotImplementedException();
     }
-    public IOGraphNodeDescriptor HasType(Action<IOGraphComplexTypeDescriptor> configure)
+    public IOGraphNodeDescriptor UseType(Action<IOGraphComplexTypeDescriptor> configure)
     {
         throw new NotImplementedException();
     }
-    public IOGraphNodeDescriptor HasType<T>(Action<IOGraphComplexTypeDescriptor<T>> configure)
+    public IOGraphNodeDescriptor UseType<T>(Action<IOGraphComplexTypeDescriptor<T>> configure)
     {
         throw new NotImplementedException();
     }   

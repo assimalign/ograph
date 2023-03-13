@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -9,7 +10,6 @@ namespace Assimalign.OGraph;
 
 public readonly struct Route : IEquatable<Route>, IEqualityComparer<Route>
 {
-
 	public Route(string route)
 	{
 		if (string.IsNullOrEmpty(route))
@@ -18,8 +18,12 @@ public readonly struct Route : IEquatable<Route>, IEqualityComparer<Route>
 		}
 		Segments = route.Trim('/').Split('/').Select(segment =>
 		{
+			var start = segment.IndexOf('{');
+			var end = segment.IndexOf('}');
 
-			return new RouteSegment(segment, isLiteral: true);
+			return start == -1 ? 
+				new RouteSegment(segment, isLiteral: true) : 
+				new RouteSegment(segment.Substring(start + 1, end - start - 1), isParameter: true);
 
 		}).ToArray();
 	}
@@ -68,4 +72,21 @@ public readonly struct Route : IEquatable<Route>, IEqualityComparer<Route>
     {
 		return instance.GetHashCode();
     }
+
+	public bool IsMatch(string value)
+	{
+		var items = value.Trim('/').Split('/');
+
+		if (items.Length != Segments.Length)
+		{
+            return false;
+        }
+		foreach (var segment in Segments)
+		{
+
+		}
+
+
+		return true;
+	}
 }

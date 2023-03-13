@@ -1,10 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+
 
 namespace Assimalign.OGraph.Internal;
 
@@ -33,9 +31,6 @@ internal class OGraphPropertyCollection : IOGraphPropertyCollection
         }
         this.properties.Add(property);
     }
-
-   
-
     public void Remove(IOGraphProperty property)
     {
         AssertReadOnly();
@@ -47,14 +42,12 @@ internal class OGraphPropertyCollection : IOGraphPropertyCollection
 
         this.properties.Remove(property);
     }
-
     public bool TryGet(Name name, out IOGraphProperty? property)
     {
         property = this.properties.FirstOrDefault(p => p.Name == name);
 
         return property is null ? false : true;
     }
-
 
     public IEnumerator<IOGraphProperty> GetEnumerator() => this.properties.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();

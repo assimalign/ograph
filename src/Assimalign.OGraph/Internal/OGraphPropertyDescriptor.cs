@@ -78,7 +78,8 @@ internal class OGraphPropertyDescriptor : IOGraphPropertyDescriptor
     }
     public IOGraphPropertyDescriptor UseType<TType>() where TType : IOGraphType, new()
     {
-        throw new NotImplementedException();
+        property.Type = new TType();
+        return this;
     }
 }
 

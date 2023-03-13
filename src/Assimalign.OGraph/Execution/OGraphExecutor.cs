@@ -21,11 +21,11 @@ public abstract class OGraphExecutor : IOGraphExecutor
     protected virtual IServiceProvider? ServiceProvider { get; init; }
 
 
-    public virtual async Task<IOGraphResponse> ExecuteAsync(IOGraphRequest request, CancellationToken cancellationToken = default)
+    public virtual async Task<IOGraphResponse> ExecuteAsync(Name name, IOGraphRequest request, CancellationToken cancellationToken = default)
     {
         var response = new OGraphResponse();
 
-        if (!TryGetOperation(request, out var operation))
+        if (!TryGetOperation(name, out var operation))
         {
             // TODO: Response 404 - Not Found
             response.StatusCode = 404;
@@ -57,13 +57,42 @@ public abstract class OGraphExecutor : IOGraphExecutor
         // Execute Operation
         try
         {
-            var builder = new OGraphOperationHandlerChainBuilder(operation.Middleware);
-            var chain = builder.GetChain(new OGraphOperationHandler(operation.Resolver.InvokeAsync));
-            var result = await chain.Invoke(context);
+            var result = await operation.GetResolverChain().Invoke(context);
 
             if (result.IsSuccess)
             {
-                var content = result.Data;
+                //var content = result.Data;
+
+                //if (hasQuery)
+                //{
+                //    var queryContext = new OGraphQueryContext()
+                //    {
+                //        Graph = this.Graph,
+                //        Node = operation.Node,
+                //        Options = new OGraphQueryOptions(),
+                //    };
+
+                //    if (query.Root is not RootQueryNode root)
+                //    {
+                //        throw new Exception();
+                //    }
+                //    if (root.TryGetFilters(out var filters))
+                //    {
+                //        var filter = filters.First(x => !x.HasEdge);
+
+
+                //        if (!filters.Any(x=>x.HasEdge))
+                //        {
+
+                //        }
+                //    }
+
+                //    operation.QueryProvider.ApplyFiltering()
+
+                //    var queryProvider = new QueryableQueryProvider(queryContext);
+
+                //    content = queryProvider.Execute(content);
+                //}
 
 
             }
@@ -173,31 +202,31 @@ public abstract class OGraphExecutor : IOGraphExecutor
     }
 
 
-    private bool TryGetOperation(IOGraphRequest request, out IOGraphOperation? operation)
+    private bool TryGetOperation(Name operationName, out IOGraphOperation? operation)
     {
-        operation = Graph.Operations.FirstOrDefault(x => x.Method == request.Method && x.Route == request.Route);
+        operation = Graph.Operations.FirstOrDefault(x => x.Name == operationName);
 
-
-
-
-
-        return true;
+        return operation is null ? false : true;
     }
 
     private bool TryGetQuery(IOGraphRequest request, out QueryDocument? document)
     {
         document = null;
 
-
-        if (request.Query.TryGetValue("query", out var query))
+        try
         {
-            document = QueryParser.Parse(query);
+            if (request.Query.TryGetValue("query", out var query))
+            {
+                document = QueryParser.Parse(query);
 
-            return true;
+                return true;
+            }
+            return false;
         }
-
-
-        return false;
+        catch
+        {
+            return false;
+        }        
     }
 
 

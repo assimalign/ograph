@@ -28,6 +28,8 @@ public static class OGraphWebApplicationExtensions
             throw new Exception("");
         }
 
+        var routes = graph.GetRoutes();
+
 
 
         foreach (var operation in graph.Operations.OrderBy(x => x.Route))
@@ -74,7 +76,7 @@ public static class OGraphWebApplicationExtensions
                 {
                     var graphExecutor = context.RequestServices.GetRequiredService<IOGraphExecutor>();
 
-                    var graphResponse = await graphExecutor.ExecuteAsync(new OGraphRequest(context.Request));
+                    var graphResponse = await graphExecutor.ExecuteAsync(operation.Name, new OGraphRequest(context.Request));
 
                     context.Response.StatusCode = graphResponse.StatusCode;
 

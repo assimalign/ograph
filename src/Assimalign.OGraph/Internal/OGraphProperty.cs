@@ -1,27 +1,54 @@
 ﻿using System;
+using System.Linq;
 
 namespace Assimalign.OGraph.Internal;
 
 internal class OGraphProperty : IOGraphProperty
-{ 
-    private readonly IOGraphMetadata metadata;
-    private readonly IOGraphPropertyMiddlewareQueue middleware;
+{
+    private int chainIndex;
 
     public OGraphProperty()
     {
-        this.metadata = new OGraphMetadata();
-        this.middleware = new OGraphPropertyMiddlewareQueue();
+        this.Metadata = new OGraphMetadata();
+        this.Middleware = new OGraphPropertyMiddlewareQueue();
     }
 
 
     public Name Name { get; set; }
     public IOGraphType? Type { get; set; } 
-    public IOGraphMetadata Metadata => this.metadata;
-    public IOGraphPropertyResolver Resolver { get; set; } = new OGraphPropertyResolverDefault((context) => throw new Exception());
-    public IOGraphPropertyMiddlewareQueue Middleware => this.middleware;
-
+    public IOGraphMetadata Metadata { get; }
+    public IOGraphPropertyResolver Resolver { get; set; } 
+    public IOGraphPropertyMiddlewareQueue Middleware { get; }
     public bool IsNullable { get; set; }
     public bool IsFilterable { get; set; }
     public bool IsPagable { get; set; }
     public bool IsSortable { get; set; }
+    public OGraphPropertyHandler GetResolverChain()
+    {
+        var memoise = Cacher<OGraphProperty, OGraphPropertyHandler>.Memoise(property =>
+        {
+            if (property.Resolver is null)
+            {
+                throw new Exception();
+            }
+            return GetResolverChain(new OGraphPropertyHandler(property.Resolver.InvokeAsync));
+        });
+
+        return memoise.Invoke(this);
+    }
+    private OGraphPropertyHandler GetResolverChain(OGraphPropertyHandler handler)
+    {
+        var middleware = Middleware.Reverse().Skip(chainIndex).First();
+        var next = new OGraphPropertyHandler(context =>
+        {
+            return middleware.InvokeAsync(context, handler);
+        });
+        if (chainIndex < Middleware.Count - 1)
+        {
+            chainIndex++;
+            return GetResolverChain(next);
+        }
+        chainIndex = 0;
+        return next;
+    }
 }

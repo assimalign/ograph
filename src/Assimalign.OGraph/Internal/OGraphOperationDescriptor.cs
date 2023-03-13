@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,46 +9,63 @@ namespace Assimalign.OGraph.Internal;
 
 internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
 {
-    private readonly OGraph graph;
     private readonly OGraphOperation operation;
 
-    public OGraphOperationDescriptor(OGraphOperation operation, OGraph graph)
+    public OGraphOperationDescriptor(OGraphOperation operation)
     {
-        this.graph = graph;
         this.operation = operation;
     }
 
+    public IList<Action<OGraph>> OnConfigure { get; init; }
+
+
     public IOGraphOperationDescriptor UseMethod(Method method)
     {
-        operation.Method = method;
+        OnConfigure.Add(graph =>
+        {
+            operation.Method = method;
+        });
         return this;
     }
 
     public IOGraphOperationDescriptor UseMiddleware(IOGraphOperationMiddleware middleware)
     {
-        if (middleware is null)
+        OnConfigure.Add(graph =>
         {
-            throw new ArgumentNullException(nameof(middleware));
-        }
-        operation.Middleware.Enqueue(middleware);
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+            operation.Middleware.Enqueue(middleware);
+        });        
         return this;
     }
 
     public IOGraphOperationDescriptor UseMiddleware(OGraphOperationMiddleware middleware)
     {
-        if (middleware is null)
+        OnConfigure.Add(graph =>
         {
-            throw new ArgumentNullException(nameof(middleware));
-        }
-
-        operation.Middleware.Enqueue(new OGraphOperationMiddlewareDefault(middleware));
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+            operation.Middleware.Enqueue(new OGraphOperationMiddlewareDefault(middleware));
+        });      
 
         return this;
     }
 
     public IOGraphOperationDescriptor UseNode(Label label)
     {
-        operation.Node = graph.Nodes.FirstOrDefault(node => node.Label == label);
+        OnConfigure.Add(graph =>
+        {
+            if (!graph.Nodes.TryGet(label, out var node))
+            {
+                throw new Exception();
+            }
+            operation.Node = node;
+        });
+       
         return this;
     }
 
@@ -58,12 +76,16 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
 
     public IOGraphOperationDescriptor UseResolver(IOGraphOperationResolver resolver)
     {
-        if (resolver is null)
+        OnConfigure.Add(graph =>
         {
-            throw new ArgumentNullException(nameof(resolver));
-        }
+            if (resolver is null)
+            {
+                throw new ArgumentNullException(nameof(resolver));
+            }
 
-        operation.Resolver = resolver;
+            operation.Resolver = resolver;
+        });
+        
 
         return this;
     }
@@ -77,7 +99,11 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
 
     public IOGraphOperationDescriptor UseRoute(Route route)
     {
-        operation.Route = route;
+        OnConfigure.Add(graph =>
+        {
+            operation.Route = route;
+        });
+       
         return this;
     }
 
@@ -121,5 +147,22 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
     public IOGraphOperationDescriptor UseRequestType<TType>() where TType : IOGraphComplexType, new()
     {
         throw new NotImplementedException();
+    }
+
+    public IOGraphOperationDescriptor UseQueryProvider<TQueryProvider>() where TQueryProvider : IOGraphQueryProvider, new()
+    {
+        operation.QueryProvider = new TQueryProvider();
+        return this;
+    }
+
+    public IOGraphOperationDescriptor UseQueryProvider(IOGraphQueryProvider queryProvider)
+    {
+        if (queryProvider is null)
+        {
+            throw new ArgumentNullException(nameof(queryProvider));
+        }
+
+        operation.QueryProvider = queryProvider;
+        return this;
     }
 }

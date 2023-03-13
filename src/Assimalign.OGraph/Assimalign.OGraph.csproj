@@ -12,7 +12,8 @@
 	  <Folder Include="Execution\Internal\StatusCodeProviders\" />
 	  <Folder Include="Internal\ILEmit\" />
 	  <Folder Include="Internal\ILEmit\" />
-	  <Folder Include="Serialization\" />
+	  <Folder Include="Internal\Serialization\Json\" />
+	  <Folder Include="Internal\Serialization\Xml\" />
 	  <Folder Include="Syntax\Internal\Visitors\" />
 	</ItemGroup>
 </Project>

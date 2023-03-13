@@ -6,15 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Internal;
 
-internal class Validator
+internal class ValidatorResult
 {
-
-
-    public ValidatorResult Validate<T>(T value)
-    {
-
-
-        return default;
-    }
-
+    public bool IsValid { get; }
 }
