@@ -9,6 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Folder Include="Execution\Internal\StatusCodeProviders\" />
 	  <Folder Include="Internal\ILEmit\" />
 	  <Folder Include="Internal\ILEmit\" />
 	  <Folder Include="Serialization\" />

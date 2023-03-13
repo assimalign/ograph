@@ -1,6 +1,8 @@
-﻿using System;
+﻿
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Text;
@@ -10,11 +12,17 @@ using System.Xml;
 
 namespace Assimalign.OGraph;
 
+using Assimalign.OGraph.Internal;
+
 public class ComplexType : IOGraphComplexType
 {
+    public ComplexType()
+    {
+        this.Properties = new OGraphPropertyCollection();
+    }
     public Name TypeName { get; init; }
     public OGraphTypeIdentifier TypeIdentifier => OGraphTypeIdentifier.Complex;
-    public IOGraphPropertyCollection Properties { get; init; }
+    public IOGraphPropertyCollection Properties { get; }
     public Type? RuntimeType { get; init; }
 
     public bool TryReadJson(Utf8JsonReader reader, out OGraphObject item)

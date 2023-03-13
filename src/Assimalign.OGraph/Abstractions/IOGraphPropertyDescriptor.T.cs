@@ -19,11 +19,30 @@ public interface IOGraphPropertyDescriptor<T>
     /// <returns></returns>
     IOGraphPropertyDescriptor<T> UseName(Name name);
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    IOGraphPropertyDescriptor<T> UseMetadata(string key, object value);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    IOGraphPropertyDescriptor<T> UseType(IOGraphType type);
+    /// <summary>
     /// Overrides the OGraph type for the current property.
     /// </summary>
     /// <typeparam name="TType"></typeparam>
     /// <returns></returns>
     IOGraphPropertyDescriptor<T> UseType<TType>() where TType : IOGraphType, new();    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="action"></param>
+    /// <returns></returns>
+    IOGraphPropertyDescriptor<T> UseType(Action<IOGraphComplexTypeDescriptor<T>> action);
     /// <summary>
     /// 
     /// </summary>
@@ -42,13 +61,13 @@ public interface IOGraphPropertyDescriptor<T>
     /// <typeparam name="TMiddleware"></typeparam>
     /// <returns></returns>
     IOGraphPropertyDescriptor<T> UseMiddleware<TMiddleware>() where TMiddleware : IOGraphPropertyMiddleware, new();
+    
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="key"></param>
-    /// <param name="value"></param>
+    /// <typeparam name="TResolver"></typeparam>
     /// <returns></returns>
-    IOGraphPropertyDescriptor<T> UseMetadata(string key, object value);
+    IOGraphPropertyDescriptor<T> UseResolver<TResolver>() where TResolver : IOGraphPropertyResolver, new();
     /// <summary>
     /// 
     /// </summary>
@@ -61,10 +80,4 @@ public interface IOGraphPropertyDescriptor<T>
     /// <param name="resolver"></param>
     /// <returns></returns>
     IOGraphPropertyDescriptor<T> UseResolver(OGraphPropertyResolver resolver);
-    /// <summary>
-    /// Overrides or provides a Type Resolver for the current property.
-    /// </summary>
-    /// <param name="resolver"></param>
-    /// <returns></returns>
-    //IOGraphPropertyDescriptor<T> UseResolver(OGraphPropertyResolver<T> resolver);
 }

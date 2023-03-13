@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph;
-
-public sealed class OGraphSortingOptions
+namespace Assimalign.OGraph.Execution.Abstractions
 {
+    public interface IOGraphResponseProvider
+    {
+    }
 }

@@ -8,30 +8,58 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 
-builder.Services.AddOGraph("Users", graphBuilder =>
+builder.Services.AddOGraph("Users", builder =>
 {
-    graphBuilder.AddNode<User>("users", descriptor =>
-    {
+    builder.AddNode("users")
+        .HasMetadata("", "")
+        .HasType<User>(descriptor =>
+        {
+            descriptor.HasProperty(p => p.Details)
+                .UseName("UserDetails")
+                .UseType(descriptor =>
+                {
+                    descriptor.HasProperty("test")
+                        .UseResolver(context =>
+                        {
+                            return string.Empty;
+                        });
 
-    });
-    graphBuilder.AddOperation("GetUsers")
+                    descriptor.HasProperty(p => p.Ssn)
+                        .UseName("socialSecurityNumber")
+                        .UseResolver(context =>
+                        {
+                            return string.Empty;
+                        });
+                });
+        });
+
+    builder.AddEdge("user_has_addresses")
+        .UseSourceNode("users")
+        .UseTargetNode("addresses")
+        .UseResolver(context =>
+        {
+            return default;
+        });
+
+    builder.AddOperation("GetUsers")
         .UseMethod("GET")
         .UseRoute("/api/users")
-        //.UseNodes("users")
+        .UseNode("users")
         .UseMiddleware((context, next) =>
         {
             Console.WriteLine("Middleware 1 Invoked");
 
-            return next(context);
+            return next.Invoke(context);
         })
         .UseMiddleware((context, next) =>
         {
             Console.WriteLine("Middleware 2 Invoked");
 
-            return next(context);
+            return next.Invoke(context);
         })
         .UseResolver(async context =>
         {
+
 
             return new OGraphOperationResult<User[]>()
             {
@@ -56,9 +84,6 @@ builder.Services.AddOGraph("Users", graphBuilder =>
                 }
             };
         });
-
-
-
 });
 
 var app = builder.Build();

@@ -17,6 +17,12 @@ public interface IOGraphBuilder
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="edge"></param>
+    /// <returns></returns>
+    IOGraphBuilder AddEdge(IOGraphEdge edge);
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="operation"></param>
     /// <returns></returns>
     IOGraphBuilder AddOperation(IOGraphOperation operation);

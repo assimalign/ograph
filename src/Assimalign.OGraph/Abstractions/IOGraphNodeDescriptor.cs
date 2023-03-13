@@ -25,9 +25,31 @@ public interface IOGraphNodeDescriptor
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="name"></param>
+    /// <param name="type"></param>
     /// <returns></returns>
-    IOGraphPropertyDescriptor HasProperty(Name name);
+    /// <remarks>
+    /// The type being binded to the node should be a complex type.
+    /// </remarks>
+    IOGraphNodeDescriptor HasType(IOGraphType type);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TType"></typeparam>
+    /// <returns></returns>
+    IOGraphNodeDescriptor HasType<TType>() where TType : IOGraphType, new();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    IOGraphNodeDescriptor HasType(Action<IOGraphComplexTypeDescriptor> configure);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    IOGraphNodeDescriptor HasType<T>(Action<IOGraphComplexTypeDescriptor<T>> configure);
 }
 
 

@@ -2,11 +2,11 @@
 
 namespace Assimalign.OGraph;
 
-
+/// <summary>
+/// 
+/// </summary>
 public interface IOGraphOperationDescriptor
 {
-
-
 
     /// <summary>
     /// 
@@ -32,19 +32,25 @@ public interface IOGraphOperationDescriptor
     /// <remarks></remarks>
     /// <param name="label"></param>
     /// <returns></returns>
-    IOGraphOperationDescriptor UseNodes(Label label);
+    IOGraphOperationDescriptor UseNode(Label label);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TNode"></typeparam>
+    /// <returns></returns>
+    IOGraphOperationDescriptor UseNode<TNode>() where TNode : IOGraphNode, new();
     /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="TType"></typeparam>
     /// <returns></returns>
-    IOGraphOperationDescriptor UseRequestType<TType>() where TType : IOGraphType, new();
+    IOGraphOperationDescriptor UseRequestType<TType>() where TType : IOGraphComplexType, new();
     /// <summary>
     /// 
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    IOGraphOperationDescriptor UseRequestType(IOGraphType type);
+    IOGraphOperationDescriptor UseRequestType(IOGraphComplexType type);
     /// <summary>
     /// 
     /// </summary>
@@ -63,6 +69,12 @@ public interface IOGraphOperationDescriptor
     /// <summary>
     /// 
     /// </summary>
+    /// <typeparam name="TMiddleware"></typeparam>
+    /// <returns></returns>
+    IOGraphOperationDescriptor UseMiddleware<TMiddleware>() where TMiddleware : IOGraphOperationMiddleware, new();
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="middleware"></param>
     /// <returns></returns>
     IOGraphOperationDescriptor UseMiddleware(IOGraphOperationMiddleware middleware);
@@ -75,6 +87,12 @@ public interface IOGraphOperationDescriptor
     /// <summary>
     /// 
     /// </summary>
+    /// <typeparam name="TResolver"></typeparam>
+    /// <returns></returns>
+    IOGraphOperationDescriptor UseResolver<TResolver>() where TResolver : IOGraphOperationResolver, new();
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="resolver"></param>
     /// <returns></returns>
     IOGraphOperationDescriptor UseResolver(IOGraphOperationResolver resolver);
@@ -84,41 +102,7 @@ public interface IOGraphOperationDescriptor
     /// <param name="resolver"></param>
     /// <returns></returns>
     IOGraphOperationDescriptor UseResolver(OGraphOperationResolver resolver);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="resolver"></param>
-    /// <returns></returns>
-    //IOGraphOperationDescriptor UseResolver<T>(OGraphOperationResolver<T> resolver);
 
-    ///// <summary>
-    ///// Builds a derived type from <typeparamref name="TProperty"/>
-    ///// </summary>
-    ///// <param name="name"></param>
-    ///// <param name="descriptor"></param>
-    ///// <returns></returns>
-    //IOGraphOperationDescriptor<TProperty> UseComplexRequestType(Label name, Action<IOGraphComplexTypeDescriptor<TProperty>> descriptor);
 
-    //IOGraphOperationDescriptor<TProperty> UseCollectionRequestType(Action<IOGraphCollectionTypeDescriptor<TProperty>> descriptor);
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    ///// <param name="name"></param>
-    ///// <param name="descriptor"></param>
-    ///// <returns></returns>
-    //IOGraphOperationDescriptor<TProperty> UseCollectionRequestType(Label name, Action<IOGraphCollectionTypeDescriptor<TProperty>> descriptor);
-
-    //IOGraphOperationDescriptor<TProperty> UseComplexResponseType(Action<IOGraphComplexTypeDescriptor<TProperty>> descriptor);
-    //IOGraphOperationDescriptor<TProperty> UseComplexResponseType(Label name, Action<IOGraphComplexTypeDescriptor<TProperty>> descriptor);
-    //IOGraphOperationDescriptor<TProperty> UseCollectionResponseType(Action<IOGraphCollectionTypeDescriptor<TProperty>> descriptor);
-
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    ///// <param name="name"></param>
-    ///// <param name="descriptor"></param>
-    ///// <returns></returns>
-    //IOGraphOperationDescriptor<TProperty> UseCollectionResponseType(Label name, Action<IOGraphCollectionTypeDescriptor<TProperty>> descriptor);
 }
 

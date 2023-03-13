@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assimalign.OGraph.Internal;
+using System;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
@@ -28,5 +29,40 @@ public static class OGraphPropertyDescriptorExtensions
                 Data = resolver.Invoke(context)
             });
         });
+    }
+
+
+
+    public static IOGraphPropertyDescriptor UseResolver<TProperty>(
+        this IOGraphPropertyDescriptor descriptor,
+        Func<IOGraphPropertyResolverContext, TProperty> resolver)
+    {
+        if (resolver is null)
+        {
+            throw new ArgumentNullException(nameof(resolver));
+        }
+
+        descriptor.UseOGraphType(typeof(TProperty));
+
+        return descriptor.UseResolver(context =>
+        {
+            return ValueTask.FromResult<IOGraphPropertyResult>(new OGraphPropertyResult()
+            {
+                Data = resolver.Invoke(context)
+            });
+        });
+    }
+
+
+
+    private static void UseOGraphType(this IOGraphPropertyDescriptor descriptor, Type type)
+    {
+        if (type.IsStringType())
+        {
+            descriptor.UseType<StringType>();
+        }
+
+
+        throw new Exception();
     }
 }

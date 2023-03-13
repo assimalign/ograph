@@ -8,9 +8,21 @@ namespace Assimalign.OGraph;
 
 public interface IOGraphEdgeDescriptor
 {
-    IOGraphEdgeDescriptor UseNode(Label label);
-    IOGraphEdgeDescriptor UseNode<TNode>() where TNode : IOGraphNode;
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="label">The name of the node within the OGraph Model.</param>
+    /// <returns></returns>
+    IOGraphEdgeDescriptor UseTargetNode(Label label);
+    IOGraphEdgeDescriptor UseTargetNode<TNode>() where TNode : IOGraphNode, new();
+    IOGraphEdgeDescriptor UseSourceNode(Label label);
+    IOGraphEdgeDescriptor UseSourceNode<TNode>() where TNode : IOGraphNode, new();
+    IOGraphEdgeDescriptor UseMiddleware<TMiddleware>() where TMiddleware : IOGraphEdgeMiddleware, new();
     IOGraphEdgeDescriptor UseMiddleware(IOGraphEdgeMiddleware middleware);
+    IOGraphEdgeDescriptor UseMiddleware(OGraphEdgeMiddleware middleware);
+    IOGraphEdgeDescriptor UseResolver<TResovler>() where TResovler : IOGraphEdgeResolver, new();
+    IOGraphEdgeDescriptor UseResolver(IOGraphEdgeResolver resolver);
+    IOGraphEdgeDescriptor UseResolver(OGraphEdgeResolver resolver);
 }
 
 

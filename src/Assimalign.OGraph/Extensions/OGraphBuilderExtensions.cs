@@ -9,16 +9,7 @@ namespace Assimalign.OGraph;
 
 public static class OGraphBuilderExtensions
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TNode"></typeparam>
-    /// <param name="builder"></param>
-    /// <returns></returns>
-    public static IOGraphBuilder AddNode<TNode>(this IOGraphBuilder builder) where TNode : IOGraphNode, new()
-    {
-        return builder.AddNode(new TNode());
-    }
+    
     /// <summary>
     /// 
     /// </summary>
@@ -45,43 +36,38 @@ public static class OGraphBuilderExtensions
         return descriptor;
     }
 
+    #region Node Extensions
     /// <summary>
     /// 
     /// </summary>
+    /// <typeparam name="TNode"></typeparam>
     /// <param name="builder"></param>
-    /// <param name="label"></param>
-    /// <param name="configure"></param>
     /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    public static IOGraphBuilder AddNode(this IOGraphBuilder builder, Label label,  Action<IOGraphNodeDescriptor> configure)
+    public static IOGraphBuilder AddNode<TNode>(this IOGraphBuilder builder) where TNode : IOGraphNode, new()
     {
-        if (configure is null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
-
-        var node = new OGraphNodeDefault(configure);
-
-        return builder.AddNode(node);
+        return builder.AddNode(new TNode());
     }
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     /// <param name="builder"></param>
     /// <param name="label"></param>
     /// <param name="configure"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static IOGraphBuilder AddNode<T>(this IOGraphBuilder builder, Label label, Action<IOGraphNodeDescriptor<T>> configure)
+    public static IOGraphNodeDescriptor AddNode(this IOGraphBuilder builder, Label label)
     {
-        if (configure is null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
 
-        var node = new OGraphNodeDefault<T>(configure);
+        throw new NotImplementedException();
+    }
 
-        return builder.AddNode(node);
+    #endregion
+
+
+    public static IOGraphEdgeDescriptor AddEdge(this IOGraphBuilder buidler, Name name)
+    {
+
+
+        return default;
     }
 }

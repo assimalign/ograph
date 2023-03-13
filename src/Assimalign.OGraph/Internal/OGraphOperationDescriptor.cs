@@ -48,7 +48,7 @@ namespace Assimalign.OGraph.Internal
             return this;
         }
 
-        public IOGraphOperationDescriptor UseNodes(Label label)
+        public IOGraphOperationDescriptor UseNode(Label label)
         {
             operation.Node = graph.Nodes.FirstOrDefault(node => node.Label == label);
             return this;
