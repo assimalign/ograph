@@ -1,30 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Internal;
 
-internal class OGraphNodeDefault : IOGraphNode
+internal class OGraphNode : IOGraphNode
 {
     private readonly IOGraphEdgeCollection edges;
     private readonly IOGraphPropertyCollection properties;
     private readonly IOGraphMetadata metadata;
 
-    private readonly Action<IOGraphNodeDescriptor> configure;
-    public OGraphNodeDefault(Action<IOGraphNodeDescriptor> configure)
+    public OGraphNode()
     {
         this.edges = new OGraphEdgeCollection();
         this.properties = new OGraphPropertyCollection();
         this.metadata = new OGraphMetadata();
-        this.configure = configure;
-
-        Configure(new OGraphNodeDescriptor(this));
     }
 
     /// <inheritdoc />
     public Label Label { get; set; }
+
+    /// <inheritdoc />
+    public IOGraphType Type { get; set; }
 
     /// <inheritdoc />
     public IOGraphEdgeCollection Edges => this.edges;
@@ -35,13 +30,6 @@ internal class OGraphNodeDefault : IOGraphNode
     /// <inheritdoc />
     public IOGraphMetadata Metadata => this.metadata;
 
-    private void Configure(IOGraphNodeDescriptor descriptor)
-    {
-        if (configure is null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
 
-        configure.Invoke(descriptor);
-    }
+    public Action OnEdgeAdd { get; set; } = () => { };
 }

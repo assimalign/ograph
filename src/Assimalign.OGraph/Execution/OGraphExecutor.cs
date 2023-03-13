@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Xml;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,16 +13,12 @@ namespace Assimalign.OGraph.Execution;
 using Assimalign.OGraph.Syntax;
 using Assimalign.OGraph.Internal;
 using Assimalign.OGraph.Execution.Internal;
-using System.Xml;
 
 public abstract class OGraphExecutor : IOGraphExecutor
 {
     protected virtual QueryParser? QueryParser { get; init; } = new QueryParser();
-
     protected virtual IOGraph? Graph { get; init; }
-
     protected virtual IServiceProvider? ServiceProvider { get; init; }
-
 
 
     public virtual async Task<IOGraphResponse> ExecuteAsync(IOGraphRequest request, CancellationToken cancellationToken = default)
@@ -80,24 +76,24 @@ public abstract class OGraphExecutor : IOGraphExecutor
 
         var node = operation.Node;
 
-        if (query.Root.GetNodesOfType<RootQueryNode>().First().TryGetProjections(out var projections))
-        {
-            var rootProjections = projections.FirstOrDefault(x => !x.HasEdge);
+        //if (query.Root.GetNodesOfType<RootQueryNode>().First().TryGetProjections(out var projections))
+        //{
+        //    var rootProjections = projections.FirstOrDefault(x => !x.HasEdge);
 
-            foreach (var property in rootProjections.Properties)
-            {
-                if (!node.Properties.TryGet(property.Name, out var propertyValue))
-                {
-                    throw new Exception();
-                }
-                if (propertyValue.Type.TypeIdentifier == OGraphTypeIdentifier.Primitive)
-                {
+        //    foreach (var property in rootProjections.Properties)
+        //    {
+        //        if (!node.Properties.TryGet(property.Name, out var propertyValue))
+        //        {
+        //            throw new Exception();
+        //        }
+        //        if (propertyValue.Type.TypeIdentifier == OGraphTypeIdentifier.Primitive)
+        //        {
 
-                }
-                var result = await propertyValue.Resolver.InvokeAsync(context);
+        //        }
+        //        var result = await propertyValue.Resolver.InvokeAsync(context);
 
-            }
-        }
+        //    }
+        //}
 
 
 

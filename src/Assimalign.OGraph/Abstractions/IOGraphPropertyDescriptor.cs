@@ -9,6 +9,12 @@ namespace Assimalign.OGraph;
 public interface IOGraphPropertyDescriptor
 {
     /// <summary>
+    /// Overrides the name of the current property.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    IOGraphPropertyDescriptor UseName(Name name);
+    /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="TType"></typeparam>

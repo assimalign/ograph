@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Assimalign.OGraph.Internal;
 
 
 internal class OGraphPropertyDescriptor : IOGraphPropertyDescriptor
 {
-    private readonly IOGraphProperty property;
+    private readonly OGraphProperty property;
 
-    public OGraphPropertyDescriptor(IOGraphProperty property)
+    public OGraphPropertyDescriptor(OGraphProperty property)
     {
         if (property is null)
         {
@@ -23,82 +17,65 @@ internal class OGraphPropertyDescriptor : IOGraphPropertyDescriptor
         this.property = property;
     }
 
+    public IOGraphPropertyDescriptor UseName(Name name)
+    {
+        property.Name = name;
+        return this;
+    }
     public IOGraphPropertyDescriptor UseMetadata(string key, object value)
     {
-        throw new NotImplementedException();
+        if (key is null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+        if (value is null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+        property.Metadata[key] = value;
+        return this;
     }
-
     public IOGraphPropertyDescriptor UseMiddleware(IOGraphPropertyMiddleware middleware)
     {
-        throw new NotImplementedException();
+        if (middleware is null)
+        {
+            throw new ArgumentNullException(nameof(middleware));
+        }
+        property.Middleware.Enqueue(middleware);
+        return this;
     }
-
     public IOGraphPropertyDescriptor UseMiddleware(OGraphPropertyMiddleware middleware)
     {
-        throw new NotImplementedException();
+        if (middleware is null)
+        {
+            throw new ArgumentNullException(nameof(middleware));
+        }
+        property.Middleware.Enqueue(new OGraphPropertyMiddlewareDefault(middleware));
+        return this;
     }
-
     public IOGraphPropertyDescriptor UseMiddleware<TMiddleware>() where TMiddleware : IOGraphPropertyMiddleware, new()
     {
-        throw new NotImplementedException();
+        property.Middleware.Enqueue(new TMiddleware());
+        return this;
     }
-
     public IOGraphPropertyDescriptor UseResolver(IOGraphPropertyResolver resolver)
     {
         if (resolver is null)
         {
             throw new ArgumentNullException(nameof(resolver));
         }
-
-        throw new NotImplementedException();
+        property.Resolver = resolver;
+        return this;
     }
-
     public IOGraphPropertyDescriptor UseResolver(OGraphPropertyResolver resolver)
     {
         if (resolver is null)
         {
             throw new ArgumentNullException(nameof(resolver));
         }
-
-        var prop = property.GetType().GetProperty(nameof(IOGraphProperty.Resolver));
-
-        if (prop is null)
-        {
-            throw new Exception();
-        }
-        if (!prop.CanWrite)
-        {
-            throw new Exception();
-        }
-
-        prop.SetValue(property, new OGraphPropertyResolverDefault(resolver), null);
-
+        property.Resolver = new OGraphPropertyResolverDefault(resolver);
         return this;
     }
-
-    public IOGraphPropertyDescriptor UseResolver<T>(OGraphPropertyResolver<T> resolver)
-    {
-        if (resolver is null)
-        {
-            throw new ArgumentNullException(nameof(resolver));
-        }
-
-        var prop = property.GetType().GetProperty(nameof(IOGraphProperty.Resolver));
-
-        if (prop is null)
-        {
-            throw new Exception();
-        }
-        if (!prop.CanWrite)
-        {
-            throw new Exception();
-        }
-
-        prop.SetValue(property, new OGraphPropertyResolverDefault<T>(resolver), null);
-
-        return this;
-    }
-
     public IOGraphPropertyDescriptor UseType<TType>() where TType : IOGraphType, new()
     {
         throw new NotImplementedException();

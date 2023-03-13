@@ -4,110 +4,122 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Internal
+namespace Assimalign.OGraph.Internal;
+
+internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
 {
-    internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
+    private readonly OGraph graph;
+    private readonly OGraphOperation operation;
+
+    public OGraphOperationDescriptor(OGraphOperation operation, OGraph graph)
     {
-        private readonly OGraph graph;
-        private readonly OGraphOperation operation;
+        this.graph = graph;
+        this.operation = operation;
+    }
 
+    public IOGraphOperationDescriptor UseMethod(Method method)
+    {
+        operation.Method = method;
+        return this;
+    }
 
-        public OGraphOperationDescriptor(OGraphOperation operation, OGraph graph)
+    public IOGraphOperationDescriptor UseMiddleware(IOGraphOperationMiddleware middleware)
+    {
+        if (middleware is null)
         {
-            this.graph = graph;
-            this.operation = operation;
+            throw new ArgumentNullException(nameof(middleware));
+        }
+        operation.Middleware.Enqueue(middleware);
+        return this;
+    }
+
+    public IOGraphOperationDescriptor UseMiddleware(OGraphOperationMiddleware middleware)
+    {
+        if (middleware is null)
+        {
+            throw new ArgumentNullException(nameof(middleware));
         }
 
-        public IOGraphOperationDescriptor UseMethod(Method method)
+        operation.Middleware.Enqueue(new OGraphOperationMiddlewareDefault(middleware));
+
+        return this;
+    }
+
+    public IOGraphOperationDescriptor UseNode(Label label)
+    {
+        operation.Node = graph.Nodes.FirstOrDefault(node => node.Label == label);
+        return this;
+    }
+
+    public IOGraphOperationDescriptor UseQuery(QueryValue query)
+    {
+        return this;
+    }
+
+    public IOGraphOperationDescriptor UseResolver(IOGraphOperationResolver resolver)
+    {
+        if (resolver is null)
         {
-            operation.Method = method;
-            return this;
+            throw new ArgumentNullException(nameof(resolver));
         }
 
-        public IOGraphOperationDescriptor UseMiddleware(IOGraphOperationMiddleware middleware)
-        {
-            if (middleware is null)
-            {
-                throw new ArgumentNullException(nameof(middleware));
-            }
+        operation.Resolver = resolver;
 
-            operation.Middleware.Enqueue(middleware);
+        return this;
+    }
 
-            return this;
-        }
+    public IOGraphOperationDescriptor UseResolver(OGraphOperationResolver resolver)
+    {
+        operation.Resolver = new OGraphOperationResolverDefault(resolver);
+        return this;
+    }
 
-        public IOGraphOperationDescriptor UseMiddleware(OGraphOperationMiddleware middleware)
-        {
-            if (middleware is null)
-            {
-                throw new ArgumentNullException(nameof(middleware));
-            }
 
-            operation.Middleware.Enqueue(new OGraphOperationMiddlewareDefault(middleware));
+    public IOGraphOperationDescriptor UseRoute(Route route)
+    {
+        operation.Route = route;
+        return this;
+    }
 
-            return this;
-        }
 
-        public IOGraphOperationDescriptor UseNode(Label label)
-        {
-            operation.Node = graph.Nodes.FirstOrDefault(node => node.Label == label);
-            return this;
-        }
+    public IOGraphOperationDescriptor UseRequestType(IOGraphType type)
+    {
+        throw new NotImplementedException();
+    }
 
-        public IOGraphOperationDescriptor UseQuery(QueryValue query)
-        {
-            return this;
-        }
+    public IOGraphOperationDescriptor UseResponseType<TType>() where TType : IOGraphType, new()
+    {
+        operation.ResponseType = new TType();
+        return this;
+    }
 
-        public IOGraphOperationDescriptor UseResolver(IOGraphOperationResolver resolver)
-        {
-            if (resolver is null)
-            {
-                throw new ArgumentNullException(nameof(resolver));
-            }
+    public IOGraphOperationDescriptor UseResponseType(IOGraphType type)
+    {
+        throw new NotImplementedException();
+    }
 
-            operation.Resolver = resolver;
+    public IOGraphOperationDescriptor UseNode<TNode>() where TNode : IOGraphNode, new()
+    {
+        throw new NotImplementedException();
+    }
 
-            return this;
-        }
+    public IOGraphOperationDescriptor UseRequestType(IOGraphComplexType type)
+    {
+        throw new NotImplementedException();
+    }
 
-        public IOGraphOperationDescriptor UseResolver(OGraphOperationResolver resolver)
-        {
-            operation.Resolver = new OGraphOperationResolverDefault(resolver);
-            return this;
-        }
+    public IOGraphOperationDescriptor UseMiddleware<TMiddleware>() where TMiddleware : IOGraphOperationMiddleware, new()
+    {
+        throw new NotImplementedException();
+    }
 
-        public IOGraphOperationDescriptor UseResolver<T>(OGraphOperationResolver<T> resolver)
-        {
-            throw new NotImplementedException();
-        }
+    public IOGraphOperationDescriptor UseResolver<TResolver>() where TResolver : IOGraphOperationResolver, new()
+    {
+        throw new NotImplementedException();
+    }
 
-        public IOGraphOperationDescriptor UseRoute(Route route)
-        {
-            operation.Route = route;
-            return this;
-        }
-
-        public IOGraphOperationDescriptor UseRequestType<TType>() where TType : IOGraphType, new()
-        {
-            operation.RequestType = new TType();
-            return this;
-        }
-
-        public IOGraphOperationDescriptor UseRequestType(IOGraphType type)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IOGraphOperationDescriptor UseResponseType<TType>() where TType : IOGraphType, new()
-        {
-            operation.ResponseType = new TType();
-            return this;
-        }
-
-        public IOGraphOperationDescriptor UseResponseType(IOGraphType type)
-        {
-            throw new NotImplementedException();
-        }
+    public IOGraphOperationDescriptor UseRequestType<TType>() where TType : IOGraphComplexType, new()
+    {
+        throw new NotImplementedException();
     }
 }

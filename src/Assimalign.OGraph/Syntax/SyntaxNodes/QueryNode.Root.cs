@@ -13,7 +13,7 @@ public sealed class RootQueryNode : QueryNode
 
    
     /// <summary>
-    /// Represents the root nodes of the expression tree.
+    /// Represents the root edges of the expression tree.
     /// </summary>
     public IEnumerable<QueryNode> Nodes { get; init; } = new QueryNode[0];
     /// <summary>

@@ -22,9 +22,14 @@ internal class OGraph : IOGraph
 
     public Name Name { get; set; }
 
+
+
     public OGraphNodeCollection Nodes { get; }
     IOGraphNodeCollection IOGraph.Nodes => this.Nodes;
     
+
+    public OGraphEdgeCollection Edges { get; }
+    IOGraphEdgeCollection IOGraph.Edges => this.Edges;
 
     public OGraphOperationCollection Operations { get; }
     IOGraphOperationCollection IOGraph.Operations => this.Operations;

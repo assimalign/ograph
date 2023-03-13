@@ -17,6 +17,10 @@ public interface IOGraph
     /// <summary>
     /// 
     /// </summary>
+    IOGraphEdgeCollection Edges { get; }
+    /// <summary>
+    /// 
+    /// </summary>
     IOGraphEventCollection Events { get; }
     /// <summary>
     /// Represents a collection of HTTP Operations

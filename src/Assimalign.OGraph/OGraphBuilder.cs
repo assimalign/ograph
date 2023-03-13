@@ -1,39 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
 using Assimalign.OGraph.Internal;
-using System.Threading;
 
 public sealed class OGraphBuilder : IOGraphBuilder
 {
     // These are our build actions
-    private readonly IList<Action<OGraph>> actions;
+    private readonly IList<Action<OGraph>> onNodeAdd;
+    private readonly IList<Action<OGraph>> onEdgeAdd;
+    private readonly IList<Action<OGraph>> onOperationAdd;
 
     private readonly OGraph graph = new();
 
     private OGraphBuilder()
     {
-        this.actions = new List<Action<OGraph>>();
+        this.onNodeAdd = new List<Action<OGraph>>();
+        this.onEdgeAdd = new List<Action<OGraph>>();
+        this.onOperationAdd = new List<Action<OGraph>>();
     }
 
-
+    IOGraphBuilder IOGraphBuilder.AddEdge(IOGraphEdge edge)
+    {
+        if (edge is null)
+        {
+            throw new ArgumentNullException(nameof(edge));
+        }
+        this.onEdgeAdd.Add(graph =>
+        {
+            graph.Edges.Add(edge);
+        });
+        return this;
+    }
     IOGraphBuilder IOGraphBuilder.AddNode(IOGraphNode node)
     {
-        this.actions.Add(graph =>
+        if (node is null)
+        {
+            throw new ArgumentNullException(nameof(node));
+        }
+        this.onNodeAdd.Add(graph =>
         {
             graph.Nodes.Add(node);
         });
         return this;
     }
-
     IOGraphBuilder IOGraphBuilder.AddOperation(IOGraphOperation operation)
     {
-        this.actions.Add(graph =>
+        if (operation is null)
+        {
+            throw new ArgumentNullException(nameof(operation));
+        }
+        this.onOperationAdd.Add(graph =>
         {
             graph.Operations.Add(operation);
         });
@@ -41,15 +59,21 @@ public sealed class OGraphBuilder : IOGraphBuilder
         return this;
     }
 
-
     IOGraph IOGraphBuilder.Build()
+    {
+        Build(onNodeAdd);
+        Build(onEdgeAdd);
+        Build(onOperationAdd);
+
+        return graph;
+    }
+
+    private void Build(IList<Action<OGraph>> actions)
     {
         foreach (var action in actions)
         {
             action.Invoke(graph);
         }
-
-        return graph;
     }
 
     /// <summary>
@@ -68,7 +92,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
         
         var builder = new OGraphBuilder();
 
-        builder.actions.Add(graph =>
+        builder.onNodeAdd.Add(graph =>
         {
             graph.Name = name;
         });
@@ -76,5 +100,5 @@ public sealed class OGraphBuilder : IOGraphBuilder
         configure.Invoke(builder);
 
         return ((IOGraphBuilder)builder).Build();
-    }
+    }    
 }

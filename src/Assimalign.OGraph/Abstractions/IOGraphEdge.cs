@@ -1,7 +1,7 @@
 ﻿namespace Assimalign.OGraph;
 
 /// <summary>
-/// An edge links to nodes together.
+/// An edge links to edges together.
 /// </summary>
 /// <remarks>
 /// An Edge is also referred to as a Link.

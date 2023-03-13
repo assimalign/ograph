@@ -1,5 +1,4 @@
-﻿using Assimalign.OGraph.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
+using Assimalign.OGraph.Internal;
+
 public static class OGraphBuilderExtensions
 {
-    
     /// <summary>
     /// 
     /// </summary>
@@ -20,7 +20,12 @@ public static class OGraphBuilderExtensions
     {
         return builder.AddOperation(new TOperation());
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="name"></param>
+    /// <returns></returns>
     public static IOGraphOperationDescriptor AddOperation(this IOGraphBuilder builder, Name name)
     {
         var operation = new OGraphOperation()
@@ -35,8 +40,6 @@ public static class OGraphBuilderExtensions
 
         return descriptor;
     }
-
-    #region Node Extensions
     /// <summary>
     /// 
     /// </summary>
@@ -57,17 +60,29 @@ public static class OGraphBuilderExtensions
     /// <exception cref="ArgumentNullException"></exception>
     public static IOGraphNodeDescriptor AddNode(this IOGraphBuilder builder, Label label)
     {
+        var node = new OGraphNode()
+        {
+            Label = label
+        };
 
-        throw new NotImplementedException();
+        builder.AddNode(node);
+
+        return new OGraphNodeDescriptor(node);
     }
-
-    #endregion
-
-
-    public static IOGraphEdgeDescriptor AddEdge(this IOGraphBuilder buidler, Name name)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    public static IOGraphEdgeDescriptor AddEdge(this IOGraphBuilder builder, Name name)
     {
+        var edge = new OGraphEdge()
+        {
+            Name = name
+        };
+        builder.AddEdge(edge);
 
-
-        return default;
+        return new OGraphEdgeDescriptor(edge);
     }
 }

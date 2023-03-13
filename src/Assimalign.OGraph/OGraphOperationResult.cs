@@ -12,5 +12,9 @@ public sealed class OGraphOperationResult<TData> : IOGraphOperationResult
 
     public TData Data { get; set; }
 
+    public bool IsSuccess => throw new NotImplementedException();
+
+    public IOGraphError? Error => throw new NotImplementedException();
+
     object IOGraphOperationResult.Data => this.Data;
 }

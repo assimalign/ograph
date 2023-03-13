@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Internal;
 
@@ -30,75 +26,76 @@ internal class OGraphPropertyDescriptor<T> : IOGraphPropertyDescriptor<T>
         {
             throw new ArgumentNullException(nameof(value));
         }
-
         property.Metadata[key] = value;
-
         return this;
     }
-
     public IOGraphPropertyDescriptor<T> UseMiddleware(IOGraphPropertyMiddleware middleware)
     {
         if (middleware is null)
         {
             throw new ArgumentNullException(nameof(middleware));
-        }
-        
+        }        
         property.Middleware.Enqueue(middleware);
-
         return this;
     }
-
     public IOGraphPropertyDescriptor<T> UseMiddleware(OGraphPropertyMiddleware middleware)
     {
-        throw new NotImplementedException();
+        if (middleware is null)
+        {
+            throw new ArgumentNullException(nameof(middleware));
+        }
+        property.Middleware.Enqueue(new OGraphPropertyMiddlewareDefault(middleware));
+        return this;
     }
-
     public IOGraphPropertyDescriptor<T> UseMiddleware<TMiddleware>() where TMiddleware : IOGraphPropertyMiddleware, new()
     {
-        throw new NotImplementedException();
+        property.Middleware.Enqueue(new TMiddleware());
+        return this;
     }
-
     public IOGraphPropertyDescriptor<T> UseName(Name name)
     {
         property.Name = name;
-
         return this;
     }
-
     public IOGraphPropertyDescriptor<T> UseResolver(IOGraphPropertyResolver resolver)
-    {
-
-
-
-        return this;
-    }
-
-    public IOGraphPropertyDescriptor<T> UseResolver(OGraphPropertyResolver<T> resolver)
     {
         if (resolver is null)
         {
             throw new ArgumentNullException(nameof(resolver));
         }
-
-        
-
+        property.Resolver = resolver;
         return this;
     }
-
     public IOGraphPropertyDescriptor<T> UseResolver(OGraphPropertyResolver resolver)
     {
         if (resolver is null)
         {
             throw new ArgumentNullException(nameof(resolver));
         }
-
         property.Resolver = new OGraphPropertyResolverDefault(resolver);
-
         return this;
     }
-
+    public IOGraphPropertyDescriptor<T> UseResolver<TResolver>() where TResolver : IOGraphPropertyResolver, new()
+    {
+        property.Resolver = new TResolver();
+        return this;
+    }
     public IOGraphPropertyDescriptor<T> UseType<TType>() where TType : IOGraphType, new()
     {
+        property.Type = new TType();
         return this;
+    }
+    public IOGraphPropertyDescriptor<T> UseType(IOGraphType type)
+    {
+        if (type is null)
+        {
+            throw new ArgumentNullException(nameof(type));
+        }
+        property.Type = type;
+        return this;
+    }
+    public IOGraphPropertyDescriptor<T> UseType(Action<IOGraphComplexTypeDescriptor<T>> action)
+    {
+        throw new NotImplementedException();
     }
 }
