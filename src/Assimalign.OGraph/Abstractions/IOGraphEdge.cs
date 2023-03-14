@@ -33,8 +33,11 @@ public interface IOGraphEdge
     /// </summary>
     IOGraphEdgeMiddlewareQueue Middleware { get; }
     /// <summary>
-    /// 
+    /// Builds an execution chain for the given edge.
     /// </summary>
     /// <returns></returns>
+    /// <remarks>
+    /// Utilize Chain-Of-Responsibility pattern to combine the middleware and resolver to be executed in order. 
+    /// </remarks>
     OGraphEdgeHandler GetResolverChain();
 }

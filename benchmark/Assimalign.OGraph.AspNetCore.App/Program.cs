@@ -2,6 +2,7 @@ using Assimalign.OGraph;
 using Assimalign.OGraph.AspNetCore;
 using Assimalign.OGraph.Execution;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOGraph("Users", builder =>
 {
     builder.AddNode("users")
-        .UseMetadata("description", "");
+        .UseMetadata("description", "")
+        .UseType<UserType>();
     //.UseType<User>(descriptor =>
     //{
     //    descriptor.HasProperty(p => p.Details)
@@ -62,32 +64,31 @@ builder.Services.AddOGraph("Users", builder =>
 
             return next.Invoke(context);
         })
-        .UseResolver(async context =>
+
+        // Queryable Return Type
+        .UseResolver(context =>
         {
-
-
-            return new OGraphOperationResult<User[]>()
+            
+            var list = new List<User>()
             {
-                StatusCode = 200,
-                Data = new User[]
+                new User
                 {
-                    new User
-                    {
-                        FirstName = "Chase",
-                        LastName = "Crawford"
-                    },
-                    new User
-                    {
-                        FirstName = "John",
-                        LastName = "Doe"
-                    },
-                    new User
-                    {
-                        FirstName = "Jane",
-                        LastName = "Doe"
-                    }
+                    FirstName = "Chase",
+                    LastName = "Crawford"
+                },
+                new User
+                {
+                    FirstName = "John",
+                    LastName = "Doe"
+                },
+                new User
+                {
+                    FirstName = "Jane",
+                    LastName = "Doe"
                 }
             };
+
+            return list.AsQueryable();
         });
 });
 

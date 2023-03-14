@@ -27,6 +27,4 @@ public interface IOGraphOperationResult
     /// 
     /// </summary>
     IOGraphError? Error { get; }
-    
 }
-

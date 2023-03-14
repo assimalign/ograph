@@ -1,5 +1,14 @@
 ﻿namespace Assimalign.OGraph.AspNetCore;
 
+
+public class UserType : ComplexType<User>
+{
+    protected override void Configure(IOGraphComplexTypeDescriptor<User> descriptor)
+    {
+        
+    }
+}
+
 public class User
 {
     public string FirstName { get; set; }

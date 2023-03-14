@@ -7,11 +7,8 @@ namespace Assimalign.OGraph;
 public sealed class StringType : IOGraphType
 {
     public Name TypeName => "String";
-    public OGraphTypeIdentifier TypeIdentifier => throw new System.NotImplementedException();
-
-    public Type? RuntimeType => throw new NotImplementedException();
-
-    public bool IsRuntimeType => throw new NotImplementedException();
+    public OGraphTypeIdentifier TypeIdentifier => OGraphTypeIdentifier.Primitive;
+    public Type? RuntimeType => typeof(string);
 
     public bool TryReadJson(Utf8JsonReader reader, out object value)
     {

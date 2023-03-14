@@ -2,10 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Assimalign.OGraph;
 
-internal class DateType
+public sealed class DateType : ValueType<DateOnly>
 {
+    public override bool TryReadJson(Utf8JsonReader reader, out OGraphValue value)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override bool TryReadXml(XmlReader reader, out OGraphValue value)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override bool TryWriteJson(Utf8JsonWriter writer, OGraphValue value)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override bool TryWriteXml(XmlWriter writer, OGraphValue value)
+    {
+        throw new NotImplementedException();
+    }
 }

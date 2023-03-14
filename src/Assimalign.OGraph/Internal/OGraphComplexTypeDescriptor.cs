@@ -1,15 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assimalign.OGraph.Internal;
+﻿namespace Assimalign.OGraph.Internal;
 
 internal class OGraphComplexTypeDescriptor : IOGraphComplexTypeDescriptor
 {
+    private readonly IOGraphComplexType complexType;
+
+    public OGraphComplexTypeDescriptor(IOGraphComplexType complexTyp)
+    {
+        this.complexType = complexTyp;
+    }
+
     public IOGraphPropertyDescriptor HasProperty(Name name)
     {
-        throw new NotImplementedException();
+        var property = new OGraphProperty()
+        {
+            Name = name,
+        };
+        var descriptor = new OGraphPropertyDescriptor(property);
+
+        complexType.Properties.Add(property);
+
+        return descriptor;
     }
 }

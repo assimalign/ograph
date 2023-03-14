@@ -59,6 +59,9 @@ public abstract class OGraphExecutor : IOGraphExecutor
         {
             var result = await operation.GetResolverChain().Invoke(context);
 
+
+            
+
             if (result.IsSuccess)
             {
                 //var content = result.Data;
@@ -105,24 +108,28 @@ public abstract class OGraphExecutor : IOGraphExecutor
 
         var node = operation.Node;
 
-        //if (query.Root.GetNodesOfType<RootQueryNode>().First().TryGetProjections(out var projections))
-        //{
-        //    var rootProjections = projections.FirstOrDefault(x => !x.HasEdge);
+        if (query.Root.GetNodesOfType<RootQueryNode>().First().TryGetProjections(out var projections))
+        {
+            var rootProjections = projections.FirstOrDefault(x => !x.HasEdge);
 
-        //    foreach (var property in rootProjections.Properties)
-        //    {
-        //        if (!node.Properties.TryGet(property.Name, out var propertyValue))
-        //        {
-        //            throw new Exception();
-        //        }
-        //        if (propertyValue.Type.TypeIdentifier == OGraphTypeIdentifier.Primitive)
-        //        {
+            foreach (var property in rootProjections.Properties)
+            {
+                if (node.Type is not IOGraphComplexType complexType)
+                {
+                    throw new Exception();
+                }
+                if (!complexType.Properties.TryGet(property.Name, out var propertyValue))
+                {
+                    throw new Exception();
+                }
+                if (propertyValue.Type.TypeIdentifier == OGraphTypeIdentifier.Primitive)
+                {
 
-        //        }
-        //        var result = await propertyValue.Resolver.InvokeAsync(context);
+                }
+                var result = await propertyValue.Resolver.InvokeAsync(context);
 
-        //    }
-        //}
+            }
+        }
 
 
 
