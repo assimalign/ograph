@@ -17,17 +17,17 @@ public partial class QueryParserTests
         var query = "query().page({ take 25 skip 50})";
         var parser = new QueryParser();
         var document = parser.Parse(query);
-        var rootNode = Assert.IsType<RootQueryNode>(document.Root);
+        var rootNode = Assert.IsType<RootNode>(document.Root);
 
         Assert.Single(rootNode.Nodes);
 
-        var pageNode = Assert.IsType<PageQueryNode>(rootNode.Nodes.First());
+        var pageNode = Assert.IsType<PageNode>(rootNode.Nodes.First());
 
         Assert.NotNull(pageNode.Take);
         Assert.NotNull(pageNode.Skip);
 
-        var skipConstant = Assert.IsType<ConstantQueryNode>(pageNode.Skip);
-        var takeConstant = Assert.IsType<ConstantQueryNode>(pageNode.Take);
+        var skipConstant = Assert.IsType<ConstantNode>(pageNode.Skip);
+        var takeConstant = Assert.IsType<ConstantNode>(pageNode.Take);
 
         //Assert.Equal(skipConstant.V)
     }
@@ -39,11 +39,11 @@ public partial class QueryParserTests
         var query = "query().page({ take 25 skip 50})";
         var parser = new QueryParser();
         var document = parser.Parse(query);
-        var rootNode = Assert.IsType<RootQueryNode>(document.Root);
+        var rootNode = Assert.IsType<RootNode>(document.Root);
 
         Assert.Single(rootNode.Nodes);
 
-        var pageNode = Assert.IsType<PageQueryNode>(rootNode.Nodes.First());
+        var pageNode = Assert.IsType<PageNode>(rootNode.Nodes.First());
 
         Assert.NotNull(pageNode.Take);
         Assert.NotNull(pageNode.Skip);

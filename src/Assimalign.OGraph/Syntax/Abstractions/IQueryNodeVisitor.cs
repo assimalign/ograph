@@ -9,14 +9,14 @@ namespace Assimalign.OGraph.Syntax;
 public interface IQueryNodeVisitor<T>
 {
     T Visit(QueryNode token);
-    T Visit(RootQueryNode token);
-    T Visit(FilterQueryNode token);
-    T Visit(ProjectionQueryNode token);
-    T Visit(PageQueryNode token);
-    T Visit(SortQueryNode token);
-    T Visit(BinaryQueryNode token);
-    T Visit(PropertyQueryNode token);
-    T Visit(ParameterQueryNode token);
+    T Visit(RootNode token);
+    T Visit(FilterNode token);
+    T Visit(ProjectionNode token);
+    T Visit(PageNode token);
+    T Visit(SortNode token);
+    T Visit(BinaryNode token);
+    T Visit(PropertyNode token);
+    T Visit(ParameterNode token);
     T Visit(FunctionQueryNode token);
-    T Visit(ConstantQueryNode token);
+    T Visit(ConstantNode token);
 }

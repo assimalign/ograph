@@ -4,19 +4,32 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax;
 
-public sealed class SortQueryNode : QueryNode
+public sealed class SortNode : QueryNode
 {
-    public SortQueryNode() { }
+    public SortNode() { }
 
-    //public override int Depth { get; }
-    /// <summary>
-    /// Represents the edge, if any, to apply sorting.
-    /// </summary>
-    public EdgeQueryNode? Edge { get; init; }
-    /// <summary>
-    /// Specifies whether the sort is the root of the query.
-    /// </summary>
-    public bool HasEdge => Edge is not null;
+    public SortNode(QueryNode sortBy)
+    {
+        this.SortBy = sortBy;
+    }
+    public SortNode(QueryNode sortBy, SortNode thenBy)
+    {
+        this.SortBy = sortBy;
+        this.ThenBy = thenBy;
+    }
+    public SortNode(QueryNode sortBy, SortNode thenBy, IEnumerable<EdgeSortNode> edges)
+    {
+        this.SortBy = sortBy;
+        this.ThenBy = thenBy;
+        this.Edges = edges;
+    }
+    public SortNode(QueryNode sortBy, IEnumerable<EdgeSortNode> edges)
+    {
+        this.SortBy = sortBy;
+        this.Edges = edges;
+    }
+
+
     /// <summary>
     /// 
     /// </summary>
@@ -28,7 +41,15 @@ public sealed class SortQueryNode : QueryNode
     /// <summary>
     /// 
     /// </summary>
-    public SortQueryNode? ThenBy { get; init; }
+    public SortNode? ThenBy { get; init; }
+    /// <summary>
+    /// 
+    /// </summary>
+    public IEnumerable<EdgeSortNode>? Edges { get; init; }
+    /// <summary>
+    /// 
+    /// </summary>
+    public bool HasEdges => Edges is not null && Edges.Any();
     /// <summary>
     /// 
     /// </summary>
@@ -68,11 +89,14 @@ public sealed class SortQueryNode : QueryNode
         {
             yield return node;
         }
-        if (Edge is not null)
+        if (Edges is not null)
         {
-            foreach (var node1 in Edge.GetNodesOfType<TNode>())
+            foreach (var edge in Edges)
             {
-                yield return node1;
+                foreach (var node1 in edge.GetNodesOfType<TNode>())
+                {
+                    yield return node1;
+                }
             }
         }
         if (SortBy is not null)

@@ -7,11 +7,11 @@ internal class RootParser : Parser
 {
     internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
     {
-        if (queryNode is not RootQueryNode root)
+        if (queryNode is not RootNode root)
         {
             // This should never happen, but here for safety.
             throw QueryParserException.UnexpectedQueryNode(
-                typeof(RootQueryNode),
+                typeof(RootNode),
                 queryNode.GetType());
         }
         while (lexer.HasNext)
@@ -42,54 +42,54 @@ internal class RootParser : Parser
         return root;
     }
 
-    private RootQueryNode ParsePage(ref TokenLexer lexer, ParserContext context, RootQueryNode queryNode)
+    private RootNode ParsePage(ref TokenLexer lexer, ParserContext context, RootNode queryNode)
     {
         var nodes = queryNode.Nodes.ToList();
         var pageParser = context.GetParser<PageParser>();
-        var pageNode = pageParser.Parse<PageQueryNode>(ref lexer, context);
+        var pageNode = pageParser.Parse<PageNode>(ref lexer, context);
 
         nodes.Add(pageNode);
 
-        return new RootQueryNode()
+        return new RootNode()
         {
             Nodes = nodes
         };
     }
-    private RootQueryNode ParseSort(ref TokenLexer lexer, ParserContext context, RootQueryNode node)
+    private RootNode ParseSort(ref TokenLexer lexer, ParserContext context, RootNode node)
     {
         var nodes = node.Nodes.ToList();
         var sortParser = context.GetParser<SortParser>();
-        var sortNode = sortParser.Parse<SortQueryNode>(ref lexer, context);
+        var sortNode = sortParser.Parse<SortNode>(ref lexer, context);
 
         nodes.Add(sortNode);
 
-        return new RootQueryNode()
+        return new RootNode()
         {
             Nodes = nodes
         };
     }
-    private RootQueryNode ParseProjections(ref TokenLexer lexer, ParserContext context, RootQueryNode node)
+    private RootNode ParseProjections(ref TokenLexer lexer, ParserContext context, RootNode node)
     {
         var nodes = node.Nodes.ToList();
         var projectionParser = context.GetParser<ProjectionParser>();
-        var projectionNode = projectionParser.Parse<ProjectionQueryNode>(ref lexer, context);
+        var projectionNode = projectionParser.Parse<ProjectionNode>(ref lexer, context);
 
         nodes.Add(projectionNode);
 
-        return new RootQueryNode()
+        return new RootNode()
         {
             Nodes = nodes
         };
     }
-    private RootQueryNode ParseFilter(ref TokenLexer lexer, ParserContext context, RootQueryNode node)
+    private RootNode ParseFilter(ref TokenLexer lexer, ParserContext context, RootNode node)
     {
         var nodes = node.Nodes.ToList();
         var filterParser = context.GetParser<FilterParser>();
-        var filterNode = filterParser.Parse<FilterQueryNode>(ref lexer, context);
+        var filterNode = filterParser.Parse<FilterNode>(ref lexer, context);
 
         nodes.Add(filterNode);
 
-        return new RootQueryNode()
+        return new RootNode()
         {
             Nodes = nodes
         };

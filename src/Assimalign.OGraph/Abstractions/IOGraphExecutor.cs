@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Execution;
-
+namespace Assimalign.OGraph;
 
 /// <summary>
 /// 
@@ -19,5 +15,5 @@ public interface IOGraphExecutor
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IOGraphResponse> ExecuteAsync(Name operationName, IOGraphRequest request, CancellationToken cancellationToken = default);
+    Task<IOGraphResponse> ExecuteAsync(IOGraphRequest request, CancellationToken cancellationToken = default);
 }

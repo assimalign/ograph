@@ -13,34 +13,10 @@ public class OGraphNodeTests
     [Fact]
     public void TestPropertyResolver()
     {
-        var node = new UserNode(descriptor =>
-        {
-            descriptor.HasProperty("fullName")
-                .UseResolver(async context =>
-                {
-                    var user = context.GetParent<User>();
-
-                    return $"{user.LastName}, {user.FirstName}";
-                });
-        });
+        
     }
 
 
-
-    public class UserNode : OGraphNode<User>
-    {
-        private readonly Action<IOGraphNodeDescriptor<User>> configure;
-
-        public UserNode(Action<IOGraphNodeDescriptor<User>> configure)
-        {
-            this.configure = configure;
-        }
-
-        protected override void Configure(IOGraphNodeDescriptor<User> descriptor)
-        {
-            configure.Invoke(descriptor);
-        }
-    }
 
 
 

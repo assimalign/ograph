@@ -15,11 +15,14 @@ public readonly struct Method :
 	private const string allowedCharacters = "abcdefghijklmnopqrstuvwxwzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	public Method(string value)
 	{
+		if (string.IsNullOrEmpty(value))
+		{
+            throw new ArgumentNullException(nameof(value));
+        }
 		if (value.Any(character => !allowedCharacters.Contains(character)))
 		{
 			throw new Exception("Only Alphabetic characters are allowed as Method names");
 		}
-
 		this.Value = value.ToUpperInvariant();
 	}
 	/// <summary>
@@ -37,10 +40,17 @@ public readonly struct Method :
 
 		return false;
 	}
+
 	/// <inheritdoc />
 	public override int GetHashCode()
 	{
 		return base.GetHashCode();
+	}
+
+	/// <inheritdoc />
+	public override string ToString()
+	{
+		return Value;
 	}
 
 	/// <inheritdoc />

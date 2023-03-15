@@ -35,104 +35,97 @@ public class OGraphBuilderTests
             // Define Root Structures
 
             // Fluent Implementation
-            builder.AddNode<User>("users", descriptor =>
-            {
-                descriptor.HasProperty("FullName")
-                    .UseResolver(async context =>
-                    {
-                        var user = context.GetParent<User>();
-
-
-                        return $"{user.LastName}, {user.FirstName} {user.MiddleName}";
-                    });
-
-                descriptor.HasProperty(p => p.Password)
-                    .UseName("UserPassword")
-                    .UseMetadata("description", "")
-                    .UseResolver(context =>
-                    {
-
-
-                        return string.Empty;
-                    });
-
-                descriptor.HasProperty(p => p.Profile)
-                    .UseName("UserProfile")
-                    .UseMiddleware((context, next) =>
-                    {
-
-
-                        return next(context);
-                    })
-                    .UseMiddleware((context, next) =>
-                    {
-
-
-                        return next(context);
-                    })
-                    .UseResolver(context =>
-                    {   
-                        return context.GetParent<User>().Profile;
-                    });
-
-
-                //// Define Edges:
-                //// One-to-One Relationship: /users/{userId}/profiles/{profileId} 
-                //descriptor.HasEdge(p => p.Profile)                    
-                //    .UseMiddleware(default)
-                //    .UseResolver(async context =>
-                //    {
-                //        return default;
-                //    });
-
-                //// One-to-Many Relationship: /users/{userId}/addresses
-                //descriptor.HasEdge(p => p.Addresses)
-                //    .UseResolver(async context =>
-                //    {
-                //        return default;
-                //    });
-            });
-            //builder.AddNode<UserAddress>("addresses", descriptor =>
-            //{
-
-            //});
-            //builder.AddNode("settings", descriptor =>
-            //{
-            //    descriptor.HasProperty("addressType");
-
-            //});
-            builder.AddNode<UserAddressNode>();
-            
-
-            //builder.AddOperation("CreateUser")
-            //    .UseMethod(Method.Post)
-            //    .UseRoute("/api/users");
-
-            //builder.AddOperation("GetUsers")
-            //    .UseMethod(Method.Get)
-            //    .UseRoute("/api/users")
-            //    .UseMiddleware(async (context, next) =>
+            //    builder.AddNode<User>("users", descriptor =>
             //    {
+            //        descriptor.HasProperty("FullName")
+            //            .UseResolver(async context =>
+            //            {
+            //                var user = context.GetParent<User>();
 
 
-            //        return await next(context);
-            //    })
-            //    .UseResolver(async context =>
-            //    {
+            //                return $"{user.LastName}, {user.FirstName} {user.MiddleName}";
+            //            });
 
+            //        descriptor.HasProperty(p => p.Password)
+            //            .UseName("UserPassword")
+            //            .UseMetadata("description", "")
+            //            .UseResolver(context =>
+            //            {
+
+
+            //                return string.Empty;
+            //            });
+
+            //        descriptor.HasProperty(p => p.Profile)
+            //            .UseName("UserProfile")
+            //            .UseMiddleware((context, next) =>
+            //            {
+
+
+            //                return next(context);
+            //            })
+            //            .UseMiddleware((context, next) =>
+            //            {
+
+
+            //                return next(context);
+            //            })
+            //            .UseResolver(context =>
+            //            {   
+            //                return context.GetParent<User>().Profile;
+            //            });
+
+
+            //        //// Define Edges:
+            //        //// One-to-One Relationship: /users/{userId}/profiles/{profileId} 
+            //        //descriptor.HasEdge(p => p.Profile)                    
+            //        //    .UseMiddleware(default)
+            //        //    .UseResolver(async context =>
+            //        //    {
+            //        //        return default;
+            //        //    });
+
+            //        //// One-to-Many Relationship: /users/{userId}/addresses
+            //        //descriptor.HasEdge(p => p.Addresses)
+            //        //    .UseResolver(async context =>
+            //        //    {
+            //        //        return default;
+            //        //    });
             //    });
+            //    //builder.AddNode<UserAddress>("addresses", descriptor =>
+            //    //{
+
+            //    //});
+            //    //builder.AddNode("settings", descriptor =>
+            //    //{
+            //    //    descriptor.HasProperty("addressType");
+
+            //    //});
+            //    //builder.AddNode<UserAddressNode>();
+
+
+            //    //builder.AddOperation("CreateUser")
+            //    //    .UseMethod(Method.Post)
+            //    //    .UseRoute("/api/users");
+
+            //    //builder.AddOperation("GetUsers")
+            //    //    .UseMethod(Method.Get)
+            //    //    .UseRoute("/api/users")
+            //    //    .UseMiddleware(async (context, next) =>
+            //    //    {
+
+
+            //    //        return await next(context);
+            //    //    })
+            //    //    .UseResolver(async context =>
+            //    //    {
+
+            //    //    });
 
         });
     }
 
-    public class UserAddressNode : OGraphNode<UserAddress>
-    {
-        protected override void Configure(IOGraphNodeDescriptor<UserAddress> descriptor)
-        {
-            descriptor.HasLabel("Addresses");
-           // descriptor.HasKey(p => p.AddressId);
-        }
-    }
+ 
 }
 
 #region Test Models

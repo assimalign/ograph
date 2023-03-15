@@ -22,7 +22,7 @@ internal class OGraphPropertyResolverDefault : IOGraphPropertyResolver
 
         this.resolver = resolver;
     }
-    public ValueTask<IOGraphPropertyResult> InvokeAsync(IOGraphPropertyResolverContext context)
+    public ValueTask<IOGraphPropertyResult> InvokeAsync(IOGraphPropertyContext context)
     {
         return resolver.Invoke(context);
     }

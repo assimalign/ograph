@@ -5,12 +5,12 @@ using System.Text;
 
 namespace Assimalign.OGraph.Syntax;
 
-public sealed class ConstantQueryNode : QueryNode
+public sealed class ConstantNode : QueryNode
 {
     private byte[] value = new byte[0];
 
-    public ConstantQueryNode() { }
-    public ConstantQueryNode(byte[] value)
+    public ConstantNode() { }
+    public ConstantNode(byte[] value)
     {
         this.Value = value;
     }

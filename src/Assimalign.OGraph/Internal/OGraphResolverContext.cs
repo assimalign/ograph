@@ -12,19 +12,19 @@ using System.Threading.Tasks;
 namespace Assimalign.OGraph.Internal;
 
 using Assimalign.OGraph.Execution;
-
+using Assimalign.OGraph.Http;
 
 internal class OGraphResolverContext :
-    IOGraphEdgeResolverContext,
-    IOGraphPropertyResolverContext,
-    IOGraphOperationResolverContext
+    IOGraphEdgeContext,
+    IOGraphPropertyContext,
+    IOGraphOperationContext
 {
     #region Request Information
     internal Route RequestRoute { get; init; }
     internal Stream? RequestBody { get; init; }
     internal IOGraphType RequestType { get; init; }
-    internal IOGraphQueryCollection RequestQuery { get; init; }
-    internal IOGraphHeaderCollection? RequestHeaders { get; init; }
+    internal Execution.IOGraphQueryCollection RequestQuery { get; init; }
+    internal Execution.IOGraphHeaderCollection? RequestHeaders { get; init; }
 
     
     internal IServiceProvider? ServiceProvider { get; init; }

@@ -4,32 +4,32 @@ using System.Text;
 
 namespace Assimalign.OGraph.Syntax;
 
-public sealed class PageQueryNode : QueryNode
+public sealed class PageNode : QueryNode
 {
-    public PageQueryNode() { }
-    public PageQueryNode(string token)
+    public PageNode() { }
+    public PageNode(string token)
     {
         if (string.IsNullOrEmpty(token))
         {
             throw new ArgumentNullException(nameof(token));
         }
-        Token = new ConstantQueryNode()
+        Token = new ConstantNode()
         {
             Value = Encoding.UTF8.GetBytes(token)
         };
     }
-    public PageQueryNode(long take, long skip)
+    public PageNode(long take, long skip)
     {
-        this.Skip = new ConstantQueryNode()
+        this.Skip = new ConstantNode()
         {
             Value = new byte[1] { (byte)skip }
         };
-        this.Take = new ConstantQueryNode()
+        this.Take = new ConstantNode()
         {
             Value = new byte[1] { (byte)take }
         };
     }
-    public PageQueryNode(EdgeQueryNode edge, long take, long skip)
+    public PageNode(EdgeNode edge, long take, long skip)
         : this(take, skip)
     {
         this.Edge = edge;
@@ -39,19 +39,19 @@ public sealed class PageQueryNode : QueryNode
     /// <summary>
     /// Represents the edge, if any, to apply paging.
     /// </summary>
-    public EdgeQueryNode? Edge { get; init; }
+    public EdgeNode? Edge { get; init; }
     /// <summary>
     /// 
     /// </summary>
-    public ConstantQueryNode? Take { get; init; }
+    public ConstantNode? Take { get; init; }
     /// <summary>
     ///
     /// </summary>
-    public ConstantQueryNode? Skip { get; init; }
+    public ConstantNode? Skip { get; init; }
     /// <summary>
     /// 
     /// </summary>
-    public ConstantQueryNode? Token { get; init; }
+    public ConstantNode? Token { get; init; }
     /// <summary>
     /// 
     /// </summary>

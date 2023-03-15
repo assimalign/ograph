@@ -8,7 +8,6 @@ namespace Assimalign.OGraph;
 
 public readonly struct QueryValue
 {
-
 	public QueryValue(string value)
 	{
 		this.Value = value;    
@@ -17,6 +16,7 @@ public readonly struct QueryValue
 	public string Value { get; }
 
 
-    public static implicit operator QueryValue(string value) => new QueryValue(value);
+	public static implicit operator QueryValue(string value) => new QueryValue(value);
+	public static implicit operator string(QueryValue value) => value.Value;	
 
 }

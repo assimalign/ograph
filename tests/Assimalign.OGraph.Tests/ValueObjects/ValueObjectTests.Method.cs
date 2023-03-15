@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Assimalign.OGraph.ValueObjects;
 
-public class ValueObjectTests
+public partial class ValueObjectTests
 {
     [Fact]
     public void TestBadMethodName()

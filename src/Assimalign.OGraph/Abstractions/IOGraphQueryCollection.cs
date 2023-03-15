@@ -6,10 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphQueryResult
+public interface IOGraphQueryCollection : IDictionary<string, QueryValue>
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    OGraphObject Data { get; }
 }

@@ -27,6 +27,10 @@ public sealed class QueryParserOptions
     /// 
     /// </summary>
     public Encoding Encoding { get; set; } = Encoding.UTF8;
+    /// <summary>
+    /// The allowed maximum depth of the query. The default is '5'.
+    /// </summary>
+    public int MaxEdgeDepth { get; set; } = 5;
 
 
     internal IEnumerable<QueryAnalyzer> Analyzers => this.analyzers;

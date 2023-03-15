@@ -12,10 +12,7 @@ public interface IOGraphNode
     /// Represents the label each node should contain.
     /// </summary>
     Label Label { get; }
-    /// <summary>
-    /// The set of key value pairs that are associated with this node.
-    /// </summary>
-    IOGraphType Type { get; }
+    
     /// <summary>
     /// Represents arbitrary metadata that can be associated with this node.
     /// </summary>
@@ -23,7 +20,5 @@ public interface IOGraphNode
     /// <summary>
     /// A collection of edges that are connected to this node.
     /// </summary>
-    IOGraphEdgeCollection Edges { get; }    
-    
-
+    IOGraphEdgeCollection Edges { get; }
 }

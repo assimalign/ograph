@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -62,7 +61,6 @@ public readonly struct Route : IEquatable<Route>, IEqualityComparer<Route>
     {
 		return this.ToString().Equals(route.ToString(), StringComparison.InvariantCultureIgnoreCase);
     }
-
     public bool Equals(Route left, Route right)
     {
         return left.Equals(right);
@@ -73,16 +71,18 @@ public readonly struct Route : IEquatable<Route>, IEqualityComparer<Route>
 		return instance.GetHashCode();
     }
 
-	public bool IsMatch(string value)
+	public bool IsMatch(Path path)
 	{
-		var items = value.Trim('/').Split('/');
+		if (path.Segments.Length != Segments.Length)
+		{
+			return false;
+		}
 
-		if (items.Length != Segments.Length)
+		for (int i = 0; i < Segments.Length; i++)
 		{
-            return false;
-        }
-		foreach (var segment in Segments)
-		{
+			var routeSegment = Segments[i];
+			var pathSegment = path.Segments[i];
+
 
 		}
 

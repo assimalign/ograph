@@ -10,30 +10,34 @@ namespace Assimalign.OGraph.Syntax;
 /// <remarks>
 /// Unlike select statements, projections are not limited to a single entity.
 /// </remarks>
-public sealed class ProjectionQueryNode : QueryNode
+public sealed class ProjectionNode : QueryNode
 {
-    public ProjectionQueryNode() { }
-    public ProjectionQueryNode(IEnumerable<PropertyQueryNode> properties)
+    public ProjectionNode() { }
+    public ProjectionNode(IEnumerable<PropertyNode> properties)
     {
         this.Properties = properties;
     }
-    public ProjectionQueryNode(EdgeQueryNode edge, IEnumerable<PropertyQueryNode> properties)
+    public ProjectionNode(IEnumerable<PropertyNode> properties, IEnumerable<EdgeProjectionNode> edges)
     {
-        this.Edge = edge;
         this.Properties = properties;
+        this.Edges = edges;
     }
-    /// <summary>
-    /// Represents the edge, if any, to apply projections.
-    /// </summary>
-    public EdgeQueryNode? Edge { get; init; }
-    /// <summary>
-    /// Specifies whether the projection is the root of the query.
-    /// </summary>
-    public bool HasEdge => Edge is not null;
+      
+
     /// <summary>
     /// A collection of properties to project in the query.
     /// </summary>
-    public IEnumerable<PropertyQueryNode> Properties { get; init; } = new PropertyQueryNode[0];
+    public IEnumerable<PropertyNode> Properties { get; init; } = new PropertyNode[0];
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public IEnumerable<EdgeProjectionNode>? Edges { get; init; }
+
+    /// <summary>
+    /// Specifies whether the projection is the root of the query.
+    /// </summary>
+    public bool HasEdges => Edges is not null && Edges.Any();
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Projection;
@@ -51,11 +55,14 @@ public sealed class ProjectionQueryNode : QueryNode
         {
             yield return node;
         }
-        if (Edge is not null)
+        if (Edges is not null)
         {
-            foreach (var node1 in Edge.GetNodesOfType<TNode>())
+            foreach (var edge in Edges)
             {
-                yield return node1;
+                foreach (var node1 in edge.GetNodesOfType<TNode>())
+                {
+                    yield return node1;
+                }
             }
         }
         foreach (var node2 in Properties.SelectMany(x => x.GetNodesOfType<TNode>()))

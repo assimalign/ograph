@@ -13,42 +13,42 @@ public abstract class QueryNodeVisitor<T> : IQueryNodeVisitor<T>
     public T Visit(QueryNode node) => node.Accept(this);
 
 
-    public virtual T Visit(RootQueryNode node)
+    public virtual T Visit(RootNode node)
     {
         throw new NotImplementedException();
     }
 
-    public virtual T Visit(FilterQueryNode node)
+    public virtual T Visit(FilterNode node)
     {
         throw new NotImplementedException();
     }
 
-    public virtual T Visit(ProjectionQueryNode node)
+    public virtual T Visit(ProjectionNode node)
     {
         throw new NotImplementedException();
     }
 
-    public virtual T Visit(PageQueryNode node)
+    public virtual T Visit(PageNode node)
     {
         throw new NotImplementedException();
     }
 
-    public virtual T Visit(SortQueryNode node)
+    public virtual T Visit(SortNode node)
     {
         throw new NotImplementedException();
     }
 
-    public virtual T Visit(BinaryQueryNode node)
+    public virtual T Visit(BinaryNode node)
     {
         throw new NotImplementedException();
     }
 
-    public virtual T Visit(PropertyQueryNode node)
+    public virtual T Visit(PropertyNode node)
     {
         throw new NotImplementedException();
     }
 
-    public virtual T Visit(ParameterQueryNode node)
+    public virtual T Visit(ParameterNode node)
     {
         throw new NotImplementedException();
     }
@@ -58,7 +58,7 @@ public abstract class QueryNodeVisitor<T> : IQueryNodeVisitor<T>
         throw new NotImplementedException();
     }
 
-    public virtual T Visit(ConstantQueryNode node)
+    public virtual T Visit(ConstantNode node)
     {
         throw new NotImplementedException();
     }

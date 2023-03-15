@@ -36,13 +36,13 @@ public interface IOGraphOperation
     /// </summary>
     IOGraphNode Node { get; }
     /// <summary>
-    /// 
+    /// A collection of the types that can be submitted to this operation.
     /// </summary>
-    IOGraphType RequestType { get; }
+    IOGraphTypeCollection RequestTypes { get; }
     /// <summary>
-    /// 
+    /// A collection of the types that are returned by this operation.
     /// </summary>
-    IOGraphType ResponseType { get; }
+    IOGraphTypeCollection ResponseTypes { get; }
     /// <summary>
     /// 
     /// </summary>
@@ -55,10 +55,6 @@ public interface IOGraphOperation
     /// 
     /// </summary>
     IOGraphMetadata Metadata { get; }
-    /// <summary>
-    /// 
-    /// </summary>
-    IOGraphQueryProvider QueryProvider { get; }
     /// <summary>
     /// 
     /// </summary>

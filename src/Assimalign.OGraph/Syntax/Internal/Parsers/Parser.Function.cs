@@ -43,7 +43,7 @@ internal class FunctionParser : Parser
     }
     private QueryNode ParseFunctionStartsWtih(ref TokenLexer lexer, ParserContext context, FunctionQueryNode queryNode)
     {
-        var parameters = new Queue<ParameterQueryNode>();
+        var parameters = new Queue<ParameterNode>();
 
         if (!lexer.TryPeek(out var peek) || peek.TokenType != TokenType.OpenParenthesis)
         {
@@ -68,18 +68,18 @@ internal class FunctionParser : Parser
                         }
                         else
                         {
-                            parameters.Enqueue(new ParameterQueryNode()
+                            parameters.Enqueue(new ParameterNode()
                             {
-                                ParameterValue = context.GetParser<PropertyParser>().Parse<PropertyQueryNode>(ref lexer, context)
+                                ParameterValue = context.GetParser<PropertyParser>().Parse<PropertyNode>(ref lexer, context)
                             });
                         }
                         break;
                     }
                 case TokenType.String:
                     {
-                        parameters.Enqueue(new ParameterQueryNode()
+                        parameters.Enqueue(new ParameterNode()
                         {
-                            ParameterValue = context.GetParser<ConstantParser>().Parse<ConstantQueryNode>(ref lexer, context)
+                            ParameterValue = context.GetParser<ConstantParser>().Parse<ConstantNode>(ref lexer, context)
                         });
                         break;
                     }
@@ -125,7 +125,7 @@ internal class FunctionParser : Parser
 
         var parser = context.GetParser<ParameterParser>();
 
-        if (parser.Parse(ref lexer, context, new ParameterQueryNode()) is not ParameterQueryNode parameter)
+        if (parser.Parse(ref lexer, context, new ParameterNode()) is not ParameterNode parameter)
         {
             // TODO: Add diagnostic
             return queryNode;

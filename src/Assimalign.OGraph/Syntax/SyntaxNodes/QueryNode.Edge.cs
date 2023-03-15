@@ -1,37 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Assimalign.OGraph.Syntax;
 
-public sealed class EdgeQueryNode : QueryNode
+public abstract class EdgeNode : QueryNode
 {
-    public EdgeQueryNode() { }
-    public EdgeQueryNode(string path)
-    {
-        this.Path = path;
-    }
+    public EdgeNode() { }
+
+    /// <summary>
+    /// Represents the Edge Path from the Parent Node.
+    /// </summary>
+    public string? Path { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
-    public string? Path { get; init; }
-
-    /// <inheritdoc />
-    public override QueryNodeType NodeType => QueryNodeType.Edge;
-
-    /// <inheritdoc />
-    public override T Accept<T>(IQueryNodeVisitor<T> visitor)
+    /// <returns></returns>
+    public Name? GetEdgeName()
     {
-        return visitor.Visit(this);
-    }
-
-    /// <inheritdoc />
-    public override IEnumerable<TNode> GetNodesOfType<TNode>()
-    {
-        if (this is TNode node)
-        {
-            yield return node;
-        }
+        return GetSegments().Last();
     }
 
     /// <summary>

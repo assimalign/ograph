@@ -6,10 +6,10 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax;
 
-public sealed class BinaryQueryNode : QueryNode
+public sealed class BinaryNode : QueryNode
 {
-    internal BinaryQueryNode() { }
-    public BinaryQueryNode(QueryNode left, QueryNode right, BinaryOperatorType operatorType)
+    internal BinaryNode() { }
+    public BinaryNode(QueryNode left, QueryNode right, BinaryOperatorType operatorType)
     {
         LeftOperand = left;
         RightOperand = right;

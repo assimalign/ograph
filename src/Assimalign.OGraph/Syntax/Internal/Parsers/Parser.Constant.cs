@@ -6,7 +6,7 @@ internal class ConstantParser : Parser
     {
         var token = lexer.Current;
 
-        return new ConstantQueryNode()
+        return new ConstantNode()
         {
             Value = token.Value.ToArray()
         };

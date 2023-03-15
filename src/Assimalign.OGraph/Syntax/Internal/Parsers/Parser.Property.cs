@@ -8,10 +8,10 @@ internal class PropertyParser : Parser
 {
     internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
     {
-        if (queryNode is not PropertyQueryNode propertyNode)
+        if (queryNode is not PropertyNode propertyNode)
         {
             throw QueryParserException.UnexpectedQueryNode(
-                typeof(PropertyQueryNode),
+                typeof(PropertyNode),
                 queryNode.GetType());
         }
         // Check if 
@@ -23,11 +23,11 @@ internal class PropertyParser : Parser
 
         return ParseProperty(ref lexer, context, propertyNode);
     }
-    private PropertyQueryNode ParseProperty(ref TokenLexer lexer, ParserContext context, PropertyQueryNode queryNode)
+    private PropertyNode ParseProperty(ref TokenLexer lexer, ParserContext context, PropertyNode queryNode)
     {
         var peek = default(Token);
 
-        queryNode = new PropertyQueryNode()
+        queryNode = new PropertyNode()
         {
             Name = lexer.Current.Text
         };
@@ -47,7 +47,7 @@ internal class PropertyParser : Parser
         {
             lexer.Skip();
 
-            var children = queryNode.Children?.ToList() ?? new List<PropertyQueryNode>();
+            var children = queryNode.Children?.ToList() ?? new List<PropertyNode>();
 
             while (lexer.HasNext)
             {
@@ -55,7 +55,7 @@ internal class PropertyParser : Parser
 
                 if (token.TokenType == TokenType.CloseBracket)
                 {
-                    return queryNode = new PropertyQueryNode()
+                    return queryNode = new PropertyNode()
                     {
                         Name = queryNode.Name,
                         Alias = queryNode.Alias,
@@ -66,7 +66,7 @@ internal class PropertyParser : Parser
                 {
                     case TokenType.Identifier:
                         {
-                            children.Add((PropertyQueryNode)Parse(ref lexer, context, new PropertyQueryNode()));
+                            children.Add((PropertyNode)Parse(ref lexer, context, new PropertyNode()));
                         }
                         break;
                     default:
@@ -80,7 +80,7 @@ internal class PropertyParser : Parser
 
         return queryNode;
     }
-    private PropertyQueryNode ParsePropertyAlias(ref TokenLexer lexer, ParserContext context, PropertyQueryNode queryNode)
+    private PropertyNode ParsePropertyAlias(ref TokenLexer lexer, ParserContext context, PropertyNode queryNode)
     {
         if (!lexer.HasNext)
         {
@@ -98,7 +98,7 @@ internal class PropertyParser : Parser
             return queryNode;
         }
 
-        return queryNode = new PropertyQueryNode()
+        return queryNode = new PropertyNode()
         {
             Alias = token.Text,
             Name = queryNode.Name,

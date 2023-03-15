@@ -4,10 +4,10 @@ using System.Linq;
 
 namespace Assimalign.OGraph.Syntax;
 
-public sealed class PropertyQueryNode : QueryNode
+public sealed class PropertyNode : QueryNode
 {
-    public PropertyQueryNode() { }
-    public PropertyQueryNode(string name)
+    public PropertyNode() { }
+    public PropertyNode(string name)
     {
         this.Name = name;
     }
@@ -23,7 +23,7 @@ public sealed class PropertyQueryNode : QueryNode
     /// <summary>
     /// Represents nested Identifiers
     /// </summary>
-    public IEnumerable<PropertyQueryNode>? Children { get; init; }
+    public IEnumerable<PropertyNode>? Children { get; init; }
     /// <summary>
     /// Specifies whether the Attribute has nested Identifiers.
     /// </summary>

@@ -16,7 +16,7 @@ internal class OGraphOperationResolverDefault : IOGraphOperationResolver
         this.resolver = resolver;
     }
 
-    public Task<IOGraphOperationResult> InvokeAsync(IOGraphOperationResolverContext context)
+    public Task<IOGraphOperationResult> InvokeAsync(IOGraphOperationContext context)
     {
         return resolver.Invoke(context);
     }

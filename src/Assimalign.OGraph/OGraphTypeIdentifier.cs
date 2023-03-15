@@ -6,8 +6,20 @@
 public enum OGraphTypeIdentifier
 {
     None,
+    /// <summary>
+    /// 
+    /// </summary>
+    Queryable,
+    /// <summary>
+    /// 
+    /// </summary>
     Collection,
+    /// <summary>
+    /// 
+    /// </summary>
     Complex,
-    Enum,
+    /// <summary>
+    /// 
+    /// </summary>
     Primitive,
 }

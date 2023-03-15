@@ -23,4 +23,28 @@ public interface IOGraphType
     /// All types must have a RuntimeType, even if it is a custom type.
     /// </remarks>
     Type? RuntimeType { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="queryableType"></param>
+    /// <returns></returns>
+    bool IsQueryableType(out IOGraphQueryableType queryableType);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="collectionType"></param>
+    /// <returns></returns>
+    bool IsCollectionType(out IOGraphCollectionType collectionType);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="primitiveType"></param>
+    /// <returns></returns>
+    bool IsPrimitiveType(out IOGraphPrimitiveType primitiveType);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="complexType"></param>
+    /// <returns></returns>
+    bool IsComplexType(out IOGraphComplexType complexType);
 }

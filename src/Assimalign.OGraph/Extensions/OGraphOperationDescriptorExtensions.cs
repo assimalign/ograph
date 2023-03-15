@@ -1,24 +1,30 @@
-﻿using System;
+﻿using Assimalign.OGraph.Internal;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
 public static class OGraphOperationDescriptorExtensions
 {
-    public static IOGraphOperationDescriptor UseResolver<T>(
+    public static IOGraphOperationDescriptor UseResolver<TQueryable>(
         this IOGraphOperationDescriptor descriptor,
-        Func<IOGraphOperationResolverContext, T> resolver)
+        Func<IOGraphOperationContext, TQueryable> resolver) where TQueryable : IQueryable
     {
         if (resolver is null)
         {
             throw new ArgumentNullException(nameof(resolver));
         }
+
         return descriptor.UseResolver(context =>
         {
-            return Task.FromResult<IOGraphOperationResult>(new OGraphOperationResult<T>()
+            return Task.FromResult<IOGraphOperationResult>(new QueryableOperationResult()
             {
                 StatusCode = 200,
-                Data = resolver.Invoke(context)
+                Body = new QueryableResponseType()
+                {
+
+                }
             });
         });
     }

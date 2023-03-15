@@ -1,34 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Assimalign.OGraph.Syntax;
 
-public sealed class FilterQueryNode : QueryNode
+public sealed class FilterNode : QueryNode
 {
-    public FilterQueryNode() { }
-    public FilterQueryNode(BinaryQueryNode predicate)
+    public FilterNode() { }
+    public FilterNode(BinaryNode predicate)
     {
         Predicate = predicate;
     }
-    public FilterQueryNode(EdgeQueryNode? edge, BinaryQueryNode predicate)
+    public FilterNode(BinaryNode predicate, IEnumerable<EdgeFilterNode> edges)
     {
-        Edge = edge;
+        Edges = edges;
         Predicate = predicate;
     }
 
 
     /// <summary>
-    /// Represents the edge, if any, to apply filter.
+    /// 
     /// </summary>
-    public EdgeQueryNode? Edge { get; init; }
+    public BinaryNode? Predicate { get; init; }
+
     /// <summary>
     /// 
     /// </summary>
-    public BinaryQueryNode? Predicate { get; init; }
+    public IEnumerable<EdgeFilterNode>? Edges { get; init; }
+
     /// <summary>
     /// 
     /// </summary>
-    public bool HasEdge => Edge is not null;
+    public bool HaseEdges => Edges is not null && Edges.Any();
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Filter;
@@ -45,12 +48,15 @@ public sealed class FilterQueryNode : QueryNode
         if (this is TNode node)
         {
             yield return node;
-        }
-        if (Edge is not null)
+        }      
+        if (Edges is not null)
         {
-            foreach (var item in Edge.GetNodesOfType<TNode>())
+            foreach (var edge in Edges)
             {
-                yield return item;
+                foreach (var item in edge.GetNodesOfType<TNode>())
+                {
+                    yield return item;
+                }
             }
         }
         if (Predicate is not null)

@@ -6,10 +6,10 @@ internal class EdgeParser : Parser
 {
     internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
     {
-        if (queryNode is not EdgeQueryNode edgeNode)
+        if (queryNode is not EdgeNode edgeNode)
         {
             throw QueryParserException.UnexpectedQueryNode(
-                typeof(EdgeQueryNode),
+                typeof(EdgeNode),
                 queryNode.GetType());
         }
 
@@ -29,7 +29,7 @@ internal class EdgeParser : Parser
             }
             if (token.TokenType == TokenType.Identifier)
             {
-                queryNode = new EdgeQueryNode()
+                queryNode = new EdgeNode()
                 {
                     Path = edgePath = string.IsNullOrEmpty(edgePath) ? token.Text : string.Join('/', edgePath, token.Text)
                 };                

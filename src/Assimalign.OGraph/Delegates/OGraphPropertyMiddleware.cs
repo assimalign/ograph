@@ -9,4 +9,4 @@ namespace Assimalign.OGraph;
 /// <param name="context"></param>
 /// <param name="next"></param>
 /// <returns></returns>
-public delegate ValueTask<IOGraphPropertyResult> OGraphPropertyMiddleware(IOGraphPropertyResolverContext context, OGraphPropertyHandler next);
+public delegate ValueTask<IOGraphPropertyResult> OGraphPropertyMiddleware(IOGraphPropertyContext context, OGraphPropertyHandler next);

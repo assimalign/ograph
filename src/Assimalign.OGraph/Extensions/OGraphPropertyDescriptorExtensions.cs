@@ -16,7 +16,7 @@ public static class OGraphPropertyDescriptorExtensions
     /// <exception cref="ArgumentNullException"></exception>
     public static IOGraphPropertyDescriptor<TProperty> UseResolver<TProperty>(
         this IOGraphPropertyDescriptor<TProperty> descriptor,
-        Func<IOGraphPropertyResolverContext, TProperty> resolver)
+        Func<IOGraphPropertyContext, TProperty> resolver)
     {
         if (resolver is null)
         {
@@ -35,7 +35,7 @@ public static class OGraphPropertyDescriptorExtensions
 
     public static IOGraphPropertyDescriptor UseResolver<TProperty>(
         this IOGraphPropertyDescriptor descriptor,
-        Func<IOGraphPropertyResolverContext, TProperty> resolver)
+        Func<IOGraphPropertyContext, TProperty> resolver)
     {
         if (resolver is null)
         {

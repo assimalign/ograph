@@ -21,7 +21,7 @@ internal class QueryEdgeProjectionPropertyValidationAnalyzer : QueryAnalyzer
 
     public override Task AnalyzeAsync(QueryDocument document, CancellationToken cancellationToken)
     {
-        foreach (var projection in document.Root.GetNodesOfType<ProjectionQueryNode>())
+        foreach (var projection in document.Root.GetNodesOfType<ProjectionNode>())
         {
             if (projection.HasEdge)
             {

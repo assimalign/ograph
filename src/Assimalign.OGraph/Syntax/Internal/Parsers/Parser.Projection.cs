@@ -7,10 +7,10 @@ internal class ProjectionParser : Parser
 {
     internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
     {
-        if (queryNode is not ProjectionQueryNode projectionNode)
+        if (queryNode is not ProjectionNode projectionNode)
         {
             throw QueryParserException.UnexpectedQueryNode(
-                typeof(ProjectionQueryNode),
+                typeof(ProjectionNode),
                 queryNode.GetType());
         }
         if (!lexer.HasNext)
@@ -34,7 +34,7 @@ internal class ProjectionParser : Parser
 
         return ParseParenthesisBlock(ref lexer, context, projectionNode);
     }
-    private ProjectionQueryNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, ProjectionQueryNode queryNode)
+    private ProjectionNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, ProjectionNode queryNode)
     {
         var token = default(Token);
 
@@ -50,9 +50,9 @@ internal class ProjectionParser : Parser
         {
             var parser = context.GetParser<EdgeParser>();
 
-            queryNode = new ProjectionQueryNode()
+            queryNode = new ProjectionNode()
             {
-                Edge = parser.Parse<EdgeQueryNode>(ref lexer, context)
+                Edge = parser.Parse<EdgeNode>(ref lexer, context)
             };
 
             if (!lexer.TryPeek(out token))
@@ -98,9 +98,9 @@ internal class ProjectionParser : Parser
 
         return queryNode;
     }
-    private ProjectionQueryNode ParseBracketBlock(ref TokenLexer lexer, ParserContext context, ProjectionQueryNode queryNode)
+    private ProjectionNode ParseBracketBlock(ref TokenLexer lexer, ParserContext context, ProjectionNode queryNode)
     {
-        var properties = new List<PropertyQueryNode>();
+        var properties = new List<PropertyNode>();
 
         while (lexer.HasNext)
         {
@@ -108,7 +108,7 @@ internal class ProjectionParser : Parser
 
             if (token.TokenType == TokenType.CloseBracket)
             {
-                return new ProjectionQueryNode()
+                return new ProjectionNode()
                 {
                     Edge = queryNode.Edge,
                     Properties = properties
@@ -118,7 +118,7 @@ internal class ProjectionParser : Parser
             {
                 case TokenType.Identifier:
                     {
-                        properties.Add(context.GetParser<PropertyParser>().Parse<PropertyQueryNode>(ref lexer, context));
+                        properties.Add(context.GetParser<PropertyParser>().Parse<PropertyNode>(ref lexer, context));
                     }
                     break;
                 default:

@@ -10,7 +10,7 @@ internal class FilterParser : Parser
 {
     internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
     {
-        if (queryNode is not FilterQueryNode filterNode)
+        if (queryNode is not FilterNode filterNode)
         {
             // This is internal error. Some dumbass messed with the code.
             return queryNode;
@@ -31,7 +31,7 @@ internal class FilterParser : Parser
 
         return ParseParenthesisBlock(ref lexer, context, filterNode);
     }
-    private FilterQueryNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, FilterQueryNode queryNode)
+    private FilterNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, FilterNode queryNode)
     {
         var next = default(Token);
 
@@ -44,9 +44,9 @@ internal class FilterParser : Parser
         if (next.TokenType == TokenType.Identifier)
         {
             var edgeParser = context.GetParser<EdgeParser>();
-            var edgeNode = edgeParser.Parse<EdgeQueryNode>(ref lexer, context);
+            var edgeNode = edgeParser.Parse<EdgeNode>(ref lexer, context);
 
-            queryNode = new FilterQueryNode()
+            queryNode = new FilterNode()
             {
                 Edge = edgeNode
             };
@@ -84,7 +84,7 @@ internal class FilterParser : Parser
 
         return queryNode;
     }
-    private FilterQueryNode ParseBracketBlock(ref TokenLexer lexer, ParserContext context, FilterQueryNode queryNode)
+    private FilterNode ParseBracketBlock(ref TokenLexer lexer, ParserContext context, FilterNode queryNode)
     {
         var leftOperand = default(QueryNode);
 
@@ -108,7 +108,7 @@ internal class FilterParser : Parser
                     break;
                 case TokenType.Identifier:
                     {
-                        leftOperand = context.GetParser<PropertyParser>().Parse<PropertyQueryNode>(ref lexer, context);
+                        leftOperand = context.GetParser<PropertyParser>().Parse<PropertyNode>(ref lexer, context);
                         break;
                     }
                 case TokenType.Null:
@@ -117,7 +117,7 @@ internal class FilterParser : Parser
                 case TokenType.FloatingPoint:
                 case TokenType.Boolean:
                     {
-                        leftOperand = context.GetParser<ConstantParser>().Parse(ref lexer, context, new ConstantQueryNode());
+                        leftOperand = context.GetParser<ConstantParser>().Parse(ref lexer, context, new ConstantNode());
                         break;
                     }
                 case TokenType.Equal:
@@ -131,7 +131,7 @@ internal class FilterParser : Parser
                     {
                         var parser = context.GetParser<BinaryParser>();
 
-                        if (parser.Parse(ref lexer, context, new BinaryQueryNode() {  LeftOperand = leftOperand }) is not BinaryQueryNode binaryNode1)
+                        if (parser.Parse(ref lexer, context, new BinaryNode() {  LeftOperand = leftOperand }) is not BinaryNode binaryNode1)
                         {
                             // TODO: Add diagnostic
                             continue;
@@ -148,13 +148,13 @@ internal class FilterParser : Parser
             }
         }
 
-        if (leftOperand is not BinaryQueryNode binaryNode)
+        if (leftOperand is not BinaryNode binaryNode)
         {
             // TODO: 
             return queryNode;
         }
 
-        queryNode = new FilterQueryNode()
+        queryNode = new FilterNode()
         {
             Edge = queryNode.Edge,
             Predicate = binaryNode

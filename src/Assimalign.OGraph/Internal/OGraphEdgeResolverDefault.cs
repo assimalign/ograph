@@ -10,7 +10,7 @@ internal class OGraphEdgeResolverDefault : IOGraphEdgeResolver
     {
         this.resolver = resolver;
     }
-    public Task<IOGraphEdgeResult> InvokeAsync(IOGraphEdgeResolverContext context)
+    public Task<IOGraphEdgeResult> InvokeAsync(IOGraphEdgeContext context)
     {
         return resolver.Invoke(context);
     }

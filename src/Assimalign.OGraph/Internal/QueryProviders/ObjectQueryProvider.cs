@@ -14,22 +14,22 @@ internal class ObjectQueryProvider<T> : IOGraphQueryProvider
 {
     public Type ProviderType => typeof(T);
 
-    public void ApplyFiltering(FilterQueryNode filter, OGraphQueryContext context)
+    public void ApplyFiltering(FilterNode filter, OGraphQueryContext context)
     {
         throw new InvalidOperationException("Filtering of a Complex Type. Only Projections are permitted.");
     }
 
-    public void ApplyPaging(PageQueryNode paging, OGraphQueryContext context)
+    public void ApplyPaging(PageNode paging, OGraphQueryContext context)
     {
         throw new InvalidOperationException("Paging of a Complex Type. Only Projections are permitted.");
     }
 
-    public void ApplyProjections(ProjectionQueryNode projection, OGraphQueryContext context)
+    public void ApplyProjections(ProjectionNode projection, OGraphQueryContext context)
     {
         throw new NotImplementedException();
     }
 
-    public void ApplySorting(SortQueryNode sorting, OGraphQueryContext context)
+    public void ApplySorting(SortNode sorting, OGraphQueryContext context)
     {
         throw new InvalidOperationException("Sorting of a Complex Type. Only Projections are permitted.");
     }

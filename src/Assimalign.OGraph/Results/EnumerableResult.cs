@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Execution.Internal
+namespace Assimalign.OGraph.Results
 {
-    internal class OGraphExecutionPlan
+    internal class EnumerableResult
     {
     }
 }

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
@@ -15,9 +18,9 @@ public interface IOGraphPropertyResult
     /// <summary>
     /// 
     /// </summary>
-    object? Data { get; }
+    IOGraphError? Error { get; }
     /// <summary>
     /// 
     /// </summary>
-    IOGraphError? Error { get; }
+    object? Value { get; }
 }

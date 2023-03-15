@@ -1,32 +1,19 @@
 # Query
-https://endpoint.com/api/users?query=project({
+https://endpoint.com/api/users?query=
+# Root Query
+.project({
     # Queryable Fields
     userId
     firstName
     lastName
     middleName
-    addresses as locations {
-        streetOne
-        streetTwo
-        streetThree
-        addressTypes {
-            typeId
-            type
-        }
+    fullName
+    notes {
+        noteId
+        note
     }
 })
 .filter({
-    and(
-        eq(
-            add(
-
-            ),
-            12
-        ),
-        subtract(
-
-        )
-    )
     startsWith(firstName,'c',true) and ((
         endsWith(middleName,'e',true) and 
         age eq 12
@@ -36,47 +23,47 @@ https://endpoint.com/api/users?query=project({
     )
 })
 .page({
-    take @take
-    skip @skip
+    take 0 
+    skip 25
 })
 .sort({
     toLower(firstName) desc
 })
-.project(roles, {           # Navigation Select
+
+
+# Edge Queries
+.project(hasUserRoles, {
     roleName
 })
-.filter(roles, {            # Navigation Filtering 
+.filter(hasUserRoles, {            # Navigation Filtering 
     isActive eq true
 })
-.page(roles, {
+.page(hasUserRoles, {
     take @take
     skip @skip
 })
-.sort(roles, {
+.sort(hasUserRoles, {
     toLower(roleName) desc
 })
-.project(applications/roles, {
+
+
+.project(has_primary_addresses, {
+
+})
+.project(addresses/types, {
 
 })
 
 
+.project({
 
+})
+.project(employee, {
 
+})
+.project(employee/company, {
 
+})
+.project(addresses, {
 
-
--   [Raw string literals](##Raw string literals)
--   [Generic math support](##Generic math support)
--   [Generic attributes](##Generic attributes)
--   [UTF-8 string literals](##UTF-8 string literals)
--   [Newlines in string interpolation expressions](##Newlines in string interpolation expressions)
--   [List patterns](##List patterns)
--   [File-local types](##File-local types)
--   [Required members](##Required members)
--   [Auto-default structs](##Auto-default structs)
--   [Pattern match `Span<char>` on a constant `string`](##Pattern match `Span<char>` on a constant `string`)
--   [Extended `nameof` scope](##Extended `nameof` scope)
--   [Numeric IntPtr](##Numeric IntPtr)
--   [`ref` fields and `scoped ref`](##`ref` fields and `scoped ref`)
--   [Improved method group conversion to delegate](##Improved method group conversion to delegate)
--   [Warning wave 7](##Warning wave 7)
+})

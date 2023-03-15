@@ -8,10 +8,10 @@ internal sealed class PageParser : Parser
 {
     internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
     {
-        if (queryNode is not PageQueryNode pageNode)
+        if (queryNode is not PageNode pageNode)
         {
             throw QueryParserException.UnexpectedQueryNode(
-                typeof(PageQueryNode),
+                typeof(PageNode),
                 queryNode.GetType());
         }
         if (!lexer.HasNext)
@@ -35,7 +35,7 @@ internal sealed class PageParser : Parser
 
         return ParseParenthesisBlock(ref lexer, context, pageNode);
     }
-    private PageQueryNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, PageQueryNode queryNode)
+    private PageNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, PageNode queryNode)
     {
         var next = default(Token);
 
@@ -51,9 +51,9 @@ internal sealed class PageParser : Parser
         {
             var parser = context.GetParser<EdgeParser>();
 
-            queryNode = new PageQueryNode()
+            queryNode = new PageNode()
             {
-                Edge = parser.Parse<EdgeQueryNode>(ref lexer, context)
+                Edge = parser.Parse<EdgeNode>(ref lexer, context)
             };
 
             if (!lexer.TryNext(out next))
@@ -99,7 +99,7 @@ internal sealed class PageParser : Parser
 
         return queryNode;
     }
-    private PageQueryNode ParseBracketBlock(ref TokenLexer lexer, ParserContext context, PageQueryNode queryNode)
+    private PageNode ParseBracketBlock(ref TokenLexer lexer, ParserContext context, PageNode queryNode)
     {
         while (lexer.HasNext)
         {
@@ -130,9 +130,9 @@ internal sealed class PageParser : Parser
 
         return queryNode;
     }
-    private PageQueryNode ParseSkip(ref TokenLexer lexer, ParserContext context, PageQueryNode queryNode)
+    private PageNode ParseSkip(ref TokenLexer lexer, ParserContext context, PageNode queryNode)
     {
-        if (queryNode is not PageQueryNode pageNode)
+        if (queryNode is not PageNode pageNode)
         {
             // TODO: 
             return queryNode;
@@ -141,9 +141,9 @@ internal sealed class PageParser : Parser
         var token = lexer.Next();
         var parser = context.GetParser<ConstantParser>();
 
-        if (parser.Parse(ref lexer, context, pageNode) is ConstantQueryNode constant)
+        if (parser.Parse(ref lexer, context, pageNode) is ConstantNode constant)
         {
-            return new PageQueryNode()
+            return new PageNode()
             {
                 Skip = constant,
                 Take = pageNode.Take,
@@ -157,9 +157,9 @@ internal sealed class PageParser : Parser
 
         return queryNode;
     }
-    private PageQueryNode ParseTake(ref TokenLexer lexer, ParserContext context, PageQueryNode queryNode)
+    private PageNode ParseTake(ref TokenLexer lexer, ParserContext context, PageNode queryNode)
     {
-        if (queryNode is not PageQueryNode pageNode)
+        if (queryNode is not PageNode pageNode)
         {
             // TODO: 
             return queryNode;
@@ -168,9 +168,9 @@ internal sealed class PageParser : Parser
         var token = lexer.Next();
         var parser = context.GetParser<ConstantParser>();
 
-        if (parser.Parse(ref lexer, context, pageNode) is ConstantQueryNode constant)
+        if (parser.Parse(ref lexer, context, pageNode) is ConstantNode constant)
         {
-            return new PageQueryNode()
+            return new PageNode()
             {
                 Take = constant,
                 Skip = pageNode.Skip,
@@ -184,9 +184,9 @@ internal sealed class PageParser : Parser
 
         return queryNode;
     }
-    private PageQueryNode ParseToken(ref TokenLexer lexer, ParserContext context, PageQueryNode queryNode)
+    private PageNode ParseToken(ref TokenLexer lexer, ParserContext context, PageNode queryNode)
     {
-        if (queryNode is not PageQueryNode pageNode)
+        if (queryNode is not PageNode pageNode)
         {
             // TODO: 
             return queryNode;
@@ -195,9 +195,9 @@ internal sealed class PageParser : Parser
         var token = lexer.Next();
         var parser = context.GetParser<ConstantParser>();
 
-        if (parser.Parse(ref lexer, context, pageNode) is ConstantQueryNode constant)
+        if (parser.Parse(ref lexer, context, pageNode) is ConstantNode constant)
         {
-            return new PageQueryNode()
+            return new PageNode()
             {
                 Skip = pageNode.Skip,
                 Take = pageNode.Take,

@@ -12,5 +12,5 @@ public interface IOGraphEdgeResolver
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task<IOGraphEdgeResult> InvokeAsync(IOGraphEdgeResolverContext context);
+    Task<IOGraphEdgeResult> InvokeAsync(IOGraphEdgeContext context);
 }

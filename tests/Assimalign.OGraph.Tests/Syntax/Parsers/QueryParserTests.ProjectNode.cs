@@ -34,9 +34,9 @@ public partial class QueryParserTests
         Assert.Empty(document.Errors);
         
 
-        var root = Assert.IsType<RootQueryNode>(document.Root);
+        var root = Assert.IsType<RootNode>(document.Root);
         var node = Assert.Single(root.Nodes);
-        var projection = Assert.IsType<ProjectionQueryNode>(node);
+        var projection = Assert.IsType<ProjectionNode>(node);
 
         Assert.Equal(4, projection.Properties.Count());
 
@@ -183,9 +183,9 @@ public partial class QueryParserTests
         // Assert No Errors
         Assert.Empty(document.Errors);
 
-        var root = Assert.IsType<RootQueryNode>(document.Root);
+        var root = Assert.IsType<RootNode>(document.Root);
         var node = Assert.Single(root.Nodes);
-        var projection = Assert.IsType<ProjectionQueryNode>(node);
+        var projection = Assert.IsType<ProjectionNode>(node);
 
         Assert.Equal(4, projection.Properties.Count());
 
@@ -215,8 +215,8 @@ public partial class QueryParserTests
         // Assert No Errors
         Assert.Empty(document.Errors);
 
-        var root = Assert.IsType<RootQueryNode>(document.Root);
-        var projection = Assert.IsType<ProjectionQueryNode>(root.Nodes.First());
+        var root = Assert.IsType<RootNode>(document.Root);
+        var projection = Assert.IsType<ProjectionNode>(root.Nodes.First());
 
         Assert.Equal("employees/addresses", projection?.Edge?.Path);
         Assert.False(projection?.HasEdge);
@@ -245,13 +245,13 @@ public partial class QueryParserTests
         var parser = new QueryParser();
         var document = parser.Parse(query);
 
-        var properties = document.Root.GetNodesOfType<PropertyQueryNode>();
+        var properties = document.Root.GetNodesOfType<PropertyNode>();
 
         // Assert Errors: Missing single comma
         Assert.Single(document.Errors);
 
-        var root = Assert.IsType<RootQueryNode>(document.Root);
-        var projection = Assert.IsType<ProjectionQueryNode>(root.Nodes.First());
+        var root = Assert.IsType<RootNode>(document.Root);
+        var projection = Assert.IsType<ProjectionNode>(root.Nodes.First());
 
         Assert.Equal("employees/addresses", projection?.Edge?.Path);
         Assert.False(projection?.HasEdge);

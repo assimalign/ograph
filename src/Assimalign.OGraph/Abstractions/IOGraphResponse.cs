@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Execution;
+namespace Assimalign.OGraph;
 
+/// <summary>
+/// Represents an HTTP Response.
+/// </summary>
 public interface IOGraphResponse
 {
     /// <summary>
     /// 
     /// </summary>
-    int StatusCode { get; }
+    StatusCode StatusCode { get; set; }
     /// <summary>
     /// 
     /// </summary>

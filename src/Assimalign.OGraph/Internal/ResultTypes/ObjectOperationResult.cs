@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Execution;
+namespace Assimalign.OGraph.Internal;
 
-public interface IOGraphQueryCollection : IDictionary<string, string>
+internal class ObjectOperationResult
 {
 }

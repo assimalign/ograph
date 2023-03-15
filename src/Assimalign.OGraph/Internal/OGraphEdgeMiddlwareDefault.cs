@@ -14,7 +14,7 @@ internal class OGraphEdgeMiddlwareDefault : IOGraphEdgeMiddleware
     {
         this.middleware = middleware;   
     }
-    public Task<IOGraphEdgeResult> InvokeAsync(IOGraphEdgeResolverContext context, OGraphEdgeHandler next)
+    public Task<IOGraphEdgeResult> InvokeAsync(IOGraphEdgeContext context, OGraphEdgeHandler next)
     {
         return middleware.Invoke(context, next);
     }

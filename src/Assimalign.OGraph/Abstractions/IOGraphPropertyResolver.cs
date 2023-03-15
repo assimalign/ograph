@@ -12,5 +12,5 @@ public interface IOGraphPropertyResolver
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    ValueTask<IOGraphPropertyResult> InvokeAsync(IOGraphPropertyResolverContext context);
+    ValueTask<IOGraphPropertyResult> InvokeAsync(IOGraphPropertyContext context);
 }

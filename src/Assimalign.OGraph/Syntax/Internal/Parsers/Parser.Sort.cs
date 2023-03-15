@@ -10,10 +10,10 @@ internal class SortParser : Parser
 {
     internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
     {
-        if (queryNode is not SortQueryNode sortNode)
+        if (queryNode is not SortNode sortNode)
         {
             throw QueryParserException.UnexpectedQueryNode(
-                typeof(ProjectionQueryNode),
+                typeof(ProjectionNode),
                 queryNode.GetType());
         }
         if (!lexer.HasNext)
@@ -38,7 +38,7 @@ internal class SortParser : Parser
         return ParseParenthesisBlock(ref lexer, context, sortNode);
     }
 
-    private SortQueryNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, SortQueryNode queryNode)
+    private SortNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, SortNode queryNode)
     {
         var token = default(Token);
 
@@ -54,9 +54,9 @@ internal class SortParser : Parser
         {
             var parser = context.GetParser<EdgeParser>();
 
-            queryNode = new SortQueryNode()
+            queryNode = new SortNode()
             {
-                Edge = parser.Parse<EdgeQueryNode>(ref lexer, context)
+                Edge = parser.Parse<EdgeNode>(ref lexer, context)
             };
 
             if (!lexer.TryPeek(out token))
@@ -103,7 +103,7 @@ internal class SortParser : Parser
 
         return queryNode;
     }
-    private SortQueryNode ParseBracketBlock(ref TokenLexer lexer, ParserContext context, SortQueryNode queryNode)
+    private SortNode ParseBracketBlock(ref TokenLexer lexer, ParserContext context, SortNode queryNode)
     {
         while (lexer.HasNext)
         {
@@ -130,7 +130,7 @@ internal class SortParser : Parser
         return queryNode;
     }
 
-    private SortQueryNode ParseSortIdentifier(ref TokenLexer lexer, ParserContext context, SortQueryNode queryNode)
+    private SortNode ParseSortIdentifier(ref TokenLexer lexer, ParserContext context, SortNode queryNode)
     {
         var token = lexer.Current;
         var sortNode = default(QueryNode);
@@ -144,7 +144,7 @@ internal class SortParser : Parser
                 }
             case TokenType.Identifier:
                 {
-                    sortNode = context.GetParser<PropertyParser>().Parse<PropertyQueryNode>(ref lexer, context);
+                    sortNode = context.GetParser<PropertyParser>().Parse<PropertyNode>(ref lexer, context);
                     break;
                 }
             default:
@@ -159,7 +159,7 @@ internal class SortParser : Parser
             {
                 token = lexer.Next();
 
-                queryNode = new SortQueryNode()
+                queryNode = new SortNode()
                 {
                     SortBy = sortNode,
                     Direction = (SortDirection)token.TokenType,
@@ -176,17 +176,17 @@ internal class SortParser : Parser
             {
                 token = lexer.Next();
 
-                queryNode = new SortQueryNode()
+                queryNode = new SortNode()
                 {
                     SortBy = sortNode,
                     Direction = queryNode.Direction,
                     Edge = queryNode.Edge,
-                    ThenBy = ParseSortIdentifier(ref lexer, context, new SortQueryNode()),
+                    ThenBy = ParseSortIdentifier(ref lexer, context, new SortNode()),
                 };
             }
             else
             {
-                queryNode = new SortQueryNode()
+                queryNode = new SortNode()
                 {
                     SortBy = sortNode,
                     Direction = queryNode.Direction,

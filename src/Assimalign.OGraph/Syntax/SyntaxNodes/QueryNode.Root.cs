@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax;
 
-public sealed class RootQueryNode : QueryNode
+public sealed class RootNode : QueryNode
 {
-    public RootQueryNode() { }
-    public RootQueryNode(IEnumerable<QueryNode> nodes)
+    public RootNode() { }
+    public RootNode(IEnumerable<QueryNode> nodes)
     {
         this.Nodes = nodes;
     }
@@ -21,25 +21,25 @@ public sealed class RootQueryNode : QueryNode
     /// </summary>
     /// <param name="nodes"></param>
     /// <returns></returns>
-    public bool TryGetProjections(out IEnumerable<ProjectionQueryNode>? nodes) => TryGetNodes(out nodes);
+    public bool TryGetProjection(out ProjectionNode? node) => TryGetNode(out node);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="nodes"></param>
     /// <returns></returns>
-    public bool TryGetFilters(out IEnumerable<FilterQueryNode>? nodes) => TryGetNodes(out nodes);
+    public bool TryGetFilter(out FilterNode? node) => TryGetNode(out node);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="nodes"></param>
     /// <returns></returns>
-    public bool TryGetSorts(out IEnumerable<SortQueryNode>? nodes) => TryGetNodes(out nodes);
+    public bool TryGetSort(out SortNode? node) => TryGetNode(out node);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="nodes"></param>
     /// <returns></returns>
-    public bool TryGetPages(out IEnumerable<PageQueryNode>? nodes) => TryGetNodes(out nodes);
+    public bool TryGetPage(out PageNode? node) => TryGetNode(out node);
 
     
     /// <inheritdoc />
@@ -67,23 +67,17 @@ public sealed class RootQueryNode : QueryNode
         }
     }
 
-    private bool TryGetNodes<TNode>(out IEnumerable<TNode>? nodes)
+    private bool TryGetNode<TNode>(out TNode? node)
     {
-        nodes = default;
-
-        var list = new List<TNode>();
+        node = default;
 
         foreach (var n in Nodes)
         {
             if (n is TNode tn)
             {
-                list.Add(tn);
+                node = tn;
+                return true;
             }
-        }
-        if (list.Count > 0)
-        {
-            nodes = list.ToArray();
-            return true;
         }
 
         return false;

@@ -10,7 +10,7 @@ internal class BinaryParser : Parser
 {
     internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
     {
-        if (queryNode is not BinaryQueryNode binaryNode)
+        if (queryNode is not BinaryNode binaryNode)
         {
             // TODO: Add diagnostics
             return queryNode;
@@ -48,7 +48,7 @@ internal class BinaryParser : Parser
                 }
         }
     }
-    private BinaryQueryNode ParseComparisonOperators(ref TokenLexer lexer, ParserContext context, BinaryQueryNode queryNode)
+    private BinaryNode ParseComparisonOperators(ref TokenLexer lexer, ParserContext context, BinaryNode queryNode)
     {
         var binaryOperator = (BinaryOperatorType)lexer.Current.TokenType;
         var token = default(Token);
@@ -61,9 +61,9 @@ internal class BinaryParser : Parser
         if (token.IsLiteral)
         {
             var constantParser = context.GetParser<ConstantParser>();
-            var constantNode = constantParser.Parse<ConstantQueryNode>(ref lexer, context);
+            var constantNode = constantParser.Parse<ConstantNode>(ref lexer, context);
 
-            queryNode = new BinaryQueryNode()
+            queryNode = new BinaryNode()
             {
                 LeftOperand = queryNode.LeftOperand,
                 RightOperand = constantNode,
@@ -74,7 +74,7 @@ internal class BinaryParser : Parser
         {
             if (token.Value.IsFunction(out var functionType))
             {
-                queryNode = new BinaryQueryNode()
+                queryNode = new BinaryNode()
                 {
                     LeftOperand = queryNode.LeftOperand,
                     RightOperand = context.GetParser<FunctionParser>().Parse(ref lexer, context, new FunctionQueryNode()
@@ -86,10 +86,10 @@ internal class BinaryParser : Parser
             }
             else
             {
-                queryNode = new BinaryQueryNode()
+                queryNode = new BinaryNode()
                 {
                     LeftOperand = queryNode.LeftOperand,
-                    RightOperand = context.GetParser<PropertyParser>().Parse<PropertyQueryNode>(ref lexer, context),
+                    RightOperand = context.GetParser<PropertyParser>().Parse<PropertyNode>(ref lexer, context),
                     OperatorType = binaryOperator
                 };
             }
@@ -97,7 +97,7 @@ internal class BinaryParser : Parser
         if (lexer.TryPeek(out token) && token.IsOperator)
         {
             lexer.Next();
-            if (Parse(ref lexer, context, new BinaryQueryNode() { LeftOperand = queryNode }) is not BinaryQueryNode binaryNode)
+            if (Parse(ref lexer, context, new BinaryNode() { LeftOperand = queryNode }) is not BinaryNode binaryNode)
             {
                 throw new Exception("");
             }
@@ -106,7 +106,7 @@ internal class BinaryParser : Parser
 
         return queryNode;
     }
-    private BinaryQueryNode ParseAndOperator(ref TokenLexer lexer, ParserContext context, BinaryQueryNode queryNode)
+    private BinaryNode ParseAndOperator(ref TokenLexer lexer, ParserContext context, BinaryNode queryNode)
     {
         var token = default(Token);
         var rightOperand = default(QueryNode);
@@ -133,7 +133,7 @@ internal class BinaryParser : Parser
                 }
             case TokenType.Identifier:
                 {
-                    rightOperand = context.GetParser<PropertyParser>().Parse<PropertyQueryNode>(ref lexer, context);
+                    rightOperand = context.GetParser<PropertyParser>().Parse<PropertyNode>(ref lexer, context);
                     break;
                 }
             // Check for constants on the right side.
@@ -143,17 +143,17 @@ internal class BinaryParser : Parser
             case TokenType.String:
             case TokenType.Boolean:
                 {
-                    rightOperand = context.GetParser<ConstantParser>().Parse<ConstantQueryNode>(ref lexer, context);
+                    rightOperand = context.GetParser<ConstantParser>().Parse<ConstantNode>(ref lexer, context);
                     break;
                 }
         }
         if (lexer.TryPeek(out token) && token.IsOperator)
         {
             lexer.Next();
-            rightOperand = Parse(ref lexer, context, new BinaryQueryNode() { LeftOperand = queryNode }) as BinaryQueryNode;
+            rightOperand = Parse(ref lexer, context, new BinaryNode() { LeftOperand = queryNode }) as BinaryNode;
         }
 
-        queryNode = new BinaryQueryNode()
+        queryNode = new BinaryNode()
         {
             LeftOperand = queryNode.LeftOperand,
             RightOperand = rightOperand,
@@ -162,7 +162,7 @@ internal class BinaryParser : Parser
 
         return queryNode;
     }
-    private BinaryQueryNode ParseOrOperator(ref TokenLexer lexer, ParserContext context, BinaryQueryNode queryNode)
+    private BinaryNode ParseOrOperator(ref TokenLexer lexer, ParserContext context, BinaryNode queryNode)
     {
         var token = default(Token);
         var rightOperand = default(QueryNode);
@@ -189,7 +189,7 @@ internal class BinaryParser : Parser
                 }
             case TokenType.Identifier:
                 {
-                    rightOperand = context.GetParser<PropertyParser>().Parse<PropertyQueryNode>(ref lexer, context);
+                    rightOperand = context.GetParser<PropertyParser>().Parse<PropertyNode>(ref lexer, context);
                     break;
                 }
             // Check for constants on the right side.
@@ -199,16 +199,16 @@ internal class BinaryParser : Parser
             case TokenType.String:
             case TokenType.Boolean:
                 {
-                    rightOperand = context.GetParser<ConstantParser>().Parse<ConstantQueryNode>(ref lexer, context);
+                    rightOperand = context.GetParser<ConstantParser>().Parse<ConstantNode>(ref lexer, context);
                     break;
                 }
         }
         if (lexer.TryPeek(out token) && token.IsOperator)
         {
             lexer.Next();
-            rightOperand = Parse(ref lexer, context, new BinaryQueryNode() { LeftOperand = queryNode }) as BinaryQueryNode;
+            rightOperand = Parse(ref lexer, context, new BinaryNode() { LeftOperand = queryNode }) as BinaryNode;
         }
-        queryNode = new BinaryQueryNode()
+        queryNode = new BinaryNode()
         {
             LeftOperand = queryNode.LeftOperand,
             RightOperand = rightOperand,
@@ -241,7 +241,7 @@ internal class BinaryParser : Parser
                     }
                 case TokenType.Identifier:
                     {
-                        leftOperand = context.GetParser<PropertyParser>().Parse<PropertyQueryNode>(ref lexer, context);
+                        leftOperand = context.GetParser<PropertyParser>().Parse<PropertyNode>(ref lexer, context);
                         break;
                     }
                 case TokenType.Null:
@@ -250,7 +250,7 @@ internal class BinaryParser : Parser
                 case TokenType.FloatingPoint:
                 case TokenType.Boolean:
                     {
-                        leftOperand = context.GetParser<ConstantParser>().Parse(ref lexer, context, new ConstantQueryNode());
+                        leftOperand = context.GetParser<ConstantParser>().Parse(ref lexer, context, new ConstantNode());
                         break;
                     }
                 case TokenType.Equal:
@@ -262,7 +262,7 @@ internal class BinaryParser : Parser
                 case TokenType.And:
                 case TokenType.Or:
                     {
-                        leftOperand = Parse(ref lexer, context, new BinaryQueryNode()
+                        leftOperand = Parse(ref lexer, context, new BinaryNode()
                         {
                             LeftOperand = leftOperand
                         });

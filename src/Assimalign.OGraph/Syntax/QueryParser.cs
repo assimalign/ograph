@@ -42,7 +42,7 @@ public sealed partial class QueryParser
                 ThrowExceptionOnDiagnosticError = options.ThrowExceptionOnDiagnosticError
             };
             var parser  = Parser.Create();
-            var node    = parser.Parse(ref lexer, context, new RootQueryNode());
+            var node    = parser.Parse(ref lexer, context, new RootNode());
 
             var document = new QueryDocument(
                 query,

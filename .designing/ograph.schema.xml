@@ -8,9 +8,21 @@
     -->
     <model domain="users">
         <node label="users">
+            <type name="UserQueryable">
+                <property name="pageInfo" type="UserPageInfo"/>
+                <property name="data" type="UserCollection" />
+            </type>
+            <type name="UserPageInfo">
+                <property name="totalCount" type="Long"/>
+            </type>
+            <type name="UserCollection">
+                <collection type="User"/>
+            </type>
             <type name="User">
                 <property name="userId" type="Guid" is-nullable="false" is-key="true" />
-                <property name="firstName" type="String" is-nullable="true" />
+                <property name="firstName" type="String" is-nullable="true">
+                    <meta key="description" value="The first name of the user." />
+                </property>
                 <property name="lastName" type="String" is-nullable="true" />
                 <property name="middleName" type="String" is-nullable="true" />
                 <property name="fullName" type="String" is-nullable="true" is-filterable="false" />

@@ -4,9 +4,13 @@ using System.Collections.Generic;
 namespace Assimalign.OGraph;
 
 using Assimalign.OGraph.Internal;
+using System.Collections.Concurrent;
 
 public sealed class OGraphBuilder : IOGraphBuilder
 {
+
+    private readonly static ConcurrentDictionary<Name, IOGraph> cache = new();
+
     // These are our build actions
     internal readonly IList<Action<OGraph>> onNodeAdd;
     internal readonly IList<Action<OGraph>> onEdgeAdd;
@@ -87,7 +91,6 @@ public sealed class OGraphBuilder : IOGraphBuilder
         {
             throw new ArgumentNullException(nameof(configure));
         }
-
         this.onEdgeAdd.Add(graph =>
         {
             var edge = configure.Invoke(graph);
