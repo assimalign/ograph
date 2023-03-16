@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml;
 using System.Text.Json;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,8 +15,5 @@ public interface IOGraphOperationResult
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="context"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    Task ExecuteAsync(IOGraphOperationContext context, CancellationToken cancellationToken = default);
+    IOGraphError? Error { get; }
 }

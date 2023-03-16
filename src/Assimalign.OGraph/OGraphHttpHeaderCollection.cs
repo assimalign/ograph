@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Assimalign.OGraph;
 
 public sealed class OGraphHttpHeaderCollection : Dictionary<string, HeaderValue>,
-    IOGraphHeaderCollection
+    IOGraphHttpHeaderCollection
 {
     public OGraphHttpHeaderCollection() : base(StringComparer.OrdinalIgnoreCase) { }
 

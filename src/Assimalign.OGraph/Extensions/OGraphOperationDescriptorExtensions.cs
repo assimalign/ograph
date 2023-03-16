@@ -1,9 +1,10 @@
-﻿using Assimalign.OGraph.Internal;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
+
+using Assimalign.OGraph.Internal;
 
 public static class OGraphOperationDescriptorExtensions
 {
@@ -15,16 +16,11 @@ public static class OGraphOperationDescriptorExtensions
         {
             throw new ArgumentNullException(nameof(resolver));
         }
-
         return descriptor.UseResolver(context =>
         {
             return Task.FromResult<IOGraphOperationResult>(new QueryableOperationResult()
             {
-                StatusCode = 200,
-                Body = new QueryableResponseType()
-                {
-
-                }
+            
             });
         });
     }

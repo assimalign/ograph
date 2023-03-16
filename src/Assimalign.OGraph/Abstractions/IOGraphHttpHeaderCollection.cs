@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphHeaderCollection : IDictionary<string, HeaderValue>
+public interface IOGraphHttpHeaderCollection : IDictionary<string, HeaderValue>
 {
     HeaderValue? Host { get; }
     HeaderValue? Accept { get; }

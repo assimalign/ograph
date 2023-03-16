@@ -6,7 +6,7 @@ namespace Assimalign.OGraph;
 /// <summary>
 /// Represents an HTTP Response.
 /// </summary>
-public interface IOGraphResponse
+public interface IOGraphHttpResponse
 {
     /// <summary>
     /// 
@@ -15,7 +15,7 @@ public interface IOGraphResponse
     /// <summary>
     /// 
     /// </summary>
-    IOGraphHeaderCollection Headers { get; }
+    IOGraphHttpHeaderCollection Headers { get; }
     /// <summary>
     /// 
     /// </summary>

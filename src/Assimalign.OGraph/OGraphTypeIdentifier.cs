@@ -9,10 +9,6 @@ public enum OGraphTypeIdentifier
     /// <summary>
     /// 
     /// </summary>
-    Queryable,
-    /// <summary>
-    /// 
-    /// </summary>
     Collection,
     /// <summary>
     /// 

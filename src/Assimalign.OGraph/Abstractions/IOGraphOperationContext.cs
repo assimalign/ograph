@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Security.Claims;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,63 +9,39 @@ using System.Threading.Tasks;
 namespace Assimalign.OGraph;
 
 using Assimalign.OGraph.Syntax;
-using System.IO;
-using System.Security.Claims;
-using System.Text.Json;
-using System.Xml;
 
 public interface IOGraphOperationContext
 {
     /// <summary>
-    /// 
+    /// Get's the OGrapp Model.
     /// </summary>
     /// <returns></returns>
-    IOGraph GetOGraph();
+    IOGraph GetGraph();
     /// <summary>
     /// Get's the binded node for the given operation.
     /// </summary>
     /// <returns></returns>
-    IOGraphNode GetOGraphNode();
+    IOGraphNode GetNode();
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
-    QueryDocument GetOGraphQuery();
+    IOGraphEdge GetEdge();
+    /// <summary>
+    /// Get's the HTTP request query.
+    /// </summary>
+    /// <returns></returns>
+    QueryDocument GetQuery();
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
-    RootNode GetOGraphQueryRoot();
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    PageNode GetOGraphPaging();
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    SortNode GetOGraphSorting();
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    FilterNode GetOGraphFiltering();
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    ProjectionNode GetOGraphProjections();
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    XmlWriter GetXmlWriter();
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    Utf8JsonWriter GetJsonWriter();
+    IOGraphQueryProvider GetQueryProvider();
+
+
+
+    #region HTTP Request Information
+
     /// <summary>
     /// 
     /// </summary>
@@ -91,17 +69,29 @@ public interface IOGraphOperationContext
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     T GetRequestBody<T>();
-
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
     Stream GetRequestBody();
+    /// <summary>
+    /// Get's the authenticated user or application i
+    /// </summary>
+    /// <returns></returns>
+    ClaimsPrincipal GetClaimsPrincipal();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    T GetService<T>();
+
+    #endregion
 
 
 
 
     Stream GetResponseBody();
 
-    ClaimsPrincipal GetClaimsPrincipal();
+    
 }

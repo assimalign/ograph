@@ -1,62 +1,47 @@
 using Assimalign.OGraph;
 using Assimalign.OGraph.AspNetCore;
 
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
-
 builder.Services.AddOGraph("Users", builder =>
 {
-    builder.AddNode("users")
-        .UseMetadata("description", "")
-        .UseType<UserType>();
+    builder.AddNode<UserNode>();
+    builder.AddNode<UserAddressNode>();
+    builder.AddNode<CompanyNode>();
+    builder.AddNode<CompanyAddressNode>();
+    builder.AddNode<EmployeeNode>();
+    builder.AddNode<EmployeeAddressNode>();
 
 
-    builder.AddNode("addresses")
-        .UseMetadata("", "");
-
-    builder.AddEdge("userAddresses")
-        .UseMetadata("description", "Returns a collection of addresses associated with a single user object.")
-        .UseSourceNode("users")
-        .UseTargetNode("addresses")
-        .UseResolver(context =>
-        {
-            var parent = context.GetParent<User>();
-
-
-            return default;
-        });
+    builder.AddOperation<UserCreateOperation>();
 
     builder.AddOperation("GetUsers")
         .UseMethod("GET")
         .UseRoute("/api/users")
-        .UseNode("users")
+        .UseNode<UserNode>()
         .UseMiddleware((context, next) =>
         {
             Console.WriteLine("Middleware 1 Invoked");
 
             return next.Invoke(context);
         })
-        .UseMiddleware((context, next) =>
+        .UseMiddleware(async (context, next) =>
         { 
             var claimsPrincipal = context.GetClaimsPrincipal();
             
             if (!claimsPrincipal.HasClaim("role", "some.role"))
             {
-                return default;
+                return new OGraphErrorResult(new OGraphError()
+                {
+
+                });
             }
 
             Console.WriteLine("Middleware 2 Invoked");
 
-            return next.Invoke(context);
+            return await next.Invoke(context);
         })
-
-        // Queryable Return Type
         .UseResolver(context =>
         {
             
@@ -86,5 +71,4 @@ builder.Services.AddOGraph("Users", builder =>
 var app = builder.Build();
 
 app.UseOGraph();
-
 app.Run();

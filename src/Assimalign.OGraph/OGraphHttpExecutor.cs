@@ -1,9 +1,8 @@
 ﻿
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,16 +11,14 @@ namespace Assimalign.OGraph;
 using Assimalign.OGraph.Internal;
 using Assimalign.OGraph.Syntax;
 
-public class OGraphHttpExecutor : IOGraphExecutor
+
+public class OGraphHttpExecutor : IOGraphHttpExecutor
 {
-    private static readonly ConcurrentDictionary<Type, IQueryProvider> providers;
-
-
     protected virtual IOGraph Graph { get; init; }
 
-    public virtual async Task<IOGraphResponse> ExecuteAsync(IOGraphRequest request, CancellationToken cancellationToken = default)
+    public virtual async Task<IOGraphHttpResponse> ExecuteAsync(IOGraphHttpRequest request, CancellationToken cancellationToken = default)
     {
-        var response = default(IOGraphResponse);
+        var response = default(IOGraphHttpResponse);
         try
         {
             if (!TryValidate(request, out var error))
@@ -49,17 +46,17 @@ public class OGraphHttpExecutor : IOGraphExecutor
             };
             var result = await operation.GetResolverChain().Invoke(context);
 
-            await result.ExecuteAsync(context, cancellationToken);
+            await JsonSerializer.SerializeAsync(response.Body, result);
 
             return response;
         }
         catch (Exception exception)
         {
-            return default(IOGraphResponse);
+            return default(IOGraphHttpResponse);
         }
     }
 
-    public bool TryValidate(IOGraphRequest request, out IOGraphError error)
+    public bool TryValidate(IOGraphHttpRequest request, out IOGraphError error)
     {
         error = default;
 
@@ -71,7 +68,7 @@ public class OGraphHttpExecutor : IOGraphExecutor
         return true;
 
     }
-    public bool TryGetOperation(IOGraphRequest request, out IOGraphOperation operation)
+    public bool TryGetOperation(IOGraphHttpRequest request, out IOGraphOperation operation)
     {
         operation = default;
 
@@ -87,7 +84,7 @@ public class OGraphHttpExecutor : IOGraphExecutor
         return false;
     }
 
-    public bool TryGetQuery(IOGraphRequest request, out QueryDocument queryDocument)
+    public bool TryGetQuery(IOGraphHttpRequest request, out QueryDocument queryDocument)
     {
         queryDocument = default;
 

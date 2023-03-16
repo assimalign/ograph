@@ -74,7 +74,7 @@ public static class OGraphWebApplicationExtensions
             {
                 try
                 {
-                    var graphExecutor = context.RequestServices.GetRequiredService<IOGraphExecutor>();
+                    var graphExecutor = context.RequestServices.GetRequiredService<IOGraphHttpExecutor>();
 
                     var graphResponse = await graphExecutor.ExecuteAsync(operation.Name, new OGraphRequest(context.Request));
 

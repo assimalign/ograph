@@ -50,6 +50,12 @@ public interface IOGraphNodeDescriptor
     /// <param name="configure"></param>
     /// <returns></returns>
     IOGraphNodeDescriptor UseType<T>(Action<IOGraphComplexTypeDescriptor<T>> configure);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    IOGraphEdgeDescriptor AddEdge(Name name);
 }
 
 

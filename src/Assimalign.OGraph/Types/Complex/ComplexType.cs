@@ -25,6 +25,8 @@ public class ComplexType : IOGraphComplexType
     public IOGraphPropertyCollection Properties { get; }
     public Type? RuntimeType { get; init; }
 
+    public bool IsRoot => throw new NotImplementedException();
+
     public bool TryReadJson(Utf8JsonReader reader, out OGraphObject item)
     {
         item = default;
@@ -152,4 +154,5 @@ public class ComplexType : IOGraphComplexType
     {
         throw new NotImplementedException();
     }
+
 }

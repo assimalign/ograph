@@ -7,7 +7,12 @@ namespace Assimalign.OGraph;
 /// </summary>
 public interface IOGraphOperationDescriptor
 {
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    IOGraphOperationDescriptor UseName(Name name);
     /// <summary>
     /// 
     /// </summary>
@@ -42,33 +47,6 @@ public interface IOGraphOperationDescriptor
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TType"></typeparam>
-    /// <returns></returns>
-    IOGraphOperationDescriptor UseRequestType<TType>() where TType : IOGraphComplexType, new();
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    IOGraphOperationDescriptor UseRequestType(IOGraphComplexType type);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TType"></typeparam>
-    /// <returns></returns>
-    IOGraphOperationDescriptor UseResponseType<TType>() where TType : IOGraphType, new();
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    /// <remarks>
-    /// The Execution engine internally will try
-    /// </remarks>
-    IOGraphOperationDescriptor UseResponseType(IOGraphType type);
-    /// <summary>
-    /// 
-    /// </summary>
     /// <typeparam name="TQueryProvider"></typeparam>
     /// <returns></returns>
     IOGraphOperationDescriptor UseQueryProvider<TQueryProvider>() where TQueryProvider : IOGraphQueryProvider, new();
@@ -78,6 +56,24 @@ public interface IOGraphOperationDescriptor
     /// <param name="queryProvider"></param>
     /// <returns></returns>
     IOGraphOperationDescriptor UseQueryProvider(IOGraphQueryProvider queryProvider);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    IOGraphOperationDescriptor UseQueryProvider(Func<OGraphQueryOptions, IOGraphQueryProvider> configure);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="options"></param>
+    /// <returns></returns>
+    IOGraphOperationDescriptor UseQueryOptions(OGraphQueryOptions options);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    IOGraphOperationDescriptor UseQueryOptions(Action<OGraphQueryOptions> configure);
     /// <summary>
     /// 
     /// </summary>

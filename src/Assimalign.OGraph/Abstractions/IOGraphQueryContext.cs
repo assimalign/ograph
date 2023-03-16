@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assimalign.OGraph.Syntax;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public abstract class OGraphOperationResult
+public interface IOGraphQueryContext
 {
+
+    QueryDocument Query { get; }
 }

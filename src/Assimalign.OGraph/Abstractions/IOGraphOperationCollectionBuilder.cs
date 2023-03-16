@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphQueryableType : IOGraphType
+public interface IOGraphOperationCollectionBuilder
 {
+
+    IOGraphOperationDescriptor AddOperation(Name name);
+
+
+
+
+    IOGraphOperationCollection Build();
 }

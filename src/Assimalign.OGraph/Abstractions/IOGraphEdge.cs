@@ -19,7 +19,7 @@ public interface IOGraphEdge
     /// <summary>
     /// 
     /// </summary>
-    IOGraphNode Target { get; }
+    IOGraphNode Target { get; }  
     /// <summary>
     /// 
     /// </summary>
@@ -32,6 +32,14 @@ public interface IOGraphEdge
     /// A collection of middleware that will be executed before the edge is resolved.
     /// </summary>
     IOGraphEdgeMiddlewareQueue Middleware { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    IOGraphQueryProvider QueryProvider { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    OGraphQueryOptions QueryOptions { get; }
     /// <summary>
     /// Builds an execution chain for the given edge.
     /// </summary>

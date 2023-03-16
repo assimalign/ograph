@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphQueryCollection : IDictionary<string, QueryValue>
+public class OGraphHttpPutAttribute : OGraphHttpMethodAttribute
 {
+    public OGraphHttpPutAttribute() : base("PUT")
+    {
+        
+    }
 }

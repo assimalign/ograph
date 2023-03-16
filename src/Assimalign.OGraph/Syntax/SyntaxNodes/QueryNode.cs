@@ -33,8 +33,19 @@ public abstract class QueryNode
     /// </summary>
     /// <typeparam name="TNode"></typeparam>
     /// <returns></returns>
-    public virtual IEnumerable<TNode> GetNodesOfType<TNode>()
+    public virtual IEnumerable<TNode> GetNodesOfType<TNode>() where TNode : QueryNode
     {
         return Array.Empty<TNode>();
+    }
+
+
+    public virtual TNode OfType<TNode>() where TNode : QueryNode
+    {
+        if (this is TNode node)
+        {
+            return node;
+        }
+
+        return default;
     }
 }

@@ -10,29 +10,9 @@ namespace Assimalign.OGraph.Internal;
 
 internal class EnumerableQueryProvider<T> : IOGraphQueryProvider
 {
-    public Type ProviderType => typeof(IEnumerable<T>);
+    public Type ElementType => typeof(IEnumerable<T>);
 
-    public void ApplyFiltering(FilterNode filter, OGraphQueryContext context)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void ApplyPaging(PageNode paging, OGraphQueryContext context)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void ApplyProjections(ProjectionNode projection, OGraphQueryContext context)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void ApplySorting(SortNode sorting, OGraphQueryContext context)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IOGraphQueryResult> ExecuteAsync(CancellationToken cancellationToken = default)
+    public Task<IOGraphQueryResult> ExecuteAsync(IOGraphQueryContext context, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

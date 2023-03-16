@@ -18,7 +18,7 @@
             <type name="UserCollection">
                 <collection type="User"/>
             </type>
-            <type name="User">
+            <type name="User" is-root="true">
                 <property name="userId" type="Guid" is-nullable="false" is-key="true" />
                 <property name="firstName" type="String" is-nullable="true">
                     <meta key="description" value="The first name of the user." />
@@ -55,7 +55,6 @@
         <node label="profiles">
 
         </node>
-
         <operation name="GetUsers">
 
 

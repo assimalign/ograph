@@ -3,13 +3,13 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<RootNamespace>Assimalign.OGraph</RootNamespace>
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\Assimalign.OGraph\Assimalign.OGraph.csproj" />
 		<ProjectReference Include="..\Assimalign.OGraph.AspNetCore\Assimalign.OGraph.AspNetCore.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<Folder Include="Operations\" />
-		<Folder Include="Nodes\" />
+	  <Folder Include="Events\" />
 	</ItemGroup>
 </Project>

@@ -76,7 +76,6 @@ public readonly struct Method :
 
 
 
-
 	public static Method Get => "GET";
 	public static Method Post => "POST";
 	public static Method Put => "PUT";

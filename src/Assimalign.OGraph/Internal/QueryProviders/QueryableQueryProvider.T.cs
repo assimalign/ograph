@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -13,30 +14,32 @@ using Assimalign.OGraph.Syntax;
 
 internal class QueryableQueryProvider<T> : IOGraphQueryProvider
 {
-    public Type ProviderType => typeof(IQueryable<T>);
+    public Type ElementType => typeof(IQueryable<T>);
 
-    public void ApplyFiltering(FilterNode filter, OGraphQueryContext context)
+    public IQueryable<T> Queryable { get; set; }
+
+    public Task<IOGraphQueryResult> ExecuteAsync(IOGraphQueryContext context, CancellationToken cancellationToken = default)
     {
+        var visitor = new QueryExpressionVisitor(Queryable.Expression)
+        {
+            ElementType = Queryable.ElementType
+        };
+
+        var expression = visitor.Visit(context.Query.Root);
+        var expressionResult = Queryable.Provider.Execute(expression);
+
+        if (expressionResult is not IEnumerable enumerable)
+        {
+            throw new Exception();
+        }
+        foreach (var item in enumerable)
+        {
+
+        }
+
+
+
         throw new NotImplementedException();
     }
-
-    public void ApplyPaging(PageNode paging, OGraphQueryContext context)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void ApplyProjections(ProjectionNode projection, OGraphQueryContext context)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void ApplySorting(SortNode sorting, OGraphQueryContext context)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IOGraphQueryResult> ExecuteAsync(CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
+   
 }

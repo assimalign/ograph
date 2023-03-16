@@ -26,9 +26,7 @@ public interface IOGraphType
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="queryableType"></param>
-    /// <returns></returns>
-    bool IsQueryableType(out IOGraphQueryableType queryableType);
+    bool IsRoot { get; }
     /// <summary>
     /// 
     /// </summary>

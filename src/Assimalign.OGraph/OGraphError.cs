@@ -8,9 +8,7 @@ namespace Assimalign.OGraph;
 
 public sealed class OGraphError : IOGraphError
 {
-    public string Code => throw new NotImplementedException();
-
-    public string Message => throw new NotImplementedException();
-
-    public IOGraphErrorDetailsCollection Details => throw new NotImplementedException();
+    public string Code { get; init; }
+    public string Message { get; init; }
+    public IOGraphErrorDetailsCollection Details { get; init; }
 }

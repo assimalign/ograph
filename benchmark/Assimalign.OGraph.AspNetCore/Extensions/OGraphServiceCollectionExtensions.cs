@@ -19,7 +19,7 @@ public static class OGraphServiceCollectionExtensions
             {
                 return OGraphBuilder.Create(name, configure);
             })
-            .AddSingleton<IOGraphExecutor>(serviceProvider =>
+            .AddSingleton<IOGraphHttpExecutor>(serviceProvider =>
             {
                 var graph = serviceProvider.GetRequiredService<IOGraph>();
 

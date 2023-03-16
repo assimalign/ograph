@@ -16,10 +16,10 @@ internal class QueryableOperationResult : IOGraphOperationResult
     public IOGraphEdgeContext EdgeResolverContext { get; init; }
     public IQueryable Queryable { get; init; }
 
-    public async Task ExecuteAsync(IOGraphResponse response, IOGraphOperationContext context, CancellationToken cancellationToken = default)
+    public async Task ExecuteAsync(IOGraphHttpResponse response, IOGraphOperationContext context, CancellationToken cancellationToken = default)
     {
-        var graphQuery  = context.GetOGraphQuery();
-        var graphNode   = context.GetOGraphNode();
+        var graphQuery  = context.GetQuery();
+        var graphNode   = context.GetNode();
       
         if (graphQuery is null)
         {

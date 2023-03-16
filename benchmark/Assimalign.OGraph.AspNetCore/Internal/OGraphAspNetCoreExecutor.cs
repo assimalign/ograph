@@ -11,7 +11,7 @@ namespace Assimalign.OGraph.AspNetCore.Internal;
 internal class OGraphAspNetCoreExecutor : OGraphExecutor
 {
 
-    public override Task<IOGraphResponse> ExecuteAsync(Name name, IOGraphRequest request, CancellationToken cancellationToken = default)
+    public override Task<IOGraphHttpResponse> ExecuteAsync(Name name, IOGraphHttpRequest request, CancellationToken cancellationToken = default)
     {
         return base.ExecuteAsync(name, request, cancellationToken);
     }

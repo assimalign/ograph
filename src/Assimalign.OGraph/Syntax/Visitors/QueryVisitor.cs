@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
 
-public abstract class QueryNodeVisitor<T> : IQueryNodeVisitor<T>
+public abstract class QueryVisitor<T> : IQueryNodeVisitor<T>
 {
     
     public T Visit(QueryNode node) => node.Accept(this);

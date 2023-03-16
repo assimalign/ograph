@@ -14,10 +14,6 @@ public interface IOGraphPropertyResult
     /// <summary>
     /// 
     /// </summary>
-    bool IsSuccess { get; }
-    /// <summary>
-    /// 
-    /// </summary>
     IOGraphError? Error { get; }
     /// <summary>
     /// 

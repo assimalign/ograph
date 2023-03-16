@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Results
+namespace Assimalign.OGraph;
+
+public interface IOGraphHttpQueryCollection : IDictionary<string, QueryValue>
 {
-    internal class EnumerableResult
-    {
-    }
 }
