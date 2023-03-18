@@ -48,8 +48,7 @@ public class ComplexType<T> : ComplexType
             }
             if (property.PropertyType.IsComplexType())
             {
-                var propertyType = property.PropertyType;
-                var complexType = typeof(ComplexType<>).MakeGenericType(propertyType);
+                var complexType     = typeof(ComplexType<>).MakeGenericType(property.PropertyType);
                 var complexInstance = Activator.CreateInstance(complexType);
 
                 if (complexInstance is not IOGraphComplexType type)

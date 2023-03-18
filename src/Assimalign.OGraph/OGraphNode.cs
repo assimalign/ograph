@@ -30,7 +30,10 @@ public abstract class OGraphNode : IOGraphNode
     IOGraphEdgeCollection IOGraphNode.Edges => this.edges;
 
 
-   
+    protected virtual void Configure(IOGraphNodeDescriptor descriptor)
+    {
+
+    }
 
 
 
@@ -45,20 +48,4 @@ public abstract class OGraphNode : IOGraphNode
 
         return true;
     }
-
-}
-
-
-
-
-public abstract class OGraphNode<TType> : OGraphNode 
-    where TType :  IOGraphType, new()
-{
-    public OGraphNode()
-    {
-        base.type = new TType();
-        base.label = new Label(type.TypeName);
-    }
-
-    protected abstract void Configure(IOGraphNodeDescriptor descriptor);
 }

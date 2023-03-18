@@ -20,6 +20,10 @@ internal class OGraphEdge : IOGraphEdge
     public IOGraphEdgeResolver Resolver { get; set; }
     public IOGraphEdgeMiddlewareQueue Middleware { get; }
 
+    public IOGraphQueryProvider QueryProvider => throw new NotImplementedException();
+
+    public OGraphQueryOptions QueryOptions => throw new NotImplementedException();
+
     public OGraphEdgeHandler GetResolverChain()
     {
         var memoise = Cacher<OGraphEdge, OGraphEdgeHandler>.Memoise(edge =>

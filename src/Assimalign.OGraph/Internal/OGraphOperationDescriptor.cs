@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Internal;
 
@@ -13,21 +9,72 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
 
     public OGraphOperationDescriptor(OGraphOperation operation)
     {
+        if (operation is null)
+        {
+            throw new ArgumentNullException(nameof(operation));
+        }
         this.operation = operation;
     }
 
     public IList<Action<OGraph>> OnConfigure { get; init; }
 
-
+    public IOGraphOperationDescriptor UseName(Name name)
+    {
+        OnConfigure.Add(graph =>
+        {
+            operation.name = name;
+        });
+        return this;
+    }
+    public IOGraphOperationDescriptor UseQuery(QueryValue query)
+    {
+        return this;
+    }
+    public IOGraphOperationDescriptor UseRoute(Route route)
+    {
+        OnConfigure.Add(graph =>
+        {
+            operation.route = route;
+        });
+        return this;
+    }
     public IOGraphOperationDescriptor UseMethod(Method method)
     {
         OnConfigure.Add(graph =>
         {
-            operation.Method = method;
+            operation.method = method;
         });
         return this;
     }
-
+    public IOGraphOperationDescriptor UseNode(Label label)
+    {
+        OnConfigure.Add(graph =>
+        {
+            if (!graph.Nodes.TryGet(label, out var node))
+            {
+                throw new Exception();
+            }
+            operation.node = node;
+        });
+        return this;
+    }
+    public IOGraphOperationDescriptor UseNode<TNode>() where TNode : IOGraphNode, new()
+    {
+        OnConfigure.Add(graph =>
+        {
+            operation.node = new TNode();
+        });
+        return this;
+    }
+    public IOGraphOperationDescriptor UseMiddleware<TMiddleware>()
+       where TMiddleware : IOGraphOperationMiddleware, new()
+    {
+        OnConfigure.Add(graph =>
+        {
+            operation.Middleware.Enqueue(new TMiddleware());
+        });
+        return this;
+    }
     public IOGraphOperationDescriptor UseMiddleware(IOGraphOperationMiddleware middleware)
     {
         OnConfigure.Add(graph =>
@@ -40,7 +87,6 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });        
         return this;
     }
-
     public IOGraphOperationDescriptor UseMiddleware(OGraphOperationMiddleware middleware)
     {
         OnConfigure.Add(graph =>
@@ -51,29 +97,17 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
             }
             operation.Middleware.Enqueue(new OGraphOperationMiddlewareDefault(middleware));
         });      
-
         return this;
     }
-
-    public IOGraphOperationDescriptor UseNode(Label label)
+    public IOGraphOperationDescriptor UseResolver<TResolver>()
+        where TResolver : IOGraphOperationResolver, new()
     {
         OnConfigure.Add(graph =>
         {
-            if (!graph.Nodes.TryGet(label, out var node))
-            {
-                throw new Exception();
-            }
-            operation.Node = node;
+            operation.resolver = new TResolver();
         });
-       
         return this;
     }
-
-    public IOGraphOperationDescriptor UseQuery(QueryValue query)
-    {
-        return this;
-    }
-
     public IOGraphOperationDescriptor UseResolver(IOGraphOperationResolver resolver)
     {
         OnConfigure.Add(graph =>
@@ -83,86 +117,72 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
                 throw new ArgumentNullException(nameof(resolver));
             }
 
-            operation.Resolver = resolver;
+            operation.resolver = resolver;
         });
-        
-
         return this;
     }
-
     public IOGraphOperationDescriptor UseResolver(OGraphOperationResolver resolver)
-    {
-        operation.Resolver = new OGraphOperationResolverDefault(resolver);
-        return this;
-    }
-
-
-    public IOGraphOperationDescriptor UseRoute(Route route)
     {
         OnConfigure.Add(graph =>
         {
-            operation.Route = route;
+            if (resolver is null)
+            {
+                throw new ArgumentNullException(nameof(resolver));
+            }
+
+            operation.resolver = new OGraphOperationResolverDefault(resolver);
         });
-       
         return this;
     }
-
-
-    public IOGraphOperationDescriptor UseRequestType(IOGraphType type)
+    public IOGraphOperationDescriptor UseQueryProvider<TQueryProvider>() 
+        where TQueryProvider : IOGraphQueryProvider, new()
     {
-        throw new NotImplementedException();
-    }
-
-    public IOGraphOperationDescriptor UseResponseType<TType>() where TType : IOGraphType, new()
-    {
-        operation.ResponseType = new TType();
+        OnConfigure.Add(graph =>
+        {
+            operation.queryProvider = new TQueryProvider();
+        });
         return this;
     }
-
-    public IOGraphOperationDescriptor UseResponseType(IOGraphType type)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IOGraphOperationDescriptor UseNode<TNode>() where TNode : IOGraphNode, new()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IOGraphOperationDescriptor UseRequestType(IOGraphComplexType type)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IOGraphOperationDescriptor UseMiddleware<TMiddleware>() where TMiddleware : IOGraphOperationMiddleware, new()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IOGraphOperationDescriptor UseResolver<TResolver>() where TResolver : IOGraphOperationResolver, new()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IOGraphOperationDescriptor UseRequestType<TType>() where TType : IOGraphComplexType, new()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IOGraphOperationDescriptor UseQueryProvider<TQueryProvider>() where TQueryProvider : IOGraphQueryProvider, new()
-    {
-        operation.QueryProvider = new TQueryProvider();
-        return this;
-    }
-
     public IOGraphOperationDescriptor UseQueryProvider(IOGraphQueryProvider queryProvider)
     {
-        if (queryProvider is null)
+        OnConfigure.Add(graph =>
         {
-            throw new ArgumentNullException(nameof(queryProvider));
-        }
+            if (queryProvider is null)
+            {
+                throw new ArgumentNullException(nameof(queryProvider));
+            }
+            operation.queryProvider = queryProvider;
+        });
+        return this;
+    }
+    public IOGraphOperationDescriptor UseQueryOptions(OGraphQueryOptions options)
+    {
+        OnConfigure.Add(graph =>
+        {
+            if (options is null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+            operation.queryOptions = options;
+        });
+        return this;
+    }
+    public IOGraphOperationDescriptor UseQueryOptions(Action<OGraphQueryOptions> configure)
+    {
+        OnConfigure.Add(graph =>
+        {
+            if (configure is null)
+            {
+                throw new ArgumentNullException(nameof(configure));
+            }
 
-        operation.QueryProvider = queryProvider;
+            var options = new OGraphQueryOptionsDefault();
+
+            configure.Invoke(options);
+
+            operation.queryOptions = options;
+
+        });
         return this;
     }
 }

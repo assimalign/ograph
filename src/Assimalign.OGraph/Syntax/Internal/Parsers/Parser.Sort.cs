@@ -56,7 +56,7 @@ internal class SortParser : Parser
 
             queryNode = new SortNode()
             {
-                Edge = parser.Parse<EdgeNode>(ref lexer, context)
+                //Edge = parser.Parse<EdgeNode>(ref lexer, context)
             };
 
             if (!lexer.TryPeek(out token))
@@ -163,7 +163,7 @@ internal class SortParser : Parser
                 {
                     SortBy = sortNode,
                     Direction = (SortDirection)token.TokenType,
-                    Edge = queryNode.Edge,
+                    //Edge = queryNode.Edge,
                     ThenBy = queryNode.ThenBy,
                 };
 
@@ -180,7 +180,7 @@ internal class SortParser : Parser
                 {
                     SortBy = sortNode,
                     Direction = queryNode.Direction,
-                    Edge = queryNode.Edge,
+                    //Edge = queryNode.Edge,
                     ThenBy = ParseSortIdentifier(ref lexer, context, new SortNode()),
                 };
             }
@@ -190,7 +190,7 @@ internal class SortParser : Parser
                 {
                     SortBy = sortNode,
                     Direction = queryNode.Direction,
-                    Edge = queryNode.Edge
+                    //Edge = queryNode.Edge
                 };
             }
         }

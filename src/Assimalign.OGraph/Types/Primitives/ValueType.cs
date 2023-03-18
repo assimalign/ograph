@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Assimalign.OGraph;
 
-public abstract class ValueType<T> : IOGraphPrimitiveType
+public abstract class ValueType<T> 
     where T : struct
 {
     public Name TypeName => nameof(T);
@@ -12,9 +12,4 @@ public abstract class ValueType<T> : IOGraphPrimitiveType
     public Type? RuntimeType => typeof(T);
 
     public virtual object? Value { get; }
-
-    public abstract bool TryReadJson(Utf8JsonReader reader, out OGraphValue value);
-    public abstract bool TryWriteJson(Utf8JsonWriter writer, OGraphValue value);
-    public abstract bool TryReadXml(XmlReader reader, out OGraphValue value);
-    public abstract bool TryWriteXml(XmlWriter writer, OGraphValue value);
 }

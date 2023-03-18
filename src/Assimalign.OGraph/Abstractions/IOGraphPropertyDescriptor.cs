@@ -23,6 +23,12 @@ public interface IOGraphPropertyDescriptor
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    IOGraphPropertyDescriptor UseType(Action<IOGraphComplexTypeDescriptor> configure);
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="middleware"></param>
     /// <returns></returns>
     IOGraphPropertyDescriptor UseMiddleware(OGraphPropertyMiddleware middleware);

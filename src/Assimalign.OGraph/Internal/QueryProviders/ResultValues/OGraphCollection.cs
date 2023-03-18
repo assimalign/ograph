@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Assimalign.OGraph;
+namespace Assimalign.OGraph.Internal;
 
-public readonly struct OGraphCollection : IEnumerable<OGraphCollectionItem>
+internal readonly struct OGraphCollection : IEnumerable<OGraphCollectionItem>
 {
 
     public OGraphCollection(OGraphCollectionItem[] items)

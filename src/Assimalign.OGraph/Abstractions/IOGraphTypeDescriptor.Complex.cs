@@ -1,5 +1,10 @@
-﻿namespace Assimalign.OGraph;
+﻿using System;
 
+namespace Assimalign.OGraph;
+
+/// <summary>
+/// 
+/// </summary>
 public interface IOGraphComplexTypeDescriptor
 {
     /// <summary>

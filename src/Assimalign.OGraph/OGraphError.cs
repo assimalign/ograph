@@ -8,7 +8,12 @@ namespace Assimalign.OGraph;
 
 public sealed class OGraphError : IOGraphError
 {
-    public string Code { get; init; }
-    public string Message { get; init; }
-    public IOGraphErrorDetailsCollection Details { get; init; }
+    /// <inheritdoc />
+    public string? Code { get; set; }
+
+    /// <inheritdoc />
+    public string? Message { get; set; }
+
+    /// <inheritdoc />
+    public IOGraphErrorDetailsCollection? Details { get; set; }
 }

@@ -12,20 +12,23 @@ namespace Assimalign.OGraph.Internal;
 
 using Assimalign.OGraph.Syntax;
 
-internal class QueryableQueryProvider<T> : IOGraphQueryProvider
+internal class OGraphQueryableQueryProvider<T> : IOGraphQueryProvider
 {
     public Type ElementType => typeof(IQueryable<T>);
 
-    public IQueryable<T> Queryable { get; set; }
+    public IQueryable<T> Queryable { get; init; }
 
-    public Task<IOGraphQueryResult> ExecuteAsync(IOGraphQueryContext context, CancellationToken cancellationToken = default)
+    public Task<IOGraphQueryResult> ExecuteAsync(IOGraphQueryContext context, OGraphQueryOptions options, CancellationToken cancellationToken = default)
     {
-        var visitor = new QueryExpressionVisitor(Queryable.Expression)
+        var query = context.Query.Root;
+        var queryVisitor = new QueryExpressionVisitor(Queryable.Expression)
         {
             ElementType = Queryable.ElementType
         };
 
-        var expression = visitor.Visit(context.Query.Root);
+        var node = context.Node;
+
+        var expression = queryVisitor.Visit(context.Query.Root);
         var expressionResult = Queryable.Provider.Execute(expression);
 
         if (expressionResult is not IEnumerable enumerable)
@@ -34,12 +37,20 @@ internal class QueryableQueryProvider<T> : IOGraphQueryProvider
         }
         foreach (var item in enumerable)
         {
+            var projections = query.OfType<RootNode>();
 
+            if (projections.TryGetProjection(out var projection))
+            {
+                foreach (var edge in projection.Edges)
+                {
+                    if (node.Edges.TryGet(edge.GetEdgeName().Value, out var e))
+                    {
+                        
+                    }
+                }
+            }
         }
-
-
 
         throw new NotImplementedException();
     }
-   
 }

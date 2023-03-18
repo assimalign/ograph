@@ -10,5 +10,6 @@ namespace Assimalign.OGraph;
 public interface IOGraphQueryContext
 {
 
+    IOGraphNode Node { get;  }
     QueryDocument Query { get; }
 }

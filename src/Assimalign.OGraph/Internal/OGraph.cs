@@ -23,7 +23,6 @@ internal class OGraph : IOGraph
     public Name Name { get; set; }
 
 
-
     public OGraphNodeCollection Nodes { get; }
     IOGraphNodeCollection IOGraph.Nodes => this.Nodes;
     

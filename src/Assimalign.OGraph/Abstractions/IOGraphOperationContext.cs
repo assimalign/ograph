@@ -26,12 +26,17 @@ public interface IOGraphOperationContext
     /// 
     /// </summary>
     /// <returns></returns>
-    IOGraphEdge GetEdge();
+    IOGraphEdge GetEdge(Name name);
     /// <summary>
     /// Get's the HTTP request query.
     /// </summary>
     /// <returns></returns>
     QueryDocument GetQuery();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    OGraphQueryOptions GetQueryOptions();
     /// <summary>
     /// 
     /// </summary>

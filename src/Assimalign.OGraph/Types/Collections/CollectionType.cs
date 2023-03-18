@@ -13,10 +13,24 @@ public abstract class CollectionType<TCollection> : IOGraphCollectionType
     public OGraphTypeIdentifier TypeIdentifier => OGraphTypeIdentifier.Collection;
     public Type RuntimeType => typeof(TCollection);
 
-    public abstract bool TryReadJson(Utf8JsonReader reader, out OGraphCollection collection);
-    public abstract bool TryReadXml(XmlReader reader, out OGraphCollection collection);
-    public abstract bool TryWriteJson(Utf8JsonWriter writer, OGraphCollection collection);
-    public abstract bool TryWriteXml(XmlWriter writer, OGraphCollection collection);
+    public bool IsRoot => throw new NotImplementedException();
+
+    public bool IsCollectionType(out IOGraphCollectionType collectionType)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool IsComplexType(out IOGraphComplexType complexType)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool IsPrimitiveType(out IOGraphPrimitiveType primitiveType)
+    {
+        throw new NotImplementedException();
+    }
+
+
 
     //public bool TryReadJson(Utf8JsonReader reader, out OGraphCollection collection)
     //{

@@ -44,11 +44,11 @@ internal class FilterParser : Parser
         if (next.TokenType == TokenType.Identifier)
         {
             var edgeParser = context.GetParser<EdgeParser>();
-            var edgeNode = edgeParser.Parse<EdgeNode>(ref lexer, context);
+            //var edgeNode = edgeParser.Parse<EdgeNode>(ref lexer, context);
 
             queryNode = new FilterNode()
             {
-                Edge = edgeNode
+                //Edge = edgeNode
             };
 
             if (!lexer.TryPeek(out next))
@@ -156,7 +156,7 @@ internal class FilterParser : Parser
 
         queryNode = new FilterNode()
         {
-            Edge = queryNode.Edge,
+            //Edge = queryNode.Edge,
             Predicate = binaryNode
         };
 

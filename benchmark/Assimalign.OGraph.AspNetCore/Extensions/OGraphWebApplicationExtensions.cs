@@ -9,15 +9,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Assimalign.OGraph.AspNetCore;
 
-using Assimalign.OGraph.Execution;
-
 
 public static class OGraphWebApplicationExtensions
 {
     public static WebApplication UseOGraph(this WebApplication app)
     {
         var graph = app.Services.GetService<IOGraph>();
-
 
         if (graph is null)
         {
@@ -29,8 +26,6 @@ public static class OGraphWebApplicationExtensions
         }
 
         var routes = graph.GetRoutes();
-
-
 
         foreach (var operation in graph.Operations.OrderBy(x => x.Route))
         {
@@ -76,7 +71,7 @@ public static class OGraphWebApplicationExtensions
                 {
                     var graphExecutor = context.RequestServices.GetRequiredService<IOGraphHttpExecutor>();
 
-                    var graphResponse = await graphExecutor.ExecuteAsync(operation.Name, new OGraphRequest(context.Request));
+                    var graphResponse = await graphExecutor.ExecuteAsync(new OGraphRequest(context.Request));
 
                     context.Response.StatusCode = graphResponse.StatusCode;
 

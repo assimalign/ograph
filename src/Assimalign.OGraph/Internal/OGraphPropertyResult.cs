@@ -20,4 +20,6 @@ internal class OGraphPropertyResult : IOGraphPropertyResult
     public bool IsSuccess => this.Error == null;
     public object Data { get; init; }
     public IOGraphError? Error { get; init; }
+
+    public object? Value => throw new NotImplementedException();
 }

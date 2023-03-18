@@ -18,21 +18,33 @@ internal class OGraphComplexTypeDescriptor<T> : IOGraphComplexTypeDescriptor<T>
 
     public IOGraphPropertyDescriptor HasProperty(Name name)
     {
-        throw new NotImplementedException();
+        return default;
     }
 
     public IOGraphPropertyDescriptor<TProperty> HasProperty<TProperty>(Expression<Func<T, TProperty>> expression)
     {
-        throw new NotImplementedException();
+        return default;
     }
 
     public IOGraphComplexTypeDescriptor<T> Ignore(Name name)
     {
-        throw new NotImplementedException();
+        if (complexType.Properties.TryGet(name, out var property))
+        {
+            complexType.Properties.Remove(property);
+        }
+
+        return this;
     }
 
     public IOGraphComplexTypeDescriptor<T> Ignore<TProperty>(Expression<Func<T, TProperty>> expression)
     {
-        throw new NotImplementedException();
+        var memberExpression = (MemberExpression)expression.Body;
+
+        if (complexType.Properties.TryGet(memberExpression.Member.Name, out var property))
+        {
+            complexType.Properties.Remove(property);
+        }
+
+        return this;
     }
 }

@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Assimalign.OGraph.AspNetCore;
 
-using Assimalign.OGraph.Execution;
 
 public static class OGraphServiceCollectionExtensions
 {
@@ -23,7 +22,10 @@ public static class OGraphServiceCollectionExtensions
             {
                 var graph = serviceProvider.GetRequiredService<IOGraph>();
 
-                return OGraphExecutor.Create(graph);
+                return new OGraphHttpExecutor()
+                {
+                    
+                };
             });
     }
 }

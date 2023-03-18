@@ -19,5 +19,5 @@ public interface IOGraphQueryProvider
     Type ElementType { get; }
 
 
-    Task<IOGraphQueryResult> ExecuteAsync(IOGraphQueryContext context, CancellationToken cancellationToken = default);
+    Task<IOGraphQueryResult> ExecuteAsync(IOGraphQueryContext context, OGraphQueryOptions options, CancellationToken cancellationToken = default);
 }

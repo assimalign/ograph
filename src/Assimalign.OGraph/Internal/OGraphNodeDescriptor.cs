@@ -22,7 +22,7 @@ internal class OGraphNodeDescriptor : IOGraphNodeDescriptor
 
     public IOGraphNodeDescriptor UseLabel(Label label)
     {
-        node.Label = label;
+        node.label = label;
         return this;
     }
     public IOGraphNodeDescriptor UseMetadata(string key, object value)
@@ -36,7 +36,7 @@ internal class OGraphNodeDescriptor : IOGraphNodeDescriptor
             throw new ArgumentNullException(nameof(value));
         }
 
-        node.Metadata[key] = value;
+        node.metadata[key] = value;
 
         return this;
     }
@@ -46,12 +46,12 @@ internal class OGraphNodeDescriptor : IOGraphNodeDescriptor
         {
             throw new ArgumentNullException(nameof(type));
         }
-        node.Type = type;
+        node.type = type;
         return this;
     }
     public IOGraphNodeDescriptor UseType<TType>() where TType : IOGraphType, new()
     {
-        node.Type = new TType();
+        node.type = new TType();
         return this;
     }
     public IOGraphNodeDescriptor HasType(Action<OGraphComplexTypeDescriptor> configure)
@@ -65,5 +65,10 @@ internal class OGraphNodeDescriptor : IOGraphNodeDescriptor
     public IOGraphNodeDescriptor UseType<T>(Action<IOGraphComplexTypeDescriptor<T>> configure)
     {
         throw new NotImplementedException();
-    }   
+    }
+
+    public IOGraphEdgeDescriptor AddEdge(Name name)
+    {
+        throw new NotImplementedException();
+    }
 }

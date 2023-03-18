@@ -53,7 +53,7 @@ internal sealed class PageParser : Parser
 
             queryNode = new PageNode()
             {
-                Edge = parser.Parse<EdgeNode>(ref lexer, context)
+                //Edge = parser.Parse<EdgeNode>(ref lexer, context)
             };
 
             if (!lexer.TryNext(out next))

@@ -14,7 +14,7 @@ internal class ObjectQueryProvider<T> : IOGraphQueryProvider
 {
     public Type ElementType => typeof(T);
 
-    public Task<IOGraphQueryResult> ExecuteAsync(IOGraphQueryContext context, CancellationToken cancellationToken = default)
+    public Task<IOGraphQueryResult> ExecuteAsync(IOGraphQueryContext context, OGraphQueryOptions options, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

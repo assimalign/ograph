@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph;
+namespace Assimalign.OGraph.Internal;
 
-public readonly struct OGraphObjectItem
+internal readonly struct OGraphObjectItem
 {
     private readonly object value;
 

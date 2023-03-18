@@ -1,42 +1,71 @@
 {
-    "@ograph.label": "",
-    "@ograph.totalCount": 4568,
-    "pageInfo": {},
-    "data": [
+    //"$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "ograph.response.schema.json",
+
+    "@ograph.node": "#model/nodes/employees", // A reference to the nodes schema in the OGraph Model
+    "pageInfo": {
+        "totalCount": 2345,
+        "hasNext": true,
+        "hasPrevious": true
+    },
+    "error": {
+        "code": "Unauthorized",
+        "message": "The user is unauthorized.",
+        "details": [
+            {
+                "code": "Access Denied",
+                "message": "The user is not authorized to access edge: 'taxInfo'"
+            }
+        ]
+    },
+    "nodes": [
         {
-            "@ograph.label": "User",
+            // Context Information
+            "@ograph.label": "employees",
+
+            // Attributes
             "firstName": "Chase",
             "lastName": "Crawford",
-            "addresses": {
-                "@ograph.label": "",
-                "@ograph.totalCount": 4568,
-                "pageInfo": {},
-                "data": [
-                    {
+            
+            // Edges
+            "@ograph.edges": {
+                "company": {
+                    "pageInfo": {
 
-                    }
-                ],
-                "error": {
-                    "code": "",
-                    "message": "",
-                    "details": [
+                    },
+                    "nodes": [
                         {
-                            "code": "",
-                            "message": ""
+                            "@ograph.label": "company",
+                            "companyName": "Assimalign LLC",
+    
+    
+                            "@ograph.edges": {
+    
+                            }
                         }
                     ]
+                },
+                "addresses": {                
+                    "@ograph.label": "",
+                    "@ograph.totalCount": 4568,
+                    "pageInfo": {},
+                    "nodes": [
+                        {
+    
+                        }
+                    ],
+                    "error": {
+                        "code": "",
+                        "message": "",
+                        "details": [
+                            {
+                                "code": "",
+                                "message": ""
+                            }
+                        ]
+                    }
                 }
             }
         }
-    ],
-    "error": {
-        "code": "",
-        "message": "",
-        "details": [
-            {
-                "code": "",
-                "message": ""
-            }
-        ]
-    }
+    ]
 }

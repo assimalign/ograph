@@ -47,10 +47,10 @@ https://endpoint.com/api/users?query=
 })
 
 
-.project(has_primary_addresses, {
+.project(hasPrimaryAddresses, {
 
 })
-.project(addresses/types, {
+.project(hasPrimaryAddresses/hasTypes, {
 
 })
 

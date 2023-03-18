@@ -8,11 +8,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Assimalign.OGraph.Syntax;
 
 namespace Assimalign.OGraph.Internal;
-
-using Assimalign.OGraph.Execution;
-using Assimalign.OGraph.Http;
 
 internal class OGraphResolverContext :
     IOGraphEdgeContext,
@@ -23,8 +21,6 @@ internal class OGraphResolverContext :
     internal Route RequestRoute { get; init; }
     internal Stream? RequestBody { get; init; }
     internal IOGraphType RequestType { get; init; }
-    internal Execution.IOGraphQueryCollection RequestQuery { get; init; }
-    internal Execution.IOGraphHeaderCollection? RequestHeaders { get; init; }
 
     
     internal IServiceProvider? ServiceProvider { get; init; }
@@ -47,14 +43,6 @@ internal class OGraphResolverContext :
         {
             RequestBody.Position = 0;
 
-            if (RequestHeaders.ContentType == OGraphMediaType.Json)
-            {
-                return GetJsonBodyValue<T>();
-            }
-            if (RequestHeaders.ContentType == OGraphMediaType.Xml)
-            {
-                return GetXmlBodyValue<T>();
-            }
 
             throw new Exception("Unsupported Media Type");
         });
@@ -73,10 +61,7 @@ internal class OGraphResolverContext :
             
             var reader = new Utf8JsonReader(span);
 
-            if (!complexType.TryReadJson(reader, out var value))
-            {
-                throw new Exception();
-            }
+    
         }
 
 
@@ -88,10 +73,7 @@ internal class OGraphResolverContext :
         {
             var reader = XmlReader.Create(RequestBody);
 
-            if (!complexType.TryReadXml(reader, out var value))
-            {
-                throw new Exception();
-            }
+   
         }
 
         throw new Exception();
@@ -127,6 +109,76 @@ internal class OGraphResolverContext :
     }
 
     public T GetService<T>()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IOGraph GetGraph()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IOGraphEdge GetEdge()
+    {
+        throw new NotImplementedException();
+    }
+
+    public QueryDocument GetQuery()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IOGraphQueryProvider GetQueryProvider()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IOGraphType GetPropertyType()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IOGraphNode GetNode()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IOGraphEdge GetEdge(Name name)
+    {
+        throw new NotImplementedException();
+    }
+
+    public OGraphQueryOptions GetQueryOptions()
+    {
+        throw new NotImplementedException();
+    }
+
+    public T GetRequestHeader<T>(string headerName)
+    {
+        throw new NotImplementedException();
+    }
+
+    public T GetRequestRouteParam<T>(string parameterName)
+    {
+        throw new NotImplementedException();
+    }
+
+    public T GetRequestQueryValue<T>(string parameterName)
+    {
+        throw new NotImplementedException();
+    }
+
+    public T GetRequestBody<T>()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Stream GetRequestBody()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Stream GetResponseBody()
     {
         throw new NotImplementedException();
     }

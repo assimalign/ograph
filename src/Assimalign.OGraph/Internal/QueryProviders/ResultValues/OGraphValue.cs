@@ -1,9 +1,9 @@
-﻿namespace Assimalign.OGraph;
+﻿namespace Assimalign.OGraph.Internal;
 
 /// <summary>
 /// 
 /// </summary>
-public readonly struct OGraphValue
+internal readonly struct OGraphValue
 {
     internal OGraphValue(object value)
     {

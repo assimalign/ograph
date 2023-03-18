@@ -4,21 +4,28 @@ using Assimalign.OGraph.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton<IRepository<User>, UserRepository>();
+
 builder.Services.AddOGraph("Users", builder =>
 {
     builder.AddNode<UserNode>();
-    builder.AddNode<UserAddressNode>();
-    builder.AddNode<CompanyNode>();
-    builder.AddNode<CompanyAddressNode>();
-    builder.AddNode<EmployeeNode>();
-    builder.AddNode<EmployeeAddressNode>();
+    //builder.AddNode<UserAddressNode>();
+    //builder.AddNode<CompanyNode>();
+    //builder.AddNode<CompanyAddressNode>();
+    //builder.AddNode<EmployeeNode>();
+    //builder.AddNode<EmployeeAddressNode>();
 
+    //builder.AddOperation<UserCreateOperation>();
 
-    builder.AddOperation<UserCreateOperation>();
 
     builder.AddOperation("GetUsers")
         .UseMethod("GET")
         .UseRoute("/api/users")
+        .UseQueryOptions(options =>
+        {
+            options.CanFilter = false;
+            options.CanPage = false;
+        })
         .UseNode<UserNode>()
         .UseMiddleware((context, next) =>
         {
@@ -32,39 +39,17 @@ builder.Services.AddOGraph("Users", builder =>
             
             if (!claimsPrincipal.HasClaim("role", "some.role"))
             {
-                return new OGraphErrorResult(new OGraphError()
-                {
-
-                });
+                
             }
 
             Console.WriteLine("Middleware 2 Invoked");
 
             return await next.Invoke(context);
         })
-        .UseResolver(context =>
+        .UseResolver(async context =>
         {
-            
-            var list = new List<User>()
-            {
-                new User
-                {
-                    FirstName = "Chase",
-                    LastName = "Crawford"
-                },
-                new User
-                {
-                    FirstName = "John",
-                    LastName = "Doe"
-                },
-                new User
-                {
-                    FirstName = "Jane",
-                    LastName = "Doe"
-                }
-            };
-
-            return list.AsQueryable();
+            return context.GetService<IRepository<User>>()
+                .Queryable;
         });
 });
 

@@ -59,12 +59,6 @@ public interface IOGraphOperationDescriptor
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="configure"></param>
-    /// <returns></returns>
-    IOGraphOperationDescriptor UseQueryProvider(Func<OGraphQueryOptions, IOGraphQueryProvider> configure);
-    /// <summary>
-    /// 
-    /// </summary>
     /// <param name="options"></param>
     /// <returns></returns>
     IOGraphOperationDescriptor UseQueryOptions(OGraphQueryOptions options);

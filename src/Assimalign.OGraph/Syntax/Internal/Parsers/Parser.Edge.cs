@@ -29,10 +29,10 @@ internal class EdgeParser : Parser
             }
             if (token.TokenType == TokenType.Identifier)
             {
-                queryNode = new EdgeNode()
-                {
-                    Path = edgePath = string.IsNullOrEmpty(edgePath) ? token.Text : string.Join('/', edgePath, token.Text)
-                };                
+                //queryNode = new EdgeNode()
+                //{
+                //    Path = edgePath = string.IsNullOrEmpty(edgePath) ? token.Text : string.Join('/', edgePath, token.Text)
+                //};                
                 if (!lexer.TryPeek(out var peek))
                 {
                     context.AddDiagnostic(Diagnostic.UnexpectedEOF(

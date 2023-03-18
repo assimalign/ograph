@@ -12,7 +12,7 @@ internal class EnumerableQueryProvider<T> : IOGraphQueryProvider
 {
     public Type ElementType => typeof(IEnumerable<T>);
 
-    public Task<IOGraphQueryResult> ExecuteAsync(IOGraphQueryContext context, CancellationToken cancellationToken = default)
+    public Task<IOGraphQueryResult> ExecuteAsync(IOGraphQueryContext context, OGraphQueryOptions options, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

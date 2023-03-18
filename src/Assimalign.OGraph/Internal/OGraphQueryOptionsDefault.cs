@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph
+namespace Assimalign.OGraph.Internal;
+
+internal class OGraphQueryOptionsDefault : OGraphQueryOptions
 {
-    internal class Either
-    {
-    }
 }

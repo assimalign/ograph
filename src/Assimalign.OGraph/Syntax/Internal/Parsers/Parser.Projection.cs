@@ -52,7 +52,7 @@ internal class ProjectionParser : Parser
 
             queryNode = new ProjectionNode()
             {
-                Edge = parser.Parse<EdgeNode>(ref lexer, context)
+                //Edge = parser.Parse<EdgeNode>(ref lexer, context)
             };
 
             if (!lexer.TryPeek(out token))
@@ -110,7 +110,7 @@ internal class ProjectionParser : Parser
             {
                 return new ProjectionNode()
                 {
-                    Edge = queryNode.Edge,
+                    //Edge = queryNode.Edge,
                     Properties = properties
                 };
             }

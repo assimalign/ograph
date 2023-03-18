@@ -4,10 +4,11 @@
 [OGraphNode<CompanyNode>()]
 public class CompanyOperations
 {
+
     [OGraphNode<CompanyNode>()]
     [OGraphOperation("UpdateCompany")]
     [OGraphHttpPut, OGraphHttpRoute("/companies/{companyId}")]
-    public async Task<IOGraphOperationResult> UpdateCompanyAsync(IOGraphOperationContext content)
+    public async Task<IOGraphOperationResult> UpdateCompanyAsync([OGraphService] object someService )
     {
         throw new NotImplementedException();
     }

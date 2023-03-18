@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph;
+namespace Assimalign.OGraph.Internal;
 
-public readonly struct OGraphObject : IEnumerable<OGraphObjectItem>
+internal readonly struct OGraphObject : IEnumerable<OGraphObjectItem>
 {
     public OGraphObject(IEnumerable<OGraphObjectItem> items)
     {

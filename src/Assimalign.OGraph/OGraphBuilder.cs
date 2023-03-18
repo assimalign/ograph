@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace Assimalign.OGraph;
 
 using Assimalign.OGraph.Internal;
-using System.Collections.Concurrent;
+
 
 public sealed class OGraphBuilder : IOGraphBuilder
 {
-
     private readonly static ConcurrentDictionary<Name, IOGraph> cache = new();
 
     // These are our build actions
@@ -49,9 +49,9 @@ public sealed class OGraphBuilder : IOGraphBuilder
     /// <inheritdoc />
     public IOGraphNodeDescriptor AddNode(Label label)
     {
-        var node = new OGraphNode()
+        var node = new OGraphNodeDefault()
         {
-            Label = label
+            label = label
         };
 
         var descriptor = new OGraphNodeDescriptor(node)
@@ -159,9 +159,9 @@ public sealed class OGraphBuilder : IOGraphBuilder
     /// <inheritdoc />
     public IOGraphOperationDescriptor AddOperation(Name name)
     {
-        var operation = new OGraphOperation()
+        var operation = new OGraphOperationDefault()
         {
-            Name = name
+            name = name
         };
         var descriptor = new OGraphOperationDescriptor(operation)
         {
@@ -174,11 +174,14 @@ public sealed class OGraphBuilder : IOGraphBuilder
     }
     IOGraph IOGraphBuilder.Build()
     {
-        Build(onNodeAdd);
-        Build(onEdgeAdd);
-        Build(onOperationAdd);
+        return cache.GetOrAdd(graph.Name, name =>
+        {
+            Build(onNodeAdd);
+            Build(onEdgeAdd);
+            Build(onOperationAdd);
 
-        return graph;
+            return graph;
+        });
     }
 
     private void Build(IList<Action<OGraph>> actions)

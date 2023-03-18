@@ -8,6 +8,11 @@ public class UserCreateOperation : OGraphOperation<UserNode>
             .UseRoute("/users")
             .UseResolver(context =>
             {
+
+                return new User()
+                {
+
+                };
                 throw new NotImplementedException();
             });
     }

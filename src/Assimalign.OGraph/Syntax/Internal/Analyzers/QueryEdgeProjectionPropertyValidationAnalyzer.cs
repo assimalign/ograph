@@ -23,12 +23,7 @@ internal class QueryEdgeProjectionPropertyValidationAnalyzer : QueryAnalyzer
     {
         foreach (var projection in document.Root.GetNodesOfType<ProjectionNode>())
         {
-            if (projection.HasEdge)
-            {
-                var edge = projection.Edge;
-
-               
-            }
+            
         }
 
         return Task.CompletedTask;

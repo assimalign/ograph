@@ -7,8 +7,9 @@ public class UserNode : OGraphNode<UserType>
 
         descriptor.UseLabel("Users");
 
-        descriptor.AddEdge("belongsToCompany")
+        descriptor.AddEdge("companies")
             .UseTargetNode<CompanyNode>()
+
             .UseResolver(context =>
             {
 

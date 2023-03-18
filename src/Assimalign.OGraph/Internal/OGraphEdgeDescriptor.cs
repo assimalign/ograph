@@ -55,6 +55,17 @@ internal class OGraphEdgeDescriptor : IOGraphEdgeDescriptor
         edge.Middleware.Enqueue(new OGraphEdgeMiddlwareDefault(middleware));
         return this;
     }
+
+    public IOGraphEdgeDescriptor UseQueryProvider<TQueryProvider>() where TQueryProvider : IOGraphQueryProvider, new()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IOGraphEdgeDescriptor UseQueryProvider(IOGraphQueryProvider queryProvider)
+    {
+        throw new NotImplementedException();
+    }
+
     public IOGraphEdgeDescriptor UseResolver<TResovler>() where TResovler : IOGraphEdgeResolver, new()
     {
         edge.Resolver = new TResovler();

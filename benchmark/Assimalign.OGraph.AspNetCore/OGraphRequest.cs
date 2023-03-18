@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Http;
 
 namespace Assimalign.OGraph.AspNetCore;
 
-using Assimalign.OGraph.Execution;
-
 public sealed class OGraphRequest : IOGraphHttpRequest
 {
 
@@ -29,4 +27,6 @@ public sealed class OGraphRequest : IOGraphHttpRequest
     public IOGraphHttpHeaderCollection? Headers { get; init; }
 
     public Stream? Body { get; init; }
+
+    public Path Path => throw new NotImplementedException();
 }

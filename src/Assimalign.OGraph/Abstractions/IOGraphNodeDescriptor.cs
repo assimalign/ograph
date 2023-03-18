@@ -38,7 +38,7 @@ public interface IOGraphNodeDescriptor
     /// <returns></returns>
     IOGraphNodeDescriptor UseType<TType>() where TType : IOGraphType, new();
     /// <summary>
-    /// 
+    /// Configures a complex type to be binded to the node.
     /// </summary>
     /// <param name="configure"></param>
     /// <returns></returns>
