@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-internal class LongType
+public sealed class LongType : PrimitiveType<Int64>
 {
 }

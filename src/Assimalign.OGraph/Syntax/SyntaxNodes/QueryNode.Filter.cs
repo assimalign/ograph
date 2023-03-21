@@ -6,17 +6,32 @@ namespace Assimalign.OGraph.Syntax;
 
 public sealed class FilterNode : QueryNode
 {
-    public FilterNode() { }
+    internal FilterNode() { }
     public FilterNode(BinaryNode predicate)
     {
         Predicate = predicate;
     }
-    public FilterNode(BinaryNode predicate, IEnumerable<EdgeFilterNode> edges)
+    public FilterNode(BinaryNode predicate, IdentifierNode identifier)
     {
-        Edges = edges;
         Predicate = predicate;
+        Identifier = identifier;
+    }
+    public FilterNode(BinaryNode predicate, IEnumerable<FilterNode> edges)
+    {
+        Predicate = predicate;
+        Edges = edges;
+    }
+    public FilterNode(BinaryNode predicate, IdentifierNode identifier, IEnumerable<FilterNode> edges)
+    {
+        Predicate = predicate;
+        Identifier = identifier;
+        Edges = edges;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public IdentifierNode? Identifier { get; set; }
 
     /// <summary>
     /// 
@@ -26,7 +41,7 @@ public sealed class FilterNode : QueryNode
     /// <summary>
     /// 
     /// </summary>
-    public IEnumerable<EdgeFilterNode>? Edges { get; init; }
+    public IEnumerable<FilterNode>? Edges { get; init; }
 
     /// <summary>
     /// 

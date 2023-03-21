@@ -15,5 +15,8 @@ public interface IOGraphOperationResult
     /// <summary>
     /// 
     /// </summary>
-    IOGraphError? Error { get; }
+    /// <param name="response"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task ExecuteAsync(IOGraphHttpResponse response, CancellationToken cancellationToken = default);
 }

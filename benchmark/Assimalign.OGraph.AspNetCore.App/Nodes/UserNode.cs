@@ -9,7 +9,6 @@ public class UserNode : OGraphNode<UserType>
 
         descriptor.AddEdge("companies")
             .UseTargetNode<CompanyNode>()
-
             .UseResolver(context =>
             {
 

@@ -2,102 +2,27 @@
 using System.Xml;
 using System.Text.Json;
 using System.Collections;
+using Assimalign.OGraph.Internal;
 
 namespace Assimalign.OGraph;
 
-public abstract class CollectionType<TCollection> : IOGraphCollectionType
+public class CollectionType<TCollection> : IOGraphCollectionType
     where TCollection : IEnumerable
 {
-    public virtual Name TypeName => nameof(TCollection);
-    public abstract IOGraphType ItemType { get; }
+    public virtual Name TypeName
+    {
+        get
+        {
+            if (typeof(TCollection).IsEnumerableType(out var enumerableType))
+            {
+                return $"{enumerableType.Name}Collection";
+            }
+
+            return nameof(TCollection);
+        }
+    }
+    public virtual IOGraphType ItemType { get; internal set; }
     public OGraphTypeIdentifier TypeIdentifier => OGraphTypeIdentifier.Collection;
     public Type RuntimeType => typeof(TCollection);
-
-    public bool IsRoot => throw new NotImplementedException();
-
-    public bool IsCollectionType(out IOGraphCollectionType collectionType)
-    {
-        throw new NotImplementedException();
-    }
-
-    public bool IsComplexType(out IOGraphComplexType complexType)
-    {
-        throw new NotImplementedException();
-    }
-
-    public bool IsPrimitiveType(out IOGraphPrimitiveType primitiveType)
-    {
-        throw new NotImplementedException();
-    }
-
-
-
-    //public bool TryReadJson(Utf8JsonReader reader, out OGraphCollection collection)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //public bool TryReadXml(XmlReader reader, out OGraphCollection collection)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //public bool TryWriteJson(Utf8JsonWriter writer, OGraphCollection collection)
-    //{
-    //    if (ItemType is IOGraphComplexType complexType)
-    //    {
-    //        foreach (var item in collection.Items)
-    //        {
-    //            if (!item.IsComplexType(out var value))
-    //            {
-    //                return false;
-    //            }
-    //            if (!complexType.TryWriteJson(writer, value))
-    //            {
-    //                return false;
-    //            }
-    //        }
-
-    //        return true;
-    //    }
-    //    if (ItemType is IOGraphPrimitiveType primitiveType)
-    //    {
-    //        foreach (var item in collection.Items)
-    //        {
-    //            if (!item.IsPrimitiveType(out var value))
-    //            {
-    //                return false;
-    //            }
-    //            if (!primitiveType.TryWriteJson(writer, value))
-    //            {
-    //                return false;
-    //            }
-    //        }
-
-    //        return true;
-    //    }
-    //    if (ItemType is IOGraphCollectionType collectionType)
-    //    {
-    //        foreach (var item in collection.Items)
-    //        {
-    //            if (!item.IsCollectionType(out var value))
-    //            {
-    //                return false;
-    //            }
-    //            if (!collectionType.TryWriteJson(writer, value))
-    //            {
-    //                return false;
-    //            }
-    //        }
-
-    //        return true;
-    //    }
-
-    //    return false;
-    //}
-
-    //public bool TryWriteXml(XmlWriter writer, OGraphCollection collection)
-    //{
-    //    throw new NotImplementedException();
-    //}
+    public bool IsNullable => true;
 }

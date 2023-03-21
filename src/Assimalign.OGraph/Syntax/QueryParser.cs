@@ -13,34 +13,33 @@ public sealed partial class QueryParser
 {
     private readonly QueryParserOptions options;
     
-
     public QueryParser() : this(new QueryParserOptions()) { }
     public QueryParser(QueryParserOptions options)
     {
         this.options = options;
     }
 
-    
-
     public QueryDocument Parse(string query)
     {
         try
         {
-            var buffer = options.Encoding.GetBytes(query);
+            var buffer  = options.Encoding.GetBytes(query);
             var lexer   = new TokenLexer(buffer, new()
             {
-                SkipCarriageReturn = true,
-                SkipLineFeed = true,
-                SkipTabs = true,
-                SkipWhiteSpace = true,
-                SkipComments = true,
-                Encoding = options.Encoding
+                SkipCarriageReturn  = true,
+                SkipLineFeed        = true,
+                SkipTabs            = true,
+                SkipWhiteSpace      = true,
+                SkipComments        = true,
+                Encoding            = options.Encoding
             });
             var context = new ParserContext()
             {
                 Encoding = options.Encoding,
                 ThrowExceptionOnDiagnosticError = options.ThrowExceptionOnDiagnosticError
             };
+            // NOTE: The Parser is responsible for only syntax diagnostics
+            //       Analyzers will be responsible for semantic diagnostics.
             var parser  = Parser.Create();
             var node    = parser.Parse(ref lexer, context, new RootNode());
 

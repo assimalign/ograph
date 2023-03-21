@@ -15,14 +15,16 @@ public sealed class OGraphBuilder : IOGraphBuilder
     internal readonly IList<Action<OGraph>> onNodeAdd;
     internal readonly IList<Action<OGraph>> onEdgeAdd;
     internal readonly IList<Action<OGraph>> onOperationAdd;
+    internal readonly IList<Action<OGraph>> onBuild;
 
-    private readonly OGraph graph = new();
+    internal readonly OGraph graph = new();
 
     private OGraphBuilder()
     {
         this.onNodeAdd = new List<Action<OGraph>>();
         this.onEdgeAdd = new List<Action<OGraph>>();
         this.onOperationAdd = new List<Action<OGraph>>();
+        this.onBuild = new List<Action<OGraph>>();  
     }
 
 
@@ -131,8 +133,16 @@ public sealed class OGraphBuilder : IOGraphBuilder
         {
             throw new ArgumentNullException(nameof(operation));
         }
-        this.onOperationAdd.Add(graph =>
+        this.onBuild.Add(graph =>
         {
+            var node = operation.Node;
+            var root = operation.Route.Segments[0].Value;
+
+            if (!node.Label.Equals(root))
+            {
+                throw new InvalidOperationException($"The operation node label '{node.Label}' does not match the root segment '/{root}' of the route.");
+            }
+
             graph.Operations.Add(operation);
         });
 
@@ -179,6 +189,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
             Build(onNodeAdd);
             Build(onEdgeAdd);
             Build(onOperationAdd);
+            Build(onBuild);
 
             return graph;
         });
@@ -208,10 +219,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
 
         var builder = new OGraphBuilder();
 
-        builder.onNodeAdd.Add(graph =>
-        {
-            graph.Name = name;
-        });
+        builder.graph.Name = name;
 
         configure.Invoke(builder);
 

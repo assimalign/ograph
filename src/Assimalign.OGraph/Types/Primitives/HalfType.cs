@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphTypeValue
+public sealed class HalfType : PrimitiveType<Half>
 {
-    object Value { get; }
 }

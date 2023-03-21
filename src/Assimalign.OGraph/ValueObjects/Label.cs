@@ -12,7 +12,7 @@ public readonly struct Label :
     IEquatable<Label>, 
     IEqualityComparer<Label>
 {
-    private const string allowedCharacters = "abcdefghijklmnopqrstuvwxwzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567980";
+    private const string allowedCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567980";
 
     public Label(string value)
     {
@@ -20,7 +20,6 @@ public readonly struct Label :
         {
             throw new ArgumentNullException(nameof(value));
         }
-
         foreach (var character in value)
         {
             if (!allowedCharacters.Contains(character))
@@ -51,6 +50,11 @@ public readonly struct Label :
     public override int GetHashCode()
     {
         return Value.GetHashCode();
+    }
+
+    public override string ToString()
+    {
+        return Value;
     }
 
     /// <inheritdoc />

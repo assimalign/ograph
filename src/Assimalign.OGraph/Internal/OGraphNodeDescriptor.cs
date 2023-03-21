@@ -69,6 +69,9 @@ internal class OGraphNodeDescriptor : IOGraphNodeDescriptor
 
     public IOGraphEdgeDescriptor AddEdge(Name name)
     {
-        throw new NotImplementedException();
+        return new OGraphEdgeDescriptor(new OGraphEdge()
+        {
+            Name = name,
+        });
     }
 }

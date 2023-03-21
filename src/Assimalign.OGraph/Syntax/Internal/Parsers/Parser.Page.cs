@@ -49,11 +49,10 @@ internal sealed class PageParser : Parser
         // Check if projection is followed by an edge identifier
         if (next.TokenType == TokenType.Identifier)
         {
-            var parser = context.GetParser<EdgeParser>();
-
             queryNode = new PageNode()
             {
-                //Edge = parser.Parse<EdgeNode>(ref lexer, context)
+                Identifier = (EdgeNode)context.GetParser<EdgeParser>()
+                    .Parse(ref lexer, context, new EdgeNode())
             };
 
             if (!lexer.TryNext(out next))
@@ -147,7 +146,6 @@ internal sealed class PageParser : Parser
             {
                 Skip = constant,
                 Take = pageNode.Take,
-                Token = pageNode.Token
             };
         }
         else
@@ -174,7 +172,6 @@ internal sealed class PageParser : Parser
             {
                 Take = constant,
                 Skip = pageNode.Skip,
-                Token = pageNode.Token
             };
         }
         else
@@ -201,7 +198,7 @@ internal sealed class PageParser : Parser
             {
                 Skip = pageNode.Skip,
                 Take = pageNode.Take,
-                Token = constant
+                //Token = constant
             };
         }
         else

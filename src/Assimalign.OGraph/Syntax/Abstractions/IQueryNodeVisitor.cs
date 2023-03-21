@@ -1,22 +1,17 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-
-namespace Assimalign.OGraph.Syntax;
+﻿namespace Assimalign.OGraph.Syntax;
 
 public interface IQueryNodeVisitor<T>
 {
-    T Visit(QueryNode token);
-    T Visit(RootNode token);
-    T Visit(FilterNode token);
-    T Visit(ProjectionNode token);
-    T Visit(PageNode token);
-    T Visit(SortNode token);
-    T Visit(BinaryNode token);
-    T Visit(PropertyNode token);
-    T Visit(ParameterNode token);
-    T Visit(FunctionQueryNode token);
-    T Visit(ConstantNode token);
+    T Visit(QueryNode queryNode);
+    T Visit(RootNode queryNode);
+    T Visit(FilterNode queryNode);
+    T Visit(ProjectionNode queryNode);
+    T Visit(PageNode queryNode);
+    T Visit(SortNode queryNode);
+    T Visit(BinaryNode queryNode);
+    T Visit(PropertyNode queryNode);
+    T Visit(ParameterNode queryNode);
+    T Visit(FunctionCallNode queryNode);
+    T Visit(ConstantNode queryNode);
+    T Visit(EdgeNode queryNode);
 }

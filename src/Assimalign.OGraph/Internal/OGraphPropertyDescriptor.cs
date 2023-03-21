@@ -81,6 +81,23 @@ internal class OGraphPropertyDescriptor : IOGraphPropertyDescriptor
         property.Type = new TType();
         return this;
     }
+
+    public IOGraphPropertyDescriptor UseType(Action<IOGraphComplexTypeDescriptor> configure)
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(nameof(configure));
+        }
+
+        var complexType = new ComplexType();
+        var descriptor = new OGraphComplexTypeDescriptor(complexType);
+
+        configure.Invoke(descriptor);
+
+        property.Type = complexType;
+
+        return this;
+    }
 }
 
 

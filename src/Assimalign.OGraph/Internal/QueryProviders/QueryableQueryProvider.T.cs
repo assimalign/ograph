@@ -37,18 +37,9 @@ internal class OGraphQueryableQueryProvider<T> : IOGraphQueryProvider
         }
         foreach (var item in enumerable)
         {
-            var projections = query.OfType<RootNode>();
+            var projections = query.IsOfType<RootNode>();
 
-            if (projections.TryGetProjection(out var projection))
-            {
-                foreach (var edge in projection.Edges)
-                {
-                    if (node.Edges.TryGet(edge.GetEdgeName().Value, out var e))
-                    {
-                        
-                    }
-                }
-            }
+            
         }
 
         throw new NotImplementedException();

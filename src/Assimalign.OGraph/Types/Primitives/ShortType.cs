@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-internal class ShortType
+public sealed class ShortType : PrimitiveType<Int16>
 {
 }

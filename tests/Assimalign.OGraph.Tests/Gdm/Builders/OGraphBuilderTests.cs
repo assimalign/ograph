@@ -16,8 +16,8 @@ public class OGraphBuilderTests
         
             1. Operation Resolver
             2. Property Resolver
-            3. Edge Resolver
-            3.1 Edge Property Resolver
+            3. Identifier Resolver
+            3.1 Identifier Property Resolver
 
             Execution Pipeline:
 
@@ -26,7 +26,7 @@ public class OGraphBuilderTests
             3. Execute OnResolve Middleware (Pre-Resolver)  
             3. Execute Operation Resolver
             4. Execute Root Property Resolver
-            5. Execute Edge Resolver
+            5. Execute Identifier Resolver
          
          */
 

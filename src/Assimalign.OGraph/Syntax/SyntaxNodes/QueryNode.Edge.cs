@@ -1,17 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Assimalign.OGraph.Syntax;
 
-public abstract class EdgeNode : QueryNode
+public sealed class EdgeNode : IdentifierNode
 {
-    public EdgeNode() { }
+    internal EdgeNode() { }
+    public EdgeNode(string name)
+    {
+        this.Name = name;
+    }
 
-    /// <summary>
-    /// Represents the Edge Path from the Parent Node.
-    /// </summary>
-    public string? Path { get; init; }
+    /// <inheritdoc />
+    public override QueryNodeType NodeType => QueryNodeType.Edge;
 
     /// <summary>
     /// 
@@ -28,6 +29,6 @@ public abstract class EdgeNode : QueryNode
     /// <returns></returns>
     public string[] GetSegments()
     {
-        return Path?.Split('/') ?? new string[0];
+        return Name?.Split('/') ?? new string[0];
     }
 }

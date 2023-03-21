@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-internal class IntType
+public sealed class IntType : PrimitiveType<Int32>
 {
 }

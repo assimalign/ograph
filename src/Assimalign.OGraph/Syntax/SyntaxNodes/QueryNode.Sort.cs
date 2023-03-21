@@ -17,61 +17,52 @@ public sealed class SortNode : QueryNode
         this.SortBy = sortBy;
         this.ThenBy = thenBy;
     }
-    public SortNode(QueryNode sortBy, SortNode thenBy, IEnumerable<EdgeSortNode> edges)
+    public SortNode(QueryNode sortBy, SortNode thenBy, IEnumerable<SortNode> edges)
     {
         this.SortBy = sortBy;
         this.ThenBy = thenBy;
         this.Edges = edges;
     }
-    public SortNode(QueryNode sortBy, IEnumerable<EdgeSortNode> edges)
+    public SortNode(QueryNode sortBy, IEnumerable<SortNode> edges)
     {
         this.SortBy = sortBy;
         this.Edges = edges;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public IdentifierNode? Identifier { get; init; }
 
     /// <summary>
     /// 
     /// </summary>
     public SortDirection Direction { get; init; } = SortDirection.Ascending;
+
     /// <summary>
     /// 
     /// </summary>
-    public QueryNode? SortBy { get; init; }        
+    public QueryNode? SortBy { get; init; }    
+    
     /// <summary>
     /// 
     /// </summary>
     public SortNode? ThenBy { get; init; }
+
     /// <summary>
     /// 
     /// </summary>
-    public IEnumerable<EdgeSortNode>? Edges { get; init; }
+    public IEnumerable<SortNode>? Edges { get; init; }
+
     /// <summary>
     /// 
     /// </summary>
     public bool HasEdges => Edges is not null && Edges.Any();
+
     /// <summary>
     /// 
     /// </summary>
-    public bool HasThenBy => ThenBy is not null;
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="function"></param>
-    /// <returns></returns>
-    public bool IsFunction(out FunctionQueryNode? function)
-    {
-        function = null;
-
-        if (SortBy is FunctionQueryNode functionNode)
-        {
-            function = functionNode;
-            return true;
-        }
-
-        return false;
-    }
-   
+    public bool HasThenBy => ThenBy is not null;   
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Sort;

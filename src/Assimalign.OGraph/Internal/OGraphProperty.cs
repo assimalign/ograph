@@ -19,10 +19,6 @@ internal class OGraphProperty : IOGraphProperty
     public IOGraphMetadata Metadata { get; }
     public IOGraphPropertyResolver Resolver { get; set; } 
     public IOGraphPropertyMiddlewareQueue Middleware { get; }
-    public bool IsNullable { get; set; }
-    public bool IsFilterable { get; set; }
-    public bool IsPagable { get; set; }
-    public bool IsSortable { get; set; }
     public OGraphPropertyHandler GetResolverChain()
     {
         var memoise = Cacher<OGraphProperty, OGraphPropertyHandler>.Memoise(property =>

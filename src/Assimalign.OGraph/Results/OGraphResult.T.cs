@@ -13,4 +13,7 @@ public abstract class OGraphResult<TData> : IOGraphOperationResult, IOGraphEdgeR
     /// <inheritdoc />
     public virtual IOGraphError? Error { get; }
 
+    /// <inheritdoc />
+    public abstract Task ExecuteAsync(IOGraphHttpResponse response, CancellationToken cancellationToken = default);
+
 }

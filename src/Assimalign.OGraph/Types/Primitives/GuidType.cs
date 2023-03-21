@@ -9,25 +9,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-internal class GuidType : ValueType<Guid>
+internal class GuidType : PrimitiveType<Guid>
 {
-    public override bool TryReadJson(Utf8JsonReader reader, out OGraphValue value)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override bool TryReadXml(XmlReader reader, out OGraphValue value)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override bool TryWriteJson(Utf8JsonWriter writer, OGraphValue value)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override bool TryWriteXml(XmlWriter writer, OGraphValue value)
-    {
-        throw new NotImplementedException();
-    }
+    
 }

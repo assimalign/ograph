@@ -10,10 +10,10 @@ internal class FunctionParser : Parser
 {
     internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
     {
-        if (queryNode is not FunctionQueryNode functionNode)
+        if (queryNode is not FunctionCallNode functionNode)
         {
             throw QueryParserException.UnexpectedQueryNode(
-                typeof(FunctionQueryNode),
+                typeof(FunctionCallNode),
                 queryNode.GetType());
         }
         if (!lexer.Current.Value.IsFunction(out var functionType))
@@ -41,7 +41,7 @@ internal class FunctionParser : Parser
 
         return queryNode;
     }
-    private QueryNode ParseFunctionStartsWtih(ref TokenLexer lexer, ParserContext context, FunctionQueryNode queryNode)
+    private QueryNode ParseFunctionStartsWtih(ref TokenLexer lexer, ParserContext context, FunctionCallNode queryNode)
     {
         var parameters = new Queue<ParameterNode>();
 
@@ -70,7 +70,7 @@ internal class FunctionParser : Parser
                         {
                             parameters.Enqueue(new ParameterNode()
                             {
-                                ParameterValue = context.GetParser<PropertyParser>().Parse<PropertyNode>(ref lexer, context)
+                                ParameterValue = context.GetParser<PropertyParser>().Parse(ref lexer, context, new PropertyNode())
                             });
                         }
                         break;
@@ -79,7 +79,7 @@ internal class FunctionParser : Parser
                     {
                         parameters.Enqueue(new ParameterNode()
                         {
-                            ParameterValue = context.GetParser<ConstantParser>().Parse<ConstantNode>(ref lexer, context)
+                            ParameterValue = context.GetParser<ConstantParser>().Parse(ref lexer, context, new ConstantNode())
                         });
                         break;
                     }
@@ -104,7 +104,7 @@ internal class FunctionParser : Parser
             // TODO : Add Diagnostics
         }
 
-        queryNode = new FunctionQueryNode()
+        queryNode = new FunctionCallNode()
         {
             FunctionType = queryNode.FunctionType,
             Name = "startswith",

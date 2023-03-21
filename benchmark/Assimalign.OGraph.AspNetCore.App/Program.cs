@@ -9,18 +9,17 @@ builder.Services.AddSingleton<IRepository<User>, UserRepository>();
 builder.Services.AddOGraph("Users", builder =>
 {
     builder.AddNode<UserNode>();
-    //builder.AddNode<UserAddressNode>();
-    //builder.AddNode<CompanyNode>();
-    //builder.AddNode<CompanyAddressNode>();
-    //builder.AddNode<EmployeeNode>();
-    //builder.AddNode<EmployeeAddressNode>();
+    builder.AddNode<UserAddressNode>();
+    builder.AddNode<CompanyNode>();
+    builder.AddNode<CompanyAddressNode>();
+    builder.AddNode<EmployeeNode>();
+    builder.AddNode<EmployeeAddressNode>();
 
     //builder.AddOperation<UserCreateOperation>();
 
-
     builder.AddOperation("GetUsers")
         .UseMethod("GET")
-        .UseRoute("/api/users")
+        .UseRoute("/users")
         .UseQueryOptions(options =>
         {
             options.CanFilter = false;
@@ -50,6 +49,16 @@ builder.Services.AddOGraph("Users", builder =>
         {
             return context.GetService<IRepository<User>>()
                 .Queryable;
+        });
+
+
+    builder.AddOperation("UpdateUser")
+        .UseMethod(Method.Put)
+        .UseRoute("/users/{userId}")
+        .UseNode<UserNode>()
+        .UseResolver(async context =>
+        {
+            return default;
         });
 });
 

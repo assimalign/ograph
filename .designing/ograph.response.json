@@ -26,7 +26,7 @@
             // Attributes
             "firstName": "Chase",
             "lastName": "Crawford",
-            
+
             // Edges
             "@ograph.edges": {
                 "company": {

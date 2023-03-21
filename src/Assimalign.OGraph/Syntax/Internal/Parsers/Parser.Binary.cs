@@ -61,7 +61,7 @@ internal class BinaryParser : Parser
         if (token.IsLiteral)
         {
             var constantParser = context.GetParser<ConstantParser>();
-            var constantNode = constantParser.Parse<ConstantNode>(ref lexer, context);
+            var constantNode = constantParser.Parse(ref lexer, context, new ConstantNode());
 
             queryNode = new BinaryNode()
             {
@@ -77,7 +77,8 @@ internal class BinaryParser : Parser
                 queryNode = new BinaryNode()
                 {
                     LeftOperand = queryNode.LeftOperand,
-                    RightOperand = context.GetParser<FunctionParser>().Parse(ref lexer, context, new FunctionQueryNode()
+                    RightOperand = context.GetParser<FunctionParser>()
+                    .Parse(ref lexer, context, new FunctionCallNode()
                     {
                         FunctionType = functionType,
                     }),
@@ -89,7 +90,8 @@ internal class BinaryParser : Parser
                 queryNode = new BinaryNode()
                 {
                     LeftOperand = queryNode.LeftOperand,
-                    RightOperand = context.GetParser<PropertyParser>().Parse<PropertyNode>(ref lexer, context),
+                    RightOperand = context.GetParser<PropertyParser>()
+                    .Parse(ref lexer, context, new PropertyNode()),
                     OperatorType = binaryOperator
                 };
             }
@@ -125,7 +127,8 @@ internal class BinaryParser : Parser
                 }
             case TokenType.Identifier when token.Value.IsFunction(out var functionType):
                 {
-                    rightOperand =context.GetParser<FunctionParser>().Parse(ref lexer, context, new FunctionQueryNode()
+                    rightOperand =context.GetParser<FunctionParser>()
+                        .Parse(ref lexer, context, new FunctionCallNode()
                     {
                         FunctionType = functionType
                     });
@@ -133,7 +136,8 @@ internal class BinaryParser : Parser
                 }
             case TokenType.Identifier:
                 {
-                    rightOperand = context.GetParser<PropertyParser>().Parse<PropertyNode>(ref lexer, context);
+                    rightOperand = context.GetParser<PropertyParser>()
+                        .Parse(ref lexer, context, new PropertyNode());
                     break;
                 }
             // Check for constants on the right side.
@@ -143,7 +147,8 @@ internal class BinaryParser : Parser
             case TokenType.String:
             case TokenType.Boolean:
                 {
-                    rightOperand = context.GetParser<ConstantParser>().Parse<ConstantNode>(ref lexer, context);
+                    rightOperand = context.GetParser<ConstantParser>()
+                        .Parse(ref lexer, context, new ConstantNode());
                     break;
                 }
         }
@@ -181,7 +186,8 @@ internal class BinaryParser : Parser
                 }
             case TokenType.Identifier when token.Value.IsFunction(out var functionType):
                 {
-                    rightOperand = context.GetParser<FunctionParser>().Parse(ref lexer, context, new FunctionQueryNode()
+                    rightOperand = context.GetParser<FunctionParser>()
+                        .Parse(ref lexer, context, new FunctionCallNode()
                     {
                         FunctionType = functionType
                     });
@@ -189,7 +195,8 @@ internal class BinaryParser : Parser
                 }
             case TokenType.Identifier:
                 {
-                    rightOperand = context.GetParser<PropertyParser>().Parse<PropertyNode>(ref lexer, context);
+                    rightOperand = context.GetParser<PropertyParser>()
+                        .Parse(ref lexer, context, new PropertyNode());
                     break;
                 }
             // Check for constants on the right side.
@@ -199,7 +206,8 @@ internal class BinaryParser : Parser
             case TokenType.String:
             case TokenType.Boolean:
                 {
-                    rightOperand = context.GetParser<ConstantParser>().Parse<ConstantNode>(ref lexer, context);
+                    rightOperand = context.GetParser<ConstantParser>()
+                        .Parse(ref lexer, context, new ConstantNode());
                     break;
                 }
         }
@@ -233,7 +241,8 @@ internal class BinaryParser : Parser
             {
                 case TokenType.Identifier when token.Value.IsFunction(out var functionType):
                     {
-                        leftOperand = context.GetParser<FunctionParser>().Parse(ref lexer, context, new FunctionQueryNode()
+                        leftOperand = context.GetParser<FunctionParser>()
+                            .Parse(ref lexer, context, new FunctionCallNode()
                         {
                             FunctionType = functionType
                         });
@@ -241,7 +250,8 @@ internal class BinaryParser : Parser
                     }
                 case TokenType.Identifier:
                     {
-                        leftOperand = context.GetParser<PropertyParser>().Parse<PropertyNode>(ref lexer, context);
+                        leftOperand = context.GetParser<PropertyParser>()
+                            .Parse(ref lexer, context, new PropertyNode());
                         break;
                     }
                 case TokenType.Null:
@@ -250,7 +260,8 @@ internal class BinaryParser : Parser
                 case TokenType.FloatingPoint:
                 case TokenType.Boolean:
                     {
-                        leftOperand = context.GetParser<ConstantParser>().Parse(ref lexer, context, new ConstantNode());
+                        leftOperand = context.GetParser<ConstantParser>()
+                            .Parse(ref lexer, context, new ConstantNode());
                         break;
                     }
                 case TokenType.Equal:

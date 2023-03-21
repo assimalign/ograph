@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
 namespace Assimalign.OGraph.Syntax;
 
+
+[DebuggerDisplay("{Text}")]
 public sealed class ConstantNode : QueryNode
 {
     private byte[] value = new byte[0];
 
-    public ConstantNode() { }
+    internal ConstantNode() { }
     public ConstantNode(byte[] value)
     {
         this.Value = value;
@@ -27,6 +30,11 @@ public sealed class ConstantNode : QueryNode
         }
     }
 
+    /// <summary>
+    /// Get's the raw text value of the constant. Uses UTF8 encoding.
+    /// </summary>
+    public string Text => Encoding.UTF8.GetString(this.value);
+
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Constant;
 
@@ -43,6 +51,12 @@ public sealed class ConstantNode : QueryNode
         {
             yield return node;
         }
+    }
+
+    /// <inheritdoc />
+    public override bool IsOfType<TNode>()
+    {
+        return this is TNode;
     }
 
     #region Parse

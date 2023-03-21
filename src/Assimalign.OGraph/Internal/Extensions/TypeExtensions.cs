@@ -678,17 +678,22 @@ internal static class TypeExtensions
 	/// <param name="type"></param>
 	public static bool IsNullable(this Type type)
 	{
-		var arguments = type.GenericTypeArguments;
-
-		if (arguments.Any() && arguments.Length == 1)
+		if (type.IsValueType)
 		{
-			if (type == typeof(Nullable<>).MakeGenericType(arguments[0]))
-			{
-				return true;
-			}
-		}
+			var arguments = type.GenericTypeArguments;
 
-		return false;
+			if (arguments.Any() && arguments.Length == 1)
+			{
+				if (type == typeof(Nullable<>).MakeGenericType(arguments[0]))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+		
+		return true;
 	}
 
 	/// <summary>
@@ -762,67 +767,7 @@ internal static class TypeExtensions
 	/// </summary>
 	/// <param name="type"></param>
 	/// <param name="checkNullable"></param>
-	public static bool IsValueType(this Type type, bool checkNullable = true)
-	{
-		var isValueType = type.IsValueType;
-
-		// Will use this array of types to check for nullable value and enum types
-		var valueTypes = new Type[]
-		{
-				typeof(Boolean),
-				typeof(Byte),
-				typeof(Char),
-				typeof(DateOnly),
-				typeof(DateTime),
-				typeof(DateTimeOffset),
-				typeof(Decimal),
-				typeof(Double),
-				typeof(Guid),
-				typeof(Half),
-				typeof(Index),
-#if NET7_0_OR_GREATER
-				typeof(Int128),
-				typeof(UInt128),
-#endif
-				typeof(Int16),
-				typeof(Int32),
-				typeof(Int64),
-				typeof(IntPtr),
-				typeof(Range),
-				typeof(Single),
-				typeof(UInt16),
-				typeof(UInt32),
-				typeof(UInt64),
-				typeof(SByte),
-				typeof(TimeSpan),
-				typeof(TimeOnly),
-				typeof(UIntPtr)
-		};
-
-		// Let's ensure that the type is not wrapped in the Nullable<> type class
-		if (checkNullable)
-		{
-			foreach (var valueType in valueTypes)
-			{
-				if (type == typeof(Nullable<>).MakeGenericType(valueType))
-				{
-					return true;
-				}
-			}
-		}
-		else
-		{
-			foreach (var valueType in valueTypes)
-			{
-				if (type == valueType)
-				{
-					return true;
-				}
-			}
-		}
-
-		return isValueType;
-	}
+	public static bool IsValueType(this Type type) => type.IsValueType;
 
 
 	/// <summary>
@@ -836,60 +781,24 @@ internal static class TypeExtensions
 	{
 		implementation = null;
 
-		var isValueType = type.IsValueType;
-
-		// Will use this array of types to check for nullable value and enum types
-		var valueTypes = new Type[]
+		if (type.IsValueType)
 		{
-				typeof(short),
-				typeof(int),
-				typeof(long),
-				typeof(double),
-				typeof(decimal),
-				typeof(float),
-				typeof(ushort),
-				typeof(uint),
-				typeof(ulong),
-				typeof(char),
-				typeof(byte),
-				typeof(sbyte),
-				typeof(bool),
-				typeof(Guid),
-				typeof(DateTime),
-				typeof(TimeSpan),
-				typeof(nint),
-				typeof(nuint),
-				typeof(string)
-		};
-
-		if (!isValueType)
-		{
-			return false;
-		}
-
-
-		// Let's ensure that the type is not wrapped in the Nullable<> type class
-		if (checkNullable)
-		{
-			foreach (var valueType in valueTypes)
+			if (checkNullable)
 			{
-				if (type == typeof(Nullable<>).MakeGenericType(valueType))
+				var arguments = type.GetGenericArguments();
+
+				if (arguments is not null && arguments.Length == 1)
 				{
-					implementation = valueType;
-					return true;
+					var nullableType = typeof(Nullable<>).MakeGenericType(arguments[0]);
+
+					if (nullableType.IsAssignableTo(type))
+					{
+						implementation = arguments[0];
+					}
 				}
 			}
-		}
-		else
-		{
-			foreach (var valueType in valueTypes)
-			{
-				if (type == valueType)
-				{
-					implementation = valueType;
-					return true;
-				}
-			}
+
+			return true;
 		}
 
 		return false;

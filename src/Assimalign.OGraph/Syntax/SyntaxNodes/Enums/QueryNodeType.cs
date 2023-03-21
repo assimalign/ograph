@@ -12,6 +12,7 @@ public enum QueryNodeType
     Function,
     Parameter,
     Constant,
-    Binary
+    Binary,
+    Edge
 }
 

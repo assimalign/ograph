@@ -9,7 +9,7 @@ namespace Assimalign.OGraph;
 public interface IOGraphComplexType : IOGraphType
 {
     /// <summary>
-    /// 
+    /// A collection of properties
     /// </summary>
     IOGraphPropertyCollection Properties { get; }
 }

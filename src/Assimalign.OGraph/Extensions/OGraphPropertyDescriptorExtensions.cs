@@ -26,7 +26,7 @@ public static class OGraphPropertyDescriptorExtensions
         {
             return ValueTask.FromResult<IOGraphPropertyResult>(new OGraphPropertyResult()
             {
-                Data = resolver.Invoke(context)
+                Value = resolver.Invoke(context)
             });
         });
     }
@@ -48,7 +48,7 @@ public static class OGraphPropertyDescriptorExtensions
         {
             return ValueTask.FromResult<IOGraphPropertyResult>(new OGraphPropertyResult()
             {
-                Data = resolver.Invoke(context)
+                Value = resolver.Invoke(context)
             });
         });
     }
@@ -61,8 +61,5 @@ public static class OGraphPropertyDescriptorExtensions
         {
             descriptor.UseType<StringType>();
         }
-
-
-        throw new Exception();
     }
 }

@@ -1,69 +1,43 @@
-# Query
-https://endpoint.com/api/users?query=
-# Root Query
-.project({
-    # Queryable Fields
-    userId
-    firstName
-    lastName
+https://endpoint.com/api/employees?query=
+project({
+    employeeId 
+    firstName 
+    lastName 
     middleName
-    fullName
-    notes {
-        noteId
-        note
-    }
+    createdDateTime
+    createdBy
+    updatedDateTime
+    updatedBy
 })
 .filter({
-    startsWith(firstName,'c',true) and ((
-        endsWith(middleName,'e',true) and 
-        age eq 12
-    ) or any(addresses, {
-            startsWith(streetOne, '10')
-        })
-    )
-})
-.page({
-    take 0 
-    skip 25
+    startsWith(firstName, 'c') and 
+    statsWith(lastName, 'g')
 })
 .sort({
-    toLower(firstName) desc
+    firstName asc
+    lastName desc
 })
-
-
-# Edge Queries
-.project(hasUserRoles, {
-    roleName
-})
-.filter(hasUserRoles, {            # Navigation Filtering 
-    isActive eq true
-})
-.page(hasUserRoles, {
-    take @take
-    skip @skip
-})
-.sort(hasUserRoles, {
-    toLower(roleName) desc
-})
-
-
-.project(hasPrimaryAddresses, {
-
-})
-.project(hasPrimaryAddresses/hasTypes, {
-
-})
-
-
-.project({
-
-})
-.project(employee, {
-
-})
-.project(employee/company, {
-
-})
-.project(addresses, {
-
-})
+    .project(companies, {                       # /api/employees/{employeeId}/companies
+        companyId
+        companyName
+        createdDateTime
+        createdBy
+        updatedDateTime
+        updatedBy
+    })
+    .filter(companies, {                        # /api/employees/{employeeId}/companies
+        startsWith(companyName, 'c')
+    })
+    .sort(companies, {                          # /api/employees/{employeeId}/companies
+        companyName desc
+    })
+        .project(companies/addresses, {         # /api/employees/{employeeId}/companies/{companyId}/addresses
+            streetOne 
+            streetTwo 
+            streetThree
+        })
+    .project(addresses, {                       # /api/employees/{employeeId}/addresses
+        streetOne 
+        streetTwo 
+        streetThree
+    })

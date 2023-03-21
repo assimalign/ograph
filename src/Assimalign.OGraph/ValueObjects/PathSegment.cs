@@ -15,6 +15,7 @@ public readonly struct PathSegment
         {
             throw new ArgumentNullException(nameof(value));
         }
+        this.Value = value;
     }
 
     public string Value { get; }

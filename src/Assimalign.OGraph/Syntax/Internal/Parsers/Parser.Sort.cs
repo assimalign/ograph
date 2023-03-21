@@ -52,11 +52,10 @@ internal class SortParser : Parser
         // Check if projection is followed by an edge identifier
         if (token.TokenType == TokenType.Identifier)
         {
-            var parser = context.GetParser<EdgeParser>();
-
             queryNode = new SortNode()
             {
-                //Edge = parser.Parse<EdgeNode>(ref lexer, context)
+                Identifier = (EdgeNode)context.GetParser<EdgeParser>()
+                    .Parse(ref lexer, context, new EdgeNode())
             };
 
             if (!lexer.TryPeek(out token))
@@ -139,12 +138,14 @@ internal class SortParser : Parser
         {
             case TokenType.Identifier when token.Value.IsFunction():
                 {
-                    sortNode = context.GetParser<FunctionParser>().Parse<FunctionQueryNode>(ref lexer, context);
+                    sortNode = context.GetParser<FunctionParser>()
+                        .Parse(ref lexer, context, new FunctionCallNode());
                     break;
                 }
             case TokenType.Identifier:
                 {
-                    sortNode = context.GetParser<PropertyParser>().Parse<PropertyNode>(ref lexer, context);
+                    sortNode = context.GetParser<PropertyParser>()
+                        .Parse(ref lexer, context, new PropertyNode());
                     break;
                 }
             default:
@@ -163,7 +164,7 @@ internal class SortParser : Parser
                 {
                     SortBy = sortNode,
                     Direction = (SortDirection)token.TokenType,
-                    //Edge = queryNode.Edge,
+                    //Identifier = queryNode.Identifier,
                     ThenBy = queryNode.ThenBy,
                 };
 
@@ -180,7 +181,7 @@ internal class SortParser : Parser
                 {
                     SortBy = sortNode,
                     Direction = queryNode.Direction,
-                    //Edge = queryNode.Edge,
+                    //Identifier = queryNode.Identifier,
                     ThenBy = ParseSortIdentifier(ref lexer, context, new SortNode()),
                 };
             }
@@ -190,7 +191,7 @@ internal class SortParser : Parser
                 {
                     SortBy = sortNode,
                     Direction = queryNode.Direction,
-                    //Edge = queryNode.Edge
+                    //Identifier = queryNode.Identifier
                 };
             }
         }

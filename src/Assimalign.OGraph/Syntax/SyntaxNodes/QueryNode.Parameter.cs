@@ -1,5 +1,4 @@
-﻿using Assimalign.OGraph.Syntax.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax;
@@ -17,7 +16,7 @@ public sealed class ParameterNode : QueryNode
     {
         this.parameterValue = parameterValue;
     }
-    public ParameterNode(FunctionQueryNode parameterValue)
+    public ParameterNode(FunctionCallNode parameterValue)
     {
         this.parameterValue = parameterValue;
     }
@@ -51,7 +50,7 @@ public sealed class ParameterNode : QueryNode
     public ParameterType ParameterType => this.parameterValue switch
     {
         ConstantNode => ParameterType.Constant,
-        FunctionQueryNode => ParameterType.Function,
+        FunctionCallNode => ParameterType.Function,
         PropertyNode => ParameterType.Property,
         _                 => ParameterType.None
     };

@@ -15,6 +15,8 @@ public abstract class OGraphNode : IOGraphNode
     {
         this.metadata = new OGraphMetadata();
         this.edges = new OGraphEdgeCollection();
+
+        Configure(new OGraphNodeDescriptor(this));
     }
 
     /// <inheritdoc />

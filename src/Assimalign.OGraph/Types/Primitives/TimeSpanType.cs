@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-internal class TimeSpanType
+public sealed class TimeSpanType : PrimitiveType<TimeSpan>
 {
 }

@@ -9,16 +9,11 @@ namespace Assimalign.OGraph.Syntax;
 public abstract class QueryNode
 {
     /// <summary>
-    /// The depth of this node below the root.
-    /// </summary>
-    //public abstract int Depth { get; init; }
-
-    /// <summary>
     /// An identifier for the node type.
     /// </summary>
     public abstract QueryNodeType NodeType { get; }
     /// <summary>
-    /// 
+    /// Accepts an <see cref="IQueryNodeVisitor{T}"/>.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="visitor"></param>
@@ -27,9 +22,8 @@ public abstract class QueryNode
     {
         return visitor.Visit(this);
     }
-
     /// <summary>
-    /// 
+    /// Returns a collection of nodes within the tree that match the type of: <typeparamref name="TNode"/>.
     /// </summary>
     /// <typeparam name="TNode"></typeparam>
     /// <returns></returns>
@@ -37,15 +31,13 @@ public abstract class QueryNode
     {
         return Array.Empty<TNode>();
     }
-
-
-    public virtual TNode OfType<TNode>() where TNode : QueryNode
+    /// <summary>
+    /// Checks whether the node is of type: <typeparamref name="TNode"/>.
+    /// </summary>
+    /// <typeparam name="TNode"></typeparam>
+    /// <returns></returns>
+    public virtual bool IsOfType<TNode>() where TNode : QueryNode
     {
-        if (this is TNode node)
-        {
-            return node;
-        }
-
-        return default;
+        return this is TNode;
     }
 }

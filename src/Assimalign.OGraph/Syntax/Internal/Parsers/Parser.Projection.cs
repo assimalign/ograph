@@ -48,11 +48,10 @@ internal class ProjectionParser : Parser
         // Check if projection is followed by an edge identifier
         if (token.TokenType == TokenType.Identifier)
         {
-            var parser = context.GetParser<EdgeParser>();
-
             queryNode = new ProjectionNode()
             {
-                //Edge = parser.Parse<EdgeNode>(ref lexer, context)
+                Identifier = (EdgeNode)context.GetParser<EdgeParser>()
+                    .Parse(ref lexer, context, new EdgeNode())
             };
 
             if (!lexer.TryPeek(out token))
@@ -110,7 +109,7 @@ internal class ProjectionParser : Parser
             {
                 return new ProjectionNode()
                 {
-                    //Edge = queryNode.Edge,
+                    Identifier = queryNode.Identifier,
                     Properties = properties
                 };
             }
@@ -118,7 +117,8 @@ internal class ProjectionParser : Parser
             {
                 case TokenType.Identifier:
                     {
-                        properties.Add(context.GetParser<PropertyParser>().Parse<PropertyNode>(ref lexer, context));
+                        properties.Add((PropertyNode)context.GetParser<PropertyParser>()
+                            .Parse(ref lexer, context, new PropertyNode()));
                     }
                     break;
                 default:

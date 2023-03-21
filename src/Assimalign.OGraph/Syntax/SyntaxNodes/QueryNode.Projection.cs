@@ -12,17 +12,55 @@ namespace Assimalign.OGraph.Syntax;
 /// </remarks>
 public sealed class ProjectionNode : QueryNode
 {
-    public ProjectionNode() { }
+    internal ProjectionNode() { }
+    /// <summary>
+    /// A default constructor for <see cref="ProjectionNode"/>.
+    /// </summary>
+    /// <param name="properties"></param>
     public ProjectionNode(IEnumerable<PropertyNode> properties)
     {
         this.Properties = properties;
     }
-    public ProjectionNode(IEnumerable<PropertyNode> properties, IEnumerable<EdgeProjectionNode> edges)
+    /// <summary>
+    /// A default constructor for <see cref="ProjectionNode"/>.
+    /// </summary>
+    /// <param name="properties"></param>
+    /// <param name="identifier"></param>
+    public ProjectionNode(IEnumerable<PropertyNode> properties, IdentifierNode identifier) 
+        : this(properties)
     {
-        this.Properties = properties;
+        this.Identifier = identifier;
+    }
+    /// <summary>
+    /// A default constructor for <see cref="ProjectionNode"/>.
+    /// </summary>
+    /// <param name="properties"></param>
+    /// <param name="edges"></param>
+    public ProjectionNode(IEnumerable<PropertyNode> properties, IEnumerable<ProjectionNode> edges) 
+        : this(properties)
+    {
         this.Edges = edges;
     }
+    /// <summary>
+    /// A default constructor for <see cref="ProjectionNode"/>.
+    /// </summary>
+    /// <param name="properties"></param>
+    /// <param name="edges"></param>
+    /// <param name="identifier"></param>
+    public ProjectionNode(IEnumerable<PropertyNode> properties, IEnumerable<ProjectionNode> edges, IdentifierNode identifier) 
+        : this(properties, edges)
+    {
+        this.Identifier = identifier;
+    }
       
+    /// <summary>
+    /// Represents the identifier of the projection.
+    /// </summary>
+    /// <remarks>
+    /// This is used to identify the projection in the 
+    /// query chain and should always be a edge identifier.
+    /// </remarks>
+    public IdentifierNode? Identifier { get; init; }
 
     /// <summary>
     /// A collection of properties to project in the query.
@@ -30,9 +68,9 @@ public sealed class ProjectionNode : QueryNode
     public IEnumerable<PropertyNode> Properties { get; init; } = new PropertyNode[0];
 
     /// <summary>
-    /// 
+    /// Represents edge projections via the query chain.
     /// </summary>
-    public IEnumerable<EdgeProjectionNode>? Edges { get; init; }
+    public IEnumerable<ProjectionNode> Edges { get; init; } = new ProjectionNode[0];
 
     /// <summary>
     /// Specifies whether the projection is the root of the query.

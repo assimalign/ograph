@@ -18,4 +18,8 @@ public enum OGraphTypeIdentifier
     /// 
     /// </summary>
     Primitive,
+    /// <summary>
+    /// 
+    /// </summary>
+    Enum
 }

@@ -43,12 +43,10 @@ internal class FilterParser : Parser
         // Check if projection is followed by an edge identifier
         if (next.TokenType == TokenType.Identifier)
         {
-            var edgeParser = context.GetParser<EdgeParser>();
-            //var edgeNode = edgeParser.Parse<EdgeNode>(ref lexer, context);
-
             queryNode = new FilterNode()
             {
-                //Edge = edgeNode
+                Identifier = (EdgeNode)context.GetParser<EdgeParser>()
+                    .Parse(ref lexer, context, new EdgeNode())
             };
 
             if (!lexer.TryPeek(out next))
@@ -100,7 +98,8 @@ internal class FilterParser : Parser
             {
                 case TokenType.Identifier when token.Value.IsFunction(out var functionType):
                     {
-                        leftOperand = context.GetParser<FunctionParser>().Parse(ref lexer, context, new FunctionQueryNode()
+                        leftOperand = context.GetParser<FunctionParser>()
+                            .Parse(ref lexer, context, new FunctionCallNode()
                         {
                             FunctionType = functionType
                         });
@@ -108,7 +107,8 @@ internal class FilterParser : Parser
                     break;
                 case TokenType.Identifier:
                     {
-                        leftOperand = context.GetParser<PropertyParser>().Parse<PropertyNode>(ref lexer, context);
+                        leftOperand = context.GetParser<PropertyParser>()
+                            .Parse(ref lexer, context, new PropertyNode());
                         break;
                     }
                 case TokenType.Null:
@@ -117,7 +117,8 @@ internal class FilterParser : Parser
                 case TokenType.FloatingPoint:
                 case TokenType.Boolean:
                     {
-                        leftOperand = context.GetParser<ConstantParser>().Parse(ref lexer, context, new ConstantNode());
+                        leftOperand = context.GetParser<ConstantParser>()
+                            .Parse(ref lexer, context, new ConstantNode());
                         break;
                     }
                 case TokenType.Equal:
@@ -156,7 +157,7 @@ internal class FilterParser : Parser
 
         queryNode = new FilterNode()
         {
-            //Edge = queryNode.Edge,
+            //Identifier = queryNode.Identifier,
             Predicate = binaryNode
         };
 

@@ -11,4 +11,6 @@ namespace Assimalign.OGraph;
 public abstract class OGraphResult : IOGraphOperationResult, IOGraphEdgeResult
 {
     public abstract IOGraphError Error { get; }
+
+    public abstract Task ExecuteAsync(IOGraphHttpResponse response, CancellationToken cancellationToken = default);
 }

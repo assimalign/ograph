@@ -1,45 +1,62 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Assimalign.OGraph.Syntax;
 
 public sealed class PageNode : QueryNode
 {
-    public PageNode() { }
-    public PageNode(string token)
-    {
-        if (string.IsNullOrEmpty(token))
-        {
-            throw new ArgumentNullException(nameof(token));
-        }
-        Token = new ConstantNode()
-        {
-            Value = Encoding.UTF8.GetBytes(token)
-        };
-    }
+    internal PageNode() { }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="take"></param>
+    /// <param name="skip"></param>
     public PageNode(long take, long skip)
     {
-        this.Skip = new ConstantNode()
-        {
-            Value = new byte[1] { (byte)skip }
-        };
-        this.Take = new ConstantNode()
-        {
-            Value = new byte[1] { (byte)take }
-        };
+        this.Skip = new ConstantNode(new[] { (byte)skip });
+        this.Take = new ConstantNode(new[] { (byte)take });
     }
-    public PageNode(EdgeNode edge, long take, long skip)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="take"></param>
+    /// <param name="skip"></param>
+    /// <param name="identifier"></param>
+    public PageNode(long take, long skip, IdentifierNode identifier)
         : this(take, skip)
     {
-        this.Edge = edge;
+        this.Identifier = identifier;
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="take"></param>
+    /// <param name="skip"></param>
+    /// <param name="edges"></param>
+    public PageNode(long take, long skip, IEnumerable<PageNode> edges) 
+        : this(skip, take)
+    {
+        this.Edges = edges;
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="take"></param>
+    /// <param name="skip"></param>
+    /// <param name="identifier"></param>
+    /// <param name="edges"></param>
+    public PageNode(long take, long skip, IdentifierNode identifier, IEnumerable<PageNode> edges)
+        : this(skip, take, identifier)
+    {
+        this.Edges = edges;
     }
 
 
     /// <summary>
-    /// Represents the edge, if any, to apply paging.
+    /// Represents the identifier, if any, to apply paging.
     /// </summary>
-    public EdgeNode? Edge { get; init; }
+    public IdentifierNode? Identifier { get; init; }
     /// <summary>
     /// 
     /// </summary>
@@ -51,11 +68,11 @@ public sealed class PageNode : QueryNode
     /// <summary>
     /// 
     /// </summary>
-    public ConstantNode? Token { get; init; }
+    public IEnumerable<PageNode> Edges { get; } = new PageNode[0];
     /// <summary>
     /// 
     /// </summary>
-    public bool HasEdge => Edge is not null;
+    public bool HasEdgse => Edges is not null && Edges.Any();
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Page;
@@ -73,9 +90,9 @@ public sealed class PageNode : QueryNode
         {
             yield return node;
         }
-        if (Edge is not null)
+        if (Identifier is not null)
         {
-            foreach (var item in Edge.GetNodesOfType<TNode>())
+            foreach (var item in Identifier.GetNodesOfType<TNode>())
             {
                 yield return item;
             }
@@ -90,13 +107,6 @@ public sealed class PageNode : QueryNode
         if (Skip is not null)
         {
             foreach (var item in Skip.GetNodesOfType<TNode>())
-            {
-                yield return item;
-            }
-        }
-        if (Token is not null)
-        {
-            foreach (var item in Token.GetNodesOfType<TNode>())
             {
                 yield return item;
             }

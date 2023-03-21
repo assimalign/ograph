@@ -53,12 +53,17 @@ public abstract class QueryVisitor<T> : IQueryNodeVisitor<T>
         throw new NotImplementedException();
     }
 
-    public virtual T Visit(FunctionQueryNode node)
+    public virtual T Visit(FunctionCallNode node)
     {
         throw new NotImplementedException();
     }
 
     public virtual T Visit(ConstantNode node)
+    {
+        throw new NotImplementedException();
+    }
+
+    public T Visit(EdgeNode queryNode)
     {
         throw new NotImplementedException();
     }

@@ -77,13 +77,20 @@ public readonly struct Route : IEquatable<Route>, IEqualityComparer<Route>
 		{
 			return false;
 		}
-
 		for (int i = 0; i < Segments.Length; i++)
 		{
 			var routeSegment = Segments[i];
 			var pathSegment = path.Segments[i];
 
-
+			if (routeSegment.IsParameter)
+			{
+                continue;
+            }
+			
+			if (!routeSegment.Value.Equals(pathSegment.Value, StringComparison.InvariantCultureIgnoreCase))
+			{
+				return false;
+			}
 		}
 
 

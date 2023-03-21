@@ -6,6 +6,9 @@ namespace Assimalign.OGraph;
 /// Types represent primitive, complex, or collection structure that can be 
 /// used to define a property, inputs, and outputs of operations within the graph.
 /// </summary>
+/// <remarks>
+/// An <see cref="IOGraphType"/> represents a
+/// </remarks>
 public interface IOGraphType
 {
     /// <summary>
@@ -23,4 +26,6 @@ public interface IOGraphType
     /// All types must have a RuntimeType, even if it is a custom type.
     /// </remarks>
     Type? RuntimeType { get; }
+
+    bool IsNullable { get; }
 }

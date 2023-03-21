@@ -25,7 +25,7 @@ public static class OGraphWebApplicationExtensions
             throw new Exception("");
         }
 
-        var routes = graph.GetRoutes();
+        var routes = graph.GetRoutes().ToList();
 
         foreach (var operation in graph.Operations.OrderBy(x => x.Route))
         {

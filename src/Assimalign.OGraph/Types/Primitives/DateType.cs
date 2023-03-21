@@ -8,25 +8,7 @@ using System.Xml;
 
 namespace Assimalign.OGraph;
 
-public sealed class DateType : ValueType<DateOnly>
+public sealed class DateType : PrimitiveType<DateOnly>
 {
-    public override bool TryReadJson(Utf8JsonReader reader, out OGraphValue value)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override bool TryReadXml(XmlReader reader, out OGraphValue value)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override bool TryWriteJson(Utf8JsonWriter writer, OGraphValue value)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override bool TryWriteXml(XmlWriter writer, OGraphValue value)
-    {
-        throw new NotImplementedException();
-    }
+    
 }

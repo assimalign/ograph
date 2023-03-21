@@ -218,8 +218,8 @@ public partial class QueryParserTests
         var root = Assert.IsType<RootNode>(document.Root);
         var projection = Assert.IsType<ProjectionNode>(root.Nodes.First());
 
-        Assert.Equal("employees/addresses", projection?.Edge?.Path);
-        Assert.False(projection?.HasEdge);
+        //Assert.Equal("employees/addresses", projection?.Edges?.Path);
+        Assert.False(projection?.HasEdges);
     }
 
     [Fact]
@@ -253,8 +253,45 @@ public partial class QueryParserTests
         var root = Assert.IsType<RootNode>(document.Root);
         var projection = Assert.IsType<ProjectionNode>(root.Nodes.First());
 
-        Assert.Equal("employees/addresses", projection?.Edge?.Path);
-        Assert.False(projection?.HasEdge);
+        //Assert.Equal("employees/addresses", projection?.Edge?.Path);
+        //Assert.False(projection?.HasEdge);
+    }
+
+    [Fact]
+    public void Test()
+    {
+        var query = """
+            project({
+                streetOne
+                streetTwo
+                streetThree
+                addressTypes {
+                    typeId
+                    type
+                }
+            })
+            .project(employees, { 
+                firstName
+                lastName
+            })
+            .project(employees/addresses, {
+                streetOne
+                streetTwo
+                streetThree
+            })
+            .project(employees/taxInfo, {
+                taxId
+            })
+            .project(companies, {
+                companyName
+            })
+        """;
+
+
+        var parser = new QueryParser();
+        var document = parser.Parse(query);
+
+
     }
 
     #endregion

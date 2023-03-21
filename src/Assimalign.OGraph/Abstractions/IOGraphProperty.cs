@@ -24,11 +24,6 @@ public interface IOGraphProperty
     /// 
     /// </summary>
     IOGraphPropertyMiddlewareQueue Middleware { get; }
-    bool IsNullable { get; }
-    bool IsFilterable { get; }
-    bool IsPagable { get; }
-    bool IsSortable { get; }
-
     /// <summary>
     /// 
     /// </summary>

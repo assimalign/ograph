@@ -13,13 +13,13 @@ internal class OGraphPropertyResult : IOGraphPropertyResult
         
     }
 
-    public OGraphPropertyResult(object data )
+    public OGraphPropertyResult(object value)
     {
-        this.Data = data;
+        this.Value = value;
     }
     public bool IsSuccess => this.Error == null;
-    public object Data { get; init; }
+    public object? Data { get; init; }
     public IOGraphError? Error { get; init; }
 
-    public object? Value => throw new NotImplementedException();
+    public object? Value { get; init; }
 }

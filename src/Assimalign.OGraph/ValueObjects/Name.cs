@@ -9,7 +9,7 @@ public readonly struct Name :
     IEqualityComparer<Name>,
     IComparable<Name>
 {
-    private const string allowedCharacters = "abcdefghijklmnopqrstuvwxwzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567980";
+    private const string allowedCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567980_";
 
     public Name(string value)
     {
@@ -32,6 +32,11 @@ public readonly struct Name :
     /// The raw name value.
     /// </summary>
     public string Value { get; }
+
+    public override string ToString()
+    {
+        return Value;
+    }
 
     /// <inheritdoc />
     public override bool Equals([NotNullWhen(true)] object? instance)

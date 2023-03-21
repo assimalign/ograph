@@ -4,12 +4,12 @@
 /// An edge links to edges together.
 /// </summary>
 /// <remarks>
-/// An Edge is also referred to as a Link.
+/// An Identifier is also referred to as a Link.
 /// </remarks>
 public interface IOGraphEdge
 {
     /// <summary>
-    /// The name of the Edge.
+    /// The name of the Identifier.
     /// </summary>
     Name Name { get; }
     /// <summary>

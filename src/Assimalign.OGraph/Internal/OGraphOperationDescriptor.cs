@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Assimalign.OGraph.Internal;
 
@@ -62,7 +63,15 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
     {
         OnConfigure.Add(graph =>
         {
-            operation.node = new TNode();
+            var node = graph.Nodes.FirstOrDefault(x => x is TNode);
+
+            if (node is null)
+            {
+                node = new TNode();
+                graph.Nodes.Add(node);
+            }
+
+            operation.node = node;
         });
         return this;
     }
