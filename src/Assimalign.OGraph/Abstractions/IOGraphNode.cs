@@ -1,7 +1,7 @@
 ﻿namespace Assimalign.OGraph;
 
 /// <summary>
-/// Represents a single entity and it's structure within the Graph Model.
+/// Represents a single entity and it's structure within the graph Model.
 /// </summary>
 /// <remarks>
 /// A Node is also referred to as a Vertex.

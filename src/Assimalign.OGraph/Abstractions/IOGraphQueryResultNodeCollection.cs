@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public sealed class OGraphHttpQueryCollection : Dictionary<string, QueryValue>, 
-    IOGraphHttpQueryCollection
+public interface IOGraphQueryResultNodeCollection : IEnumerable<IOGraphQueryResultNode>
 {
+
 }

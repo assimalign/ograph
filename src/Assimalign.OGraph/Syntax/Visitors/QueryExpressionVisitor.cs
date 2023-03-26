@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
 
-public sealed class QueryExpressionVisitor : QueryVisitor<Expression>
+public sealed class QueryExpressionVisitor : IQueryNodeVisitor<Expression>
 {
     private readonly Expression expression;
 
@@ -16,5 +16,63 @@ public sealed class QueryExpressionVisitor : QueryVisitor<Expression>
         this.expression = expression;
     }
 
-    public Type ElementType { get; init; }
+    public Expression Visit(QueryNode queryNode)
+    {
+        return expression;
+    }
+
+    public Expression Visit(RootNode queryNode)
+    {
+        return expression;
+    }
+
+    public Expression Visit(FilterNode queryNode)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Expression Visit(ProjectionNode queryNode)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Expression Visit(PageNode queryNode)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Expression Visit(SortNode queryNode)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Expression Visit(BinaryNode queryNode)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Expression Visit(PropertyNode queryNode)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Expression Visit(ParameterNode queryNode)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Expression Visit(FunctionCallNode queryNode)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Expression Visit(ConstantNode queryNode)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Expression Visit(EdgeNode queryNode)
+    {
+        throw new NotImplementedException();
+    }
 }

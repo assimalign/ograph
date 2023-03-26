@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphHttpExecutorBuilder
+public interface IEither
 {
-
-
-
-
+    int ValueType { get; }
+    object Value { get; }
 }

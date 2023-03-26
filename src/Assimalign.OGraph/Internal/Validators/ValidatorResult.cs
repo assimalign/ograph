@@ -8,5 +8,10 @@ namespace Assimalign.OGraph.Internal;
 
 internal class ValidatorResult
 {
-    public bool IsValid { get; }
+    public ValidatorResult()
+    {
+        
+    }
+    public bool IsValid => !Errors.Any();
+    public IEnumerable<ValidatorError> Errors { get; }
 }

@@ -9,7 +9,7 @@ public readonly struct Name :
     IEqualityComparer<Name>,
     IComparable<Name>
 {
-    private const string allowedCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567980_";
+    private const string allowedCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567980_-";
 
     public Name(string value)
     {

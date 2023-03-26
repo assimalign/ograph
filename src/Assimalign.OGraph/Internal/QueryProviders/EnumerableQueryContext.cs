@@ -12,4 +12,6 @@ internal class EnumerableQueryContext : IOGraphQueryContext
     public IOGraphNode Node { get; init; }
 
     public QueryDocument Query { get; init; }
+
+    public IServiceProvider ServiceProvider => throw new NotImplementedException();
 }

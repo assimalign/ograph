@@ -1,16 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public abstract class OGraphResult : IOGraphOperationResult, IOGraphEdgeResult
+public abstract class OGraphResult : IOGraphOperationResult
 {
-    public abstract IOGraphError Error { get; }
 
-    public abstract Task ExecuteAsync(IOGraphHttpResponse response, CancellationToken cancellationToken = default);
+    public abstract Task ExecuteAsync(IOGraphExecutorContext context, CancellationToken cancellationToken = default);
+
+
+
+
+
+    public static OGraphResultBuilder Unauthorzed()
+    {
+
+
+        
+        return new OGraphResultBuilder(new OGraphUnauthorizedResult());
+    
+    }
+
+
 }

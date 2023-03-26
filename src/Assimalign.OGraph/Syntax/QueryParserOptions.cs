@@ -12,7 +12,6 @@ public sealed class QueryParserOptions
 {
     private readonly IList<QueryAnalyzer> analyzers;
 
-
     public QueryParserOptions()
     {
         this.analyzers = new List<QueryAnalyzer>();
@@ -36,7 +35,11 @@ public sealed class QueryParserOptions
     internal IEnumerable<QueryAnalyzer> Analyzers => this.analyzers;
 
 
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="analyzer"></param>
+    /// <exception cref="ArgumentNullException"></exception>
     public void AddAnalyzer(QueryAnalyzer analyzer)
     {
         if (analyzer is null)
@@ -46,6 +49,11 @@ public sealed class QueryParserOptions
 
         analyzers.Add(analyzer);
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TAnalyzer"></typeparam>
+    /// <exception cref="ArgumentNullException"></exception>
     public void AddAnalyzer<TAnalyzer>() where TAnalyzer : QueryAnalyzer, new()
     {
         AddAnalyzer(new TAnalyzer());

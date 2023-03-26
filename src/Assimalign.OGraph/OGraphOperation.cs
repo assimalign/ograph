@@ -57,6 +57,12 @@ public abstract class OGraphOperation : IOGraphOperation
     public IOGraphMetadata Metadata { get; }
 
     /// <inheritdoc />
+    public IOGraphType RequestType => throw new NotImplementedException();
+
+    /// <inheritdoc />
+    public IOGraphType ResponseType => throw new NotImplementedException();
+
+    /// <inheritdoc />
     public OGraphOperationHandler GetResolverChain()
     {
         var memoise = Cacher<OGraphOperation, OGraphOperationHandler>.Memoise(operation =>
@@ -65,7 +71,14 @@ public abstract class OGraphOperation : IOGraphOperation
             {
                 throw new Exception();
             }
-            return GetResolverChain(new OGraphOperationHandler(operation.Resolver.InvokeAsync));
+            var root = new OGraphOperationHandler(operation.Resolver.InvokeAsync);
+
+            if (operation.Middleware.Count == 0)
+            {
+                return root;
+            }
+
+            return GetResolverChain(root);
         });
 
         return memoise.Invoke(this);

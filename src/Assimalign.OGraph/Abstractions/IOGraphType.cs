@@ -26,6 +26,8 @@ public interface IOGraphType
     /// All types must have a RuntimeType, even if it is a custom type.
     /// </remarks>
     Type? RuntimeType { get; }
-
+    /// <summary>
+    /// 
+    /// </summary>
     bool IsNullable { get; }
 }

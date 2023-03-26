@@ -6,10 +6,15 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public sealed class OGraphHttpHeaderCollection : Dictionary<string, HeaderValue>,
-    IOGraphHttpHeaderCollection
+public sealed class OGraphHeaderCollection : Dictionary<string, HeaderValue>,
+    IOGraphHeaderCollection
 {
-    public OGraphHttpHeaderCollection() : base(StringComparer.OrdinalIgnoreCase) { }
+    public OGraphHeaderCollection() : base(StringComparer.CurrentCultureIgnoreCase) { }
+
+    public OGraphHeaderCollection(Dictionary<string, HeaderValue> headers) : base(headers, StringComparer.CurrentCultureIgnoreCase)
+    {
+        
+    }
 
 
     public HeaderValue? Host => TryGetValue("host", out var value) ? value : default;

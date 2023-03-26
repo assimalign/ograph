@@ -7,7 +7,7 @@ namespace Assimalign.OGraph;
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphHttpExecutor
+public interface IOGraphExecutor
 {
     /// <summary>
     /// 
@@ -15,5 +15,5 @@ public interface IOGraphHttpExecutor
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IOGraphHttpResponse> ExecuteAsync(IOGraphHttpRequest request, CancellationToken cancellationToken = default);
+    Task<IOGraphExecutorResponse> ExecuteAsync(IOGraphExecutorRequest request, CancellationToken cancellationToken = default);
 }

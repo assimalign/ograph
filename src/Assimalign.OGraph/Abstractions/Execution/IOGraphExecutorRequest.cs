@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphHttpRequest
+public interface IOGraphExecutorRequest
 {
     /// <summary>
     /// 
@@ -20,11 +20,15 @@ public interface IOGraphHttpRequest
     /// <summary>
     /// 
     /// </summary>
-    IOGraphHttpQueryCollection Query { get; }
+    Host Host { get; }
     /// <summary>
     /// 
     /// </summary>
-    IOGraphHttpHeaderCollection Headers { get; }
+    IOGraphQueryCollection Query { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    IOGraphHeaderCollection Headers { get; }
     /// <summary>
     /// 
     /// </summary>

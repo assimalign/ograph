@@ -31,13 +31,15 @@ public abstract class QueryNode
     {
         return Array.Empty<TNode>();
     }
-    /// <summary>
-    /// Checks whether the node is of type: <typeparamref name="TNode"/>.
-    /// </summary>
-    /// <typeparam name="TNode"></typeparam>
-    /// <returns></returns>
-    public virtual bool IsOfType<TNode>() where TNode : QueryNode
-    {
-        return this is TNode;
-    }
+
+
+    public bool IsConstant() => NodeType == QueryNodeType.Constant;
+    public bool IsProjection() => NodeType == QueryNodeType.Projection;
+    public bool IsFunctionCall() => NodeType == QueryNodeType.FunctionCall;
+    public bool IsBinary() => NodeType == QueryNodeType.Binary;
+    public bool IsFilter() => NodeType == QueryNodeType.Filter;
+    public bool IsSort() => NodeType == QueryNodeType.Sort;
+    public bool IsPage() => NodeType == QueryNodeType.Page;
+    public bool IsProperty() => NodeType == QueryNodeType.Property;
+    public bool IsParameter() => NodeType == QueryNodeType.Parameter;
 }

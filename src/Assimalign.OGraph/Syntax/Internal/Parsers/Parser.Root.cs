@@ -45,8 +45,27 @@ internal class RootParser : Parser
     private RootNode ParsePage(ref TokenLexer lexer, ParserContext context, RootNode queryNode)
     {
         var nodes = queryNode.Nodes.ToList();
-        var pageNode = context.GetParser<PageParser>()
+        var pageNode = (PageNode)context.GetParser<PageParser>()
             .Parse(ref lexer, context, new PageNode());
+
+        if (queryNode.TryGetPage(out var pageRoot))
+        {
+            // Let's remove from root collection to be reformatted
+            nodes.Remove(pageRoot);
+
+            if (pageNode.Identifier is null)
+            {
+                // TODO: 
+            }
+            else
+            {
+                pageNode = FormatEdgeTree(pageRoot, pageNode);
+            }
+        }
+        if (pageNode.Identifier is not null)
+        {
+            // TODO: Duplicate or missing Root Projection
+        }
 
         nodes.Add(pageNode);
 
@@ -54,12 +73,70 @@ internal class RootParser : Parser
         {
             Nodes = nodes
         };
+
+        PageNode FormatEdgeTree(PageNode root, PageNode node, int index = 0)
+        {
+            var edgeNode = (EdgeNode)node.Identifier;
+            var segments = edgeNode.GetSegments();
+
+            // Check if we've reached the of the tree
+            if (segments.Length == (index + 1))
+            {
+                root = new PageNode()
+                {
+                    Identifier = root.Identifier,
+                    Skip = root.Skip,
+                    Take = root.Take,
+                    Edges = root.Edges.Concat(new[] { node })
+                };
+            }
+            else
+            {
+                var next = root.Edges.FirstOrDefault(x =>
+                    x.Identifier.Name.Equals(segments[index], StringComparison.InvariantCultureIgnoreCase));
+
+                index = index + 1;
+                root = new PageNode()
+                {
+                    Identifier = root.Identifier,
+                    Skip = root.Skip,
+                    Take = root.Take,
+                    Edges = root.Edges
+                        .Where(x => !x.Identifier.Name.Equals(next.Identifier.Name))
+                        .Concat(new[]
+                        {
+                            FormatEdgeTree(next, node, index)
+                        })
+                };
+            }
+
+            return root;
+        }
     }
-    private RootNode ParseSort(ref TokenLexer lexer, ParserContext context, RootNode node)
+    private RootNode ParseSort(ref TokenLexer lexer, ParserContext context, RootNode queryNode)
     {
-        var nodes = node.Nodes.ToList();
-        var sortParser = context.GetParser<SortParser>();
-        var sortNode = sortParser.Parse<SortNode>(ref lexer, context);
+        var nodes = queryNode.Nodes.ToList();
+        var sortNode = (SortNode)context.GetParser<SortParser>()
+            .Parse(ref lexer, context, new SortNode());
+
+        if (queryNode.TryGetSort(out var sortRoot))
+        {
+            // Let's remove from root collection to be reformatted
+            nodes.Remove(sortRoot);
+
+            if (sortNode.Identifier is null)
+            {
+                // TODO: 
+            }
+            else
+            {
+                sortNode = FormatEdgeTree(sortRoot, sortNode);
+            }
+        }
+        if (sortNode.Identifier is not null)
+        {
+            // TODO: Duplicate or missing Root Projection
+        }
 
         nodes.Add(sortNode);
 
@@ -67,6 +144,47 @@ internal class RootParser : Parser
         {
             Nodes = nodes
         };
+
+        SortNode FormatEdgeTree(SortNode root, SortNode node, int index = 0)
+        {
+            var edgeNode = (EdgeNode)node.Identifier;
+            var segments = edgeNode.GetSegments();
+
+            // Check if we've reached the of the tree
+            if (segments.Length == (index + 1))
+            {
+                root = new SortNode()
+                {
+                    Identifier = root.Identifier,
+                    Direction = root.Direction,
+                    SortBy = root.SortBy,
+                    ThenBy = root.ThenBy,
+                    Edges = root.Edges.Concat(new[] { node })
+                };
+            }
+            else
+            {
+                var next = root.Edges.FirstOrDefault(x =>
+                    x.Identifier.Name.Equals(segments[index], StringComparison.InvariantCultureIgnoreCase));
+
+                index = index + 1;
+                root = new SortNode()
+                {
+                    Identifier = root.Identifier,
+                    Direction = root.Direction,
+                    SortBy = root.SortBy,
+                    ThenBy = root.ThenBy,
+                    Edges = root.Edges
+                        .Where(x => !x.Identifier.Name.Equals(next.Identifier.Name))
+                        .Concat(new[]
+                        {
+                            FormatEdgeTree(next, node, index)
+                        })
+                };
+            }
+
+            return root;
+        }
     }
     private RootNode ParseProjections(ref TokenLexer lexer, ParserContext context, RootNode queryNode)
     {
@@ -77,6 +195,7 @@ internal class RootParser : Parser
         // Get Root Projection
         if (queryNode.TryGetProjection(out var projections))
         {
+            // Let's remove from root collection to be reformatted
             nodes.Remove(projections);
 
             if (projectionNode.Identifier is null)
@@ -85,12 +204,12 @@ internal class RootParser : Parser
             }
             else
             {
-                projectionNode = WalkTree(projections, projectionNode);
+                projectionNode = FormatEdgeTree(projections, projectionNode);
             }
         }
         if (projectionNode.Identifier is not null)
         {
-            // TODO: Duplicate projection
+            // TODO: Duplicate or missing Root Projection
         }
 
         nodes.Add(projectionNode);
@@ -100,16 +219,14 @@ internal class RootParser : Parser
             Nodes = nodes
         };
 
-        ProjectionNode WalkTree(ProjectionNode root, ProjectionNode node, int index = 0)
+        ProjectionNode FormatEdgeTree(ProjectionNode root, ProjectionNode node, int index = 0)
         {
             var edgeNode = (EdgeNode)node.Identifier;
             var segments = edgeNode.GetSegments();
-            var next = root.Edges.FirstOrDefault(x => x.Identifier.Name.Equals(segments[index], StringComparison.InvariantCultureIgnoreCase));
-
+            
+            // Check if we've reached the of the tree
             if (segments.Length == (index + 1))
             {
-                var edges = next?.Edges ?? new ProjectionNode[0];
-
                 root = new ProjectionNode()
                 {
                     Identifier = root.Identifier,
@@ -119,26 +236,51 @@ internal class RootParser : Parser
             }
             else
             {
-                var i = index + 1;
+                var next = root.Edges.FirstOrDefault(x => 
+                    x.Identifier.Name.Equals(segments[index], StringComparison.InvariantCultureIgnoreCase));
+
+                index = index + 1;
                 root = new ProjectionNode()
                 {
                     Identifier = root.Identifier,
                     Properties = root.Properties,
-                    Edges = root.Edges.Where(x => !x.Identifier.Name.Equals(next.Identifier.Name)).Concat(new[] 
-                    { 
-                        WalkTree(next, node, i) 
-                    })
+                    Edges = root.Edges
+                        .Where(x => !x.Identifier.Name.Equals(next.Identifier.Name))
+                        .Concat(new[] 
+                        { 
+                            FormatEdgeTree(next, node, index) 
+                        })
                 }; 
             }
 
             return root;
         }
     }
-    private RootNode ParseFilter(ref TokenLexer lexer, ParserContext context, RootNode node)
+    private RootNode ParseFilter(ref TokenLexer lexer, ParserContext context, RootNode queryNode)
     {
-        var nodes = node.Nodes.ToList();
-        var filterNode = context.GetParser<FilterParser>()
+        var nodes = queryNode.Nodes.ToList();
+        var filterNode = (FilterNode)context.GetParser<FilterParser>()
             .Parse(ref lexer, context, new FilterNode());
+
+        // Get Root Projection
+        if (queryNode.TryGetFilter(out var filterRoot))
+        {
+            // Let's remove from root collection to be reformatted
+            nodes.Remove(filterRoot);
+
+            if (filterNode.Identifier is null)
+            {
+                // TODO: 
+            }
+            else
+            {
+                filterNode = FormatEdgeTree(filterRoot, filterNode);
+            }
+        }
+        if (filterNode.Identifier is not null)
+        {
+            // TODO: Duplicate or missing Root Projection
+        }
 
         nodes.Add(filterNode);
 
@@ -146,5 +288,42 @@ internal class RootParser : Parser
         {
             Nodes = nodes
         };
+
+        FilterNode FormatEdgeTree(FilterNode root, FilterNode node, int index = 0)
+        {
+            var edgeNode = (EdgeNode)node.Identifier;
+            var segments = edgeNode.GetSegments();
+
+            // Check if we've reached the of the tree
+            if (segments.Length == (index + 1))
+            {
+                root = new FilterNode()
+                {
+                    Identifier = root.Identifier,
+                    Predicate = root.Predicate,
+                    Edges = root.Edges.Concat(new[] { node })
+                };
+            }
+            else
+            {
+                var next = root.Edges.FirstOrDefault(x =>
+                    x.Identifier.Name.Equals(segments[index], StringComparison.InvariantCultureIgnoreCase));
+
+                index = index + 1;
+                root = new FilterNode()
+                {
+                    Identifier = root.Identifier,
+                    Predicate = root.Predicate,
+                    Edges = root.Edges
+                        .Where(x => !x.Identifier.Name.Equals(next.Identifier.Name))
+                        .Concat(new[]
+                        {
+                            FormatEdgeTree(next, node, index)
+                        })
+                };
+            }
+
+            return root;
+        }        
     }
 }

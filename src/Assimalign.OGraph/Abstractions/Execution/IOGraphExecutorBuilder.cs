@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Assimalign.OGraph;
+
+public interface IOGraphExecutorBuilder
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    IOGraphExecutorBuilder AddGraph(Action<IOGraphBuilder> configure);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="options"></param>
+    /// <returns></returns>
+    IOGraphExecutorBuilder AddOptions(Action<OGraphOptions> options);
+
+
+    /// <summary>
+    /// Builds the executor.
+    /// </summary>
+    /// <returns></returns>
+    IOGraphExecutor Build();
+
+}

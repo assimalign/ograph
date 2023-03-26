@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Assimalign.OGraph.AspNetCore;
 
@@ -15,6 +16,7 @@ public static class OGraphWebApplicationExtensions
     public static WebApplication UseOGraph(this WebApplication app)
     {
         var graph = app.Services.GetService<IOGraph>();
+        var options = app.Services.GetService<IOptions<OGraphOptions>>().Value;
 
         if (graph is null)
         {
@@ -27,7 +29,7 @@ public static class OGraphWebApplicationExtensions
 
         var routes = graph.GetRoutes().ToList();
 
-        foreach (var operation in graph.Operations.OrderBy(x => x.Route))
+        foreach (var operation in graph.Operations)
         {
             if (app.Environment.IsDevelopment())
             {
@@ -65,11 +67,11 @@ public static class OGraphWebApplicationExtensions
                 Console.Write(operation.Route);
                 Console.Write(Environment.NewLine);
             }
-            app.MapMethods(operation.Route, new string[] { operation.Method }, async context =>
+            app.MapMethods(string.Join('/', options.RoutePrefix, operation.Route), new string[] { operation.Method }, async context =>
             {
                 try
                 {
-                    var graphExecutor = context.RequestServices.GetRequiredService<IOGraphHttpExecutor>();
+                    var graphExecutor = context.RequestServices.GetRequiredService<IOGraphExecutor>();
 
                     var graphResponse = await graphExecutor.ExecuteAsync(new OGraphRequest(context.Request));
 
@@ -79,6 +81,7 @@ public static class OGraphWebApplicationExtensions
 
                     if (graphResponse.Body.Length > 0)
                     {
+                        graphResponse.Body.Position = 0;
                         await graphResponse.Body.CopyToAsync(context.Response.Body);
                     }
                 }

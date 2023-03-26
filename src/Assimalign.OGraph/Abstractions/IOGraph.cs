@@ -2,7 +2,7 @@
 
 
 /// <summary>
-/// Represents a single Graph Model.
+/// Represents a single graph Model.
 /// </summary>
 public interface IOGraph
 {

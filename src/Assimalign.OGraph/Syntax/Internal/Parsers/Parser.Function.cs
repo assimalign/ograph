@@ -18,7 +18,7 @@ internal class FunctionParser : Parser
         }
         if (!lexer.Current.Value.IsFunction(out var functionType))
         {
-            // TODO: Expected Function Type
+            // TODO: Expected FunctionCall Type
             return queryNode;
         }
 

@@ -9,7 +9,8 @@ namespace Assimalign.OGraph.Internal;
 
 internal class QueryableQueryContext : IOGraphQueryContext
 {
+    public IQueryable Queryable { get; init; }
     public IOGraphNode Node { get; init; }
-
     public QueryDocument Query { get; init; }
+    public IServiceProvider ServiceProvider { get; init; }
 }

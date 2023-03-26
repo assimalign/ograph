@@ -9,7 +9,7 @@ public enum QueryNodeType
     Page,
     Attribute,
     Property,
-    Function,
+    FunctionCall,
     Parameter,
     Constant,
     Binary,

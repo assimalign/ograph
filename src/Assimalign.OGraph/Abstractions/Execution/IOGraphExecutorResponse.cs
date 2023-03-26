@@ -6,16 +6,16 @@ namespace Assimalign.OGraph;
 /// <summary>
 /// Represents an HTTP Response.
 /// </summary>
-public interface IOGraphHttpResponse
+public interface IOGraphExecutorResponse
 {
     /// <summary>
     /// 
     /// </summary>
     StatusCode StatusCode { get; set; }
     /// <summary>
-    /// 
+    /// A collection of headers to be returned with the response.
     /// </summary>
-    IOGraphHttpHeaderCollection Headers { get; }
+    IOGraphHeaderCollection Headers { get; }
     /// <summary>
     /// 
     /// </summary>

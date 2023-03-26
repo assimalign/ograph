@@ -4,9 +4,12 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using System.IO;
 
 namespace Assimalign.OGraph;
 
+[DebuggerDisplay("Route: /{ToString()}")]
 public readonly struct Route : IEquatable<Route>, IEqualityComparer<Route>
 {
 	public Route(string route)
@@ -33,46 +36,61 @@ public readonly struct Route : IEquatable<Route>, IEqualityComparer<Route>
 	public static implicit operator string(Route route) => string.Join('/', route.Segments.Select(x=>x.Value));
 
 
-    public override string ToString()
-    {
+	public override string ToString()
+	{
 		return string.Join('/', Segments.Select(x => x.Value));
-    }
+	}
 
-    public override int GetHashCode()
-    {
+	public override int GetHashCode()
+	{
 		var hashCode = new HashCode();
-
 		foreach (var segment in Segments)
 		{
 			hashCode.Add(segment);
 		}
-
 		return hashCode.ToHashCode();
-    }
-    public override bool Equals([NotNullWhen(true)] object? instance)
-    {
+	}
+	public override bool Equals([NotNullWhen(true)] object? instance)
+	{
 		if (instance is Route route)
 		{
 			return Equals(route);
 		}
 		return false;
-    }
-    public bool Equals(Route route)
-    {
-		return this.ToString().Equals(route.ToString(), StringComparison.InvariantCultureIgnoreCase);
-    }
-    public bool Equals(Route left, Route right)
-    {
-        return left.Equals(right);
-    }
-
-    public int GetHashCode([DisallowNull] Route instance)
-    {
-		return instance.GetHashCode();
-    }
-
-	public bool IsMatch(Path path)
+	}
+	public bool Equals(Route route)
 	{
+		if (route.Segments.Length != Segments.Length)
+		{
+			return false;
+		}
+		for (int i = 0; i < Segments.Length; i++)
+		{
+			var incoming = route.Segments[i];
+			var current = Segments[i];
+
+			if (incoming.Value != current.Value)
+			{
+				return false;
+			}
+		}
+		return true;
+
+	}
+	public bool Equals(Route left, Route right)
+	{
+		return left.Equals(right);
+	}
+
+	public int GetHashCode([DisallowNull] Route instance)
+	{
+		return instance.GetHashCode();
+	}
+
+	public bool IsMatch(Path path, string prefix = null)
+	{
+		path = path.ToString().Replace(prefix, "");
+
 		if (path.Segments.Length != Segments.Length)
 		{
 			return false;
@@ -84,10 +102,14 @@ public readonly struct Route : IEquatable<Route>, IEqualityComparer<Route>
 
 			if (routeSegment.IsParameter)
 			{
-                continue;
-            }
+				if (!routeSegment.IsValid(pathSegment))
+				{
+					return false;
+				}
+				continue;
+			}
 			
-			if (!routeSegment.Value.Equals(pathSegment.Value, StringComparison.InvariantCultureIgnoreCase))
+			if (!routeSegment.Value.Equals(pathSegment.Value, StringComparison.CurrentCultureIgnoreCase))
 			{
 				return false;
 			}

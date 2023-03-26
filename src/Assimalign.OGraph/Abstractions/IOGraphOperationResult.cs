@@ -18,5 +18,5 @@ public interface IOGraphOperationResult
     /// <param name="response"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task ExecuteAsync(IOGraphHttpResponse response, CancellationToken cancellationToken = default);
+    Task ExecuteAsync(IOGraphExecutorContext context, CancellationToken cancellationToken = default);
 }

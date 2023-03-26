@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
@@ -18,5 +14,8 @@ public readonly struct PathSegment
         this.Value = value;
     }
 
+    /// <summary>
+    /// The raw segment value.
+    /// </summary>
     public string Value { get; }
 }

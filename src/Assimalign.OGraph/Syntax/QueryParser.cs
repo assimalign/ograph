@@ -40,10 +40,9 @@ public sealed partial class QueryParser
             };
             // NOTE: The Parser is responsible for only syntax diagnostics
             //       Analyzers will be responsible for semantic diagnostics.
-            var parser  = Parser.Create();
-            var node    = parser.Parse(ref lexer, context, new RootNode());
-
-            var document = new QueryDocument(
+            var parser      = Parser.Create();
+            var node        = parser.Parse(ref lexer, context, new RootNode());
+            var document    = new QueryDocument(
                 query,
                 node,
                 context.Diasgnostics);

@@ -18,7 +18,7 @@ public interface IOGraphOperationContext
     /// <returns></returns>
     IOGraph GetGraph();
     /// <summary>
-    /// Get's the binded node for the given operation.
+    /// Get's the binded node for the given operation being executed.
     /// </summary>
     /// <returns></returns>
     IOGraphNode GetNode();

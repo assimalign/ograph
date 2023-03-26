@@ -1,7 +1,7 @@
 {
     //"$schema": "http://json-schema.org/draft-07/schema",
     "$schema": "ograph.response.schema.json",
-
+    "@ograph.status": 200,
     "@ograph.node": "#model/nodes/employees", // A reference to the nodes schema in the OGraph Model
     "pageInfo": {
         "totalCount": 2345,
@@ -30,39 +30,25 @@
             // Edges
             "@ograph.edges": {
                 "company": {
+                    "@ograph.node": "",
                     "pageInfo": {
-
+                        "hasNext": true,
+                        "hasPrevious": false,
+                        "totalCount": 200
                     },
                     "nodes": [
                         {
                             "@ograph.label": "company",
-                            "companyName": "Assimalign LLC",
-    
-    
-                            "@ograph.edges": {
-    
-                            }
+                            "companyName": "Assimalign LLC"
                         }
                     ]
                 },
                 "addresses": {                
-                    "@ograph.label": "",
-                    "@ograph.totalCount": 4568,
-                    "pageInfo": {},
-                    "nodes": [
-                        {
-    
-                        }
-                    ],
-                    "error": {
-                        "code": "",
-                        "message": "",
-                        "details": [
-                            {
-                                "code": "",
-                                "message": ""
-                            }
-                        ]
+                    "@ograph.node": "",
+                    "pageInfo": {
+                        "hasNext": true,
+                        "hasPrevious": false,
+                        "totalCount": 200
                     }
                 }
             }

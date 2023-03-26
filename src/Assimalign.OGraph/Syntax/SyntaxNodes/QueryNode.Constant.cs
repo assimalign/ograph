@@ -53,12 +53,6 @@ public sealed class ConstantNode : QueryNode
         }
     }
 
-    /// <inheritdoc />
-    public override bool IsOfType<TNode>()
-    {
-        return this is TNode;
-    }
-
     #region Parse
     public string GetString() => Encoding.UTF8.GetString(Value);
     public DateOnly GetDate() => DateOnly.Parse(GetString());

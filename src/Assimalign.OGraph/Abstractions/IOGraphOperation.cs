@@ -38,6 +38,17 @@ public interface IOGraphOperation
     /// <summary>
     /// 
     /// </summary>
+    IOGraphType RequestType { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// Response Types must match the binded node type.
+    /// </remarks>
+    IOGraphType ResponseType { get; }
+    /// <summary>
+    /// 
+    /// </summary>
     IOGraphOperationResolver Resolver { get; }
     /// <summary>
     /// 

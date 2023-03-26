@@ -64,7 +64,23 @@ internal class OGraphNodeDescriptor : IOGraphNodeDescriptor
     }
     public IOGraphNodeDescriptor UseType<T>(Action<IOGraphComplexTypeDescriptor<T>> configure)
     {
-        throw new NotImplementedException();
+        OnConfigure.Add(graph =>
+        {
+            if (configure is null)
+            {
+                throw new ArgumentNullException(nameof(configure));
+            }
+
+            var complexType = new ComplexType<T>();
+
+            var descriptor = new OGraphComplexTypeDescriptor<T>(complexType);
+
+            configure.Invoke(descriptor);
+
+            node.type = complexType;
+        });
+
+        return this;
     }
 
     public IOGraphEdgeDescriptor AddEdge(Name name)

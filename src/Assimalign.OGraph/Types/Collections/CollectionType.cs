@@ -3,6 +3,7 @@ using System.Xml;
 using System.Text.Json;
 using System.Collections;
 using Assimalign.OGraph.Internal;
+using System.Linq;
 
 namespace Assimalign.OGraph;
 

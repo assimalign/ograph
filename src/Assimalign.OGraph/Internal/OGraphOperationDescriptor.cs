@@ -51,7 +51,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
     {
         OnConfigure.Add(graph =>
         {
-            if (!graph.Nodes.TryGet(label, out var node))
+            if (!graph.Nodes.TryGet(label, out var node) || node is null)
             {
                 throw new Exception();
             }
@@ -93,7 +93,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
                 throw new ArgumentNullException(nameof(middleware));
             }
             operation.Middleware.Enqueue(middleware);
-        });        
+        });
         return this;
     }
     public IOGraphOperationDescriptor UseMiddleware(OGraphOperationMiddleware middleware)
@@ -105,7 +105,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
                 throw new ArgumentNullException(nameof(middleware));
             }
             operation.Middleware.Enqueue(new OGraphOperationMiddlewareDefault(middleware));
-        });      
+        });
         return this;
     }
     public IOGraphOperationDescriptor UseResolver<TResolver>()
@@ -143,7 +143,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseQueryProvider<TQueryProvider>() 
+    public IOGraphOperationDescriptor UseQueryProvider<TQueryProvider>()
         where TQueryProvider : IOGraphQueryProvider, new()
     {
         OnConfigure.Add(graph =>
@@ -191,6 +191,22 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
 
             operation.queryOptions = options;
 
+        });
+        return this;
+    }
+    public IOGraphOperationDescriptor UseQueryOptions<TQueryOptions>(Action<TQueryOptions> configure)
+        where TQueryOptions : OGraphQueryOptions, new()
+    {
+        OnConfigure.Add(graph =>
+        {
+            if (configure is null)
+            {
+                throw new ArgumentNullException(nameof(configure));
+            }
+
+            var options = new TQueryOptions();
+            configure.Invoke(options);
+            operation.queryOptions = options;
         });
         return this;
     }

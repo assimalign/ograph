@@ -22,7 +22,7 @@ public sealed class FunctionCallNode : IdentifierNode
     public IEnumerable<ParameterNode> Parameters { get; init; } = new ParameterNode[0];
 
     /// <inheritdoc />
-    public override QueryNodeType NodeType => QueryNodeType.Function;
+    public override QueryNodeType NodeType => QueryNodeType.FunctionCall;
 
     /// <inheritdoc />
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)

@@ -1,5 +1,8 @@
-﻿namespace Assimalign.OGraph;
+﻿using System.Diagnostics;
 
+namespace Assimalign.OGraph;
+
+[DebuggerDisplay("Segment: {Value}")]
 public readonly struct RouteSegment
 {
     internal RouteSegment(string value, bool isParameter = false, bool isLiteral = false)
@@ -25,5 +28,13 @@ public readonly struct RouteSegment
     public override string ToString()
     {
         return IsParameter ? $"{{{Value}}}" : Value;
+    }
+
+    internal bool IsValid(PathSegment segment)
+    {
+
+
+
+        return true;
     }
 }

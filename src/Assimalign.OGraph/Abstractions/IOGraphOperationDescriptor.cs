@@ -65,6 +65,13 @@ public interface IOGraphOperationDescriptor
     /// <summary>
     /// 
     /// </summary>
+    /// <typeparam name="TQueryOptions"></typeparam>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    IOGraphOperationDescriptor UseQueryOptions<TQueryOptions>(Action<TQueryOptions> configure) where TQueryOptions : OGraphQueryOptions, new();
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="configure"></param>
     /// <returns></returns>
     IOGraphOperationDescriptor UseQueryOptions(Action<OGraphQueryOptions> configure);

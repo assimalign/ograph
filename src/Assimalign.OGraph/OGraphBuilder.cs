@@ -55,7 +55,6 @@ public sealed class OGraphBuilder : IOGraphBuilder
         {
             label = label
         };
-
         var descriptor = new OGraphNodeDescriptor(node)
         {
             OnConfigure = onNodeAdd

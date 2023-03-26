@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Assimalign.OGraph.AspNetCore;
 
-public sealed class OGraphRequest : IOGraphHttpRequest
+public sealed class OGraphRequest : IOGraphExecutorRequest
 {
 
     public OGraphRequest() { }
@@ -16,17 +16,28 @@ public sealed class OGraphRequest : IOGraphHttpRequest
     {
         this.Method = httpRequest.Method;
         this.Body = httpRequest.Body;
+        this.Path = httpRequest.Path.Value;
+        this.Query = new OGraphQueryCollection(httpRequest.Query.ToDictionary(k => k.Key, v =>
+        {
+            return new QueryValue(v.Value);
+        }));
+        this.Headers = new OGraphHeaderCollection(httpRequest.Headers.ToDictionary(k => k.Key, v =>
+        {
+            return new HeaderValue(v.Value.ToString());
+        }));
+
     }
 
+    public Host Host { get; init; }
     public Route Route { get; init; }
 
     public Method Method { get; init; }
 
-    public IOGraphHttpQueryCollection? Query { get; init; }
+    public IOGraphQueryCollection? Query { get; init; }
 
-    public IOGraphHttpHeaderCollection? Headers { get; init; }
+    public IOGraphHeaderCollection? Headers { get; init; }
 
     public Stream? Body { get; init; }
 
-    public Path Path => throw new NotImplementedException();
+    public Path Path { get; init; }
 }

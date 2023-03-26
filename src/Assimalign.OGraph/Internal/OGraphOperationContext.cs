@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -21,7 +19,7 @@ internal class OGraphOperationContext : IOGraphOperationContext
 
     public ClaimsPrincipal GetClaimsPrincipal()
     {
-        throw new NotImplementedException();
+        return ClaimsPrincipal.Current;
     }
 
     public IOGraphEdge GetEdge(Name name)
@@ -31,27 +29,27 @@ internal class OGraphOperationContext : IOGraphOperationContext
 
     public IOGraph GetGraph()
     {
-        throw new NotImplementedException();
+        return Graph;
     }
 
     public IOGraphNode GetNode()
     {
-        throw new NotImplementedException();
+        return Operation.Node;
     }
 
     public QueryDocument GetQuery()
     {
-        throw new NotImplementedException();
+        return Query;
     }
 
     public OGraphQueryOptions GetQueryOptions()
     {
-        throw new NotImplementedException();
+        return Operation.QueryOptions;
     }
 
     public IOGraphQueryProvider GetQueryProvider()
     {
-        throw new NotImplementedException();
+        return Operation.QueryProvider;
     }
 
     public T GetRequestBody<T>()

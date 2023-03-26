@@ -12,6 +12,9 @@
                 "@ograph.node": {
                     "type": "string"
                 },
+                "@ograph.status": {
+                    "type": "number"
+                },
                 "pageInfo": {
                     "properties": {
                         "totalCount": {
@@ -73,12 +76,19 @@
         "ograph-node": {
             "type": "object",
             "minProperties": 1,
+            "properties": {
+                "@ograph.edges": {
+                    "minProperties": 1,
+                    "patternProperties": {
+                        "^[a-z]": {
+                            "$ref": "#/definitions/ograph-response"
+                        }
+                    }
+                }
+            },
             "patternProperties": {
                 "^[a-z]": {
                     "oneOf": [
-                        {
-                            "$ref": "#/definitions/ograph-response"
-                        },
                         {
                             "type": "string"
                         },

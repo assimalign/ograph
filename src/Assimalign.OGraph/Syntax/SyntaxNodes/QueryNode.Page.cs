@@ -14,8 +14,8 @@ public sealed class PageNode : QueryNode
     /// <param name="skip"></param>
     public PageNode(long take, long skip)
     {
-        this.Skip = new ConstantNode(new[] { (byte)skip });
-        this.Take = new ConstantNode(new[] { (byte)take });
+        this.Skip = new ConstantNode(BitConverter.GetBytes(skip));
+        this.Take = new ConstantNode(BitConverter.GetBytes(take));
     }
     /// <summary>
     /// 
@@ -68,7 +68,7 @@ public sealed class PageNode : QueryNode
     /// <summary>
     /// 
     /// </summary>
-    public IEnumerable<PageNode> Edges { get; } = new PageNode[0];
+    public IEnumerable<PageNode> Edges { get; init; } = new PageNode[0];
     /// <summary>
     /// 
     /// </summary>

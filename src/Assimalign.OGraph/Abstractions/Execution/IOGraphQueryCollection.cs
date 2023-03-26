@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphHttpQueryCollection : IDictionary<string, QueryValue>
+/// <summary>
+/// A collection of query parameters.
+/// </summary>
+public interface IOGraphQueryCollection : IDictionary<string, QueryValue>
 {
 }

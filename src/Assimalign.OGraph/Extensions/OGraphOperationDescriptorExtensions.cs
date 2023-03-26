@@ -76,7 +76,7 @@ public static class OGraphOperationDescriptorExtensionsd
         }
 
         return descriptor
-            .UseQueryProvider<OGraphQueryableQueryProvider<T>>()
+            .UseQueryProvider<QueryableQueryProvider<T>>()
             .UseResolver(async context =>
             {
                 // Get the binding to the operation
@@ -91,18 +91,18 @@ public static class OGraphOperationDescriptorExtensionsd
                 var graphQuery          = context.GetQuery();
                 var graphQueryOptions   = context.GetQueryOptions();
                 var graphQueryProvider  = context.GetQueryProvider();
-
-                var graphQueryContext = new QueryableQueryContext()
+                var graphQueryContext   = new QueryableQueryContext()
                 {
-                    Query = graphQuery,
+                    Query               = graphQuery,
+                    Node                = graphNode,
+                    ServiceProvider     = context.GetService<IServiceProvider>()
                 };
 
                 var graphQueryResults = await graphQueryProvider.ExecuteAsync(
                     graphQueryContext, 
                     graphQueryOptions);
 
-
-                return default;
+                return new OGraphQueryResult(graphQueryResults);
             });
     }
 
@@ -125,10 +125,11 @@ public static class OGraphOperationDescriptorExtensionsd
         }
 
         return descriptor
-            .UseQueryProvider<OGraphQueryableQueryProvider<T>>()
+            .UseQueryProvider<QueryableQueryProvider<T>>()
             .UseResolver(async context =>
             {
-                var graphQueryable = await resolver.Invoke(context);
+                var queryable = await resolver.Invoke(context);
+
                 // Get the binding to the operation
                 var graphNode = context.GetNode();
 
@@ -138,21 +139,22 @@ public static class OGraphOperationDescriptorExtensionsd
                     throw new Exception();
                 }
 
-                var graphQuery = context.GetQuery();
-                var graphQueryOptions = context.GetQueryOptions();
-                var graphQueryProvider = context.GetQueryProvider();
-
-                var graphQueryContext = new QueryableQueryContext()
+                var graphQuery          = context.GetQuery();
+                var graphQueryOptions   = context.GetQueryOptions();
+                var graphQueryProvider  = context.GetQueryProvider();
+                var graphQueryContext   = new QueryableQueryContext()
                 {
-                    Query = graphQuery,
+                    Query               = graphQuery,
+                    Node                = graphNode,
+                    ServiceProvider     = context.GetService<IServiceProvider>(),
+                    Queryable           = queryable 
                 };
 
                 var graphQueryResults = await graphQueryProvider.ExecuteAsync(
-                    graphQueryContext,
+                    graphQueryContext, 
                     graphQueryOptions);
 
-
-                return default;
+                return new OGraphQueryResult(graphQueryResults);
             });
     }
 

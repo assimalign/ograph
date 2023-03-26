@@ -12,36 +12,78 @@ namespace Assimalign.OGraph.Internal;
 
 using Assimalign.OGraph.Syntax;
 
-internal class OGraphQueryableQueryProvider<T> : IOGraphQueryProvider
+internal class QueryableQueryProvider<T> : IOGraphQueryProvider
 {
     public Type ElementType => typeof(IQueryable<T>);
 
-    public IQueryable<T> Queryable { get; init; }
-
-    public Task<IOGraphQueryResult> ExecuteAsync(IOGraphQueryContext context, OGraphQueryOptions options, CancellationToken cancellationToken = default)
+    public async Task<IOGraphQueryResult> ExecuteAsync(IOGraphQueryContext context, OGraphQueryOptions options, CancellationToken cancellationToken = default)
     {
-        var query = context.Query.Root;
-        var queryVisitor = new QueryExpressionVisitor(Queryable.Expression)
+        if (context is not QueryableQueryContext queryableContext)
         {
-            ElementType = Queryable.ElementType
+            throw new ArgumentException();
+        }
+        if (queryableContext.Queryable is not IQueryable<T> queryable)
+        {
+            throw new InvalidOperationException();
+        }
+
+
+        var result = new QueryResult();
+
+        var query           = (RootNode)context.Query.Root;
+        var queryVisitor    = new QueryExpressionVisitor(queryable.Expression);
+
+        var node            = context.Node;
+        var nodeType        = (IOGraphComplexType)context.Node.Type;
+
+        var expression          = queryVisitor.Visit(context.Query.Root);
+
+        var propertyContext = new OGraphPropertyContext()
+        {
+            ServiceProvider = queryableContext.ServiceProvider,
         };
 
-        var node = context.Node;
-
-        var expression = queryVisitor.Visit(context.Query.Root);
-        var expressionResult = Queryable.Provider.Execute(expression);
-
-        if (expressionResult is not IEnumerable enumerable)
+        if (options.CanProject && query.TryGetProjection(out var projections))
         {
-            throw new Exception();
-        }
-        foreach (var item in enumerable)
-        {
-            var projections = query.IsOfType<RootNode>();
+            foreach (var item in queryable)
+            {
+                var resultNode = new QueryResultNode();
 
-            
+                var tasks = new List<Task<Tuple<string, IOGraphPropertyResult>>>();
+
+                propertyContext.Parent = item;
+
+                foreach (var projectionProperty in projections.Properties)
+                {
+                    if (!nodeType.Properties.TryGet(projectionProperty.Name, out var graphProperty))
+                    {
+                        throw new Exception();
+                    }
+
+                    tasks.Add(Task.Run(async () =>
+                    {
+                        var value = await graphProperty.GetResolverChain().Invoke(propertyContext);
+
+                        return new Tuple<string, IOGraphPropertyResult>(
+                            projectionProperty.HasAlias ? projectionProperty.Alias : graphProperty.Name, 
+                            value);
+                    }));
+                }
+                while (tasks.Any())
+                {
+                    var any = await Task.WhenAny(tasks);
+
+                    tasks.Remove(any);
+
+                    var taskResult = any.Result;
+
+                    resultNode.Add(taskResult.Item1, taskResult.Item2.Value);
+                }
+
+                result.Nodes.Add(resultNode);
+            }
         }
 
-        throw new NotImplementedException();
+        return result;
     }
 }

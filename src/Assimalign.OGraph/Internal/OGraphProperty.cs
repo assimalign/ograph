@@ -27,7 +27,14 @@ internal class OGraphProperty : IOGraphProperty
             {
                 throw new Exception();
             }
-            return GetResolverChain(new OGraphPropertyHandler(property.Resolver.InvokeAsync));
+            var root = new OGraphPropertyHandler(property.Resolver.InvokeAsync);
+
+            if (Middleware.Count == 0)
+            {
+                return root;
+            }
+
+            return GetResolverChain(root);
         });
 
         return memoise.Invoke(this);

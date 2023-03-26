@@ -62,8 +62,8 @@
         <operation name="CreateUser" node="users">
             <method>POST</method>
             <route value="/users/{userId}">
-                <segment ordinal="1">users</segment>
-                <segment ordinal="2">{userId:int}</segment>
+                <segment ordinal="1"    is-literal="true">users</segment>
+                <segment ordinal="2"    is-parameter="true">{userId:int}</segment>
             </route>
             <query>
 
@@ -74,6 +74,9 @@
             <request>
 
             </request>
+            <response>
+
+            </response>
         </operation>
         <operation name="UpdateUserAddress" node="addresses">
             <method>PUT</method>

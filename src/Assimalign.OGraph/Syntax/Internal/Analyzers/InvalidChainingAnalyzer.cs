@@ -11,8 +11,18 @@ using Assimalign.OGraph.Syntax.Analyzer;
 
 internal class InvalidChainingAnalyzer : QueryAnalyzer
 {
+    private readonly IOGraph graph;
+
+    public InvalidChainingAnalyzer(IOGraph graph)
+    {
+        this.graph = graph;
+    }
+
     public override Task AnalyzeAsync(QueryDocument document, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+
+
+
+        return Task.CompletedTask;
     }
 }

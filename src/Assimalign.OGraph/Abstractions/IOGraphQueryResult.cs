@@ -1,23 +1,23 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
+/// <summary>
+/// 
+/// </summary>
 public interface IOGraphQueryResult
 {
     /// <summary>
     /// 
     /// </summary>
-    long TotalCount { get; }
+    IOGraphError Error { get; }
     /// <summary>
     /// 
     /// </summary>
-    IOGraphQueryPageInfo PageInfo { get; }
+    IOGraphQueryResultPageInfo PageInfo { get; }
     /// <summary>
     /// 
     /// </summary>
-    object Data { get; }
+    IOGraphQueryResultNodeCollection Nodes { get; }
 }
