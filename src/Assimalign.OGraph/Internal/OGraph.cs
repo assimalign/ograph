@@ -15,6 +15,7 @@ internal class OGraph : IOGraph
 {
     public OGraph()
     {
+        this.Edges = new OGraphEdgeCollection();
         this.Nodes = new OGraphNodeCollection();
         this.Operations = new OGraphOperationCollection();
     }
@@ -32,8 +33,5 @@ internal class OGraph : IOGraph
 
     public OGraphOperationCollection Operations { get; }
     IOGraphOperationCollection IOGraph.Operations => this.Operations;
-
-
-    public IOGraphEventCollection? Events { get; }
 
 }

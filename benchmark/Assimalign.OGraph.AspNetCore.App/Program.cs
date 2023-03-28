@@ -27,8 +27,7 @@ builder.Services
             .UseRoute("/users")
             .UseQueryOptions(options =>
             {
-                options.CanFilter = false;
-                options.CanPage = false;
+                options.CanFilter = false;                
             })
             .UseNode<UserNode>()
             //.UseMiddleware((context, next) =>

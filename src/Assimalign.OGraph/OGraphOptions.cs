@@ -16,7 +16,7 @@ public sealed class OGraphOptions
     /// <summary>
     /// 
     /// </summary>
-    public string DefaultMediaType { get; set; } = OGraphHttpMediaType.Json;
+    public string DefaultMediaType { get; set; } = OGraphMediaType.Json;
     /// <summary>
     /// Specifies the <see cref="QueryParser"/> options.
     /// </summary>

@@ -13,7 +13,7 @@ public sealed class RootNode : QueryNode
 
    
     /// <summary>
-    /// Represents the root edges of the expression tree.
+    /// Represents the root edges of the queryable tree.
     /// </summary>
     public IEnumerable<QueryNode> Nodes { get; init; } = new QueryNode[0];
     /// <summary>
@@ -44,6 +44,12 @@ public sealed class RootNode : QueryNode
     
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Root;
+
+    /// <inheritdoc />
+    public override void Accept(IQueryNodeVisitor visitor)
+    {
+        visitor.Visit(this);
+    }
 
     /// <inheritdoc />
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)

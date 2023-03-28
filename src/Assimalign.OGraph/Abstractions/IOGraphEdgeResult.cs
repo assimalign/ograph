@@ -8,8 +8,5 @@ namespace Assimalign.OGraph;
 
 public interface IOGraphEdgeResult
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    IOGraphError? Error { get; }
+
 }

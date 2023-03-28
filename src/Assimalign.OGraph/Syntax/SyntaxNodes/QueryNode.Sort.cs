@@ -8,24 +8,24 @@ public sealed class SortNode : QueryNode
 {
     public SortNode() { }
 
-    public SortNode(QueryNode sortBy)
+    public SortNode(IdentifierNode identifier)
     {
-        this.SortBy = sortBy;
+        this.Identifier = identifier;
     }
-    public SortNode(QueryNode sortBy, SortNode thenBy)
+    public SortNode(IdentifierNode identifier, SortNode thenBy)
     {
-        this.SortBy = sortBy;
+        this.Identifier = identifier;
         this.ThenBy = thenBy;
     }
-    public SortNode(QueryNode sortBy, SortNode thenBy, IEnumerable<SortNode> edges)
+    public SortNode(IdentifierNode identeifier, SortNode thenBy, IEnumerable<SortNode> edges)
     {
-        this.SortBy = sortBy;
+        this.Identifier = identeifier;
         this.ThenBy = thenBy;
         this.Edges = edges;
     }
-    public SortNode(QueryNode sortBy, IEnumerable<SortNode> edges)
+    public SortNode(IdentifierNode sortBy, IEnumerable<SortNode> edges)
     {
-        this.SortBy = sortBy;
+        this.Identifier = sortBy;
         this.Edges = edges;
     }
 
@@ -38,11 +38,6 @@ public sealed class SortNode : QueryNode
     /// 
     /// </summary>
     public SortDirection Direction { get; init; } = SortDirection.Ascending;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public QueryNode? SortBy { get; init; }    
     
     /// <summary>
     /// 
@@ -68,6 +63,12 @@ public sealed class SortNode : QueryNode
     public override QueryNodeType NodeType => QueryNodeType.Sort;
 
     /// <inheritdoc />
+    public override void Accept(IQueryNodeVisitor visitor)
+    {
+        visitor.Visit(this);
+    }
+
+    /// <inheritdoc />
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)
     {
         return visitor.Visit(this);
@@ -90,9 +91,9 @@ public sealed class SortNode : QueryNode
                 }
             }
         }
-        if (SortBy is not null)
+        if (Identifier is not null)
         {
-            foreach (var node1 in SortBy.GetNodesOfType<TNode>())
+            foreach (var node1 in Identifier.GetNodesOfType<TNode>())
             {
                 yield return node1;
             }

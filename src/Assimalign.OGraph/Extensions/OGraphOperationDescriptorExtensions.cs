@@ -27,6 +27,7 @@ public static class OGraphOperationDescriptorExtensionsd
         {
             throw new ArgumentNullException(nameof(resolver));
         }
+
         return descriptor.UseResolver(context =>
         {
 
@@ -74,7 +75,7 @@ public static class OGraphOperationDescriptorExtensionsd
         {  
             throw new ArgumentNullException(nameof(resolver));
         }
-
+        
         return descriptor
             .UseQueryProvider<QueryableQueryProvider<T>>()
             .UseResolver(async context =>

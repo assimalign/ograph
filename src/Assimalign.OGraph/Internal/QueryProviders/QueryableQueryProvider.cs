@@ -14,8 +14,22 @@ internal class QueryableQueryProvider : IOGraphQueryProvider
 {
     public Type ElementType => typeof(IQueryable);
 
-    public Task<IOGraphQueryResult> ExecuteAsync(IOGraphQueryContext context, OGraphQueryOptions options, CancellationToken cancellationToken = default)
+    Task<IOGraphQueryResult> IOGraphQueryProvider.ExecuteAsync(IOGraphQueryContext context, OGraphQueryOptions options, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        if (context is QueryableQueryContext ctx)
+        {
+            return ExecuteAsync(ctx, options, cancellationToken);
+        }
+
+        throw new ArgumentException();
+    }
+
+
+    public Task<IOGraphQueryResult> ExecuteAsync(QueryableQueryContext context, OGraphQueryOptions options, CancellationToken cancellationToken = default)
+    {
+        var providerGenericType = context.Queryable.ElementType;
+        var provider = (IOGraphQueryProvider)typeof(QueryableQueryProvider<>).MakeGenericType(providerGenericType);
+
+        return provider.ExecuteAsync(context, options, cancellationToken);
     }
 }

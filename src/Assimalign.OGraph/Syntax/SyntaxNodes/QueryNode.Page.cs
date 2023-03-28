@@ -78,6 +78,12 @@ public sealed class PageNode : QueryNode
     public override QueryNodeType NodeType => QueryNodeType.Page;
 
     /// <inheritdoc />
+    public override void Accept(IQueryNodeVisitor visitor)
+    {
+        visitor.Visit(this);
+    }
+
+    /// <inheritdoc />
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)
     {
         return visitor.Visit(this);

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,22 +22,14 @@ public sealed class OGraphQueryResult : OGraphResult
 
     public override Task ExecuteAsync(IOGraphExecutorContext context, CancellationToken cancellationToken = default)
     {
-        try
-        {
-            context.Response.StatusCode = 200;
+        context.Response.StatusCode = 200;
 
-            var content     = context.Response.Body;
-            var contentType = context.Request.Headers.ContentType;
+        var content        = context.Response.Body;
+        var acceptType     = context.Request.Headers.Accept;
 
 
-            return JsonSerializer.SerializeAsync(content, queryResult);
 
-        }
-        catch(Exception exception)
-        {
 
-        }
-
-        return Task.CompletedTask;
+        return JsonSerializer.SerializeAsync(content, queryResult);
     }
 }

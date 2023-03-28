@@ -14,6 +14,18 @@ public sealed class EdgeNode : IdentifierNode
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Edge;
 
+    /// <inheritdoc />
+    public override void Accept(IQueryNodeVisitor visitor)
+    {
+        visitor.Visit(this);
+    }
+
+    /// <inheritdoc />
+    public override T Accept<T>(IQueryNodeVisitor<T> visitor)
+    {
+        return base.Accept(visitor);
+    }
+
     /// <summary>
     /// 
     /// </summary>

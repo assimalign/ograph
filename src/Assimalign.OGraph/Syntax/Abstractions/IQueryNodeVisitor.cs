@@ -1,17 +1,65 @@
 ﻿namespace Assimalign.OGraph.Syntax;
 
-public interface IQueryNodeVisitor<T>
+public interface IQueryNodeVisitor
 {
-    T Visit(QueryNode queryNode);
-    T Visit(RootNode queryNode);
-    T Visit(FilterNode queryNode);
-    T Visit(ProjectionNode queryNode);
-    T Visit(PageNode queryNode);
-    T Visit(SortNode queryNode);
-    T Visit(BinaryNode queryNode);
-    T Visit(PropertyNode queryNode);
-    T Visit(ParameterNode queryNode);
-    T Visit(FunctionCallNode queryNode);
-    T Visit(ConstantNode queryNode);
-    T Visit(EdgeNode queryNode);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="queryNode"></param>
+    void Visit(QueryNode queryNode);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="queryNode"></param>
+    void Visit(RootNode queryNode);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="queryNode"></param>
+    void Visit(FilterNode queryNode);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="queryNode"></param>
+    void Visit(ProjectionNode queryNode);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="queryNode"></param>
+    void Visit(PageNode queryNode);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="queryNode"></param>
+    void Visit(SortNode queryNode);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="queryNode"></param>
+    void Visit(BinaryNode queryNode);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="queryNode"></param>
+    void Visit(PropertyNode queryNode);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="queryNode"></param>
+    void Visit(ParameterNode queryNode);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="queryNode"></param>
+    void Visit(FunctionCallNode queryNode);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="queryNode"></param>
+    void Visit(ConstantNode queryNode);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="queryNode"></param>
+    void Visit(EdgeNode queryNode);
 }

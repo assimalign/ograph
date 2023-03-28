@@ -6,7 +6,6 @@ namespace Assimalign.OGraph;
 
 using Assimalign.OGraph.Internal;
 
-
 public sealed class OGraphBuilder : IOGraphBuilder
 {
     private readonly static ConcurrentDictionary<Name, IOGraph> cache = new();
@@ -120,7 +119,8 @@ public sealed class OGraphBuilder : IOGraphBuilder
     }
 
     /// <inheritdoc />
-    public IOGraphBuilder AddOperation<TOperation>() where TOperation : IOGraphOperation, new()
+    public IOGraphBuilder AddOperation<TOperation>() 
+        where TOperation : IOGraphOperation, new()
     {
         return AddOperation(new TOperation());
     }
@@ -181,6 +181,8 @@ public sealed class OGraphBuilder : IOGraphBuilder
 
         return descriptor;
     }
+
+    /// <inheritdoc />
     IOGraph IOGraphBuilder.Build()
     {
         return cache.GetOrAdd(graph.Name, name =>

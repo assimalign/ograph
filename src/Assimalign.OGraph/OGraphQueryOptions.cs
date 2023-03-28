@@ -21,4 +21,12 @@ public abstract class OGraphQueryOptions
     /// Enables or disables projections. Default is true.
     /// </summary>
     public bool CanProject { get; set; } = true;
+    /// <summary>
+    /// 
+    /// </summary>
+    public int? MaxPageSize { get; set; } 
+    /// <summary>
+    /// 
+    /// </summary>
+    public int? DefaultPageSize { get; set; } = 100;
 }

@@ -12,6 +12,16 @@ public abstract class QueryNode
     /// An identifier for the node type.
     /// </summary>
     public abstract QueryNodeType NodeType { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="visitor"></param>
+    public virtual void Accept(IQueryNodeVisitor visitor)
+    {
+        visitor.Visit(this);
+    }
+
     /// <summary>
     /// Accepts an <see cref="IQueryNodeVisitor{T}"/>.
     /// </summary>

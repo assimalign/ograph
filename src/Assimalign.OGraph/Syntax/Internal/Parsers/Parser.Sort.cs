@@ -138,14 +138,26 @@ internal class SortParser : Parser
         {
             case TokenType.Identifier when token.Value.IsFunction():
                 {
-                    sortNode = context.GetParser<FunctionParser>()
-                        .Parse(ref lexer, context, new FunctionCallNode());
+                    queryNode = new SortNode()
+                    {
+                        ThenBy = queryNode.ThenBy,
+                        Edges = queryNode.Edges,
+                        Direction = queryNode.Direction,
+                        Identifier = (FunctionCallNode)context.GetParser<FunctionParser>()
+                            .Parse(ref lexer, context, new FunctionCallNode())
+                    };
                     break;
                 }
             case TokenType.Identifier:
                 {
-                    sortNode = context.GetParser<PropertyParser>()
-                        .Parse(ref lexer, context, new PropertyNode());
+                    queryNode = new SortNode()
+                    {
+                        ThenBy = queryNode.ThenBy, 
+                        Edges = queryNode.Edges,
+                        Direction = queryNode.Direction,
+                        Identifier = (PropertyNode)context.GetParser<PropertyParser>()
+                            .Parse(ref lexer, context, new PropertyNode())
+                    };
                     break;
                 }
             default:
@@ -162,15 +174,16 @@ internal class SortParser : Parser
 
                 queryNode = new SortNode()
                 {
-                    SortBy = sortNode,
+                    Edges = queryNode.Edges,
                     Direction = (SortDirection)token.TokenType,
-                    //Identifier = queryNode.Identifier,
+                    Identifier = queryNode.Identifier,
                     ThenBy = queryNode.ThenBy,
                 };
 
                 if (!lexer.TryPeek(out token))
                 {
-                    context.AddDiagnostic(Diagnostic.UnexpectedEOF(lexer.Current.End));
+                    context.AddDiagnostic(Diagnostic.UnexpectedEOF(
+                        lexer.Current.End));
                 }
             }
             if (token.TokenType == TokenType.Identifier)
@@ -179,9 +192,9 @@ internal class SortParser : Parser
 
                 queryNode = new SortNode()
                 {
-                    SortBy = sortNode,
+                    Edges = queryNode.Edges,
                     Direction = queryNode.Direction,
-                    //Identifier = queryNode.Identifier,
+                    Identifier = queryNode.Identifier,
                     ThenBy = ParseSortIdentifier(ref lexer, context, new SortNode()),
                 };
             }
@@ -189,9 +202,10 @@ internal class SortParser : Parser
             {
                 queryNode = new SortNode()
                 {
-                    SortBy = sortNode,
+                    Edges = queryNode.Edges,
+                    ThenBy = queryNode.ThenBy, 
                     Direction = queryNode.Direction,
-                    //Identifier = queryNode.Identifier
+                    Identifier = queryNode.Identifier
                 };
             }
         }

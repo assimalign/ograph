@@ -21,7 +21,7 @@ public interface IOGraph
     /// <summary>
     /// 
     /// </summary>
-    IOGraphEventCollection Events { get; }
+    //IOGraphEventCollection Events { get; }
     /// <summary>
     /// Represents a collection of HTTP Operations
     /// </summary>

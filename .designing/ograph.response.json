@@ -8,25 +8,25 @@
         "hasNext": true,
         "hasPrevious": true
     },
-    "error": {
-        "code": "Unauthorized",
-        "message": "The user is unauthorized.",
-        "details": [
-            {
-                "code": "Access Denied",
-                "message": "The user is not authorized to access edge: 'taxInfo'"
-            }
-        ]
-    },
+    "errors": [
+        {
+            "code": "Unauthorized",
+            "message": "The user is unauthorized.",
+            "details": [
+                {
+                    "code": "Access Denied",
+                    "message": "The user is not authorized to access edge: 'taxInfo'"
+                }
+            ]
+        }
+    ],
     "nodes": [
         {
             // Context Information
             "@ograph.label": "employees",
-
             // Attributes
             "firstName": "Chase",
             "lastName": "Crawford",
-
             // Edges
             "@ograph.edges": {
                 "company": {
@@ -36,6 +36,7 @@
                         "hasPrevious": false,
                         "totalCount": 200
                     },
+                    "errors": [],
                     "nodes": [
                         {
                             "@ograph.label": "company",
@@ -43,7 +44,7 @@
                         }
                     ]
                 },
-                "addresses": {                
+                "addresses": {
                     "@ograph.node": "",
                     "pageInfo": {
                         "hasNext": true,

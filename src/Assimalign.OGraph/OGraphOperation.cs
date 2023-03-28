@@ -77,7 +77,6 @@ public abstract class OGraphOperation : IOGraphOperation
             {
                 return root;
             }
-
             return GetResolverChain(root);
         });
 
@@ -85,10 +84,7 @@ public abstract class OGraphOperation : IOGraphOperation
     }
     
 
-    protected virtual void Configure(IOGraphOperationDescriptor descriptor)
-    {
-
-    }
+    protected virtual void Configure(IOGraphOperationDescriptor descriptor) { }
 
     private OGraphOperationHandler GetResolverChain(OGraphOperationHandler handler)
     {

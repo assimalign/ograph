@@ -1,13 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
+/// <inheritdoc />
 public sealed class OGraphError : IOGraphError
 {
+    public OGraphError()
+    {
+        this.Details = new OGraphErrorDetailsCollection();
+    }
+
     /// <inheritdoc />
     public string? Code { get; set; }
 
@@ -15,5 +17,5 @@ public sealed class OGraphError : IOGraphError
     public string? Message { get; set; }
 
     /// <inheritdoc />
-    public IOGraphErrorDetailsCollection? Details { get; set; }
+    public IOGraphErrorDetailsCollection? Details { get; }
 }

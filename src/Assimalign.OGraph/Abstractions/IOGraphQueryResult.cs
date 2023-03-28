@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-
-namespace Assimalign.OGraph;
+﻿namespace Assimalign.OGraph;
 
 /// <summary>
 /// 
@@ -9,15 +6,15 @@ namespace Assimalign.OGraph;
 public interface IOGraphQueryResult
 {
     /// <summary>
-    /// 
+    /// An execution error.
     /// </summary>
-    IOGraphError Error { get; }
+    IOGraphError? Error { get; }
     /// <summary>
     /// 
     /// </summary>
-    IOGraphQueryResultPageInfo PageInfo { get; }
+    IOGraphQueryResultPageInfo? PageInfo { get; }
     /// <summary>
     /// 
     /// </summary>
-    IOGraphQueryResultNodeCollection Nodes { get; }
+    IOGraphQueryResultNodeCollection? Nodes { get; }
 }

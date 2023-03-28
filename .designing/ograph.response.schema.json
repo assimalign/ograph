@@ -48,24 +48,27 @@
                         }
                     ]
                 },
-                "error": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "properties": {
-                        "code": {
-                            "type": "string"
+                "errors": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "code": {
+                                "type": "string"
+                            },
+                            "message": {
+                                "type": "string"
+                            },
+                            "details": {
+                                "type": "array"
+                            }
                         },
-                        "message": {
-                            "type": "string"
-                        },
-                        "details": {
-                            "type": "array"
-                        }
-                    },
-                    "required": [
-                        "code",
-                        "message"
-                    ]
+                        "required": [
+                            "code",
+                            "message"
+                        ]
+                    }
                 }
             },
             "additionalProperties": false,

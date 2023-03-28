@@ -157,7 +157,6 @@ internal class RootParser : Parser
                 {
                     Identifier = root.Identifier,
                     Direction = root.Direction,
-                    SortBy = root.SortBy,
                     ThenBy = root.ThenBy,
                     Edges = root.Edges.Concat(new[] { node })
                 };
@@ -172,7 +171,6 @@ internal class RootParser : Parser
                 {
                     Identifier = root.Identifier,
                     Direction = root.Direction,
-                    SortBy = root.SortBy,
                     ThenBy = root.ThenBy,
                     Edges = root.Edges
                         .Where(x => !x.Identifier.Name.Equals(next.Identifier.Name))

@@ -25,6 +25,12 @@ public sealed class FunctionCallNode : IdentifierNode
     public override QueryNodeType NodeType => QueryNodeType.FunctionCall;
 
     /// <inheritdoc />
+    public override void Accept(IQueryNodeVisitor visitor)
+    {
+        visitor.Visit(this);
+    }
+
+    /// <inheritdoc />
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)
     {
         return visitor.Visit(this);

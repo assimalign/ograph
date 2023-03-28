@@ -763,7 +763,7 @@ internal static class TypeExtensions
 	/// <summary>
 	/// Certain types in the .NET such as strings aren't considered value types 
 	/// since they are mutable. Need to considered types such as these to be value types
-	/// as if will cut down on the type checking for the expression building.
+	/// as if will cut down on the type checking for the queryable building.
 	/// </summary>
 	/// <param name="type"></param>
 	/// <param name="checkNullable"></param>
@@ -773,7 +773,7 @@ internal static class TypeExtensions
 	/// <summary>
 	/// Certain types in the .NET such as strings aren't considered value types 
 	/// since they are mutable. Need to considered types such as these to be value types
-	/// as if will cut down on the type checking for the expression building.
+	/// as if will cut down on the type checking for the queryable building.
 	/// </summary>
 	/// <param name="type"></param>
 	/// <param name="implementation"></param>

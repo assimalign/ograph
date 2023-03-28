@@ -1,13 +1,11 @@
-﻿using System;
-
-namespace Assimalign.OGraph;
+﻿namespace Assimalign.OGraph;
 
 using Assimalign.OGraph.Internal;
 
 public abstract class OGraphNode : IOGraphNode
 {
     internal Label label;
-    internal IOGraphType? type;
+    internal IOGraphType type;
     internal IOGraphMetadata metadata;
     internal IOGraphEdgeCollection edges;
 
@@ -32,22 +30,5 @@ public abstract class OGraphNode : IOGraphNode
     IOGraphEdgeCollection IOGraphNode.Edges => this.edges;
 
 
-    protected virtual void Configure(IOGraphNodeDescriptor descriptor)
-    {
-
-    }
-
-
-
-    internal bool IsValid(out Exception? exception)
-    {
-        exception = default;
-
-
-
-
-
-
-        return true;
-    }
+    protected virtual void Configure(IOGraphNodeDescriptor descriptor) { }
 }

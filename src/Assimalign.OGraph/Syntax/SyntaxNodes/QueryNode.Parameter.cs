@@ -29,24 +29,6 @@ public sealed class ParameterNode : QueryNode
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="constant"></param>
-    /// <returns></returns>
-    public bool IsConstant(out ConstantNode? constant)
-    {
-        constant = default;
-
-        if (constant is ConstantNode node)
-        {
-            constant = node;
-            return true;
-        }
-
-        return false;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
     public ParameterType ParameterType => this.parameterValue switch
     {
         ConstantNode => ParameterType.Constant,
@@ -57,6 +39,12 @@ public sealed class ParameterNode : QueryNode
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Parameter;
+
+    /// <inheritdoc />
+    public override void Accept(IQueryNodeVisitor visitor)
+    {
+        visitor.Visit(this);
+    }
 
     /// <inheritdoc />
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)

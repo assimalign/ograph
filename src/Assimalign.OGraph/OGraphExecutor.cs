@@ -59,19 +59,19 @@ public class OGraphExecutor : IOGraphExecutor
                     return response;
                 }
             }
-            var operationResult = await operation.GetResolverChain().Invoke(new OGraphOperationContext()
+            var result = await operation.GetResolverChain().Invoke(new OGraphOperationContext()
             {
-                Query = query,
-                Operation = operation,
+                Query           = query,
+                Operation       = operation,
                 ServiceProvider = serviceProvider,
-                Graph = graph
+                Graph           = graph
             });
-
-            await operationResult.ExecuteAsync(new OGraphExecutorContext()
+            await result.ExecuteAsync(new OGraphExecutorContext()
             {
                 Request = request,
                 Response = response,
                 ContentType = request.Headers.Accept.HasValue ? request.Headers.Accept.Value : options.DefaultMediaType
+            
             }, cancellationToken);
 
             return response;
@@ -117,13 +117,11 @@ public class OGraphExecutor : IOGraphExecutor
     private bool TryGetQuery(IOGraphExecutorRequest request, out QueryDocument queryDocument)
     {
         queryDocument = default;
-
         if (request.Query.TryGetValue("query", out var value))
         {
             queryDocument = parser.Parse(value);
             return true;
         }
-
         return false;
     }
 
