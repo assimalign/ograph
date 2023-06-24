@@ -1,7 +1,7 @@
 # OGraph (Open Graph Protocol) 
 
 
-Inspired by [OData (github.com)](https://github.com/OData), Graph Data Models, and [ChilliCream's (github.com)](https://github.com/ChilliCream) GraphQL framework, OGraph is an open source protocol built over HTTP intended to provide the ability to query data similarly to GraphQL while maintaining REST. 
+Inspired by [OData](https://github.com/OData), Graph Data Models, and [ChilliCream's](https://github.com/ChilliCream) GraphQL framework, OGraph is an open source protocol built over HTTP intended to provide the ability to query data similarly to GraphQL while maintaining REST. 
 
 With the world moving towards ***micro-everything***, the push for Graph based solutions has become very prevalent in today solutions.
 
