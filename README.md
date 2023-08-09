@@ -22,7 +22,7 @@ A key benefit OData has over GraphQL is the ability to extract the EDM (Entity D
 
 
 
-combing the flexibility  built for the service/application layer meant for virtualized graph services that allow for interopreble and queryable REST APIS.
+combing the flexibility  built for the service/application layer meant for virtualized graph services that allow for interoperable and queryable REST APIS.
 
 **Purpose:** OGraph serves a virtualization of your app-layer architecture utilizing graph modeling concepts while offering secure accessible querying operations out of the box. 
 
