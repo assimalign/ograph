@@ -101,22 +101,20 @@ public class OGraphExecutor : IOGraphExecutor
     }
     private bool TryGetOperation(IOGraphExecutorRequest request, out IOGraphOperation operation)
     {
-        operation = default;
-
+        operation = default!;
         foreach (var opr in graph.Operations)
         {
-            if (opr.Method == request.Method && opr.Route.IsMatch(request.Path, options.RoutePrefix))
+            if (opr.Method == request.Method && opr.Route.IsMatch(request.Path, options.RoutePrefix!))
             {
                 operation = opr;
                 return true;
             }
         }
-
         return false;
     }
     private bool TryGetQuery(IOGraphExecutorRequest request, out QueryDocument queryDocument)
     {
-        queryDocument = default;
+        queryDocument = default!;
         if (request.Query.TryGetValue("query", out var value))
         {
             queryDocument = parser.Parse(value);
@@ -124,9 +122,6 @@ public class OGraphExecutor : IOGraphExecutor
         }
         return false;
     }
-
-
-
     public static IOGraphExecutor Create(Name name, Action<OGraphOptions, IOGraphBuilder> configure)
     {
         var options = new OGraphOptions();
@@ -139,5 +134,4 @@ public class OGraphExecutor : IOGraphExecutor
 
         return new OGraphExecutor(graph, options);
     }
-
 }

@@ -13,9 +13,10 @@ internal class SortParser : Parser
         if (queryNode is not SortNode sortNode)
         {
             throw QueryParserException.UnexpectedQueryNode(
-                typeof(ProjectionNode),
+                typeof(SortNode),
                 queryNode.GetType());
         }
+
         if (!lexer.HasNext)
         {
             context.AddDiagnostic(Diagnostic.UnexpectedEOF(
@@ -48,23 +49,6 @@ internal class SortParser : Parser
                 lexer.Current.End));
 
             return queryNode;
-        }
-        // Check if projection is followed by an edge identifier
-        if (token.TokenType == TokenType.Identifier)
-        {
-            queryNode = new SortNode()
-            {
-                Identifier = (EdgeNode)context.GetParser<EdgeParser>()
-                    .Parse(ref lexer, context, new EdgeNode())
-            };
-
-            if (!lexer.TryPeek(out token))
-            {
-                context.AddDiagnostic(Diagnostic.UnexpectedEOF(
-                    lexer.Current.End));
-
-                return queryNode;
-            }
         }
         if (token.TokenType != TokenType.OpenBracket)
         {
@@ -141,7 +125,6 @@ internal class SortParser : Parser
                     queryNode = new SortNode()
                     {
                         ThenBy = queryNode.ThenBy,
-                        Edges = queryNode.Edges,
                         Direction = queryNode.Direction,
                         Identifier = (FunctionCallNode)context.GetParser<FunctionParser>()
                             .Parse(ref lexer, context, new FunctionCallNode())
@@ -153,7 +136,6 @@ internal class SortParser : Parser
                     queryNode = new SortNode()
                     {
                         ThenBy = queryNode.ThenBy, 
-                        Edges = queryNode.Edges,
                         Direction = queryNode.Direction,
                         Identifier = (PropertyNode)context.GetParser<PropertyParser>()
                             .Parse(ref lexer, context, new PropertyNode())
@@ -174,7 +156,6 @@ internal class SortParser : Parser
 
                 queryNode = new SortNode()
                 {
-                    Edges = queryNode.Edges,
                     Direction = (SortDirection)token.TokenType,
                     Identifier = queryNode.Identifier,
                     ThenBy = queryNode.ThenBy,
@@ -192,7 +173,6 @@ internal class SortParser : Parser
 
                 queryNode = new SortNode()
                 {
-                    Edges = queryNode.Edges,
                     Direction = queryNode.Direction,
                     Identifier = queryNode.Identifier,
                     ThenBy = ParseSortIdentifier(ref lexer, context, new SortNode()),
@@ -202,7 +182,6 @@ internal class SortParser : Parser
             {
                 queryNode = new SortNode()
                 {
-                    Edges = queryNode.Edges,
                     ThenBy = queryNode.ThenBy, 
                     Direction = queryNode.Direction,
                     Identifier = queryNode.Identifier

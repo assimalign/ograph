@@ -82,7 +82,6 @@ public abstract class OGraphOperation : IOGraphOperation
 
         return memoise.Invoke(this);
     }
-    
 
     protected virtual void Configure(IOGraphOperationDescriptor descriptor) { }
 

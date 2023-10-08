@@ -48,7 +48,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
     }
 
     /// <inheritdoc />
-    public IOGraphNodeDescriptor AddNode(Label label)
+    public IOGraphNodeDescriptor AddNode(Name label)
     {
         var node = new OGraphNodeDefault()
         {
@@ -104,7 +104,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
     /// <inheritdoc />
     public IOGraphEdgeDescriptor AddEdge(Name name)
     {
-        var edge = new OGraphEdge() 
+        var edge = new OGraphEdgeDefault() 
         { 
             Name = name 
         };

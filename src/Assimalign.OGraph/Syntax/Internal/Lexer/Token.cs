@@ -44,6 +44,7 @@ internal readonly struct Token
                 case TokenType.Project:
                 case TokenType.Sort:
                 case TokenType.Page:
+                case TokenType.Edge:
                 case TokenType.Null:
                 case TokenType.And:
                 case TokenType.Or:

@@ -5,9 +5,9 @@ namespace Assimalign.OGraph.Internal;
 
 internal class OGraphEdgeDescriptor : IOGraphEdgeDescriptor
 {
-    private readonly OGraphEdge edge;
+    private readonly OGraphEdgeDefault edge;
 
-    public OGraphEdgeDescriptor(OGraphEdge edge)
+    public OGraphEdgeDescriptor(OGraphEdgeDefault edge)
     {
         if (edge is null)
         {
@@ -56,6 +56,21 @@ internal class OGraphEdgeDescriptor : IOGraphEdgeDescriptor
         return this;
     }
 
+    public IOGraphEdgeDescriptor UseQueryOptions(OGraphQueryOptions options)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IOGraphEdgeDescriptor UseQueryOptions<TQueryOptions>(Action<TQueryOptions> configure) where TQueryOptions : OGraphQueryOptions, new()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IOGraphEdgeDescriptor UseQueryOptions(Action<OGraphQueryOptions> configure)
+    {
+        throw new NotImplementedException();
+    }
+
     public IOGraphEdgeDescriptor UseQueryProvider<TQueryProvider>() where TQueryProvider : IOGraphQueryProvider, new()
     {
         throw new NotImplementedException();
@@ -89,7 +104,7 @@ internal class OGraphEdgeDescriptor : IOGraphEdgeDescriptor
         edge.Resolver = new OGraphEdgeResolverDefault(resolver);
         return this;
     }
-    public IOGraphEdgeDescriptor UseSourceNode(Label label)
+    public IOGraphEdgeDescriptor UseSourceNode(Name label)
     {
         OnConfigure.Add(graph =>
         {
@@ -106,7 +121,7 @@ internal class OGraphEdgeDescriptor : IOGraphEdgeDescriptor
         edge.Source = new TNode();
         return this;
     }
-    public IOGraphEdgeDescriptor UseTargetNode(Label label)
+    public IOGraphEdgeDescriptor UseTargetNode(Name label)
     {
         OnConfigure.Add(graph =>
         {

@@ -17,20 +17,9 @@ public sealed class SortNode : QueryNode
         this.Identifier = identifier;
         this.ThenBy = thenBy;
     }
-    public SortNode(IdentifierNode identeifier, SortNode thenBy, IEnumerable<SortNode> edges)
-    {
-        this.Identifier = identeifier;
-        this.ThenBy = thenBy;
-        this.Edges = edges;
-    }
-    public SortNode(IdentifierNode sortBy, IEnumerable<SortNode> edges)
-    {
-        this.Identifier = sortBy;
-        this.Edges = edges;
-    }
 
     /// <summary>
-    /// 
+    /// Represents the property or function output to sort by.
     /// </summary>
     public IdentifierNode? Identifier { get; init; }
 
@@ -43,16 +32,6 @@ public sealed class SortNode : QueryNode
     /// 
     /// </summary>
     public SortNode? ThenBy { get; init; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public IEnumerable<SortNode>? Edges { get; init; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public bool HasEdges => Edges is not null && Edges.Any();
 
     /// <summary>
     /// 
@@ -80,16 +59,6 @@ public sealed class SortNode : QueryNode
         if (this is TNode node)
         {
             yield return node;
-        }
-        if (Edges is not null)
-        {
-            foreach (var edge in Edges)
-            {
-                foreach (var node1 in edge.GetNodesOfType<TNode>())
-                {
-                    yield return node1;
-                }
-            }
         }
         if (Identifier is not null)
         {

@@ -12,8 +12,9 @@ using Assimalign.OGraph.Internal;
 
 public static class OGraphOperationDescriptorExtensionsd
 {
+
     /// <summary>
-    /// 
+    /// A Synchronous 
     /// </summary>
     /// <param name="descriptor"></param>
     /// <param name="resolver"></param>
@@ -21,18 +22,62 @@ public static class OGraphOperationDescriptorExtensionsd
     /// <exception cref="ArgumentNullException"></exception>
     public static IOGraphOperationDescriptor UseResolver(
         this IOGraphOperationDescriptor descriptor,
-        Func<IOGraphOperationContext, IQueryable> resolver) 
+        Func<IOGraphOperationContext, IOGraphOperationResult> resolver)
     {
         if (resolver is null)
         {
             throw new ArgumentNullException(nameof(resolver));
         }
-
         return descriptor.UseResolver(context =>
         {
+            return Task.FromResult<IOGraphOperationResult>(resolver.Invoke(context));
+        });
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="descriptor"></param>
+    /// <param name="resolver"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    //public static IOGraphOperationDescriptor UseResolver(
+    //    this IOGraphOperationDescriptor descriptor,
+    //    Func<IOGraphOperationContext, IQueryable> resolver) 
+    //{
+    //    if (resolver is null)
+    //    {
+    //        throw new ArgumentNullException(nameof(resolver));
+    //    }
+
+    //    return descriptor.UseResolver(context =>
+    //    {
 
 
-            return default;
+    //        return default;
+    //    });
+    //}
+
+    
+    public static IOGraphOperationDescriptor UseEitherResolver<TQueryable, TResult>(
+        this IOGraphOperationDescriptor descriptor,
+        Func<IOGraphOperationContext, Either<TQueryable, TResult>> resolver)
+        where TQueryable : IQueryable
+        where TResult : IOGraphOperationResult
+    {
+        if (resolver is null)
+        {
+            throw new ArgumentNullException(nameof(resolver));
+        }
+        return descriptor.UseResolver(context =>
+        {
+            var results = resolver.Invoke(context);
+
+            return results
+                .Match((TResult result) =>  result as IOGraphOperationResult)
+                .Match((TQueryable queryable) =>
+                {
+                    return new QueryableResult() as IOGraphOperationResult;
+                });
         });
     }
 
@@ -43,366 +88,385 @@ public static class OGraphOperationDescriptorExtensionsd
     /// <param name="resolver"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static IOGraphOperationDescriptor UseResolver(
-        this IOGraphOperationDescriptor descriptor,
-        Func<IOGraphOperationContext, Task<IQueryable>> resolver)
-    {
-        if (resolver is null)
-        {
-            throw new ArgumentNullException(nameof(resolver));
-        }
-        return descriptor.UseResolver(async context =>
-        {
-            var graphQueryable = await resolver.Invoke(context);
+    //public static IOGraphOperationDescriptor UseResolver(
+    //    this IOGraphOperationDescriptor descriptor,
+    //    Func<IOGraphOperationContext, Task<IQueryable>> resolver)
+    //{
+    //    if (resolver is null)
+    //    {
+    //        throw new ArgumentNullException(nameof(resolver));
+    //    }
+    //    return descriptor.UseResolver(async context =>
+    //    {
+    //        var graphQueryable = await resolver.Invoke(context);
 
-            return default;
-        });
-    }
+    //        return default;
+    //    });
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="descriptor"></param>
-    /// <param name="resolver"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    public static IOGraphOperationDescriptor UseResolver<T>(
-        this IOGraphOperationDescriptor descriptor,
-        Func<IOGraphOperationContext, IQueryable<T>> resolver)
-    {
-        if (resolver is null)
-        {  
-            throw new ArgumentNullException(nameof(resolver));
-        }
-        
-        return descriptor
-            .UseQueryProvider<QueryableQueryProvider<T>>()
-            .UseResolver(async context =>
-            {
-                // Get the binding to the operation
-                var graphNode = context.GetNode();
+    //public static IOGraphOperationDescriptor UseResolver(
+    //    this IOGraphOperationDescriptor descriptor,
+    //    Func<IOGraphOperationContext, Either<IQueryable, IOGraphOperationResult>> resolver)
+    //{
+    //    if (resolver is null)
+    //    {
+    //        throw new ArgumentNullException(nameof(resolver));
+    //    }
+    //    return descriptor.UseResolver(async context =>
+    //    {
+    //        //var results = resolver.Invoke(context);
 
-                // Validate that the type matches the unerlying node type
-                if (!typeof(T).IsAssignableTo(graphNode.Type.RuntimeType))
-                {
-                    throw new Exception();
-                }
+    //        //results.Match(async context => )
+    //        //var graphQueryable = await resolver.Invoke(context);
 
-                var graphQuery          = context.GetQuery();
-                var graphQueryOptions   = context.GetQueryOptions();
-                var graphQueryProvider  = context.GetQueryProvider();
-                var graphQueryContext   = new QueryableQueryContext()
-                {
-                    Query               = graphQuery,
-                    Node                = graphNode,
-                    ServiceProvider     = context.GetService<IServiceProvider>()
-                };
+    //        return default;
+    //    });
+    //}
 
-                var graphQueryResults = await graphQueryProvider.ExecuteAsync(
-                    graphQueryContext, 
-                    graphQueryOptions);
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <typeparam name="T"></typeparam>
+    ///// <param name="descriptor"></param>
+    ///// <param name="resolver"></param>
+    ///// <returns></returns>
+    ///// <exception cref="ArgumentNullException"></exception>
+    //public static IOGraphOperationDescriptor UseResolver<T>(
+    //    this IOGraphOperationDescriptor descriptor,
+    //    Func<IOGraphOperationContext, IQueryable<T>> resolver)
+    //{
+    //    if (resolver is null)
+    //    {  
+    //        throw new ArgumentNullException(nameof(resolver));
+    //    }
 
-                return new OGraphQueryResult(graphQueryResults);
-            });
-    }
+    //    return descriptor
+    //        .UseQueryProvider<QueryableQueryProvider<T>>()
+    //        .UseResolver(async context =>
+    //        {
+    //            // Get the binding to the operation
+    //            var graphNode = context.GetNode();
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="descriptor"></param>
-    /// <param name="resolver"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="Exception"></exception>
-    public static IOGraphOperationDescriptor UseResolver<T>(
-        this IOGraphOperationDescriptor descriptor,
-        Func<IOGraphOperationContext, Task<IQueryable<T>>> resolver)
-    {
-        if (resolver is null)
-        {
-            throw new ArgumentNullException(nameof(resolver));
-        }
+    //            // Validate that the type matches the unerlying node type
+    //            if (!typeof(T).IsAssignableTo(graphNode.Type.RuntimeType))
+    //            {
+    //                throw new Exception();
+    //            }
 
-        return descriptor
-            .UseQueryProvider<QueryableQueryProvider<T>>()
-            .UseResolver(async context =>
-            {
-                var queryable = await resolver.Invoke(context);
+    //            var graphQuery          = context.GetQuery();
+    //            var graphQueryOptions   = context.GetQueryOptions();
+    //            var graphQueryProvider  = context.GetQueryProvider();
+    //            var graphQueryContext   = new QueryableQueryContext()
+    //            {
+    //                Query               = graphQuery,
+    //                Node                = graphNode,
+    //                ServiceProvider     = context.GetService<IServiceProvider>()
+    //            };
 
-                // Get the binding to the operation
-                var graphNode = context.GetNode();
+    //            var graphQueryResults = await graphQueryProvider.ExecuteAsync(
+    //                graphQueryContext, 
+    //                graphQueryOptions);
 
-                // Validate that the type matches the unerlying node type
-                if (!typeof(T).IsAssignableTo(graphNode.Type.RuntimeType))
-                {
-                    throw new Exception();
-                }
+    //            return new OGraphQueryResult(graphQueryResults);
+    //        });
+    //}
 
-                var graphQuery          = context.GetQuery();
-                var graphQueryOptions   = context.GetQueryOptions();
-                var graphQueryProvider  = context.GetQueryProvider();
-                var graphQueryContext   = new QueryableQueryContext()
-                {
-                    Query               = graphQuery,
-                    Node                = graphNode,
-                    ServiceProvider     = context.GetService<IServiceProvider>(),
-                    Queryable           = queryable 
-                };
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <typeparam name="T"></typeparam>
+    ///// <param name="descriptor"></param>
+    ///// <param name="resolver"></param>
+    ///// <returns></returns>
+    ///// <exception cref="ArgumentNullException"></exception>
+    ///// <exception cref="Exception"></exception>
+    //public static IOGraphOperationDescriptor UseResolver<T>(
+    //    this IOGraphOperationDescriptor descriptor,
+    //    Func<IOGraphOperationContext, Task<IQueryable<T>>> resolver)
+    //{
+    //    if (resolver is null)
+    //    {
+    //        throw new ArgumentNullException(nameof(resolver));
+    //    }
 
-                var graphQueryResults = await graphQueryProvider.ExecuteAsync(
-                    graphQueryContext, 
-                    graphQueryOptions);
+    //    return descriptor
+    //        .UseQueryProvider<QueryableQueryProvider<T>>()
+    //        .UseResolver(async context =>
+    //        {
+    //            var queryable = await resolver.Invoke(context);
 
-                return new OGraphQueryResult(graphQueryResults);
-            });
-    }
+    //            // Get the binding to the operation
+    //            var graphNode = context.GetNode();
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="descriptor"></param>
-    /// <param name="resolver"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="Exception"></exception>
-    public static IOGraphOperationDescriptor UseResolver<T>(
-        this IOGraphOperationDescriptor descriptor,
-        Func<IOGraphOperationContext, IEnumerable> resolver)
-    {
-        if (resolver is null)
-        {
-            throw new ArgumentNullException(nameof(resolver));
-        }
+    //            // Validate that the type matches the unerlying node type
+    //            if (!typeof(T).IsAssignableTo(graphNode.Type.RuntimeType))
+    //            {
+    //                throw new Exception();
+    //            }
 
-        return descriptor
-            .UseQueryProvider<EnumerableQueryProvider<T>>()
-            .UseResolver(async context =>
-            {
-                // Get the binding to the operation
-                var graphNode = context.GetNode();
+    //            var graphQuery          = context.GetQuery();
+    //            var graphQueryOptions   = context.GetQueryOptions();
+    //            var graphQueryProvider  = context.GetQueryProvider();
+    //            var graphQueryContext   = new QueryableQueryContext()
+    //            {
+    //                Query               = graphQuery,
+    //                Node                = graphNode,
+    //                ServiceProvider     = context.GetService<IServiceProvider>(),
+    //                Queryable           = queryable 
+    //            };
 
-                // Validate that the type matches the unerlying node type
-                if (!typeof(T).IsAssignableTo(graphNode.Type.RuntimeType))
-                {
-                    throw new Exception();
-                }
+    //            var graphQueryResults = await graphQueryProvider.ExecuteAsync(
+    //                graphQueryContext, 
+    //                graphQueryOptions);
 
-                var graphQuery = context.GetQuery();
-                var graphQueryOptions = context.GetQueryOptions();
-                var graphQueryProvider = context.GetQueryProvider();
+    //            return new OGraphQueryResult(graphQueryResults);
+    //        });
+    //}
 
-                var graphQueryContext = new EnumerableQueryContext()
-                {
-                    Query = graphQuery,
-                };
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <typeparam name="T"></typeparam>
+    ///// <param name="descriptor"></param>
+    ///// <param name="resolver"></param>
+    ///// <returns></returns>
+    ///// <exception cref="ArgumentNullException"></exception>
+    ///// <exception cref="Exception"></exception>
+    //public static IOGraphOperationDescriptor UseResolver<T>(
+    //    this IOGraphOperationDescriptor descriptor,
+    //    Func<IOGraphOperationContext, IEnumerable> resolver)
+    //{
+    //    if (resolver is null)
+    //    {
+    //        throw new ArgumentNullException(nameof(resolver));
+    //    }
 
-                var graphQueryResults = await graphQueryProvider.ExecuteAsync(
-                    graphQueryContext,
-                    graphQueryOptions);
+    //    return descriptor
+    //        .UseQueryProvider<EnumerableQueryProvider<T>>()
+    //        .UseResolver(async context =>
+    //        {
+    //            // Get the binding to the operation
+    //            var graphNode = context.GetNode();
 
+    //            // Validate that the type matches the unerlying node type
+    //            if (!typeof(T).IsAssignableTo(graphNode.Type.RuntimeType))
+    //            {
+    //                throw new Exception();
+    //            }
 
-                return default;
-            });
-    }
+    //            var graphQuery = context.GetQuery();
+    //            var graphQueryOptions = context.GetQueryOptions();
+    //            var graphQueryProvider = context.GetQueryProvider();
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="descriptor"></param>
-    /// <param name="resolver"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="Exception"></exception>
-    public static IOGraphOperationDescriptor UseResolver<T>(
-        this IOGraphOperationDescriptor descriptor,
-        Func<IOGraphOperationContext, Task<IEnumerable>> resolver)
-    {
-        if (resolver is null)
-        {
-            throw new ArgumentNullException(nameof(resolver));
-        }
+    //            var graphQueryContext = new EnumerableQueryContext()
+    //            {
+    //                Query = graphQuery,
+    //            };
 
-        return descriptor
-            .UseQueryProvider<EnumerableQueryProvider<T>>()
-            .UseResolver(async context =>
-            {
-                // Get the binding to the operation
-                var graphNode = context.GetNode();
-
-                // Validate that the type matches the unerlying node type
-                if (!typeof(T).IsAssignableTo(graphNode.Type.RuntimeType))
-                {
-                    throw new Exception();
-                }
-
-                var graphQuery = context.GetQuery();
-                var graphQueryOptions = context.GetQueryOptions();
-                var graphQueryProvider = context.GetQueryProvider();
-
-                var graphQueryContext = new EnumerableQueryContext()
-                {
-                    Query = graphQuery,
-                };
-
-                var graphQueryResults = await graphQueryProvider.ExecuteAsync(
-                    graphQueryContext,
-                    graphQueryOptions);
+    //            var graphQueryResults = await graphQueryProvider.ExecuteAsync(
+    //                graphQueryContext,
+    //                graphQueryOptions);
 
 
-                return default;
-            });
-    }
+    //            return default;
+    //        });
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="descriptor"></param>
-    /// <param name="resolver"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="Exception"></exception>
-    public static IOGraphOperationDescriptor UseResolver<T>(
-        this IOGraphOperationDescriptor descriptor,
-        Func<IOGraphOperationContext, IEnumerable<T>> resolver)
-    {
-        if (resolver is null)
-        {
-            throw new ArgumentNullException(nameof(resolver));
-        }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <typeparam name="T"></typeparam>
+    ///// <param name="descriptor"></param>
+    ///// <param name="resolver"></param>
+    ///// <returns></returns>
+    ///// <exception cref="ArgumentNullException"></exception>
+    ///// <exception cref="Exception"></exception>
+    //public static IOGraphOperationDescriptor UseResolver<T>(
+    //    this IOGraphOperationDescriptor descriptor,
+    //    Func<IOGraphOperationContext, Task<IEnumerable>> resolver)
+    //{
+    //    if (resolver is null)
+    //    {
+    //        throw new ArgumentNullException(nameof(resolver));
+    //    }
 
-        return descriptor
-            .UseQueryProvider<EnumerableQueryProvider<T>>()
-            .UseResolver(async context =>
-            {
-                var graphEnumerable = resolver.Invoke(context);
+    //    return descriptor
+    //        .UseQueryProvider<EnumerableQueryProvider<T>>()
+    //        .UseResolver(async context =>
+    //        {
+    //            // Get the binding to the operation
+    //            var graphNode = context.GetNode();
 
-                // Get the binding to the operation
-                var graphNode = context.GetNode();
+    //            // Validate that the type matches the unerlying node type
+    //            if (!typeof(T).IsAssignableTo(graphNode.Type.RuntimeType))
+    //            {
+    //                throw new Exception();
+    //            }
 
-                // Validate that the type matches the unerlying node type
-                if (!typeof(T).IsAssignableTo(graphNode.Type.RuntimeType))
-                {
-                    throw new Exception();
-                }
+    //            var graphQuery = context.GetQuery();
+    //            var graphQueryOptions = context.GetQueryOptions();
+    //            var graphQueryProvider = context.GetQueryProvider();
 
-                var graphQuery = context.GetQuery();
-                var graphQueryOptions = context.GetQueryOptions();
-                var graphQueryProvider = context.GetQueryProvider();
+    //            var graphQueryContext = new EnumerableQueryContext()
+    //            {
+    //                Query = graphQuery,
+    //            };
 
-                var graphQueryContext = new EnumerableQueryContext()
-                {
-                    Query = graphQuery,
-                };
-
-                var graphQueryResults = await graphQueryProvider.ExecuteAsync(
-                    graphQueryContext,
-                    graphQueryOptions);
+    //            var graphQueryResults = await graphQueryProvider.ExecuteAsync(
+    //                graphQueryContext,
+    //                graphQueryOptions);
 
 
-                return default;
-            });
-    }
+    //            return default;
+    //        });
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="descriptor"></param>
-    /// <param name="resolver"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="Exception"></exception>
-    public static IOGraphOperationDescriptor UseResolver<T>(
-        this IOGraphOperationDescriptor descriptor,
-        Func<IOGraphOperationContext, Task<IEnumerable<T>>> resolver)
-    {
-        if (resolver is null)
-        {
-            throw new ArgumentNullException(nameof(resolver));
-        }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <typeparam name="T"></typeparam>
+    ///// <param name="descriptor"></param>
+    ///// <param name="resolver"></param>
+    ///// <returns></returns>
+    ///// <exception cref="ArgumentNullException"></exception>
+    ///// <exception cref="Exception"></exception>
+    //public static IOGraphOperationDescriptor UseResolver<T>(
+    //    this IOGraphOperationDescriptor descriptor,
+    //    Func<IOGraphOperationContext, IEnumerable<T>> resolver)
+    //{
+    //    if (resolver is null)
+    //    {
+    //        throw new ArgumentNullException(nameof(resolver));
+    //    }
 
-        return descriptor
-            .UseQueryProvider<EnumerableQueryProvider<T>>()
-            .UseResolver(async context =>
-            {
-                // Get the binding to the operation
-                var graphNode = context.GetNode();
+    //    return descriptor
+    //        .UseQueryProvider<EnumerableQueryProvider<T>>()
+    //        .UseResolver(async context =>
+    //        {
+    //            var graphEnumerable = resolver.Invoke(context);
 
-                // Validate that the type matches the unerlying node type
-                if (!typeof(T).IsAssignableTo(graphNode.Type.RuntimeType))
-                {
-                    throw new Exception();
-                }
+    //            // Get the binding to the operation
+    //            var graphNode = context.GetNode();
 
-                var graphQuery = context.GetQuery();
-                var graphQueryOptions = context.GetQueryOptions();
-                var graphQueryProvider = context.GetQueryProvider();
+    //            // Validate that the type matches the unerlying node type
+    //            if (!typeof(T).IsAssignableTo(graphNode.Type.RuntimeType))
+    //            {
+    //                throw new Exception();
+    //            }
 
-                var graphQueryContext = new EnumerableQueryContext()
-                {
-                    Query = graphQuery,
-                };
+    //            var graphQuery = context.GetQuery();
+    //            var graphQueryOptions = context.GetQueryOptions();
+    //            var graphQueryProvider = context.GetQueryProvider();
 
-                var graphQueryResults = await graphQueryProvider.ExecuteAsync(
-                    graphQueryContext,
-                    graphQueryOptions);
+    //            var graphQueryContext = new EnumerableQueryContext()
+    //            {
+    //                Query = graphQuery,
+    //            };
+
+    //            var graphQueryResults = await graphQueryProvider.ExecuteAsync(
+    //                graphQueryContext,
+    //                graphQueryOptions);
 
 
-                return default;
-            });
-    }
+    //            return default;
+    //        });
+    //}
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="descriptor"></param>
-    /// <param name="resolver"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="Exception"></exception>
-    public static IOGraphOperationDescriptor UseResolver<T>(
-        this IOGraphOperationDescriptor descriptor,
-        Func<IOGraphOperationContext, T> resolver) where T : class
-    {
-        if (resolver is null)
-        {
-            throw new ArgumentNullException();
-        }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <typeparam name="T"></typeparam>
+    ///// <param name="descriptor"></param>
+    ///// <param name="resolver"></param>
+    ///// <returns></returns>
+    ///// <exception cref="ArgumentNullException"></exception>
+    ///// <exception cref="Exception"></exception>
+    //public static IOGraphOperationDescriptor UseResolver<T>(
+    //    this IOGraphOperationDescriptor descriptor,
+    //    Func<IOGraphOperationContext, Task<IEnumerable<T>>> resolver)
+    //{
+    //    if (resolver is null)
+    //    {
+    //        throw new ArgumentNullException(nameof(resolver));
+    //    }
 
-        return descriptor
-            .UseQueryProvider<ObjectQueryProvider<T>>()
-            .UseResolver(async context =>
-            {
-                // Get the binding to the operation
-                var graphNode           = context.GetNode();
+    //    return descriptor
+    //        .UseQueryProvider<EnumerableQueryProvider<T>>()
+    //        .UseResolver(async context =>
+    //        {
+    //            // Get the binding to the operation
+    //            var graphNode = context.GetNode();
 
-                // Validate that the type matches the unerlying node type
-                if (!typeof(T).IsAssignableTo(graphNode.Type.RuntimeType))
-                {
-                    throw new Exception();
-                }
+    //            // Validate that the type matches the unerlying node type
+    //            if (!typeof(T).IsAssignableTo(graphNode.Type.RuntimeType))
+    //            {
+    //                throw new Exception();
+    //            }
 
-                var graphQuery          = context.GetQuery();
-                var graphQueryOptions   = context.GetQueryOptions();
-                var graphQueryProvider  = context.GetQueryProvider();
+    //            var graphQuery = context.GetQuery();
+    //            var graphQueryOptions = context.GetQueryOptions();
+    //            var graphQueryProvider = context.GetQueryProvider();
 
-                var graphQueryContext = new ObjectQueryContext()
-                {
-                    Query = graphQuery,
-                };
+    //            var graphQueryContext = new EnumerableQueryContext()
+    //            {
+    //                Query = graphQuery,
+    //            };
 
-                var graphQueryResults = await graphQueryProvider.ExecuteAsync(
-                    graphQueryContext,
-                    graphQueryOptions);
+    //            var graphQueryResults = await graphQueryProvider.ExecuteAsync(
+    //                graphQueryContext,
+    //                graphQueryOptions);
 
-                return default;
 
-            });
-    }
+    //            return default;
+    //        });
+    //}
+
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <typeparam name="T"></typeparam>
+    ///// <param name="descriptor"></param>
+    ///// <param name="resolver"></param>
+    ///// <returns></returns>
+    ///// <exception cref="ArgumentNullException"></exception>
+    ///// <exception cref="Exception"></exception>
+    //public static IOGraphOperationDescriptor UseResolver<T>(
+    //    this IOGraphOperationDescriptor descriptor,
+    //    Func<IOGraphOperationContext, T> resolver) where T : class
+    //{
+    //    if (resolver is null)
+    //    {
+    //        throw new ArgumentNullException();
+    //    }
+
+    //    return descriptor
+    //        .UseQueryProvider<ObjectQueryProvider<T>>()
+    //        .UseResolver(async context =>
+    //        {
+    //            // Get the binding to the operation
+    //            var graphNode           = context.GetNode();
+
+    //            // Validate that the type matches the unerlying node type
+    //            if (!typeof(T).IsAssignableTo(graphNode.Type.RuntimeType))
+    //            {
+    //                throw new Exception();
+    //            }
+
+    //            var graphQuery          = context.GetQuery();
+    //            var graphQueryOptions   = context.GetQueryOptions();
+    //            var graphQueryProvider  = context.GetQueryProvider();
+
+    //            var graphQueryContext = new ObjectQueryContext()
+    //            {
+    //                Query = graphQuery,
+    //            };
+
+    //            var graphQueryResults = await graphQueryProvider.ExecuteAsync(
+    //                graphQueryContext,
+    //                graphQueryOptions);
+
+    //            return default;
+
+    //        });
+    //}
 }

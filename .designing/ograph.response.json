@@ -8,38 +8,38 @@
         "hasNext": true,
         "hasPrevious": true
     },
-    "errors": [
-        {
-            "code": "Unauthorized",
-            "message": "The user is unauthorized.",
-            "details": [
-                {
-                    "code": "Access Denied",
-                    "message": "The user is not authorized to access edge: 'taxInfo'"
-                }
-            ]
-        }
-    ],
+    "errors": {
+        "code": "Unauthorized",
+        "message": "The user is unauthorized.",
+        "details": [
+            {
+                "code": "Access Denied",
+                "message": "The user is not authorized to access edge: 'taxInfo'"
+            }
+        ]
+    },
     "nodes": [
         {
             // Context Information
             "@ograph.label": "employees",
             // Attributes
+            "employeeId": "255acd9b-9db4-4a38-85a5-93504cbeeeae",
             "firstName": "Chase",
             "lastName": "Crawford",
             // Edges
             "@ograph.edges": {
-                "company": {
+                "companies": {
                     "@ograph.node": "",
                     "pageInfo": {
                         "hasNext": true,
                         "hasPrevious": false,
                         "totalCount": 200
                     },
-                    "errors": [],
                     "nodes": [
                         {
+                            "@ograph.link": "/api/employees/255acd9b-9db4-4a38-85a5-93504cbeeeae/companies/a2eb5d63-9dd9-47bb-a94f-dbed32fcaa15",
                             "@ograph.label": "company",
+                            "companyId": "a2eb5d63-9dd9-47bb-a94f-dbed32fcaa15",
                             "companyName": "Assimalign LLC"
                         }
                     ]

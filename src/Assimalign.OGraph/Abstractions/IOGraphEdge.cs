@@ -1,31 +1,31 @@
 ﻿namespace Assimalign.OGraph;
 
 /// <summary>
-/// An edge links to edges together.
+/// An edge links two nodes together.
 /// </summary>
 /// <remarks>
-/// An Identifier is also referred to as a Link.
+/// An edge is also referred to as a Link.
 /// </remarks>
 public interface IOGraphEdge
 {
     /// <summary>
-    /// The name of the Identifier.
+    /// The name of the edge.
     /// </summary>
     Name Name { get; }
     /// <summary>
-    /// 
+    /// The source node.
     /// </summary>
     IOGraphNode Source { get; }
     /// <summary>
-    /// 
+    /// The target is the node in which is linked to the source.
     /// </summary>
-    IOGraphNode Target { get; }  
+    IOGraphNode Target { get; }
     /// <summary>
-    /// 
+    /// Metadata for the edge.
     /// </summary>
     IOGraphMetadata Metadata { get; }
     /// <summary>
-    /// 
+    /// The edge resolver.
     /// </summary>
     IOGraphEdgeResolver Resolver { get; }
     /// <summary>
@@ -33,11 +33,11 @@ public interface IOGraphEdge
     /// </summary>
     IOGraphEdgeMiddlewareQueue Middleware { get; }
     /// <summary>
-    /// 
+    /// Gets the OGraph query provider.
     /// </summary>
     IOGraphQueryProvider QueryProvider { get; }
     /// <summary>
-    /// 
+    /// Gets the OGraph query options.
     /// </summary>
     OGraphQueryOptions QueryOptions { get; }
     /// <summary>
@@ -45,7 +45,7 @@ public interface IOGraphEdge
     /// </summary>
     /// <returns></returns>
     /// <remarks>
-    /// Utilize Chain-Of-Responsibility pattern to combine the middleware and resolver to be executed in order. 
+    /// Utilizes Chain-Of-Responsibility pattern to combine the middleware and resolver to be executed in order. 
     /// </remarks>
     OGraphEdgeHandler GetResolverChain();
 }

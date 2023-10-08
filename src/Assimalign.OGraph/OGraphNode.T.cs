@@ -15,7 +15,7 @@ public abstract class OGraphNode<TType> : OGraphNode
 
         if (base.label == default)
         {
-            label = new Label(type.TypeName);
+            label = new Name(type.TypeName);
         }
     }
 }

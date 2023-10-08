@@ -1,13 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Serialization;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Xml.Schema;
 
 namespace Assimalign.OGraph.Internal;
 
@@ -15,23 +6,22 @@ internal class OGraph : IOGraph
 {
     public OGraph()
     {
-        this.Edges = new OGraphEdgeCollection();
-        this.Nodes = new OGraphNodeCollection();
-        this.Operations = new OGraphOperationCollection();
+        Edges = new OGraphEdgeCollection();
+        Nodes = new OGraphNodeCollection();
+        Operations = new OGraphOperationCollection();
     }
 
 
     public Name Name { get; set; }
 
-
     public OGraphNodeCollection Nodes { get; }
     IOGraphNodeCollection IOGraph.Nodes => this.Nodes;
     
-
     public OGraphEdgeCollection Edges { get; }
     IOGraphEdgeCollection IOGraph.Edges => this.Edges;
 
     public OGraphOperationCollection Operations { get; }
     IOGraphOperationCollection IOGraph.Operations => this.Operations;
 
+    public IOGraphEventCollection Events => throw new NotImplementedException();
 }

@@ -1,43 +1,109 @@
-https://endpoint.com/api/employees?query=
-project({
-    employeeId 
-    firstName 
-    lastName 
-    middleName
-    createdDateTime
-    createdBy
-    updatedDateTime
-    updatedBy
-})
-.filter({
-    startsWith(firstName, 'c') and 
-    statsWith(lastName, 'g')
-})
-.sort({
-    firstName asc
-    lastName desc
-})
-    .project(companies, {                       # /api/employees/{employeeId}/companies
-        companyId
-        companyName
-        createdDateTime
-        createdBy
-        updatedDateTime
-        updatedBy
+
+
+
+// Endpoint query: represents a vertex
+# This endpoint can be represented as 
+#    - /api/employees
+#    - /api/vertex('employees')
+https://endpoint.com/api/employees?query= # This endpoint represents the starting vertex or vertices
+    .project({
+        employeeId 
+        firstName 
+        lastName 
+        middleName
     })
-    .filter(companies, {                        # /api/employees/{employeeId}/companies
-        startsWith(companyName, 'c')
+    .filter({
+        startsWith(firstName, 'c')
     })
-    .sort(companies, {                          # /api/employees/{employeeId}/companies
-        companyName desc
+    .page({
+        skip 0
+        take 25
     })
-        .project(companies/addresses, {         # /api/employees/{employeeId}/companies/{companyId}/addresses
-            streetOne 
-            streetTwo 
-            streetThree
+    .edge('companies' as employeeCompany)                       <-- Returns a single vertex
+        .project({                                              <-- A projection is required when returning a single vertex
+            companyName
         })
-    .project(addresses, {                       # /api/employees/{employeeId}/addresses
-        streetOne 
-        streetTwo 
-        streetThree
+        .edge('companies/address') # The Edge keyword takes in the edge path
+            .project({
+                streetOne
+            })
+            .filter({
+                addressType eq 1
+            })
+            .edge('companies/addresses/types')
+                .project({
+                    typeId
+                    typeName
+                })
+    .edge('addresses')
+        .project({
+
+        })
+
+
+// Batch Query: The idea is to basically send a query that starts at different vertexes
+https://endpoint.com/api/$batch?query=
+vertices('')        # A queryable 
+vertex('employees')
+    .project({
+        employeeId 
+        firstName 
+        lastName 
+        middleName
     })
+    .filter({
+        startsWith(firstName, 'c')
+    })
+    .page({
+        skip 0
+        take 25
+    })
+    .edge('companies')
+        .project({
+            name
+            companyType {
+                typeId
+            }
+        })
+        .filter({
+            startsWith(companyName, 'c')
+        })
+        .page({
+            skip 0
+            take 25
+        })
+        .sort({
+            companyName asc
+        })
+        .edge('companies/address') # The Edge keyword takes in the edge path
+            .project({
+                streetOne
+            })
+            .filter({
+                addressType eq 1
+            })
+            .edge('companies/addresses/types')
+                .project({
+                    typeId
+                    typeName
+                })
+    .edge('addresses')
+        .project({
+
+        })
+vertex('users')
+    .project({
+        userId
+    })
+
+
+
+
+# Vertex Keyword Rules
+#
+#   1. Requires vertex id argument 
+vertex('{vertex label}', '{vertex id}') 
+
+
+vertices('users')
+    

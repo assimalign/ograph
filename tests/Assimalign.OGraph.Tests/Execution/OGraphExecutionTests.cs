@@ -78,14 +78,14 @@ public class OGraphExecutionTests
     {
         public OGraphTestRequest()
         {
-            this.Query = new OGraphQueryCollection();
+            this.Query = new OGraphQueryParamCollection();
             this.Headers = new OGraphHeaderCollection();
             this.Body = new MemoryStream();
         }
         public Method Method { get; init; }
         public Path Path { get; init; }
         public Host Host { get; }
-        public IOGraphQueryCollection Query { get; }
+        public IOGraphQueryParamCollection Query { get; }
         public IOGraphHeaderCollection Headers { get; }
         public Stream Body { get; }
     }

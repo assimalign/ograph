@@ -12,6 +12,7 @@ internal class ParserContext
 
     internal ParserContext() { }
 
+    internal QueryNode Root { get; init; }
     internal bool ThrowExceptionOnDiagnosticError { get; init; }
     internal Encoding Encoding { get; init; } = Encoding.UTF8;
     internal IEnumerable<Diagnostic> Diasgnostics => this.diagnostics;
@@ -20,4 +21,5 @@ internal class ParserContext
     {
         diagnostics.Enqueue(diagnostic);
     }
+    internal VertexNode GetRoote() => Root as VertexNode;
 }

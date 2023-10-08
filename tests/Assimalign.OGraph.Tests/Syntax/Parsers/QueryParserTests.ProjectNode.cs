@@ -34,7 +34,7 @@ public partial class QueryParserTests
         Assert.Empty(document.Errors);
         
 
-        var root = Assert.IsType<RootNode>(document.Root);
+        var root = Assert.IsType<VertexNode>(document.Root);
         var node = Assert.Single(root.Nodes);
         var projection = Assert.IsType<ProjectionNode>(node);
 
@@ -183,7 +183,7 @@ public partial class QueryParserTests
         // Assert No Errors
         Assert.Empty(document.Errors);
 
-        var root = Assert.IsType<RootNode>(document.Root);
+        var root = Assert.IsType<VertexNode>(document.Root);
         var node = Assert.Single(root.Nodes);
         var projection = Assert.IsType<ProjectionNode>(node);
 
@@ -215,7 +215,7 @@ public partial class QueryParserTests
         // Assert No Errors
         Assert.Empty(document.Errors);
 
-        var root = Assert.IsType<RootNode>(document.Root);
+        var root = Assert.IsType<VertexNode>(document.Root);
         var projection = Assert.IsType<ProjectionNode>(root.Nodes.First());
 
         //Assert.Equal("employees/addresses", projection?.Edges?.Path);
@@ -250,7 +250,7 @@ public partial class QueryParserTests
         // Assert Errors: Missing single comma
         Assert.Single(document.Errors);
 
-        var root = Assert.IsType<RootNode>(document.Root);
+        var root = Assert.IsType<VertexNode>(document.Root);
         var projection = Assert.IsType<ProjectionNode>(root.Nodes.First());
 
         //Assert.Equal("employees/addresses", projection?.Edge?.Path);

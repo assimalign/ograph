@@ -81,14 +81,15 @@ public class ComplexType<T> : ComplexType
         {
             if (enumerableType.IsComplexType())
             {
-                var collectionType = typeof(CollectionType<>).MakeGenericType(propertyInfo.PropertyType);
+                var collectionType = typeof(CollectionType<>).MakeGenericType(
+                    typeof(ComplexType<>).MakeGenericType(propertyInfo.PropertyType));
                 var collectionInstance = Activator.CreateInstance(collectionType) as IOGraphCollectionType;
 
 
                 var complexType = typeof(ComplexType<>).MakeGenericType(enumerableType);
                 var complexInstance = Activator.CreateInstance(complexType) as IOGraphComplexType;
 
-                var collectionTypeProperty = collectionType.GetProperty(nameof(CollectionType<IEnumerable>.ItemType));
+                var collectionTypeProperty = collectionType.GetProperty(nameof(CollectionType<ComplexType>.ItemType));
 
                 collectionTypeProperty.SetValue(collectionInstance, complexInstance, null);
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Assimalign.OGraph;
+﻿namespace Assimalign.OGraph;
 
 /// <inheritdoc />
 public sealed class OGraphError : IOGraphError
@@ -17,5 +15,5 @@ public sealed class OGraphError : IOGraphError
     public string? Message { get; set; }
 
     /// <inheritdoc />
-    public IOGraphErrorDetailsCollection? Details { get; }
+    public IOGraphErrorDetailsCollection Details { get; }
 }

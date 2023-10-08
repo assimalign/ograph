@@ -9,8 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Folder Include="Internal\Exceptions\" />
-	  <Folder Include="Internal\Serialization\Xml\" />
+	  <Folder Include="Syntax\Internal\Visitors\" />
 	  <Folder Include="Syntax\Internal\Visitors\" />
 	</ItemGroup>
 </Project>

@@ -97,6 +97,7 @@ internal enum TokenType
     Filter,
     Sort,
     Page,
+    Edge,
     Descending,
     Ascending,
     Take,

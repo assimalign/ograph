@@ -2,7 +2,7 @@
 
 public enum QueryNodeType
 {
-    Root,
+    Vertex,
     Projection,
     Filter,
     Sort,

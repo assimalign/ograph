@@ -17,7 +17,7 @@ public sealed class OGraphRequest : IOGraphExecutorRequest
         this.Method = httpRequest.Method;
         this.Body = httpRequest.Body;
         this.Path = httpRequest.Path.Value;
-        this.Query = new OGraphQueryCollection(httpRequest.Query.ToDictionary(k => k.Key, v =>
+        this.Query = new OGraphQueryParamCollection(httpRequest.Query.ToDictionary(k => k.Key, v =>
         {
             return new QueryValue(v.Value);
         }));
@@ -33,7 +33,7 @@ public sealed class OGraphRequest : IOGraphExecutorRequest
 
     public Method Method { get; init; }
 
-    public IOGraphQueryCollection? Query { get; init; }
+    public IOGraphQueryParamCollection? Query { get; init; }
 
     public IOGraphHeaderCollection? Headers { get; init; }
 

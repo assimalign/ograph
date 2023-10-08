@@ -21,7 +21,7 @@ public sealed class QueryableQueryVisitor<T> : IQueryNodeVisitor<IQueryable<T>>
         return queryNode.Accept(this);
     }
 
-    public IQueryable<T> Visit(RootNode queryNode)
+    public IQueryable<T> Visit(VertexNode queryNode)
     {
         foreach (var node in queryNode.Nodes)
         {

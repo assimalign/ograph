@@ -27,8 +27,12 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseQuery(QueryValue query)
+    public IOGraphOperationDescriptor UseQueryParam(string query)
     {
+        OnConfigure.Add(graph =>
+        {
+            
+        });
         return this;
     }
     public IOGraphOperationDescriptor UseRoute(Route route)
@@ -47,7 +51,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseNode(Label label)
+    public IOGraphOperationDescriptor UseNode(Name label)
     {
         OnConfigure.Add(graph =>
         {

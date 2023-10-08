@@ -40,21 +40,6 @@ internal class FilterParser : Parser
             // TODO: Add Diagnostic error. Unexpected EOF
             return queryNode;
         }
-        // Check if projection is followed by an edge identifier
-        if (next.TokenType == TokenType.Identifier)
-        {
-            queryNode = new FilterNode()
-            {
-                Identifier = (EdgeNode)context.GetParser<EdgeParser>()
-                    .Parse(ref lexer, context, new EdgeNode())
-            };
-
-            if (!lexer.TryPeek(out next))
-            {
-                // TODO: Add Diagnostic error. Unexpected EOF
-                return queryNode;
-            }
-        }
         if (next.TokenType != TokenType.OpenBracket)
         {
             // TODO: Add diagnostic error. Expected starting bracket block

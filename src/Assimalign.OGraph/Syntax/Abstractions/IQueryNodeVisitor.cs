@@ -11,7 +11,7 @@ public interface IQueryNodeVisitor
     /// 
     /// </summary>
     /// <param name="queryNode"></param>
-    void Visit(RootNode queryNode);
+    void Visit(VertexNode queryNode);
     /// <summary>
     /// 
     /// </summary>

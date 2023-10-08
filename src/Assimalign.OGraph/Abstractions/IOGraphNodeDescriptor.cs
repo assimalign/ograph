@@ -1,32 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
+/// <summary>
+/// 
+/// </summary>
 public interface IOGraphNodeDescriptor
 {
     /// <summary>
-    /// 
+    /// Sets the label of the node
     /// </summary>
     /// <param name="label"></param>
-    /// <returns></returns>
-    IOGraphNodeDescriptor UseLabel(Label label);
+    /// <returns>The current descriptor.</returns>
+    IOGraphNodeDescriptor UseLabel(Name name);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="key"></param>
     /// <param name="value"></param>
-    /// <returns></returns>
+    /// <returns>The current descriptor.</returns>
     IOGraphNodeDescriptor UseMetadata(string key, object value);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="type"></param>
-    /// <returns></returns>
+    /// <returns>The current descriptor.</returns>
     /// <remarks>
     /// The type being binded to the node should be a complex type.
     /// </remarks>

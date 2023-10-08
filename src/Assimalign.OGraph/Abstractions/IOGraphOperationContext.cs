@@ -1,39 +1,32 @@
 ﻿using System;
-using System.IO;
 using System.Security.Claims;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
 using Assimalign.OGraph.Syntax;
 
+/// <summary>
+/// 
+/// </summary>
 public interface IOGraphOperationContext
 {
     /// <summary>
-    /// Get's the OGrapp Model.
+    /// Get's the OGraph Model.
     /// </summary>
-    /// <returns></returns>
+    /// <returns><see cref="IOGraph"/></returns>
     IOGraph GetGraph();
     /// <summary>
     /// Get's the binded node for the given operation being executed.
     /// </summary>
     /// <returns></returns>
-    IOGraphNode GetNode();
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    IOGraphEdge GetEdge(Name name);
+    IOGraphOperation GetOperation();
     /// <summary>
     /// Get's the HTTP request query.
     /// </summary>
     /// <returns></returns>
     QueryDocument GetQuery();
     /// <summary>
-    /// 
+    /// Get's the OGraph query options
     /// </summary>
     /// <returns></returns>
     OGraphQueryOptions GetQueryOptions();
@@ -42,61 +35,27 @@ public interface IOGraphOperationContext
     /// </summary>
     /// <returns></returns>
     IOGraphQueryProvider GetQueryProvider();
-
-
-
-    #region HTTP Request Information
-
     /// <summary>
-    /// 
+    /// Gets a service from the <see cref="IServiceProvider"/>.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="headerName"></param>
+    /// <typeparam name="T">The service to return.</typeparam>
     /// <returns></returns>
-    T GetRequestHeader<T>(string headerName);
+    T? GetService<T>();
     /// <summary>
-    /// Returns the route parameter
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="parameterName"></param>
-    /// <returns></returns>
-    T GetRequestRouteParam<T>(string parameterName);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="parameterName">The name of the query parameter.</param>
-    /// <returns></returns>
-    T GetRequestQueryValue<T>(string parameterName);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    T GetRequestBody<T>();
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    Stream GetRequestBody();
-    /// <summary>
-    /// Get's the authenticated user or application i
+    /// Gets the current authenticatted user if available.
     /// </summary>
     /// <returns></returns>
     ClaimsPrincipal GetClaimsPrincipal();
     /// <summary>
-    /// 
+    /// Returns the service provider if available.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    T GetService<T>();
-
-    #endregion
-
-
-
-
-    Stream GetResponseBody();
-
-    
+    IServiceProvider? ServiceProvider { get; }
+    /// <summary>
+    /// The incoming HTTP request.
+    /// </summary>
+    public IOGraphExecutorRequest Request { get; }
+    /// <summary>
+    /// The outgoing HTTP response.
+    /// </summary>
+    public IOGraphExecutorResponse Response { get; }
 }

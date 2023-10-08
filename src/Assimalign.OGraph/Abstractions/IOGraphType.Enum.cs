@@ -8,4 +8,5 @@ namespace Assimalign.OGraph;
 
 public interface IOGraphEnumType : IOGraphType
 {
+
 }

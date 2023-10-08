@@ -10,7 +10,6 @@ namespace Assimalign.OGraph;
 
 public readonly struct Host
 {
-
     public Host(string value)
     {
         this.Value = value;
@@ -39,7 +38,6 @@ public readonly struct Host
         this.Value = host + ":" + port.ToString(CultureInfo.InvariantCulture);
         this.Port = port;
     }
-
 
     public string? Value { get; }
     public int? Port { get; }

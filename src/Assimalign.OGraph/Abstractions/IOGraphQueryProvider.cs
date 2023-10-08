@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -10,8 +9,9 @@ namespace Assimalign.OGraph;
 
 public interface IOGraphQueryProvider
 {
-
-
+    /// <summary>
+    /// Represents the runtime type 
+    /// </summary>
     Type ElementType { get; }
 
     /// <summary>
@@ -21,5 +21,33 @@ public interface IOGraphQueryProvider
     /// <param name="options"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IOGraphQueryResult> ExecuteAsync(IOGraphQueryContext context, OGraphQueryOptions options, CancellationToken cancellationToken = default);
+    Task ExecuteAsync(IOGraphQueryContext context, OGraphQueryOptions options, CancellationToken cancellationToken = default);
+}
+
+
+public sealed class QueryResult 
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public long Total { get; init; }
+    /// <summary>
+    /// 
+    /// </summary>
+    public Either<QueryVertexResult, QueryVerticesResult> Nodes { get; init; } 
+}
+
+public sealed class QueryError
+{
+
+}
+
+public readonly struct QueryVertexResult
+{
+
+}
+
+public readonly struct QueryVerticesResult
+{
+
 }

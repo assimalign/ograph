@@ -12,4 +12,6 @@ public interface IOGraphComplexType : IOGraphType
     /// A collection of properties
     /// </summary>
     IOGraphPropertyCollection Properties { get; }
+
+
 }

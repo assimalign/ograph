@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Assimalign.OGraph.Syntax;
 
@@ -11,21 +10,11 @@ public sealed class FilterNode : QueryNode
     {
         Predicate = predicate;
     }
+
     public FilterNode(BinaryNode predicate, IdentifierNode identifier)
     {
         Predicate = predicate;
         Identifier = identifier;
-    }
-    public FilterNode(BinaryNode predicate, IEnumerable<FilterNode> edges)
-    {
-        Predicate = predicate;
-        Edges = edges;
-    }
-    public FilterNode(BinaryNode predicate, IdentifierNode identifier, IEnumerable<FilterNode> edges)
-    {
-        Predicate = predicate;
-        Identifier = identifier;
-        Edges = edges;
     }
 
     /// <summary>
@@ -37,16 +26,6 @@ public sealed class FilterNode : QueryNode
     /// 
     /// </summary>
     public BinaryNode? Predicate { get; init; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public IEnumerable<FilterNode>? Edges { get; init; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public bool HaseEdges => Edges is not null && Edges.Any();
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Filter;
@@ -70,16 +49,6 @@ public sealed class FilterNode : QueryNode
         {
             yield return node;
         }      
-        if (Edges is not null)
-        {
-            foreach (var edge in Edges)
-            {
-                foreach (var item in edge.GetNodesOfType<TNode>())
-                {
-                    yield return item;
-                }
-            }
-        }
         if (Predicate is not null)
         {
             foreach (var item in Predicate.GetNodesOfType<TNode>())

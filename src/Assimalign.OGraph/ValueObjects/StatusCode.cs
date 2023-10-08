@@ -9,16 +9,43 @@ namespace Assimalign.OGraph;
 /// <summary>
 /// Represents an HTTP Status Code.
 /// </summary>
-public readonly struct StatusCode : 
-    IEquatable<StatusCode>, 
+public readonly struct StatusCode :
+    IEquatable<StatusCode>,
     IEqualityComparer<StatusCode>,
     IComparable<StatusCode>
 {
-    private static ReadOnlySpan<int> validStatusCodes => Enum.GetValues<HttpStatusCode>().Select(x => (int)x).ToArray();
+    /// <summary>
+    /// Represents the valid status supported by OGraph
+    /// </summary>
+    public static ReadOnlySpan<int> ValidStatusCodes => new int[]
+    {
+        200, // Ok
+        201, // Created
+        202, // Accepted
+        204, // NotContent
+        207, // MultiStatus
+        400, // BadRequest
+        401, // Unauthorized
+        403, // Forbidden
+        404, // NotFound
+        405, // MethodNotAllowed
+        406, // NotAcceptable
+        408, // RequestTimeout
+        409, // Conflict
+        412, // PreconditionFailed
+        414, // RequestUriTooLong
+        415, // UnsupportedMediaType
+        428, // PreconditionRequired
+        429, // TooManyRequests
+        500, // InternalServerError
+        501, // NotImplemented
+        502, // BadGateway
+        503, // ServiceUnavailable
+    };
 
     public StatusCode(int code)
     {
-        if (!validStatusCodes.Contains(code))
+        if (!ValidStatusCodes.Contains(code))
         {
             throw new ArgumentOutOfRangeException(nameof(code), "The status code is not valid.");
         }
@@ -54,9 +81,7 @@ public readonly struct StatusCode :
         return statusCode.Code.CompareTo(this.Code);
     }
 
-
     #region Overloads
-
     /// <inheritdoc />
     public override int GetHashCode()
     {
@@ -78,19 +103,17 @@ public readonly struct StatusCode :
         }
         return false;
     }
-
     #endregion
 
     #region Operators
     public static implicit operator StatusCode(int code) => new StatusCode(code);
     public static implicit operator int(StatusCode status) => status.Code;
     public static bool operator ==(StatusCode left, StatusCode right) => left.Equals(right);
-    public static bool operator !=(StatusCode left, StatusCode right)=> !left.Equals(right);
+    public static bool operator !=(StatusCode left, StatusCode right) => !left.Equals(right);
     public static bool operator >(StatusCode left, StatusCode right) => ((IComparable<StatusCode>)right).CompareTo(left) > 0;
     public static bool operator <(StatusCode left, StatusCode right) => ((IComparable<StatusCode>)right).CompareTo(left) < 0;
     public static bool operator >=(StatusCode left, StatusCode right) => ((IComparable<StatusCode>)right).CompareTo(left) >= 0;
     public static bool operator <=(StatusCode left, StatusCode right) => ((IComparable<StatusCode>)right).CompareTo(left) <= 0;
-
     #endregion
 
     #region Success Status Codes
@@ -98,7 +121,7 @@ public readonly struct StatusCode :
     public static StatusCode Created => new StatusCode(201);
     public static StatusCode Accepted => new StatusCode(202);
     public static StatusCode NotContent => new StatusCode(204);
-
+    public static StatusCode MultiStatus => new StatusCode(207);
     #endregion
 
     #region Bad Request Status Code
@@ -124,5 +147,4 @@ public readonly struct StatusCode :
     public static StatusCode BadGateway => new StatusCode(502);
     public static StatusCode ServiceUnavailable => new StatusCode(503);
     #endregion
-
 }

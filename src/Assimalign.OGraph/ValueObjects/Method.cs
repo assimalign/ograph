@@ -23,8 +23,9 @@ public readonly struct Method :
 		{
 			throw new Exception("Only Alphabetic characters are allowed as Method names");
 		}
-		this.Value = value.ToUpperInvariant();
+		Value = value.ToUpperInvariant();
 	}
+
 	/// <summary>
 	/// 
 	/// </summary>
@@ -60,13 +61,13 @@ public readonly struct Method :
 	}
 
 	/// <inheritdoc />
-	public bool Equals(Method x, Method y)
+	public bool Equals(Method left, Method right)
 	{
 		throw new NotImplementedException();
 	}
 
 	/// <inheritdoc />
-	public int GetHashCode([DisallowNull] Method obj)
+	public int GetHashCode([DisallowNull] Method instance)
 	{
 		throw new NotImplementedException();
 	}

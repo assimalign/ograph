@@ -1,9 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
-
 
 namespace Assimalign.OGraph;
 
@@ -739,10 +738,6 @@ public readonly partial struct HeaderValue :
             int hashCode = 0;
             for (int i = 0; i < values.Length; i++)
             {
-                // RyuJIT optimizes this to use the ROL instruction
-                // Related GitHub pull request: https://github.com/dotnet/coreclr/pull/1830
-
-
                 var rol5 = ((uint)hashCode << 5) | ((uint)hashCode >> 27);
                 hashCode = ((int)rol5 + hashCode) ^ values[i]?.GetHashCode() ?? 0;
             }
@@ -821,5 +816,3 @@ public readonly partial struct HeaderValue :
         }
     }
 }
-
-

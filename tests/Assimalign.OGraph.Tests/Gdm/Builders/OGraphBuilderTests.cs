@@ -5,7 +5,7 @@ using System.Text.Json.Nodes;
 namespace Assimalign.OGraph.Tests;
 
 
-public class OGraphBuilderTests
+public partial class OGraphBuilderTests
 {
     [Fact]
     public void Test1()

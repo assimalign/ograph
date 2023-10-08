@@ -77,6 +77,11 @@ internal class OGraphOperationContext : IOGraphOperationContext
         throw new NotImplementedException();
     }
 
+    public T GetRequestRouteValue<T>(string parameterName) where T : struct
+    {
+        throw new NotImplementedException();
+    }
+
     public Stream GetResponseBody()
     {
         throw new NotImplementedException();

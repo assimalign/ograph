@@ -1,18 +1,99 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax;
 
-public sealed class EdgeNode : IdentifierNode
+/// <summary>
+/// 
+/// </summary>
+public sealed class EdgeNode : QueryNode
 {
+    private readonly IEnumerable<QueryNode>? nodes;
+
     internal EdgeNode() { }
-    public EdgeNode(string name)
+    public EdgeNode(IEnumerable<QueryNode> nodes)
     {
-        this.Name = name;
+        this.Nodes = nodes ?? new QueryNode[0];
     }
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Edge;
+
+    /// <summary>
+    /// The edge name to be invoked.
+    /// </summary>
+    public IdentifierNode? Identifier { get; init; }
+
+    /// <summary>
+    /// Gets the projections, filtering, paging, and 
+    /// sorting of the edge as well as any nested edges.
+    /// </summary>
+    public IEnumerable<QueryNode>? Nodes
+    {
+        get => nodes;
+        init
+        {
+            var isValid = value.Any(node =>
+                node is not ProjectionNode &&
+                node is not FilterNode &&
+                node is not SortNode &&
+                node is not PageNode &&
+                node is not EdgeNode);
+
+            if (!isValid)
+            {
+                throw new InvalidOperationException("Wrong node");
+            }
+
+            nodes = value;
+        }
+    }
+
+    /// <summary>
+    /// Returne
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
+    public bool TryGetProjection(out ProjectionNode? node) => TryGetNode(out node);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
+    public bool TryGetFilter(out FilterNode? node) => TryGetNode(out node);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
+    public bool TryGetSort(out SortNode? node) => TryGetNode(out node);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="nodes"></param>
+    /// <returns></returns>
+    public bool TryGetPage(out PageNode? node) => TryGetNode(out node);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="edges"></param>
+    /// <returns></returns>
+    public bool TryGetEdges(out IEnumerable<EdgeNode> edges)
+    {
+        edges = Nodes!.OfType<EdgeNode>();
+
+        if (edges.Any())
+        {
+            return true;
+        }
+
+        return false;
+    }
 
     /// <inheritdoc />
     public override void Accept(IQueryNodeVisitor visitor)
@@ -23,24 +104,22 @@ public sealed class EdgeNode : IdentifierNode
     /// <inheritdoc />
     public override T Accept<T>(IQueryNodeVisitor<T> visitor)
     {
-        return base.Accept(visitor);
+        return visitor.Visit(this);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public Name? GetEdgeName()
+    private bool TryGetNode<TNode>(out TNode? node)
     {
-        return GetSegments().Last();
-    }
+        node = default;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public string[] GetSegments()
-    {
-        return Name?.Split('/') ?? new string[0];
+        foreach (var n in Nodes!)
+        {
+            if (n is TNode tn)
+            {
+                node = tn;
+                return true;
+            }
+        }
+
+        return false;
     }
 }

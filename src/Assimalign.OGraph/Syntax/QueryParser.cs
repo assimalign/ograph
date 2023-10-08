@@ -35,13 +35,14 @@ public sealed partial class QueryParser
             });
             var context = new ParserContext()
             {
+                Root = new VertexNode(),
                 Encoding = options.Encoding,
                 ThrowExceptionOnDiagnosticError = options.ThrowExceptionOnDiagnosticError
             };
             // NOTE: The Parser is responsible for only syntax diagnostics
             //       Analyzers will be responsible for semantic diagnostics.
             var parser      = Parser.Create();
-            var node        = parser.Parse(ref lexer, context, new RootNode());
+            var node        = parser.Parse(ref lexer, context, context.Root);
             var document    = new QueryDocument(
                 query,
                 node,

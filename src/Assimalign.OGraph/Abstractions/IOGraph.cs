@@ -1,6 +1,5 @@
 ﻿namespace Assimalign.OGraph;
 
-
 /// <summary>
 /// Represents a single graph Model.
 /// </summary>
@@ -15,16 +14,15 @@ public interface IOGraph
     /// </summary>
     IOGraphNodeCollection Nodes { get; }
     /// <summary>
-    /// 
+    /// Gets the edge collection.
     /// </summary>
     IOGraphEdgeCollection Edges { get; }
     /// <summary>
-    /// 
+    /// Gets the collection of events within the graph model.
     /// </summary>
-    //IOGraphEventCollection Events { get; }
+    IOGraphEventCollection Events { get; }
     /// <summary>
     /// Represents a collection of HTTP Operations
     /// </summary>
     IOGraphOperationCollection Operations { get; }
-    
 }

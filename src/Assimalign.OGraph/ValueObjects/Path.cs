@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Linq;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Net.NetworkInformation;
 
 namespace Assimalign.OGraph;
 
+[DebuggerDisplay("Path: /{ToString()}")]
 public readonly struct Path : IEquatable<Path>, IEqualityComparer<Path>
 {
     private const string invalidCharacters = @"<>*%&:\?";
+
+    private readonly PathSegment[] segments;
 
     public Path(string path)
     {
@@ -16,26 +19,68 @@ public readonly struct Path : IEquatable<Path>, IEqualityComparer<Path>
         {
             throw new ArgumentNullException(nameof(path));
         }
-        if (path.Any(c => invalidCharacters.Contains(c)))
-        {
-            throw new ArgumentException($"The following path: '{path}' contains an invalid character. Disallowed Characters '{invalidCharacters}'.");
-        }
-        Segments = path.Trim('/').Split('/').Select(segment =>
-        {
-            return new PathSegment(segment);
+        //if (path.Any(c => invalidCharacters.Contains(c)))
+        //{
+        //	throw new ArgumentException($"The following path: '{path}' contains an invalid character. Disallowed Characters '{invalidCharacters}'.");
+        //}
+        segments = GetSegments(path);
+    }
 
-        }).ToArray();
+    private PathSegment[] GetSegments(string path)
+    {
+        var index = 0;
+        var segments = new PathSegment[10];
+        var segment = string.Empty;
+
+        for (int i = 0; i < path.Length; i++)
+        {
+            var character = path[i];
+
+            // Check if we reached the end of the current segment
+            if (character == '/' || character == '\\')
+            {
+                // Let's skip leading slashes
+                if (i == 0) continue;
+
+                segments[index] = new PathSegment(segment);
+                index++;
+                segment = string.Empty;
+
+                // Lets see if we reached the buffer in the array. Resize if reached.
+                if (index == segments.Length)
+                {
+                    Array.Resize(ref segments, 5);
+                }
+            }
+            else
+            {
+                segment = segment + character;
+            }
+        }
+
+        // Resizes segments to actual length
+        Array.Resize(ref segments, index);
+
+        return segments;
     }
 
     /// <summary>
     /// A collection of path segments.
     /// </summary>
-    public PathSegment[] Segments { get; }
+    public PathSegment[] Segments
+    {
+        get
+        {
+            var copy = new PathSegment[segments.Length];
+            segments.CopyTo(copy, 0);
+            return copy;
+        }
+    }
 
     /// <inheritdoc />
     public override string ToString()
     {
-        return string.Join("/", Segments.Select(s=>s.Value));
+        return string.Join("/", Segments.Select(s => s.Value));
     }
 
     /// <inheritdoc />
@@ -69,8 +114,8 @@ public readonly struct Path : IEquatable<Path>, IEqualityComparer<Path>
         }
         for (int i = 0; i < Segments.Length; i++)
         {
-            var incoming    = path.Segments[i];
-            var current     = Segments[i];
+            var incoming = path.Segments[i];
+            var current = Segments[i];
 
             if (incoming.Value != current.Value)
             {
@@ -83,13 +128,12 @@ public readonly struct Path : IEquatable<Path>, IEqualityComparer<Path>
 
     /// <inheritdoc />
     public bool Equals(Path left, Path right) => left.Equals(right);
+
     /// <inheritdoc />
     public int GetHashCode([DisallowNull] Path path)
     {
         return path.GetHashCode();
     }
-
-
 
     public static implicit operator Path(string path) => new Path(path);
     public static implicit operator string(Path path) => path.ToString();

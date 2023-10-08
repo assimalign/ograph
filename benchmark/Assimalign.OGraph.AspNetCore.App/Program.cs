@@ -1,8 +1,9 @@
 using Assimalign.OGraph;
 using Assimalign.OGraph.AspNetCore;
-
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 builder.Services.AddSingleton<IRepository<User>, UserRepository>();
 
@@ -13,6 +14,7 @@ builder.Services
     })
     .AddOGraph("Users", builder =>
     {
+        // Composite Implementation
         builder.AddNode<UserNode>();
         builder.AddNode<UserAddressNode>();
         builder.AddNode<CompanyNode>();
@@ -22,14 +24,24 @@ builder.Services
 
         //builder.AddOperation<UserCreateOperation>();
 
+        // Fluent Implementation
         builder.AddOperation("GetUsers")
             .UseMethod(Method.Get)
             .UseRoute("/users")
             .UseQueryOptions(options =>
             {
-                options.CanFilter = false;                
+                options.CanFilter = false;
             })
             .UseNode<UserNode>()
+            .UseMiddleware((context, next) =>
+            {
+
+                return next(context);
+            })
+            .UseResolver(context =>
+            {
+
+            });
             //.UseMiddleware((context, next) =>
             //{
             //    Console.WriteLine("Middleware 1 Invoked");
@@ -49,11 +61,18 @@ builder.Services
 
             //    return await next.Invoke(context);
             //})
-            .UseResolver(async context =>
-            {
-                return context.GetService<IRepository<User>>()
-                    .Queryable;
-            });
+            //.UseEitherResolver(context =>
+            //{
+            //    var value = context.GetNode();
+
+            //    if (value is null)
+            //    {
+            //        return new QueryableResult();
+            //    }
+
+            //    return context.GetService<IRepository<User>>()
+            //        .Queryable;
+            //});
 
 
         builder.AddOperation("UpdateUser")

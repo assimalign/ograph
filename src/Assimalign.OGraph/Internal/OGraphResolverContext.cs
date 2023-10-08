@@ -158,9 +158,9 @@ internal class OGraphResolverContext :
         throw new NotImplementedException();
     }
 
-    public T GetRequestRouteParam<T>(string parameterName)
+    public T GetRequestRouteValue<T>(string parameterName) where T : struct
     {
-        throw new NotImplementedException();
+        return RequestRoute.GetRouteValue<T>(parameterName);
     }
 
     public T GetRequestQueryValue<T>(string parameterName)

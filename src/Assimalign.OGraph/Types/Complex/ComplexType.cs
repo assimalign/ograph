@@ -1,5 +1,6 @@
-﻿
-using System;
+﻿using System;
+using System.Xml;
+using System.Text.Json;
 
 namespace Assimalign.OGraph;
 
@@ -16,4 +17,24 @@ public class ComplexType : IOGraphComplexType
     public IOGraphPropertyCollection Properties { get; }
     public Type? RuntimeType { get; init; }
     public bool IsNullable => true;
+
+    object IOGraphType.Read(XmlReader reader)
+    {
+        throw new NotImplementedException();
+    }
+
+    object IOGraphType.Read(ref Utf8JsonReader reader)
+    {
+        throw new NotImplementedException();
+    }
+
+    void IOGraphType.Write(XmlWriter writer, object value)
+    {
+        throw new NotImplementedException();
+    }
+
+    void IOGraphType.Write(Utf8JsonWriter writer, object value)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -28,14 +28,14 @@ public interface IOGraphNodeCollection : IEnumerable<IOGraphNode>
     /// </summary>
     /// <param name="label"></param>
     /// <returns></returns>
-    bool TryFind(Label label);
+    bool TryFind(Name name);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="Label"></param>
     /// <param name="node"></param>
     /// <returns></returns>
-    bool TryGet(Label Label, out IOGraphNode? node);
+    bool TryGet(Name name, out IOGraphNode? node);
 
     
 }

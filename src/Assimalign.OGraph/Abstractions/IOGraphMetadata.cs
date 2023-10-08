@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph;
 
+/// <summary>
+/// 
+/// </summary>
 public interface IOGraphMetadata : IEnumerable<KeyValuePair<string, object>>
 {
 

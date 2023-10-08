@@ -4,24 +4,26 @@ using Assimalign.OGraph.Internal;
 
 public abstract class OGraphNode : IOGraphNode
 {
-    internal Label label;
-    internal IOGraphType type;
+    internal Name label;
+    internal IOGraphType? type;
     internal IOGraphMetadata metadata;
     internal IOGraphEdgeCollection edges;
+    internal IOGraphOperationCollection operations;
 
     public OGraphNode()
     {
         this.metadata = new OGraphMetadata();
         this.edges = new OGraphEdgeCollection();
+        this.operations = new OGraphOperationCollection();
 
         Configure(new OGraphNodeDescriptor(this));
     }
 
     /// <inheritdoc />
-    Label IOGraphNode.Label => this.label;
+    Name IOGraphNode.Label => this.label;
 
     /// <inheritdoc />
-    IOGraphType? IOGraphNode.Type => this.type;
+    IOGraphType IOGraphNode.Type => this.type!;
 
     /// <inheritdoc />
     IOGraphMetadata IOGraphNode.Metadata => this.metadata;
@@ -29,6 +31,7 @@ public abstract class OGraphNode : IOGraphNode
     /// <inheritdoc />
     IOGraphEdgeCollection IOGraphNode.Edges => this.edges;
 
+    IOGraphOperationCollection IOGraphNode.Operations => this.operations;
 
     protected virtual void Configure(IOGraphNodeDescriptor descriptor) { }
 }

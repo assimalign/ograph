@@ -8,7 +8,6 @@ namespace Assimalign.OGraph;
 /// </summary>
 public interface IOGraphTypeCollection : IEnumerable<IOGraphType>
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -34,5 +33,4 @@ public interface IOGraphTypeCollection : IEnumerable<IOGraphType>
     /// <param name="type"></param>
     /// <returns></returns>
     bool TryGet(Name name, out IOGraphType type);
-
 }

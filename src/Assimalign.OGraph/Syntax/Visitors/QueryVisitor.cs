@@ -13,7 +13,7 @@ public abstract class QueryVisitor<T> : IQueryNodeVisitor<T>
     public T Visit(QueryNode node) => node.Accept(this);
 
 
-    public virtual T Visit(RootNode node)
+    public virtual T Visit(VertexNode node)
     {
         throw new NotImplementedException();
     }

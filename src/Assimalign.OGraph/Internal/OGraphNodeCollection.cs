@@ -19,13 +19,13 @@ internal class OGraphNodeCollection : IOGraphNodeCollection
     public bool IsReadOnly { get; set; }
     public int Count => nodes.Count;
 
-    public bool TryFind(Label label)
+    public bool TryFind(Name label)
     {
         return nodes.Any(node => node.Label == label);
     }
-    public bool TryGet(Label Label, out IOGraphNode? node)
+    public bool TryGet(Name label, out IOGraphNode? node)
     {
-        node = nodes.FirstOrDefault(x => x.Label == Label);
+        node = nodes.FirstOrDefault(x => x.Label == label);
 
         return node is null ? false : true;
     }

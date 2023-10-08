@@ -58,16 +58,24 @@ public interface IOGraphBuilder
     /// <summary>
     /// 
     /// </summary>
-    /// <returns></returns>
+    /// <returns>OGraph Model</returns>
     IOGraph Build();
-
-
-
-    IOGraphNodeDescriptor AddNode(Label label);
-
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
     IOGraphEdgeDescriptor AddEdge(Name name);
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
     IOGraphOperationDescriptor AddOperation(Name name);
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="label"></param>
+    /// <returns></returns>
+    IOGraphNodeDescriptor AddNode(Name label);
 }

@@ -24,11 +24,11 @@ public interface IOGraphOperation
     /// </summary>
     Route Route { get; }
     /// <summary>
-    /// 
+    /// The HTTP method.
     /// </summary>
     Method Method { get; }
     /// <summary>
-    /// 
+    /// Specifies whether the operation is enabled.
     /// </summary>
     bool IsEnabled { get; }
     /// <summary>
@@ -36,18 +36,7 @@ public interface IOGraphOperation
     /// </summary>
     IOGraphNode Node { get; }
     /// <summary>
-    /// 
-    /// </summary>
-    IOGraphType RequestType { get; }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <remarks>
-    /// Response Types must match the binded node type.
-    /// </remarks>
-    IOGraphType ResponseType { get; }
-    /// <summary>
-    /// 
+    /// The resolver for the operation.
     /// </summary>
     IOGraphOperationResolver Resolver { get; }
     /// <summary>
@@ -59,11 +48,11 @@ public interface IOGraphOperation
     /// </summary>
     IOGraphMetadata Metadata { get; }
     /// <summary>
-    /// 
+    /// Gets the Query provider.
     /// </summary>
     IOGraphQueryProvider QueryProvider { get; }
     /// <summary>
-    /// 
+    /// Gets the query options to be used for the query provider.
     /// </summary>
     OGraphQueryOptions QueryOptions { get; }
     /// <summary>

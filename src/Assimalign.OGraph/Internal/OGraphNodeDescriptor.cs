@@ -20,7 +20,7 @@ internal class OGraphNodeDescriptor : IOGraphNodeDescriptor
 
     public IList<Action<OGraph>> OnConfigure { get; init; }
 
-    public IOGraphNodeDescriptor UseLabel(Label label)
+    public IOGraphNodeDescriptor UseLabel(Name label)
     {
         node.label = label;
         return this;
@@ -85,7 +85,7 @@ internal class OGraphNodeDescriptor : IOGraphNodeDescriptor
 
     public IOGraphEdgeDescriptor AddEdge(Name name)
     {
-        return new OGraphEdgeDescriptor(new OGraphEdge()
+        return new OGraphEdgeDescriptor(new OGraphEdgeDefault()
         {
             Name = name,
         });
