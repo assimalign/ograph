@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph;
-
-public interface IOGraphEvent
+namespace Assimalign.OGraph.Results
 {
+    public sealed class InternalError
+    {
+    }
 }

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
@@ -12,5 +14,5 @@ public interface IOGraphEdgeResolver
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task<IOGraphEdgeResult> InvokeAsync(IOGraphEdgeContext context);
+    Task<IOGraphResult> InvokeAsync(IOGraphEdgeContext context, CancellationToken cancellationToken = default);
 }

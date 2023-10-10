@@ -31,7 +31,7 @@ public class OGraphExecutionTests
 
                 });
 
-            builder.AddOperation("GetUsers")
+            builder.AddCommand("GetUsers")
                 .UseRoute("/users")
                 .UseMethod(Method.Get)
                 .UseNode("Users")

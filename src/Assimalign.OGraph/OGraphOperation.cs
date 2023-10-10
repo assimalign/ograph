@@ -62,8 +62,10 @@ public abstract class OGraphOperation : IOGraphOperation
     /// <inheritdoc />
     public IOGraphType ResponseType => throw new NotImplementedException();
 
+    public OperationType OperationType => throw new NotImplementedException();
+
     /// <inheritdoc />
-    public OGraphOperationHandler GetResolverChain()
+    public OGraphOperationHandler BuildHandlerChain()
     {
         var memoise = Cacher<OGraphOperation, OGraphOperationHandler>.Memoise(operation =>
         {
@@ -83,12 +85,12 @@ public abstract class OGraphOperation : IOGraphOperation
         return memoise.Invoke(this);
     }
 
-    protected virtual void Configure(IOGraphOperationDescriptor descriptor) { }
+    protected virtual void Configure(IOGraphCommandOperationDescriptor descriptor) { }
 
     private OGraphOperationHandler GetResolverChain(OGraphOperationHandler handler)
     {
         var middleware = Middleware.Reverse().Skip(chainIndex).First();
-        var next = new OGraphOperationHandler(context =>
+        var next = new OGraphOperationHandler((context, cancellationToken) =>
         {
             return middleware.InvokeAsync(context, handler);
         });

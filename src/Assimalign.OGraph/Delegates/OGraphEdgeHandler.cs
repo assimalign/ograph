@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
@@ -7,4 +8,4 @@ namespace Assimalign.OGraph;
 /// </summary>
 /// <param name="context"></param>
 /// <returns></returns>
-public delegate Task<IOGraphEdgeResult> OGraphEdgeHandler(IOGraphEdgeContext context);
+public delegate Task<IOGraphResult> OGraphEdgeHandler(IOGraphEdgeContext context, CancellationToken cancellationToken = default);

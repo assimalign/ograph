@@ -18,10 +18,6 @@ public interface IOGraph
     /// </summary>
     IOGraphEdgeCollection Edges { get; }
     /// <summary>
-    /// Gets the collection of events within the graph model.
-    /// </summary>
-    IOGraphEventCollection Events { get; }
-    /// <summary>
     /// Represents a collection of HTTP Operations
     /// </summary>
     IOGraphOperationCollection Operations { get; }

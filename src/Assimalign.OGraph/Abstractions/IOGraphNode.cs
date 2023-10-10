@@ -17,7 +17,7 @@ public interface IOGraphNode
     /// </summary>
     IOGraphMetadata Metadata { get; }
     /// <summary>
-    /// A collection of types that make up individual entities.
+    /// The type being bound to this node.
     /// </summary>
     IOGraphType Type { get; }
     /// <summary>

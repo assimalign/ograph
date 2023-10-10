@@ -25,21 +25,22 @@ builder.Services
         //builder.AddOperation<UserCreateOperation>();
 
         // Fluent Implementation
-        builder.AddOperation("GetUsers")
-            .UseMethod(Method.Get)
+        builder.AddCommand("GetUsers")
+            .UseMethod(Method.Post)
             .UseRoute("/users")
-            .UseQueryOptions(options =>
-            {
-                options.CanFilter = false;
-            })
             .UseNode<UserNode>()
-            .UseMiddleware((context, next) =>
+            .UseTestResolver(async (context, token) =>
             {
+                var value = context.GetQuery();
 
-                return next(context);
-            })
-            .UseResolver(context =>
-            {
+                if (value is null)
+                {
+                    return default(IOGraphError);
+                }
+
+              
+
+                return new User();
 
             });
             //.UseMiddleware((context, next) =>
@@ -75,7 +76,7 @@ builder.Services
             //});
 
 
-        builder.AddOperation("UpdateUser")
+        builder.AddCommand("UpdateUser")
             .UseMethod(Method.Put)
             .UseRoute("/users/{userId:Guid}")
             .UseNode<UserNode>()

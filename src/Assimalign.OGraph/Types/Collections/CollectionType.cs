@@ -10,17 +10,17 @@ public class CollectionType<TType> : IOGraphCollectionType
     {
         ItemType = new TType();
     }
-    public virtual Name TypeName
+    public virtual Name Name
     {
         get
         {
-            return $"{ItemType.TypeName}Collection";
+            return $"{ItemType.Name}Collection";
         }
     }
 
     public TType ItemType { get; }
     IOGraphType IOGraphCollectionType.ItemType => ItemType;
-    public OGraphTypeIdentifier TypeIdentifier => OGraphTypeIdentifier.Collection;
+    public TypeIdentifier Identifier => TypeIdentifier.Collection;
     public Type RuntimeType => typeof(IEnumerable<>).MakeGenericType(ItemType.RuntimeType!);
     public bool IsNullable => true;
 }

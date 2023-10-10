@@ -25,8 +25,9 @@
                 <porperty name="key" type="String" is-nullable="false" />
                 <porperty name="value" type="String" is-nullable="false" />
             </type>
-            <edge name="addresses" source-node="user" target-node="addresses" is-filterable="true" is-pageable="true" />
-            <edge name="profile"   source-node="user" target-node="profiles" />
+            <edge name="addresses" source-node="user" target-node="addresses" is-filterable="true"
+                is-pageable="true" />
+            <edge name="profile" source-node="user" target-node="profiles" />
         </node>
         <node label="addresses">
             <property name="addressId" type="Guid" is-nullable="false" is-key="true" />
@@ -44,15 +45,17 @@
         <node label="profiles">
 
         </node>
-        <operation name="GetUsers">
-
-
+        <operation name="GetUsers" node="users" type="query">
+            <method>GET</method>
+            <route value="/users">
+                <segment ordinal="1" is-literal="true">users</segment>
+            </route>
         </operation>
-        <operation name="CreateUser" node="users">
+        <operation name="CreateUser" node="users" type="command">
             <method>POST</method>
             <route value="/users/{userId}">
-                <segment ordinal="1"    is-literal="true">users</segment>
-                <segment ordinal="2"    is-parameter="true">{userId:int}</segment>
+                <segment ordinal="1" is-literal="true">users</segment>
+                <segment ordinal="2" is-parameter="true">{userId:int}</segment>
             </route>
             <query>
 
@@ -67,7 +70,7 @@
 
             </response>
         </operation>
-        <operation name="UpdateUserAddress" node="addresses">
+        <operation name="UpdateUserAddress" node="addresses" type="command">
             <method>PUT</method>
             <route value="/users/{userId}/addresses/{addressId}">
                 <segment ordinal="1" is-literal="true">users</segment>

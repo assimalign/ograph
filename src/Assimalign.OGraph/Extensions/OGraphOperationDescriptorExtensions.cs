@@ -20,19 +20,19 @@ public static class OGraphOperationDescriptorExtensionsd
     /// <param name="resolver"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static IOGraphOperationDescriptor UseResolver(
-        this IOGraphOperationDescriptor descriptor,
-        Func<IOGraphOperationContext, IOGraphOperationResult> resolver)
-    {
-        if (resolver is null)
-        {
-            throw new ArgumentNullException(nameof(resolver));
-        }
-        return descriptor.UseResolver(context =>
-        {
-            return Task.FromResult<IOGraphOperationResult>(resolver.Invoke(context));
-        });
-    }
+    //public static IOGraphCommandOperationDescriptor UseResolver(
+    //    this IOGraphCommandOperationDescriptor descriptor,
+    //    Func<IOGraphOperationContext, IOGraphOperationResult> resolver)
+    //{
+    //    if (resolver is null)
+    //    {
+    //        throw new ArgumentNullException(nameof(resolver));
+    //    }
+    //    return descriptor.UseResolver(context =>
+    //    {
+    //        return Task.FromResult<IOGraphOperationResult>(resolver.Invoke(context));
+    //    });
+    //}
     /// <summary>
     /// 
     /// </summary>
@@ -58,28 +58,28 @@ public static class OGraphOperationDescriptorExtensionsd
     //}
 
     
-    public static IOGraphOperationDescriptor UseEitherResolver<TQueryable, TResult>(
-        this IOGraphOperationDescriptor descriptor,
-        Func<IOGraphOperationContext, Either<TQueryable, TResult>> resolver)
-        where TQueryable : IQueryable
-        where TResult : IOGraphOperationResult
-    {
-        if (resolver is null)
-        {
-            throw new ArgumentNullException(nameof(resolver));
-        }
-        return descriptor.UseResolver(context =>
-        {
-            var results = resolver.Invoke(context);
+    //public static IOGraphCommandOperationDescriptor UseEitherResolver<TQueryable, TResult>(
+    //    this IOGraphCommandOperationDescriptor descriptor,
+    //    Func<IOGraphOperationContext, Either<TQueryable, TResult>> resolver)
+    //    where TQueryable : IQueryable
+    //    where TResult : IOGraphOperationResult
+    //{
+    //    if (resolver is null)
+    //    {
+    //        throw new ArgumentNullException(nameof(resolver));
+    //    }
+    //    return descriptor.UseResolver(context =>
+    //    {
+    //        var results = resolver.Invoke(context);
 
-            return results
-                .Match((TResult result) =>  result as IOGraphOperationResult)
-                .Match((TQueryable queryable) =>
-                {
-                    return new QueryableResult() as IOGraphOperationResult;
-                });
-        });
-    }
+    //        return results
+    //            .Match((TResult result) =>  result as IOGraphOperationResult)
+    //            .Match((TQueryable queryable) =>
+    //            {
+    //                return new QueryableResult() as IOGraphOperationResult;
+    //            });
+    //    });
+    //}
 
     /// <summary>
     /// 

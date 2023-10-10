@@ -2,6 +2,9 @@
 
 namespace Assimalign.OGraph;
 
+/// <summary>
+/// 
+/// </summary>
 public interface IOGraphProperty
 {
     /// <summary>
@@ -28,7 +31,7 @@ public interface IOGraphProperty
     /// 
     /// </summary>
     /// <returns></returns>
-    OGraphPropertyHandler GetResolverChain();
+    OGraphPropertyHandler BuildHandlerChain();
     /// <summary>
     /// Computed properties are non filterable or sortable properties that are executed 
     /// after entities are returned from the query provider;

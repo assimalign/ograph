@@ -12,12 +12,11 @@ namespace Assimalign.OGraph;
 /// </summary>
 public interface IOGraphOperationResolver
 {
-    
     /// <summary>
     /// 
     /// </summary>
     /// <param name="context"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IOGraphOperationResult> InvokeAsync(IOGraphOperationContext context);
+    Task<IOGraphResult> InvokeAsync(IOGraphOperationContext context, CancellationToken cancellationToken = default);
 }

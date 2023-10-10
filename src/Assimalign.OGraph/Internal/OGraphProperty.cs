@@ -19,7 +19,7 @@ internal class OGraphProperty : IOGraphProperty
     public IOGraphMetadata Metadata { get; }
     public IOGraphPropertyResolver Resolver { get; set; } 
     public IOGraphPropertyMiddlewareQueue Middleware { get; }
-    public OGraphPropertyHandler GetResolverChain()
+    public OGraphPropertyHandler BuildHandlerChain()
     {
         var memoise = Cacher<OGraphProperty, OGraphPropertyHandler>.Memoise(property =>
         {

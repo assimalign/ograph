@@ -38,7 +38,7 @@ public readonly struct RouteSegment :
     /// <summary>
     /// The index of the route
     /// </summary>
-    public int Index { get; }
+    public int OrdinalId { get; }
     /// <summary>
     /// 
     /// </summary>

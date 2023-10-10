@@ -59,7 +59,7 @@ public class OGraphExecutor : IOGraphExecutor
                     return response;
                 }
             }
-            var result = await operation.GetResolverChain().Invoke(new OGraphOperationContext()
+            var result = await operation.BuildHandlerChain().Invoke(new OGraphOperationContext()
             {
                 Query           = query,
                 Operation       = operation,

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
@@ -12,5 +13,5 @@ public interface IOGraphPropertyResolver
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    ValueTask<IOGraphPropertyResult> InvokeAsync(IOGraphPropertyContext context);
+    ValueTask<IOGraphResult> InvokeAsync(IOGraphPropertyContext context, CancellationToken cancellationToken = default);
 }

@@ -24,7 +24,7 @@ internal class OGraphEdgeDefault : IOGraphEdge
 
     public OGraphQueryOptions QueryOptions => throw new NotImplementedException();
 
-    public OGraphEdgeHandler GetResolverChain()
+    public OGraphEdgeHandler Buil()
     {
         var memoise = Cacher<OGraphEdgeDefault, OGraphEdgeHandler>.Memoise(edge =>
         {

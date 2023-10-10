@@ -2,7 +2,7 @@
 
 public class UserCreateOperation : OGraphOperation<UserNode>
 {
-    protected override void Configure(IOGraphOperationDescriptor descriptor)
+    protected override void Configure(IOGraphCommandOperationDescriptor descriptor)
     {
         descriptor.UseName(nameof(UserCreateOperation))
             .UseRoute("/users")

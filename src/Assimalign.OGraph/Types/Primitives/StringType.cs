@@ -6,8 +6,8 @@ namespace Assimalign.OGraph;
 
 public sealed class StringType : IOGraphType
 {
-    public Name TypeName => typeof(string).Name;
-    public OGraphTypeIdentifier TypeIdentifier => OGraphTypeIdentifier.Primitive;
+    public Name Name => typeof(string).Name;
+    public TypeIdentifier Identifier => TypeIdentifier.Primitive;
     public Type? RuntimeType => typeof(string);
     public bool IsNullable => true;
    

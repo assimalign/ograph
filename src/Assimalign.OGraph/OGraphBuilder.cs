@@ -166,7 +166,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
     }
 
     /// <inheritdoc />
-    public IOGraphOperationDescriptor AddOperation(Name name)
+    public IOGraphCommandOperationDescriptor AddCommand(Name name)
     {
         var operation = new OGraphOperationDefault()
         {

@@ -13,5 +13,5 @@ public interface IOGraphEdgeMiddleware
     /// <param name="context"></param>
     /// <param name="next"></param>
     /// <returns></returns>
-    Task<IOGraphEdgeResult> InvokeAsync(IOGraphEdgeContext context, OGraphEdgeHandler next);
+    Task<IOGraphResult> InvokeAsync(IOGraphEdgeContext context, OGraphEdgeHandler next);
 }

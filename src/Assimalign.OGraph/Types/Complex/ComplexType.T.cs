@@ -7,18 +7,17 @@ using System.Reflection;
 namespace Assimalign.OGraph;
 
 using Assimalign.OGraph.Internal;
-using System.Collections;
 
 public class ComplexType<T> : ComplexType
 {
     public ComplexType()
     {
         base.RuntimeType    = typeof(T);
-        base.TypeName       = typeof(T).Name;
+        base.Name       = typeof(T).Name;
 
         Configure(new OGraphComplexTypeDescriptor<T>(this));
 
-        Initialize();
+        Initialize(); // Initialization must happen after Configure
     }
 
     protected virtual void Configure(IOGraphComplexTypeDescriptor<T> descriptor) { }

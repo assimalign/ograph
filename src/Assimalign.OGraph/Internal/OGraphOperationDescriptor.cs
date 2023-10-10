@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Assimalign.OGraph.Internal;
 
-internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
+internal class OGraphOperationDescriptor : IOGraphCommandOperationDescriptor
 {
     private readonly OGraphOperation operation;
 
@@ -19,7 +19,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
 
     public IList<Action<OGraph>> OnConfigure { get; init; }
 
-    public IOGraphOperationDescriptor UseName(Name name)
+    public IOGraphCommandOperationDescriptor UseName(Name name)
     {
         OnConfigure.Add(graph =>
         {
@@ -27,7 +27,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseQueryParam(string query)
+    public IOGraphCommandOperationDescriptor UseQueryParam(string query)
     {
         OnConfigure.Add(graph =>
         {
@@ -35,7 +35,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseRoute(Route route)
+    public IOGraphCommandOperationDescriptor UseRoute(Route route)
     {
         OnConfigure.Add(graph =>
         {
@@ -43,7 +43,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseMethod(Method method)
+    public IOGraphCommandOperationDescriptor UseMethod(Method method)
     {
         OnConfigure.Add(graph =>
         {
@@ -51,7 +51,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseNode(Name label)
+    public IOGraphCommandOperationDescriptor UseNode(Name label)
     {
         OnConfigure.Add(graph =>
         {
@@ -63,7 +63,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseNode<TNode>() where TNode : IOGraphNode, new()
+    public IOGraphCommandOperationDescriptor UseNode<TNode>() where TNode : IOGraphNode, new()
     {
         OnConfigure.Add(graph =>
         {
@@ -79,7 +79,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseMiddleware<TMiddleware>()
+    public IOGraphCommandOperationDescriptor UseMiddleware<TMiddleware>()
        where TMiddleware : IOGraphOperationMiddleware, new()
     {
         OnConfigure.Add(graph =>
@@ -88,7 +88,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseMiddleware(IOGraphOperationMiddleware middleware)
+    public IOGraphCommandOperationDescriptor UseMiddleware(IOGraphOperationMiddleware middleware)
     {
         OnConfigure.Add(graph =>
         {
@@ -100,7 +100,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseMiddleware(OGraphOperationMiddleware middleware)
+    public IOGraphCommandOperationDescriptor UseMiddleware(OGraphOperationMiddleware middleware)
     {
         OnConfigure.Add(graph =>
         {
@@ -112,7 +112,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseResolver<TResolver>()
+    public IOGraphCommandOperationDescriptor UseResolver<TResolver>()
         where TResolver : IOGraphOperationResolver, new()
     {
         OnConfigure.Add(graph =>
@@ -121,7 +121,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseResolver(IOGraphOperationResolver resolver)
+    public IOGraphCommandOperationDescriptor UseResolver(IOGraphOperationResolver resolver)
     {
         OnConfigure.Add(graph =>
         {
@@ -134,7 +134,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseResolver(OGraphOperationResolver resolver)
+    public IOGraphCommandOperationDescriptor UseResolver(OGraphOperationResolver resolver)
     {
         OnConfigure.Add(graph =>
         {
@@ -147,7 +147,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseQueryProvider<TQueryProvider>()
+    public IOGraphCommandOperationDescriptor UseQueryProvider<TQueryProvider>()
         where TQueryProvider : IOGraphQueryProvider, new()
     {
         OnConfigure.Add(graph =>
@@ -156,7 +156,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseQueryProvider(IOGraphQueryProvider queryProvider)
+    public IOGraphCommandOperationDescriptor UseQueryProvider(IOGraphQueryProvider queryProvider)
     {
         OnConfigure.Add(graph =>
         {
@@ -168,7 +168,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseQueryOptions(OGraphQueryOptions options)
+    public IOGraphCommandOperationDescriptor UseQueryOptions(OGraphQueryOptions options)
     {
         OnConfigure.Add(graph =>
         {
@@ -180,7 +180,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseQueryOptions(Action<OGraphQueryOptions> configure)
+    public IOGraphCommandOperationDescriptor UseQueryOptions(Action<OGraphQueryOptions> configure)
     {
         OnConfigure.Add(graph =>
         {
@@ -198,7 +198,7 @@ internal class OGraphOperationDescriptor : IOGraphOperationDescriptor
         });
         return this;
     }
-    public IOGraphOperationDescriptor UseQueryOptions<TQueryOptions>(Action<TQueryOptions> configure)
+    public IOGraphCommandOperationDescriptor UseQueryOptions<TQueryOptions>(Action<TQueryOptions> configure)
         where TQueryOptions : OGraphQueryOptions, new()
     {
         OnConfigure.Add(graph =>

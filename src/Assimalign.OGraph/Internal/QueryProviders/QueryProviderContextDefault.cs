@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Internal;
 
-internal class QueryContextDefault : IOGraphQueryContext
+internal class QueryProviderContextDefault : IOGraphQueryContext
 {
     public IOGraphNode Node { get; init; }
     public QueryDocument Query { get; init; }
     public IServiceProvider ServiceProvider { get; init; }
+
+    public Stream Stream => throw new NotImplementedException();
 }

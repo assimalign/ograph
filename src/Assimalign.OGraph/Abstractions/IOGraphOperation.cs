@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assimalign.OGraph;
+﻿namespace Assimalign.OGraph;
 
 /// <summary>
 /// Represents a single HTTP REST operation.
@@ -32,6 +26,10 @@ public interface IOGraphOperation
     /// </summary>
     bool IsEnabled { get; }
     /// <summary>
+    /// Specifies whether the operation is a command or query.
+    /// </summary>
+    OperationType OperationType { get; }
+    /// <summary>
     /// Represents the node that is binded to this operation.
     /// </summary>
     IOGraphNode Node { get; }
@@ -40,24 +38,16 @@ public interface IOGraphOperation
     /// </summary>
     IOGraphOperationResolver Resolver { get; }
     /// <summary>
-    /// 
+    /// A first-in-first-out queue of middleware that will execute 
     /// </summary>
     IOGraphOperationMiddlewareQueue Middleware { get; }
     /// <summary>
-    /// 
+    /// The metadata for the operation.
     /// </summary>
     IOGraphMetadata Metadata { get; }
     /// <summary>
-    /// Gets the Query provider.
-    /// </summary>
-    IOGraphQueryProvider QueryProvider { get; }
-    /// <summary>
-    /// Gets the query options to be used for the query provider.
-    /// </summary>
-    OGraphQueryOptions QueryOptions { get; }
-    /// <summary>
-    /// 
+    /// Builds a handler that create invocation chain to execute middleware and resolver.
     /// </summary>
     /// <returns></returns>
-    OGraphOperationHandler GetResolverChain();
+    OGraphOperationHandler BuildHandlerChain();
 }

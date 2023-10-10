@@ -12,7 +12,7 @@ internal class QueryableQueryProvider : QueryProviderDefault
 {
     public override Type ElementType { get; init; }
 
-    public override Task ExecuteAsync(QueryContextDefault context, OGraphQueryOptions options, CancellationToken cancellationToken = default)
+    public override Task ExecuteAsync(QueryProviderContextDefault context, OGraphQueryOptions options, CancellationToken cancellationToken = default)
     {
         var graphNode = context.Node;
         var grpahType = graphNode.Type as IOGraphComplexType;
@@ -30,7 +30,7 @@ internal class QueryableQueryProvider : QueryProviderDefault
             {
                 if (grpahType!.Properties.TryGet(identifier.Name, out var graphProperty)) 
                 {
-                    var handler = graphProperty.GetResolverChain();
+                    var handler = graphProperty.BuildHandlerChain();
 
                     handler.
                 }

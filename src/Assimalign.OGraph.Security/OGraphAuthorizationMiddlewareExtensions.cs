@@ -2,7 +2,7 @@
 
 public static class OGraphAuthorizationMiddlewareExtensions
 {
-    public static IOGraphOperationDescriptor UseAuthorization(this IOGraphOperationDescriptor descriptor)
+    public static IOGraphCommandOperationDescriptor UseAuthorization(this IOGraphCommandOperationDescriptor descriptor)
     {
         descriptor.UseMiddleware(async (context, next) =>
         {
