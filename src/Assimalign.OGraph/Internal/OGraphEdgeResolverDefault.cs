@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Internal;
 
@@ -10,8 +11,8 @@ internal class OGraphEdgeResolverDefault : IOGraphEdgeResolver
     {
         this.resolver = resolver;
     }
-    public Task<IOGraphEdgeResult> InvokeAsync(IOGraphEdgeContext context)
+    public Task<IOGraphResult> InvokeAsync(IOGraphEdgeContext context, CancellationToken cancellationToken = default)
     {
-        return resolver.Invoke(context);
+        return resolver.Invoke(context, cancellationToken);
     }
 }

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
@@ -26,4 +23,9 @@ public interface IOGraphOperationMiddlewareQueue : IEnumerable<IOGraphOperationM
     /// </summary>
     /// <param name="middleware"></param>
     void Dequeue(IOGraphOperationMiddleware middleware);
+    /// <summary>
+    /// Builds a handler that create invocation chain to execute middleware and resolver.
+    /// </summary>
+    /// <returns></returns>
+    OGraphOperationHandler BuildHandlerChain(IOGraphOperationResolver resolver);
 }

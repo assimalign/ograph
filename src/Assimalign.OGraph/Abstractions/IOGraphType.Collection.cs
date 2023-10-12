@@ -5,7 +5,7 @@ using System.Text.Json;
 namespace Assimalign.OGraph;
 
 /// <summary>
-/// 
+/// Represents collection types such as Arrays, Lists, etc.,
 /// </summary>
 public interface IOGraphCollectionType : IOGraphType
 {

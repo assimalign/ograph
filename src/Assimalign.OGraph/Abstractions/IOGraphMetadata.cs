@@ -6,8 +6,12 @@ namespace Assimalign.OGraph;
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphMetadata : IEnumerable<KeyValuePair<string, object>>
+public interface IOGraphMetadata : IReadOnlyDictionary<string, object>
 {
-
-    object this[string key] { get; set; }
+    /// <summary>
+    /// Checks whether the value is valid for serialization.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    bool IsValid(object value);
 }

@@ -26,7 +26,7 @@ internal class OGraphPropertyDescriptor<T> : IOGraphPropertyDescriptor<T>
         {
             throw new ArgumentNullException(nameof(value));
         }
-        property.Metadata[key] = value;
+        //property.Metadata[key] = value;
         return this;
     }
     public IOGraphPropertyDescriptor<T> UseMiddleware(IOGraphPropertyMiddleware middleware)

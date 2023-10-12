@@ -7,6 +7,10 @@ public abstract class PrimitiveType<T> : IOGraphPrimitiveType
 {
     public virtual Name Name => typeof(T).Name;
     public TypeIdentifier Identifier => TypeIdentifier.Primitive;
-    public virtual Type? RuntimeType => typeof(T);
+    public virtual Type RuntimeType => typeof(T);
     public bool IsNullable { get; internal set; }
+    public virtual bool IsAssignable(object value)
+    {
+        return RuntimeType.IsAssignableFrom(value.GetType());
+    }
 }

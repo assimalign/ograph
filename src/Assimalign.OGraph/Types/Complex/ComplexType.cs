@@ -16,4 +16,9 @@ public class ComplexType : IOGraphComplexType
     public IOGraphPropertyCollection Properties { get; }
     public Type? RuntimeType { get; init; }
     public bool IsNullable => true;
+
+    public virtual bool IsAssignable(object value)
+    {
+        return RuntimeType!.IsAssignableFrom(value.GetType());
+    }
 }

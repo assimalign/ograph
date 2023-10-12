@@ -14,18 +14,15 @@ public sealed class EnumType<TEnum> : IOGraphEnumType
                 value)).ToArray();
     }
 
-    /// <inheritdoc />
     public Name Name => $"{typeof(TEnum).Name}Enum";
-
-    /// <inheritdoc />
     public TypeIdentifier Identifier => TypeIdentifier.Enum;
-
-    /// <inheritdoc />
     public EnumValue[] Values { get; }
-
-    /// <inheritdoc />
-    public Type? RuntimeType => typeof(TEnum);
+    public Type RuntimeType => typeof(TEnum);
 
     public bool IsNullable => throw new NotImplementedException();
 
+    public bool IsAssignable(object value)
+    {
+        return RuntimeType.IsAssignableFrom(value.GetType());
+    }
 }

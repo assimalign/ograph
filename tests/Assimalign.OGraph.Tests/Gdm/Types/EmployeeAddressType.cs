@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph;
+namespace Assimalign.OGraph.Gdm;
 
-public sealed class OGraphErrorDetails : IOGraphErrorDetails
+public class EmployeeAddressType : ComplexType<EmployeeAddressType>
 {
 }

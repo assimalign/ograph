@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,8 +13,8 @@ internal class OGraphOperationResolverDefault : IOGraphOperationResolver
         this.resolver = resolver;
     }
 
-    public Task<IOGraphOperationResult> InvokeAsync(IOGraphOperationContext context)
+    public Task<IOGraphResult> InvokeAsync(IOGraphOperationContext context, CancellationToken cancellationToken = default)
     {
-        return resolver.Invoke(context);
+        return resolver.Invoke(context, cancellationToken);
     }
 }

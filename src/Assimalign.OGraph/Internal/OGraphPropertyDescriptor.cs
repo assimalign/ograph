@@ -2,7 +2,6 @@
 
 namespace Assimalign.OGraph.Internal;
 
-
 internal class OGraphPropertyDescriptor : IOGraphPropertyDescriptor
 {
     private readonly OGraphProperty property;
@@ -32,7 +31,7 @@ internal class OGraphPropertyDescriptor : IOGraphPropertyDescriptor
         {
             throw new ArgumentNullException(nameof(value));
         }
-        property.Metadata[key] = value;
+        //property.Metadata[key] = value;
         return this;
     }
     public IOGraphPropertyDescriptor UseMiddleware(IOGraphPropertyMiddleware middleware)

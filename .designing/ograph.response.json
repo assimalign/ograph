@@ -1,5 +1,4 @@
 {
-    //"$schema": "http://json-schema.org/draft-07/schema",
     "$schema": "ograph.response.schema.json",
     "@ograph.status": 200,
     "@ograph.node": "#model/nodes/employees", // A reference to the nodes schema in the OGraph Model
@@ -22,10 +21,12 @@
         {
             // Context Information
             "@ograph.label": "employees",
+
             // Attributes
             "employeeId": "255acd9b-9db4-4a38-85a5-93504cbeeeae",
             "firstName": "Chase",
             "lastName": "Crawford",
+
             // Edges
             "@ograph.edges": {
                 "companies": {

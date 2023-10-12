@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Internal;
 
-
-
+// A wrapper class for OGraphPropertyResolver callback
 internal class OGraphPropertyResolverDefault : IOGraphPropertyResolver
 {
     private readonly OGraphPropertyResolver resolver;
@@ -22,8 +18,8 @@ internal class OGraphPropertyResolverDefault : IOGraphPropertyResolver
 
         this.resolver = resolver;
     }
-    public ValueTask<IOGraphPropertyResult> InvokeAsync(IOGraphPropertyContext context)
+    public ValueTask<IOGraphResult> InvokeAsync(IOGraphPropertyContext context, CancellationToken cancellationToken = default)
     {
-        return resolver.Invoke(context);
+        return resolver.Invoke(context, cancellationToken);
     }
 }

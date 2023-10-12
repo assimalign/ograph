@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 
 namespace Assimalign.OGraph;
 
@@ -9,6 +10,10 @@ using Assimalign.OGraph.Syntax;
 /// </summary>
 public sealed class OGraphOptions
 {
+    public OGraphOptions()
+    {
+        
+    }
     /// <summary>
     /// Specify the prefix to be used on all operation routes.
     /// </summary>
@@ -25,4 +30,13 @@ public sealed class OGraphOptions
     /// 
     /// </summary>
     public IServiceProvider? ServiceProvider { get; set; }
+    /// <summary>
+    /// 
+    /// </summary>
+    public JsonSerializerOptions JsonSerializerOptions { get; set; } = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
+    };
 }

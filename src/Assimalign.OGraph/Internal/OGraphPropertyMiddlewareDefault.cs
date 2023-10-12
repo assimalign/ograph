@@ -11,7 +11,7 @@ internal class OGraphPropertyMiddlewareDefault : IOGraphPropertyMiddleware
         this.middleware = middleware;
     }
 
-    public ValueTask<IOGraphPropertyResult> InvokeAsync(IOGraphPropertyContext context, OGraphPropertyHandler next)
+    public ValueTask<IOGraphResult> InvokeAsync(IOGraphPropertyContext context, OGraphPropertyHandler next)
     {
         return middleware.Invoke(context, next);
     }

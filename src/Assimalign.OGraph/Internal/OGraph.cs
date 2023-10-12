@@ -22,6 +22,4 @@ internal class OGraph : IOGraph
 
     public OGraphOperationCollection Operations { get; }
     IOGraphOperationCollection IOGraph.Operations => this.Operations;
-
-    public IOGraphEventCollection Events => throw new NotImplementedException();
 }

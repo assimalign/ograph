@@ -14,25 +14,25 @@ public static class OGraphPropertyDescriptorExtensions
     /// <param name="resolver"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static IOGraphPropertyDescriptor<TProperty> UseResolver<TProperty>(
-        this IOGraphPropertyDescriptor<TProperty> descriptor,
-        Func<IOGraphPropertyContext, TProperty> resolver)
-    {
-        if (resolver is null)
-        {
-            throw new ArgumentNullException(nameof(resolver));
-        }
-        return descriptor.UseResolver(context =>
-        {
-            return ValueTask.FromResult<IOGraphPropertyResult>(new OGraphPropertyResult()
-            {
-                Value = resolver.Invoke(context)
-            });
-        });
-    }
+    //public static IOGraphPropertyDescriptor<TProperty> UseResolver<TProperty>(
+    //    this IOGraphPropertyDescriptor<TProperty> descriptor,
+    //    Func<IOGraphPropertyContext, TProperty> resolver)
+    //{
+    //    if (resolver is null)
+    //    {
+    //        throw new ArgumentNullException(nameof(resolver));
+    //    }
+    //    return descriptor.UseResolver(context =>
+    //    {
+    //        return ValueTask.FromResult<IOGraphPropertyResult>(new ValueResult()
+    //        {
+    //            Value = resolver.Invoke(context)
+    //        });
+    //    });
+    //}
 
 
-
+    
     public static IOGraphPropertyDescriptor UseResolver<TProperty>(
         this IOGraphPropertyDescriptor descriptor,
         Func<IOGraphPropertyContext, TProperty> resolver)
@@ -46,7 +46,7 @@ public static class OGraphPropertyDescriptorExtensions
 
         return descriptor.UseResolver(context =>
         {
-            return ValueTask.FromResult<IOGraphPropertyResult>(new OGraphPropertyResult()
+            return ValueTask.FromResult<IOGraphPropertyResult>(new ValueResult()
             {
                 Value = resolver.Invoke(context)
             });

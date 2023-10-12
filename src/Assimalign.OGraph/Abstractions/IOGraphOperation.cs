@@ -1,4 +1,7 @@
-﻿namespace Assimalign.OGraph;
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace Assimalign.OGraph;
 
 /// <summary>
 /// Represents a single HTTP REST operation.
@@ -30,7 +33,7 @@ public interface IOGraphOperation
     /// </summary>
     OperationType OperationType { get; }
     /// <summary>
-    /// Represents the node that is binded to this operation.
+    /// Represents the node that is bound to this operation.
     /// </summary>
     IOGraphNode Node { get; }
     /// <summary>
@@ -46,8 +49,10 @@ public interface IOGraphOperation
     /// </summary>
     IOGraphMetadata Metadata { get; }
     /// <summary>
-    /// Builds a handler that create invocation chain to execute middleware and resolver.
+    /// 
     /// </summary>
+    /// <param name="context"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    OGraphOperationHandler BuildHandlerChain();
+    Task<IOGraphResult> ExecuteAsync(IOGraphOperationContext context, CancellationToken cancellationToken = default);
 }

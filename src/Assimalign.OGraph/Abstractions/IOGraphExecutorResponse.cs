@@ -17,7 +17,7 @@ public interface IOGraphExecutorResponse
     /// </summary>
     IOGraphHeaderCollection Headers { get; }
     /// <summary>
-    /// 
+    /// The response body to be written back to the client.
     /// </summary>
     Stream Body { get; }
 }

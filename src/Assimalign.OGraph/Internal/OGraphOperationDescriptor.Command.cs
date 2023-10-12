@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace Assimalign.OGraph.Internal;
 
-internal class OGraphOperationDescriptor : IOGraphCommandOperationDescriptor
+internal class OGraphCommandOperationDescriptor : IOGraphCommandOperationDescriptor
 {
-    private readonly OGraphOperation operation;
+    private readonly OGraphCommandOperation operation;
 
-    public OGraphOperationDescriptor(OGraphOperation operation)
+    public OGraphCommandOperationDescriptor(OGraphCommandOperation operation)
     {
         if (operation is null)
         {
@@ -189,7 +189,7 @@ internal class OGraphOperationDescriptor : IOGraphCommandOperationDescriptor
                 throw new ArgumentNullException(nameof(configure));
             }
 
-            var options = new OGraphQueryOptionsDefault();
+            var options = OGraphQueryOptions.Default;
 
             configure.Invoke(options);
 

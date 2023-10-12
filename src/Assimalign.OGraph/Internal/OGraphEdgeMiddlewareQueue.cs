@@ -1,35 +1,40 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Internal;
 
-internal class OGraphEdgeMiddlewareQueue : IOGraphEdgeMiddlewareQueue
+internal class OGraphEdgeMiddlewareQueue : OGraphMiddlewareQueueBase<IOGraphEdgeMiddleware>,
+    IOGraphEdgeMiddlewareQueue
 {
-    public int Count => throw new NotImplementedException();
-
-    public bool IsReadOnly => throw new NotImplementedException();
-
-    public void Dequeue(IOGraphEdgeMiddleware middleware)
+    public OGraphEdgeHandler BuildHandlerChain(IOGraphEdgeResolver resolver)
     {
-        throw new NotImplementedException();
-    }
+        if (resolver is null)
+        {
+            throw new ArgumentNullException(nameof(resolver));
+        }
 
-    public void Enqueue(IOGraphEdgeMiddleware middleware)
-    {
-        throw new NotImplementedException();
-    }
+        var index = 0;
+        var root = new OGraphEdgeHandler(resolver.InvokeAsync);
 
-    public IEnumerator<IOGraphEdgeMiddleware> GetEnumerator()
-    {
-        throw new NotImplementedException();
-    }
+        if (Count == 0)
+        {
+            return root;
+        }
+        return Chain(root);
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        throw new NotImplementedException();
+        OGraphEdgeHandler Chain(OGraphEdgeHandler root)
+        {
+            var middleware = queue.Reverse().Skip(index).First();
+            var next = new OGraphEdgeHandler((context, cancellationToken) =>
+            {
+                return middleware.InvokeAsync(context, root);
+            });
+            if (index < this.Count - 1)
+            {
+                index++;
+                return Chain(next);
+            }
+            return next;
+        }
     }
 }

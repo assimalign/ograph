@@ -2,31 +2,13 @@
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphEdgeCollection : IEnumerable<IOGraphEdge>
+public interface IOGraphEdgeCollection : ICollection<IOGraphEdge>
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    int Count { get; }
-    /// <summary>
-    /// 
-    /// </summary>
-    bool IsReadOnly { get; }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="edge"></param>
-    void Add(IOGraphEdge edge);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="edge"></param>
-    void Remove(IOGraphEdge edge);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="name"></param>
     /// <param name="edge"></param>
     /// <returns></returns>
-    bool TryGet(Name name, out IOGraphEdge? edge);
+    bool TryGetEdge(Name name, out IOGraphEdge? edge);
 }

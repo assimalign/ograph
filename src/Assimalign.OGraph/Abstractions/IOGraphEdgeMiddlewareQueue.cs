@@ -23,4 +23,10 @@ public interface IOGraphEdgeMiddlewareQueue : IEnumerable<IOGraphEdgeMiddleware>
     /// </summary>
     /// <param name="middleware"></param>
     void Dequeue(IOGraphEdgeMiddleware middleware);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="resolver"></param>
+    /// <returns></returns>
+    OGraphEdgeHandler BuildHandlerChain(IOGraphEdgeResolver resolver);
 }

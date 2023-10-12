@@ -1,75 +1,40 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Internal;
 
-internal class OGraphOperationMiddlewareQueue : IOGraphOperationMiddlewareQueue
+internal class OGraphOperationMiddlewareQueue : OGraphMiddlewareQueueBase<IOGraphOperationMiddleware>,
+    IOGraphOperationMiddlewareQueue
 {
-
-    private Queue<IOGraphOperationMiddleware> queue;
-
-    public OGraphOperationMiddlewareQueue()
+    public OGraphOperationHandler BuildHandlerChain(IOGraphOperationResolver resolver)
     {
-        this.queue = new Queue<IOGraphOperationMiddleware>();
-    }
-
-
-    public bool IsReadOnly { get; set; }
-
-    public int Count => queue.Count;
-
-    public void Dequeue(IOGraphOperationMiddleware middleware)
-    {
-        AssertIsReadOnly();
-
-        if (middleware is null)
+        if (resolver is null)
         {
-            throw new ArgumentNullException(nameof(middleware));
+            throw new ArgumentNullException(nameof(resolver));
         }
 
-        var queue = new Queue<IOGraphOperationMiddleware>();
+        var index = 0;
+        var root = new OGraphOperationHandler(resolver.InvokeAsync);
 
-        foreach (var item in this.queue)
+        if (Count == 0)
         {
-            if (!item.Equals(middleware))
+            return root;
+        }
+        return Chain(root);
+
+        OGraphOperationHandler Chain(OGraphOperationHandler root)
+        {
+            var middleware = queue.Reverse().Skip(index).First();
+            var next = new OGraphOperationHandler((context, cancellationToken) =>
             {
-                queue.Enqueue(item);
+                return middleware.InvokeAsync(context, root);
+            });
+            if (index < this.Count - 1)
+            {
+                index++;
+                return Chain(next);
             }
-        }
-
-        if ((this.queue.Count - 1) != queue.Count)
-        {
-            throw new InvalidOperationException("The provided middleware does not exist.");
-        }
-
-        this.queue = queue;
-    }
-
-    public void Enqueue(IOGraphOperationMiddleware middleware)
-    {
-        AssertIsReadOnly();
-
-        if (middleware is null)
-        {
-            throw new ArgumentNullException(nameof(middleware));
-        }
-
-        queue.Enqueue(middleware);
-    }
-
-    public IEnumerator<IOGraphOperationMiddleware> GetEnumerator() => this.queue.GetEnumerator();
-    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
-
-
-    private void AssertIsReadOnly()
-    {
-        if (IsReadOnly)
-        {
-            throw new InvalidOperationException("The Middleware Queue is ReadOnly.");
+            return next;
         }
     }
 }

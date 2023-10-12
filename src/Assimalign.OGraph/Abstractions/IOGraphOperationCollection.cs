@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphOperationCollection : IEnumerable<IOGraphOperation>
+public interface IOGraphOperationCollection : ICollection<IOGraphOperation>
 {
-    void Add(IOGraphOperation operation);
+    
+    bool TryGetOperation(Name name, out IOGraphOperation operation);
 }

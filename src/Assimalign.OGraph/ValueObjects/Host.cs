@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Resources;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
+/// <summary>
+/// 
+/// </summary>
 public readonly struct Host
 {
     public Host(string value)
@@ -39,6 +37,11 @@ public readonly struct Host
         this.Port = port;
     }
 
-    public string? Value { get; }
+    public string Value { get; }
     public int? Port { get; }
+
+    public override string ToString()
+    {
+        return Value;
+    }
 }

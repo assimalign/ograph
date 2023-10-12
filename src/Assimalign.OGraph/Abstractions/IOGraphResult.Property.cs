@@ -7,9 +7,12 @@ using System.Threading.Tasks;
 namespace Assimalign.OGraph;
 
 /// <summary>
-/// Represents constant values of common error codes.
+/// 
 /// </summary>
-public sealed class OGraphErrorCodes
+public interface IOGraphPropertyResult : IOGraphResult
 {
-    public const string Unauthorized = "unauthorized";
+    /// <summary>
+    /// 
+    /// </summary>
+    object Value { get; }
 }

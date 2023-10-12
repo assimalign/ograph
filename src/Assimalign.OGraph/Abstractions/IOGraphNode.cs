@@ -11,7 +11,7 @@ public interface IOGraphNode
     /// <summary>
     /// Represents the label each node should contain.
     /// </summary>
-    Name Label { get; }    
+    Name Label { get; }
     /// <summary>
     /// Represents arbitrary metadata that can be associated with this node.
     /// </summary>

@@ -4,8 +4,10 @@ using System.Linq;
 namespace Assimalign.OGraph;
 
 using Assimalign.OGraph.Internal;
+using System.Threading.Tasks;
+using System.Threading;
 
-public abstract class OGraphOperation : IOGraphOperation
+public abstract class OGraphCommandOperation : IOGraphCommandOperation
 {
     private int chainIndex;
 
@@ -17,61 +19,33 @@ public abstract class OGraphOperation : IOGraphOperation
     internal IOGraphQueryProvider queryProvider;
     internal IOGraphOperationResolver resolver;
 
-    public OGraphOperation()
+    public OGraphCommandOperation()
     {
         this.Metadata = new OGraphMetadata();
         this.Middleware = new OGraphOperationMiddlewareQueue();
-        this.queryOptions = new OGraphQueryOptionsDefault();
+        this.queryOptions = OGraphQueryOptions.Default;
 
-        Configure(new OGraphOperationDescriptor(this));
+        Configure(new OGraphCommandOperationDescriptor(this));
     }
 
-    /// <inheritdoc />
     public Name Name => this.name;
-
-    /// <inheritdoc />
     public Route Route => this.route;
-
-    /// <inheritdoc />
     public Method Method => this.method;
+    public IOGraphNode Node => this.node;
+    public IOGraphOperationResolver Resolver => this.resolver;
+    public IOGraphOperationMiddlewareQueue Middleware { get; }
+    public IOGraphMetadata Metadata { get; }
+    public OperationType OperationType => OperationType.Command;
 
-    /// <inheritdoc />
     public bool IsEnabled => throw new NotImplementedException();
 
-    /// <inheritdoc />
-    public IOGraphNode Node => this.node;
-
-    /// <inheritdoc />
-    public IOGraphOperationResolver Resolver => this.resolver;
-
-    /// <inheritdoc />
-    public OGraphQueryOptions QueryOptions => this.queryOptions;
-
-    /// <inheritdoc />
-    public IOGraphQueryProvider QueryProvider => this.queryProvider;
-
-    /// <inheritdoc />
-    public IOGraphOperationMiddlewareQueue Middleware { get; }
-
-    /// <inheritdoc />
-    public IOGraphMetadata Metadata { get; }
-
-    /// <inheritdoc />
-    public IOGraphType RequestType => throw new NotImplementedException();
-
-    /// <inheritdoc />
-    public IOGraphType ResponseType => throw new NotImplementedException();
-
-    public OperationType OperationType => throw new NotImplementedException();
-
-    /// <inheritdoc />
     public OGraphOperationHandler BuildHandlerChain()
     {
-        var memoise = Cacher<OGraphOperation, OGraphOperationHandler>.Memoise(operation =>
+        var memoise = Cacher<OGraphCommandOperation, OGraphOperationHandler>.Memoise(operation =>
         {
             if (operation.Resolver is null)
             {
-                throw new Exception();
+                throw new InvalidOperationException("No resolver was added. Handler Chain requires a resolver.");
             }
             var root = new OGraphOperationHandler(operation.Resolver.InvokeAsync);
 
@@ -85,6 +59,7 @@ public abstract class OGraphOperation : IOGraphOperation
         return memoise.Invoke(this);
     }
 
+   
     protected virtual void Configure(IOGraphCommandOperationDescriptor descriptor) { }
 
     private OGraphOperationHandler GetResolverChain(OGraphOperationHandler handler)
@@ -101,5 +76,11 @@ public abstract class OGraphOperation : IOGraphOperation
         }
         chainIndex = 0;
         return next;
+    }
+
+
+    Task<IOGraphResult> IOGraphOperation.ExecuteAsync(IOGraphOperationContext context, CancellationToken cancellationToken)
+    {
+        return Middleware.BuildHandlerChain(Resolver).Invoke(context, cancellationToken);
     }
 }

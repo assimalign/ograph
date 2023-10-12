@@ -29,7 +29,7 @@ public class ComplexType<T> : ComplexType
 
         foreach (var runtimeProperty in runtimeProperties)
         {
-            if (Properties.TryGet(runtimeProperty.Name, out var property))
+            if (Properties.TryGetProperty(runtimeProperty.Name, out var property))
             {
                 if (property is null)
                 {
@@ -324,13 +324,13 @@ public class ComplexType<T> : ComplexType
         var labdaExpression = Expression.Lambda(memberExpression, parameterExpression);
         var method = labdaExpression.Compile();
 
-        return new OGraphPropertyResolverDefault(context =>
+        return new OGraphPropertyResolverDefault((context, cancellationToken) =>
         {
             var parent = context.GetParent<T>();
 
-            return ValueTask.FromResult<IOGraphPropertyResult>(new OGraphPropertyResult()
+            return ValueTask.FromResult<IOGraphResult>(new ValueResult()
             {
-                Value = method.DynamicInvoke(parent)
+                Value = method!.DynamicInvoke(parent)
             });
         });
     }

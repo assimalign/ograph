@@ -1,71 +1,40 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace Assimalign.OGraph.Internal;
 
-internal class OGraphPropertyMiddlewareQueue : IOGraphPropertyMiddlewareQueue
+internal class OGraphPropertyMiddlewareQueue : OGraphMiddlewareQueueBase<IOGraphPropertyMiddleware>, 
+    IOGraphPropertyMiddlewareQueue
 {
-    private Queue<IOGraphPropertyMiddleware> queue;
-
-    public OGraphPropertyMiddlewareQueue()
+    public OGraphPropertyHandler BuildHandlerChain(IOGraphPropertyResolver resolver)
     {
-        this.queue = new Queue<IOGraphPropertyMiddleware>();
-    }
-
-
-    public bool IsReadOnly { get; set; }
-
-    public int Count => queue.Count;
-
-    public void Dequeue(IOGraphPropertyMiddleware middleware)
-    {
-        AssertIsReadOnly();
-
-        if (middleware is null)
+        if (resolver is null)
         {
-            throw new ArgumentNullException(nameof(middleware));
-        }
-
-        var queue = new Queue<IOGraphPropertyMiddleware>();
-
-        foreach (var item in this.queue)
-        {
-            if (!item.Equals(middleware))
-            {
-                queue.Enqueue(item);
-            }
-        }
-
-        if ((this.queue.Count - 1) != queue.Count)
-        {
-            throw new InvalidOperationException("The provided middleware does not exist.");
-        }
-
-        this.queue = queue;
-    }
-
-    public void Enqueue(IOGraphPropertyMiddleware middleware)
-    {
-        AssertIsReadOnly();
-
-        if (middleware is null)
-        {
-            throw new ArgumentNullException(nameof(middleware));
+            throw new ArgumentNullException(nameof(resolver));
         }
         
-        queue.Enqueue(middleware);
-    }
+        var index = 0;
+        var root = new OGraphPropertyHandler(resolver.InvokeAsync);
 
-    public IEnumerator<IOGraphPropertyMiddleware> GetEnumerator() => this.queue.GetEnumerator();
-    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
-
-
-    private void AssertIsReadOnly()
-    {
-        if (IsReadOnly)
+        if (Count == 0)
         {
-            throw new InvalidOperationException("The Middleware Queue is ReadOnly.");
+            return root;
+        }
+        return Chain(root);
+
+        OGraphPropertyHandler Chain(OGraphPropertyHandler root)
+        {
+            var middleware = queue.Reverse().Skip(index).First();
+            var next = new OGraphPropertyHandler((context, cancellationToken) =>
+            {
+                return middleware.InvokeAsync(context, root);
+            });
+            if (index < this.Count - 1)
+            {
+                index++;
+                return Chain(next);
+            }
+            return next;
         }
     }
 }

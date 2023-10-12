@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Internal.Results.Operations
+namespace Assimalign.OGraph.Gdm;
+
+internal class EmployeeAddress
 {
-    internal class ObjectResult
-    {
-    }
 }

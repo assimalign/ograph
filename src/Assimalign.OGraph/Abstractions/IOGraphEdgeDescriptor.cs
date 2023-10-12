@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Assimalign.OGraph;
 
 /// <summary>
-/// 
+/// A raw descriptor for defining an edge.
 /// </summary>
 public interface IOGraphEdgeDescriptor
 {
@@ -94,9 +94,9 @@ public interface IOGraphEdgeDescriptor
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TResovler"></typeparam>
+    /// <typeparam name="TResolver"></typeparam>
     /// <returns></returns>
-    IOGraphEdgeDescriptor UseResolver<TResovler>() where TResovler : IOGraphEdgeResolver, new();
+    IOGraphEdgeDescriptor UseResolver<TResolver>() where TResolver : IOGraphEdgeResolver, new();
     /// <summary>
     /// 
     /// </summary>

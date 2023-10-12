@@ -27,4 +27,10 @@ public interface IOGraphPropertyMiddlewareQueue : IEnumerable<IOGraphPropertyMid
     /// </summary>
     /// <param name="middleware"></param>
     void Dequeue(IOGraphPropertyMiddleware middleware);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="resolver"></param>
+    /// <returns></returns>
+    OGraphPropertyHandler BuildHandlerChain(IOGraphPropertyResolver resolver);
 }

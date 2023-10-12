@@ -1,4 +1,7 @@
-﻿namespace Assimalign.OGraph;
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace Assimalign.OGraph;
 
 /// <summary>
 /// An edge links two nodes together.
@@ -41,8 +44,10 @@ public interface IOGraphEdge
     /// </summary>
     OGraphQueryOptions QueryOptions { get; }
     /// <summary>
-    /// Builds an execution chain for the given edge.
+    /// Executes the edge.
     /// </summary>
+    /// <param name="context"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    OGraphEdgeHandler BuildHandlerChain();
+    Task<IOGraphResult> ExecuteAsync(IOGraphEdgeContext context, CancellationToken cancellationToken = default);
 }

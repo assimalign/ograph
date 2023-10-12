@@ -9,9 +9,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Folder Include="Internal\Results\Edges\" />
-	  <Folder Include="Internal\Results\Property\" />
-	  <Folder Include="Internal\Results\Query\" />
+	  <Compile Remove="Utilities\ProjectionHelper.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Internal\Serialization\" />
 	  <Folder Include="Syntax\Internal\Visitors\" />
 	  <Folder Include="Syntax\Internal\Visitors\" />
 	</ItemGroup>

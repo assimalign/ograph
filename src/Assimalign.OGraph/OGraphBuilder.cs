@@ -11,12 +11,10 @@ public sealed class OGraphBuilder : IOGraphBuilder
     private readonly static ConcurrentDictionary<Name, IOGraph> cache = new();
 
     // These are our build actions
-    internal readonly IList<Action<OGraph>> onNodeAdd;
-    internal readonly IList<Action<OGraph>> onEdgeAdd;
-    internal readonly IList<Action<OGraph>> onOperationAdd;
-    internal readonly IList<Action<OGraph>> onBuild;
-
-    internal readonly OGraph graph = new();
+    private readonly IList<Action<OGraph>> onNodeAdd;
+    private readonly IList<Action<OGraph>> onEdgeAdd;
+    private readonly IList<Action<OGraph>> onOperationAdd;
+    private readonly IList<Action<OGraph>> onBuild;
 
     private OGraphBuilder()
     {
@@ -26,15 +24,14 @@ public sealed class OGraphBuilder : IOGraphBuilder
         this.onBuild = new List<Action<OGraph>>();  
     }
 
+    internal OGraph Graph { get; init; } 
 
-    /// <inheritdoc />
-    public IOGraphBuilder AddNode<TNode>() where TNode : IOGraphNode, new()
+    #region Node
+    IOGraphBuilder IOGraphBuilder.AddNode<TNode>()
     {
-        return AddNode(new TNode());
+        return (this as IOGraphBuilder).AddNode(new TNode());
     }
-
-    /// <inheritdoc />
-    public IOGraphBuilder AddNode(IOGraphNode node)
+    IOGraphBuilder IOGraphBuilder.AddNode(IOGraphNode node)
     {
         if (node is null)
         {
@@ -46,9 +43,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
         });
         return this;
     }
-
-    /// <inheritdoc />
-    public IOGraphNodeDescriptor AddNode(Name label)
+    IOGraphNodeDescriptor IOGraphBuilder.AddNode(Name label)
     {
         var node = new OGraphNodeDefault()
         {
@@ -59,19 +54,18 @@ public sealed class OGraphBuilder : IOGraphBuilder
             OnConfigure = onNodeAdd
         };
 
-        AddNode(node);
+        (this as IOGraphBuilder).AddNode(node);
 
         return descriptor;
     }
+    #endregion
 
-    /// <inheritdoc />
-    public IOGraphBuilder AddEdge<TEdge>() where TEdge : IOGraphEdge, new()
+    #region Edge
+    IOGraphBuilder IOGraphBuilder.AddEdge<TEdge>() 
     {
-        return AddEdge(new TEdge());
+        return (this as IOGraphBuilder).AddEdge(new TEdge());
     }
-
-    /// <inheritdoc />
-    public IOGraphBuilder AddEdge(IOGraphEdge edge)
+    IOGraphBuilder IOGraphBuilder.AddEdge(IOGraphEdge edge)
     {
         if (edge is null)
         {
@@ -83,9 +77,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
         });
         return this;
     }
-
-    /// <inheritdoc />
-    public IOGraphBuilder AddEdge(Func<IOGraph, IOGraphEdge> configure)
+    IOGraphBuilder IOGraphBuilder.AddEdge(Func<IOGraph, IOGraphEdge> configure)
     {
         if (configure is null)
         {
@@ -100,9 +92,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
 
         return this;
     }
-
-    /// <inheritdoc />
-    public IOGraphEdgeDescriptor AddEdge(Name name)
+    IOGraphEdgeDescriptor IOGraphBuilder.AddEdge(Name name)
     {
         var edge = new OGraphEdgeDefault() 
         { 
@@ -113,20 +103,18 @@ public sealed class OGraphBuilder : IOGraphBuilder
             OnConfigure = onEdgeAdd
         };
 
-        AddEdge(edge);
+        (this as IOGraphBuilder).AddEdge(edge);
 
         return descriptor;
     }
+    #endregion
 
-    /// <inheritdoc />
-    public IOGraphBuilder AddOperation<TOperation>() 
-        where TOperation : IOGraphOperation, new()
+    #region Operations
+    IOGraphBuilder IOGraphBuilder.AddOperation<TOperation>()
     {
-        return AddOperation(new TOperation());
+        return (this as IOGraphBuilder).AddOperation(new TOperation());
     }
-
-    /// <inheritdoc />
-    public IOGraphBuilder AddOperation(IOGraphOperation operation)
+    IOGraphBuilder IOGraphBuilder.AddOperation(IOGraphOperation operation)
     {
         if (operation is null)
         {
@@ -147,9 +135,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
 
         return this;
     }
-
-    /// <inheritdoc />
-    public IOGraphBuilder AddOperation(Func<IOGraph, IOGraphOperation> configure)
+    IOGraphBuilder IOGraphBuilder.AddOperation(Func<IOGraph, IOGraphOperation> configure)
     {
         if (configure is null)
         {
@@ -164,52 +150,66 @@ public sealed class OGraphBuilder : IOGraphBuilder
 
         return this;
     }
-
-    /// <inheritdoc />
-    public IOGraphCommandOperationDescriptor AddCommand(Name name)
+    IOGraphCommandOperationDescriptor IOGraphBuilder.AddCommand(Name name)
     {
-        var operation = new OGraphOperationDefault()
+        var operation = new OGraphCommandOperationDefault()
         {
             name = name
         };
-        var descriptor = new OGraphOperationDescriptor(operation)
+        var descriptor = new OGraphCommandOperationDescriptor(operation)
         {
             OnConfigure = onOperationAdd
         };
 
-        AddOperation(operation);
+        (this as IOGraphBuilder).AddOperation(operation);
 
         return descriptor;
     }
+    IOGraphQueryOperationDescriptor IOGraphBuilder.AddQuery(Name name)
+    {
+        var operation = new OGraphQueryOperationDefault()
+        {
+            name = name
+        };
+        var descriptor = new OGraphQueryOperationDescriptor(operation)
+        {
+            OnConfigure = onOperationAdd
+        };
 
-    /// <inheritdoc />
+        (this as IOGraphBuilder).AddOperation(operation);
+
+        return descriptor;
+        throw new NotImplementedException();
+    }
+    #endregion
+
     IOGraph IOGraphBuilder.Build()
     {
-        return cache.GetOrAdd(graph.Name, name =>
+        return cache.GetOrAdd(Graph.Name, name =>
         {
-            Build(onNodeAdd);
-            Build(onEdgeAdd);
-            Build(onOperationAdd);
-            Build(onBuild);
+            OnBuild(onNodeAdd);
+            OnBuild(onEdgeAdd);
+            OnBuild(onOperationAdd);
+            OnBuild(onBuild);
 
-            return graph;
+            return Graph;
         });
-    }
 
-    private void Build(IList<Action<OGraph>> actions)
-    {
-        foreach (var action in actions)
+        void OnBuild(IList<Action<OGraph>> actions)
         {
-            action.Invoke(graph);
+            foreach (var action in actions)
+            {
+                action.Invoke(Graph);
+            }
         }
     }
 
     /// <summary>
-    /// 
+    /// Creates a <see cref="IOGraph"/> model.
     /// </summary>
     /// <param name="name">The name of the graph model.</param>
     /// <param name="configure"></param>
-    /// <returns></returns>
+    /// <returns>OGraph model</returns>
     /// <exception cref="ArgumentNullException"></exception>
     public static IOGraph Create(Name name, Action<IOGraphBuilder> configure)
     {
@@ -220,10 +220,26 @@ public sealed class OGraphBuilder : IOGraphBuilder
 
         var builder = new OGraphBuilder();
 
-        builder.graph.Name = name;
+        builder.Graph.Name = name;
 
         configure.Invoke(builder);
 
         return ((IOGraphBuilder)builder).Build();
+    }
+
+    /// <summary>
+    /// Creates an <see cref="IOGraphBuilder"/>.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    public static IOGraphBuilder Create(Name name)
+    {
+        return new OGraphBuilder()
+        {
+            Graph = new()
+            {
+                Name = name
+            }
+        };
     }
 }

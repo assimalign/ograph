@@ -42,7 +42,7 @@ internal class OGraphPropertyCollection : IOGraphPropertyCollection
 
         this.properties.Remove(property);
     }
-    public bool TryGet(Name name, out IOGraphProperty? property)
+    public bool TryGetProperty(Name name, out IOGraphProperty? property)
     {
         property = this.properties.FirstOrDefault(p => p.Name == name);
 
@@ -58,5 +58,25 @@ internal class OGraphPropertyCollection : IOGraphPropertyCollection
         {
             throw new InvalidOperationException("The Collection is ReadOnly.");
         }
+    }
+
+    public void Clear()
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool Contains(IOGraphProperty item)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void CopyTo(IOGraphProperty[] array, int arrayIndex)
+    {
+        throw new NotImplementedException();
+    }
+
+    bool ICollection<IOGraphProperty>.Remove(IOGraphProperty item)
+    {
+        throw new NotImplementedException();
     }
 }

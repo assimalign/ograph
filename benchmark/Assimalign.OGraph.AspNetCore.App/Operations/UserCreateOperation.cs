@@ -1,6 +1,6 @@
 ﻿namespace Assimalign.OGraph;
 
-public class UserCreateOperation : OGraphOperation<UserNode>
+public class UserCreateOperation : OGraphCommandOperation<UserNode>
 {
     protected override void Configure(IOGraphCommandOperationDescriptor descriptor)
     {

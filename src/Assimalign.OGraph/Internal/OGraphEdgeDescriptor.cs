@@ -28,7 +28,7 @@ internal class OGraphEdgeDescriptor : IOGraphEdgeDescriptor
         {
             throw new ArgumentNullException(nameof(value));
         }
-        edge.Metadata[key] = value;
+       // edge.Metadata[key] = value;
 
         return this;
     }
@@ -52,7 +52,7 @@ internal class OGraphEdgeDescriptor : IOGraphEdgeDescriptor
         {
             throw new AccessViolationException(nameof(middleware));
         }
-        edge.Middleware.Enqueue(new OGraphEdgeMiddlwareDefault(middleware));
+        edge.Middleware.Enqueue(new OGraphEdgeMiddlewareDefault(middleware));
         return this;
     }
 

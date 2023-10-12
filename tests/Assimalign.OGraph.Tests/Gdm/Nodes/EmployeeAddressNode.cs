@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Internal;
+namespace Assimalign.OGraph.Gdm;
 
-internal class OGraphQueryOptionsDefault : OGraphQueryOptions
+internal class EmployeeAddressNode : OGraphNode<EmployeeAddressType>
 {
 }

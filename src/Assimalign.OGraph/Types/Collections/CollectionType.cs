@@ -23,4 +23,8 @@ public class CollectionType<TType> : IOGraphCollectionType
     public TypeIdentifier Identifier => TypeIdentifier.Collection;
     public Type RuntimeType => typeof(IEnumerable<>).MakeGenericType(ItemType.RuntimeType!);
     public bool IsNullable => true;
+    public virtual bool IsAssignable(object value)
+    {
+        return RuntimeType.IsAssignableFrom(value.GetType());
+    }
 }

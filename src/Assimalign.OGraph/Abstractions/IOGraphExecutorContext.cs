@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 
 namespace Assimalign.OGraph;
 
@@ -7,6 +8,10 @@ namespace Assimalign.OGraph;
 /// </summary>
 public interface IOGraphExecutorContext
 {
+    /// <summary>
+    /// The authenticated user or application.
+    /// </summary>
+    ClaimsPrincipal? ClaimsPrincipal { get; }
     /// <summary>
     /// The incoming HTTP request
     /// </summary>

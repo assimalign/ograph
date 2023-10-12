@@ -4,10 +4,10 @@
 /// 
 /// </summary>
 /// <typeparam name="TNode"></typeparam>
-public abstract class OGraphOperation<TNode> : OGraphOperation
+public abstract class OGraphCommandOperation<TNode> : OGraphCommandOperation
     where TNode : IOGraphNode, new()
 {
-    public OGraphOperation()
+    public OGraphCommandOperation()
     {
         this.node = new TNode();
     }

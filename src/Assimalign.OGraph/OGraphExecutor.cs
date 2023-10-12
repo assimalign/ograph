@@ -59,20 +59,26 @@ public class OGraphExecutor : IOGraphExecutor
                     return response;
                 }
             }
-            var result = await operation.BuildHandlerChain().Invoke(new OGraphOperationContext()
+            var result = await operation.ExecuteAsync(new OGraphResolverContext()
             {
-                Query           = query,
-                Operation       = operation,
-                ServiceProvider = serviceProvider,
-                Graph           = graph
-            });
-            await result.ExecuteAsync(new OGraphExecutorContext()
-            {
-                Request = request,
-                Response = response,
-                ContentType = request.Headers.Accept.HasValue ? request.Headers.Accept.Value : options.DefaultMediaType
+                //Query           = query,
+                //Operation       = operation,
+                //ServiceProvider = serviceProvider,
+                //Graph           = graph
+            }, CancellationToken.None);
+
+            var responseBody = response.Body;
+
+            await JsonSerializer.SerializeAsync(responseBody, result, options.JsonSerializerOptions);
+
+
+            //await result.ExecuteAsync(new OGraphExecutorContext()
+            //{
+            //    Request = request,
+            //    Response = response,
+            //    ContentType = request.Headers.Accept.HasValue ? request.Headers.Accept.Value : options.DefaultMediaType
             
-            }, cancellationToken);
+            //}, cancellationToken);
 
             return response;
         }

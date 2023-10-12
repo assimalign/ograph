@@ -68,4 +68,29 @@ internal class OGraphNodeCollection : IOGraphNodeCollection
             throw new InvalidOperationException("The Collection is ReadOnly.");
         }
     }
+
+    public bool TryGetNode(Name name, out IOGraphNode? node)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Clear()
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool Contains(IOGraphNode item)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void CopyTo(IOGraphNode[] array, int arrayIndex)
+    {
+        throw new NotImplementedException();
+    }
+
+    bool ICollection<IOGraphNode>.Remove(IOGraphNode item)
+    {
+        throw new NotImplementedException();
+    }
 }

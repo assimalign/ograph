@@ -3,4 +3,4 @@ using System.Linq;
 
 namespace Assimalign.OGraph.Internal;
 
-internal class OGraphOperationDefault : OGraphOperation { }
+internal class OGraphCommandOperationDefault : OGraphCommandOperation { }

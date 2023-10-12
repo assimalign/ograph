@@ -14,7 +14,7 @@ public readonly struct Name :
     IComparable<Name>
 {
     // Allowed characters for name
-    private const string expression = "^[a-zA-Z0-9]";
+    private const string expression = "^[a-zA-Z0-9]:-";
 
     public Name(string value)
     {

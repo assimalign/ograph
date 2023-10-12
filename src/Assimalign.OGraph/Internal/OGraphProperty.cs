@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Internal;
 
@@ -19,39 +21,10 @@ internal class OGraphProperty : IOGraphProperty
     public IOGraphMetadata Metadata { get; }
     public IOGraphPropertyResolver Resolver { get; set; } 
     public IOGraphPropertyMiddlewareQueue Middleware { get; }
-    public OGraphPropertyHandler BuildHandlerChain()
+
+
+    public Task<IOGraphResult> ExecuteAsync(IOGraphPropertyContext context, CancellationToken cancellationToken = default)
     {
-        var memoise = Cacher<OGraphProperty, OGraphPropertyHandler>.Memoise(property =>
-        {
-            if (property.Resolver is null)
-            {
-                throw new Exception();
-            }
-            var root = new OGraphPropertyHandler(property.Resolver.InvokeAsync);
-
-            if (Middleware.Count == 0)
-            {
-                return root;
-            }
-
-            return GetResolverChain(root);
-        });
-
-        return memoise.Invoke(this);
-    }
-    private OGraphPropertyHandler GetResolverChain(OGraphPropertyHandler handler)
-    {
-        var middleware = Middleware.Reverse().Skip(chainIndex).First();
-        var next = new OGraphPropertyHandler(context =>
-        {
-            return middleware.InvokeAsync(context, handler);
-        });
-        if (chainIndex < Middleware.Count - 1)
-        {
-            chainIndex++;
-            return GetResolverChain(next);
-        }
-        chainIndex = 0;
-        return next;
+        return Middleware.BuildHandlerChain(Resolver).Invoke(context, cancellationToken).AsTask();
     }
 }

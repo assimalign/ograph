@@ -36,7 +36,7 @@ internal class OGraphNodeDescriptor : IOGraphNodeDescriptor
             throw new ArgumentNullException(nameof(value));
         }
 
-        node.metadata[key] = value;
+        //node.metadata[key] = value;
 
         return this;
     }
@@ -89,5 +89,25 @@ internal class OGraphNodeDescriptor : IOGraphNodeDescriptor
         {
             Name = name,
         });
+    }
+
+    public IOGraphNodeDescriptor AddEdge<TEdge>() where TEdge : IOGraphEdge, new()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IOGraphNodeDescriptor AddEdge(IOGraphEdge edge)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IOGraphQueryOperationDescriptor AddQuery(Name operationName)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IOGraphCommandOperationDescriptor AddCommand(Name operationName)
+    {
+        throw new NotImplementedException();
     }
 }

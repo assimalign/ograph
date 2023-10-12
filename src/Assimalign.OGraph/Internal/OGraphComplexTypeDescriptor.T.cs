@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Internal;
 
@@ -52,7 +47,7 @@ internal class OGraphComplexTypeDescriptor<T> : IOGraphComplexTypeDescriptor<T>
 
     public IOGraphComplexTypeDescriptor<T> Ignore(Name name)
     {
-        if (complexType.Properties.TryGet(name, out var property))
+        if (complexType.Properties.TryGetProperty(name, out var property))
         {
             complexType.Properties.Remove(property);
         }
@@ -64,7 +59,7 @@ internal class OGraphComplexTypeDescriptor<T> : IOGraphComplexTypeDescriptor<T>
     {
         var memberExpression = (MemberExpression)expression.Body;
 
-        if (complexType.Properties.TryGet(memberExpression.Member.Name, out var property))
+        if (complexType.Properties.TryGetProperty(memberExpression.Member.Name, out var property))
         {
             complexType.Properties.Remove(property);
         }

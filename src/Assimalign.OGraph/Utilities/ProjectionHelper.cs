@@ -18,7 +18,7 @@ public static class ProjectionHelper
 
         queryNode.Properties.Select(property =>
         {
-            if (type.Properties.TryGet(property.Name, out var graphProperty))
+            if (type.Properties.TryGetProperty(property.Name, out var graphProperty))
             {
                 var resolver = graphProperty.BuildHandlerChain();
 
@@ -72,7 +72,7 @@ public static class ProjectionHelper
 
         foreach (var property in projection.Properties)
         {
-            if (type.Properties.TryGet(property.Name, out var graphProperty))
+            if (type.Properties.TryGetProperty(property.Name, out var graphProperty))
             {
                 if (graphProperty.Type is IOGraphComplexType nested)
                 {

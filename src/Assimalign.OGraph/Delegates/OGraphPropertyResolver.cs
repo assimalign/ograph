@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
@@ -8,4 +9,4 @@ namespace Assimalign.OGraph;
 /// </summary>
 /// <param name="context"></param>
 /// <returns></returns>
-public delegate ValueTask<IOGraphResult> OGraphPropertyResolver(IOGraphPropertyContext context);
+public delegate ValueTask<IOGraphResult> OGraphPropertyResolver(IOGraphPropertyContext context, CancellationToken cancellationToken = default);

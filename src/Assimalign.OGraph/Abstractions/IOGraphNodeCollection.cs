@@ -3,26 +3,8 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphNodeCollection : IEnumerable<IOGraphNode>
+public interface IOGraphNodeCollection : ICollection<IOGraphNode>
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    int Count { get; }
-    /// <summary>
-    /// 
-    /// </summary>
-    bool IsReadOnly { get; }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="node"></param>
-    void Add(IOGraphNode node);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="node"></param>
-    void Remove(IOGraphNode node);
     /// <summary>
     /// 
     /// </summary>
@@ -35,7 +17,5 @@ public interface IOGraphNodeCollection : IEnumerable<IOGraphNode>
     /// <param name="Label"></param>
     /// <param name="node"></param>
     /// <returns></returns>
-    bool TryGet(Name name, out IOGraphNode? node);
-
-    
+    bool TryGetNode(Name name, out IOGraphNode? node);
 }

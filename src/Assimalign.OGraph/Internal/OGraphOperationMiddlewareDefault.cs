@@ -16,7 +16,7 @@ internal class OGraphOperationMiddlewareDefault : IOGraphOperationMiddleware
         this.middleware = middleware;
     }
 
-    public Task<IOGraphOperationResult> InvokeAsync(IOGraphOperationContext context, OGraphOperationHandler next)
+    public Task<IOGraphResult> InvokeAsync(IOGraphOperationContext context, OGraphOperationHandler next)
     {
         return middleware.Invoke(context, next);
     }

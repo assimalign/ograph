@@ -30,4 +30,13 @@ public interface IOGraphType
     /// 
     /// </summary>
     bool IsNullable { get; }
+    /// <summary>
+    /// Checks whether the <paramref name="value"/> is assignable to the type.
+    /// </summary>
+    /// <remarks>
+    /// <i>This usually entails checking the value against the underlying runtime type.</i>
+    /// </remarks>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    bool IsAssignable(object value);
 }

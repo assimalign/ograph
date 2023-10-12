@@ -54,6 +54,15 @@ public interface IOGraphNodeDescriptor
     /// <param name="name"></param>
     /// <returns></returns>
     IOGraphEdgeDescriptor AddEdge(Name name);
+
+    IOGraphNodeDescriptor AddEdge<TEdge>() where TEdge : IOGraphEdge, new();
+
+    IOGraphNodeDescriptor AddEdge(IOGraphEdge edge);
+
+    IOGraphQueryOperationDescriptor AddQuery(Name operationName);
+    IOGraphCommandOperationDescriptor AddCommand(Name operationName);
+
+
 }
 
 
