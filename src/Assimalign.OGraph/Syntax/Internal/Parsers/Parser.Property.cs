@@ -4,16 +4,10 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
-internal class PropertyParser : Parser
+internal class PropertyParser : Parser<PropertyNode>
 {
-    internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
+    internal override PropertyNode Parse(ref TokenLexer lexer, ParserContext context, PropertyNode queryNode)
     {
-        if (queryNode is not PropertyNode propertyNode)
-        {
-            throw QueryParserException.UnexpectedQueryNode(
-                typeof(PropertyNode),
-                queryNode.GetType());
-        }
         // Check if 
         if (lexer.Current.TokenType != TokenType.Identifier)
         {
@@ -21,7 +15,7 @@ internal class PropertyParser : Parser
             return queryNode;
         }
 
-        return ParseProperty(ref lexer, context, propertyNode);
+        return ParseProperty(ref lexer, context, queryNode);
     }
     private PropertyNode ParseProperty(ref TokenLexer lexer, ParserContext context, PropertyNode queryNode)
     {

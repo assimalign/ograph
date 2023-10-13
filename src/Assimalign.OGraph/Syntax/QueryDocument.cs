@@ -11,6 +11,7 @@ namespace Assimalign.OGraph.Syntax;
 public sealed class QueryDocument
 {
 	private readonly ConcurrentBag<Diagnostic> diagnostics;
+
 	internal QueryDocument(
 		string text,
 		QueryNode root, 

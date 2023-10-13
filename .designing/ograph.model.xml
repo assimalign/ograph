@@ -1,6 +1,11 @@
 <?xml version="1.1" encoding="UTF-8"?>
-<!--<?xml-model href="ograph.schema.xsd"?> -->
+<?xml-model href="ograph.model.schema.xsd"?>
 <ograph>
+    <model>
+        <node>
+            <type></type>
+        </node>
+    </model>
 
     <!-- Use the collection of models to stich together a single cohesive 
          Things to Consider:
@@ -30,6 +35,7 @@
             <edge name="profile" source-node="user" target-node="profiles" />
         </node>
         <node label="addresses">
+            <test></test>
             <property name="addressId" type="Guid" is-nullable="false" is-key="true" />
             <property name="streetOne" type="String" is-nullable="true" />
             <property name="streetTwo" type="String" is-nullable="true" />

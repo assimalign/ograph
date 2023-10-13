@@ -32,7 +32,7 @@ public partial class QueryParserTests
 
         // Assert No Errors
         Assert.Empty(document.Errors);
-        
+
 
         var root = Assert.IsType<VertexNode>(document.Root);
         var node = Assert.Single(root.Nodes);
@@ -41,7 +41,7 @@ public partial class QueryParserTests
         Assert.Equal(4, projection.Properties.Count());
 
         // Asset Alias is set for Addresses
-        Assert.Equal("locations", projection.Properties.FirstOrDefault(x=>x.Name == "addresses")?.Alias);
+        Assert.Equal("locations", projection.Properties.FirstOrDefault(x => x.Name == "addresses")?.Alias);
         Assert.Equal(2, projection.Properties.FirstOrDefault(x => x.Name == "addresses")?.Children?.Count());
 
         // Assert third nested field is set
@@ -73,7 +73,6 @@ public partial class QueryParserTests
 
         // Assert No Errors
         Assert.NotEmpty(document.Errors);
-
         Assert.Contains(document.Errors, error => error.Code == DiagnosticCode.G0001.ToString());
     }
 
@@ -190,109 +189,4 @@ public partial class QueryParserTests
         Assert.Equal(4, projection.Properties.Count());
 
     }
-
-
-    #region Edge Projection Parsing Tests
-
-    [Fact]
-    public void TestEdgeProjectionParseSuccessTest()
-    {
-        var query = """
-            project(employees/addresses, {
-                streetOne
-                streetTwo
-                streetThree
-                addressTypes {
-                    typeId
-                    type as addressType
-                }
-            })
-        """;
-
-        var parser = new QueryParser();
-        var document = parser.Parse(query);
-
-        // Assert No Errors
-        Assert.Empty(document.Errors);
-
-        var root = Assert.IsType<VertexNode>(document.Root);
-        var projection = Assert.IsType<ProjectionNode>(root.Nodes.First());
-
-        //Assert.Equal("employees/addresses", projection?.Edges?.Path);
-        Assert.False(projection?.HasEdges);
-    }
-
-    [Fact]
-    public void TestEdgeProjectionExpectedCommaFailureTest()
-    {
-        var query = """
-            project(employees/addresses, {
-                streetOne
-                streetTwo
-                streetThree
-                addressTypes {
-                    typeId
-                    type
-                }
-            })
-            .sort(employees/addresses, {
-                firstName desc
-                lastName
-            })
-        """;
-
-
-        var parser = new QueryParser();
-        var document = parser.Parse(query);
-
-        var properties = document.Root.GetNodesOfType<PropertyNode>();
-
-        // Assert Errors: Missing single comma
-        Assert.Single(document.Errors);
-
-        var root = Assert.IsType<VertexNode>(document.Root);
-        var projection = Assert.IsType<ProjectionNode>(root.Nodes.First());
-
-        //Assert.Equal("employees/addresses", projection?.Edge?.Path);
-        //Assert.False(projection?.HasEdge);
-    }
-
-    [Fact]
-    public void Test()
-    {
-        var query = """
-            project({
-                streetOne
-                streetTwo
-                streetThree
-                addressTypes {
-                    typeId
-                    type
-                }
-            })
-            .project(employees, { 
-                firstName
-                lastName
-            })
-            .project(employees/addresses, {
-                streetOne
-                streetTwo
-                streetThree
-            })
-            .project(employees/taxInfo, {
-                taxId
-            })
-            .project(companies, {
-                companyName
-            })
-        """;
-
-
-        var parser = new QueryParser();
-        var document = parser.Parse(query);
-
-
-    }
-
-    #endregion
 }

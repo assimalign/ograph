@@ -7,12 +7,14 @@ public enum QueryNodeType
     Filter,
     Sort,
     Page,
-    Attribute,
+    Label,
+    //Attribute,
     Property,
     FunctionCall,
     Parameter,
     Constant,
     Binary,
-    Edge
+    Edge,
+    Root
 }
 

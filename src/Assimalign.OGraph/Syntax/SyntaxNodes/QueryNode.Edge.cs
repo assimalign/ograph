@@ -51,7 +51,7 @@ public sealed class EdgeNode : QueryNode
     }
 
     /// <summary>
-    /// Returne
+    /// Returns
     /// </summary>
     /// <param name="node"></param>
     /// <returns></returns>

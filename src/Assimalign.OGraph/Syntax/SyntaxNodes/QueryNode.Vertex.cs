@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Assimalign.OGraph.Syntax;
 
@@ -14,6 +15,10 @@ public sealed class VertexNode : QueryNode
         this.Nodes = nodes;
     }
 
+    /// <summary>
+    /// The vertex identifier
+    /// </summary>
+    public IdentifierNode Identifier { get; init; }
     /// <summary>
     /// Represents the root edges of the queryable tree.
     /// </summary>
@@ -43,7 +48,19 @@ public sealed class VertexNode : QueryNode
     /// <returns></returns>
     public bool TryGetPage(out PageNode? node) => TryGetNode(out node);
 
-    
+    public bool TryGetEdges(out IEnumerable<EdgeNode> edges)
+    {
+        edges = Nodes!.OfType<EdgeNode>();
+
+        if (edges.Any())
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Vertex;
 

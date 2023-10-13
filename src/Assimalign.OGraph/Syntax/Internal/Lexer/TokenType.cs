@@ -98,6 +98,7 @@ internal enum TokenType
     Sort,
     Page,
     Edge,
+    Vertex,
     Descending,
     Ascending,
     Take,

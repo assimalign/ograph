@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
 
@@ -21,7 +19,6 @@ public sealed class QueryParserOptions
     /// Throws an exception when there is a Diagnostic Error. The default is 'false'.
     /// </summary>
     public bool ThrowExceptionOnDiagnosticError { get; set; }
-
     /// <summary>
     /// 
     /// </summary>
@@ -30,7 +27,10 @@ public sealed class QueryParserOptions
     /// The allowed maximum depth of the query. The default is '5'.
     /// </summary>
     public int MaxEdgeDepth { get; set; } = 5;
-
+    /// <summary>
+    /// 
+    /// </summary>
+    public string? StartingVertexName { get; set; }
 
     internal IEnumerable<QueryAnalyzer> Analyzers => this.analyzers;
 

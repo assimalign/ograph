@@ -8,7 +8,6 @@ namespace Assimalign.OGraph.Syntax;
 
 using Assimalign.OGraph.Syntax.Internal;
 
-
 public sealed partial class QueryParser
 {
     private readonly QueryParserOptions options;
@@ -16,6 +15,10 @@ public sealed partial class QueryParser
     public QueryParser() : this(new QueryParserOptions()) { }
     public QueryParser(QueryParserOptions options)
     {
+        if (options is null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
         this.options = options;
     }
 
@@ -35,7 +38,10 @@ public sealed partial class QueryParser
             });
             var context = new ParserContext()
             {
-                Root = new VertexNode(),
+                Root = new VertexNode()
+                {
+                    Identifier = new LabelNode(options.StartingVertexName!)
+                },
                 Encoding = options.Encoding,
                 ThrowExceptionOnDiagnosticError = options.ThrowExceptionOnDiagnosticError
             };
@@ -46,16 +52,9 @@ public sealed partial class QueryParser
             var document    = new QueryDocument(
                 query,
                 node,
-                context.Diasgnostics);
+                context.Diagnostics);
 
-            var analyzers = GetAnalyzers(document, CancellationToken.None);
-
-            while (analyzers.Any())
-            {
-                var task = Task.WhenAny(analyzers);
-                task.Wait();
-                analyzers.Remove(task.Result);
-            }
+            Analyze(document);
 
             return document;
         }
@@ -66,15 +65,24 @@ public sealed partial class QueryParser
     }
 
 
-    private IList<Task> GetAnalyzers(QueryDocument document, CancellationToken cancellationToken)
+    private void Analyze(QueryDocument document)
     {
-        var list = new List<Task>();
+        using var cancellationTokenSource = new CancellationTokenSource(10000); // Max 10 seconds for analysis
+
+        var analyzers = new List<Task>();
 
         foreach (var analyzer in options.Analyzers)
         {
-            list.Add(analyzer.AnalyzeAsync(document, cancellationToken));
+            analyzers.Add(analyzer.AnalyzeAsync(document, cancellationTokenSource.Token));
         }
-
-        return list;
+        while (analyzers.Any())
+        {
+            var task = Task.WhenAny(analyzers);
+            if (!task.IsCompleted) // NOTE: Not sure if this is needed
+            {
+                task.Wait();
+            }
+            analyzers.Remove(task.Result);
+        }
     }
 }

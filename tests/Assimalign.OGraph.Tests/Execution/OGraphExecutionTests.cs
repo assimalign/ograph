@@ -31,21 +31,21 @@ public class OGraphExecutionTests
 
                 });
 
-            builder.AddCommand("GetUsers")
-                .UseRoute("/users")
-                .UseMethod(Method.Get)
-                .UseNode("Users")
-                .UseResolver(context =>
-                {
-                    var users = new List<User>()
-                    {
-                        new User() { FirstName = "Chase", LastName = "Crawford", MiddleName = "Ryan" },
-                        new User() { FirstName = "John", LastName = "Doe", MiddleName = null },
-                        new User() { FirstName = "Jane", LastName = "Doe", MiddleName = "Henry" }
-                    };
+            //builder.AddCommand("GetUsers")
+            //    .UseRoute("/users")
+            //    .UseMethod(Method.Get)
+            //    .UseNode("Users")
+            //    .UseResolver(context =>
+            //    {
+            //        var users = new List<User>()
+            //        {
+            //            new User() { FirstName = "Chase", LastName = "Crawford", MiddleName = "Ryan" },
+            //            new User() { FirstName = "John", LastName = "Doe", MiddleName = null },
+            //            new User() { FirstName = "Jane", LastName = "Doe", MiddleName = "Henry" }
+            //        };
 
-                    return users.AsQueryable();
-                });
+            //        return users.AsQueryable();
+            //    });
         });
     }
 

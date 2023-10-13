@@ -9,10 +9,9 @@ namespace Assimalign.OGraph.Results
     internal class ResultBuilderTests
     {
 
-        public object Test()
+        public void Test()
         {
-            return OGraphResult.Ok()
-                .
+            
                 
         }
     }

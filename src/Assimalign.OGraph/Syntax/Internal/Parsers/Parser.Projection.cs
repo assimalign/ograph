@@ -3,16 +3,10 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
-internal class ProjectionParser : Parser
+internal class ProjectionParser : Parser<ProjectionNode>
 {
-    internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
+    internal override ProjectionNode Parse(ref TokenLexer lexer, ParserContext context, ProjectionNode queryNode)
     {
-        if (queryNode is not ProjectionNode projectionNode)
-        {
-            throw QueryParserException.UnexpectedQueryNode(
-                typeof(ProjectionNode),
-                queryNode.GetType());
-        }
         if (!lexer.HasNext)
         {
             context.AddDiagnostic(Diagnostic.UnexpectedEOF(
@@ -32,11 +26,11 @@ internal class ProjectionParser : Parser
             return queryNode;
         }
 
-        return ParseParenthesisBlock(ref lexer, context, projectionNode);
+        return ParseParenthesisBlock(ref lexer, context, queryNode);
     }
     private ProjectionNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, ProjectionNode queryNode)
     {
-        var token = default(Token);
+        Token token;
 
         if (!lexer.TryPeek(out token))
         {

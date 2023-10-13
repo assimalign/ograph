@@ -4,16 +4,10 @@ using System.Reflection.Metadata;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
-internal sealed class PageParser : Parser
+internal sealed class PageParser : Parser<PageNode>
 {
-    internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
+    internal override PageNode Parse(ref TokenLexer lexer, ParserContext context, PageNode queryNode)
     {
-        if (queryNode is not PageNode pageNode)
-        {
-            throw QueryParserException.UnexpectedQueryNode(
-                typeof(PageNode),
-                queryNode.GetType());
-        }
         if (!lexer.HasNext)
         {
             context.AddDiagnostic(Diagnostic.UnexpectedEOF(
@@ -33,7 +27,7 @@ internal sealed class PageParser : Parser
             return queryNode;
         }
 
-        return ParseParenthesisBlock(ref lexer, context, pageNode);
+        return ParseParenthesisBlock(ref lexer, context, queryNode);
     }
     private PageNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, PageNode queryNode)
     {
@@ -155,7 +149,6 @@ internal sealed class PageParser : Parser
             {
                 Take = constant,
                 Skip = pageNode.Skip,
-                Identifier = pageNode.Identifier,
             };
         }
         else
@@ -182,7 +175,6 @@ internal sealed class PageParser : Parser
             {
                 Skip = pageNode.Skip,
                 Take = pageNode.Take,
-                Identifier = pageNode.Identifier,
                 //Token = constant
             };
         }
