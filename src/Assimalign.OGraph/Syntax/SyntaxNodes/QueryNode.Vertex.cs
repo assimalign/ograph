@@ -16,50 +16,17 @@ public sealed class VertexNode : QueryNode
     }
 
     /// <summary>
+    /// Specifies whether this vertex node is the root node.
+    /// </summary>
+    public bool IsRoot { get; init; }
+    /// <summary>
     /// The vertex identifier
     /// </summary>
-    public IdentifierNode Identifier { get; init; }
+    public LabelNode Label { get; init; }
     /// <summary>
     /// Represents the root edges of the queryable tree.
     /// </summary>
     public IEnumerable<QueryNode> Nodes { get; init; } = new QueryNode[0];
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="nodes"></param>
-    /// <returns></returns>
-    public bool TryGetProjection(out ProjectionNode? node) => TryGetNode(out node);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="nodes"></param>
-    /// <returns></returns>
-    public bool TryGetFilter(out FilterNode? node) => TryGetNode(out node);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="nodes"></param>
-    /// <returns></returns>
-    public bool TryGetSort(out SortNode? node) => TryGetNode(out node);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="nodes"></param>
-    /// <returns></returns>
-    public bool TryGetPage(out PageNode? node) => TryGetNode(out node);
-
-    public bool TryGetEdges(out IEnumerable<EdgeNode> edges)
-    {
-        edges = Nodes!.OfType<EdgeNode>();
-
-        if (edges.Any())
-        {
-            return true;
-        }
-
-        return false;
-    }
-
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Vertex;

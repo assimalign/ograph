@@ -6,11 +6,11 @@ public abstract class PrimitiveType<T> : IOGraphPrimitiveType
     where T : struct
 {
     public virtual Name Name => typeof(T).Name;
-    public TypeIdentifier Identifier => TypeIdentifier.Primitive;
+    public TypeKind Kind => TypeKind.Primitive;
     public virtual Type RuntimeType => typeof(T);
     public bool IsNullable { get; internal set; }
-    public virtual bool IsAssignable(object value)
+    public virtual bool IsAssignable(IOGraphType type)
     {
-        return RuntimeType.IsAssignableFrom(value.GetType());
+        return RuntimeType!.IsAssignableFrom(type.RuntimeType);
     }
 }

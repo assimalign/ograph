@@ -3,6 +3,8 @@
 internal abstract class Parser
 {
     internal abstract QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode);
+
+
     internal static Parser Create() => new VertexParser();
 }
 internal abstract class Parser<TNode> : Parser

@@ -21,7 +21,7 @@ internal class EdgeParser : Parser<EdgeNode>
         }
         if (token.TokenType != TokenType.OpenParenthesis)
         {
-            
+
             //context.AddDiagnostic(Diagnostic.(
             //    lexer.Current.End));
 
@@ -72,7 +72,7 @@ internal class EdgeParser : Parser<EdgeNode>
     internal EdgeNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, EdgeNode queryNode)
     {
         Token token;
-        EdgeNode edge = null;
+        Token peek;
 
         // Parse Parenthesis Block
         while (lexer.HasNext)
@@ -81,10 +81,11 @@ internal class EdgeParser : Parser<EdgeNode>
 
             if (token.TokenType != TokenType.Identifier)
             {
-                // Expected edge identifier
+                // TODO: Added Diagnostics - expected edge identifier
                 return queryNode;
             }
-            Token peek;
+
+            // Try to get next
             if (!lexer.TryPeek(out peek))
             {
                 context.AddDiagnostic(Diagnostic.UnexpectedEOF(
@@ -92,40 +93,80 @@ internal class EdgeParser : Parser<EdgeNode>
 
                 return queryNode;
             }
+
             // Expected an edge path. Need to 
             if (peek.TokenType == TokenType.Slash)
             {
-                IEnumerable<EdgeNode> edges = null;
-
-                if (edge is null)
+                var segments = new Queue<string>(new string[]
                 {
-                    if (!context.GetRoot().TryGetEdges(out edges))
+                    token.Text
+                });
+
+                while (lexer.HasNext)
+                {
+                    token = lexer.Next();
+
+                    if (token.TokenType != TokenType.Identifier)
                     {
-                        // TODO: Unexpected error. For example., if there is an edge path 'companies/address' and we are parsing addresses then the 'companies' edge should already exist.
+                        // Expected Identifier Node
                         return queryNode;
                     }
+
+                    if (!lexer.TryPeek(out peek))
+                    {
+                        context.AddDiagnostic(Diagnostic.UnexpectedEOF(
+                            lexer.Current.End));
+                        return queryNode;
+                    }
+
+                    segments.Enqueue(token.Text);
+
+                    // Check if next is a separator
+                    if (peek.TokenType != TokenType.Slash)
+                    {
+                        break;
+                    }
+                }
+
+                // Lets get the root edge
+                var edge = context.Root.GetNodesOfType<EdgeNode>()
+                    .FirstOrDefault(p => p.Label!.Name!.Equals(segments.First(), StringComparison.OrdinalIgnoreCase));
+
+                if (segments.Count > 2)
+                {
+                    for (int i = 1; i < segments.Count - 1; i++)
+                    { 
+                    //    edge = edge.Vertices.FirstOrDefault(p=> 
+                    //        p.Label!.Name!.Equals(segments.Skip(i).First(), StringComparison.OrdinalIgnoreCase))
+
+                    }
+
                 }
                 else
                 {
-                    if (!edge.TryGetEdges(out edges))
+                    var vertexParser = context.GetParser<VertexParser>();
+                    var vertexNode = vertexParser.Parse(ref lexer, context, new VertexNode());
+
+                    return queryNode = new()
                     {
-                        // TODO: Unexpected error. For example., if there is an edge path 'companies/address' and we are parsing addresses then the 'companies' edge should already exist.
-                        return queryNode;
-                    }
+                        Label = new LabelNode(segments.Last())
+                    };
                 }
-                edge = edges.FirstOrDefault(p => p.Identifier!.Name!.Equals(token.Text, StringComparison.OrdinalIgnoreCase))!;
+
+
             }
             if (token.TokenType == TokenType.Alias)
             {
                 // TODO: Parse Edge Alias
+
             }
 
             if (token.TokenType == TokenType.CloseParenthesis)
             {
-                
+
             }
 
-            queryNode = ParseBracketBlock(ref lexer, context, queryNode);
+            //queryNode = ParseBracketBlock(ref lexer, context, queryNode);
         }
 
 

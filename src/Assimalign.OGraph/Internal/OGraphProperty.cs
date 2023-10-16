@@ -7,14 +7,12 @@ namespace Assimalign.OGraph.Internal;
 
 internal class OGraphProperty : IOGraphProperty
 {
-    private int chainIndex;
 
     public OGraphProperty()
     {
         this.Metadata = new OGraphMetadata();
         this.Middleware = new OGraphPropertyMiddlewareQueue();
     }
-
 
     public Name Name { get; set; }
     public IOGraphType? Type { get; set; } 
@@ -25,6 +23,8 @@ internal class OGraphProperty : IOGraphProperty
 
     public Task<IOGraphResult> ExecuteAsync(IOGraphPropertyContext context, CancellationToken cancellationToken = default)
     {
-        return Middleware.BuildHandlerChain(Resolver).Invoke(context, cancellationToken).AsTask();
+        return Middleware.BuildHandlerChain(Resolver)
+            .Invoke(context, cancellationToken)
+            .AsTask();
     }
 }

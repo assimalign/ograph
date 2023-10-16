@@ -34,9 +34,17 @@ internal class OGraphComplexTypeDescriptor<T> : IOGraphComplexTypeDescriptor<T>
         {
             throw new Exception();
         }
-        if (memberExpression.Type.DeclaringType is null || !memberExpression.Type.DeclaringType.IsAssignableTo(typeof(T)))
+        if (memberExpression.Member.DeclaringType is null || !memberExpression.Member.DeclaringType.IsAssignableTo(typeof(T)))
         {
             throw new Exception();
+        }
+        if (complexType.Properties.TryGetProperty(memberExpression.Member.Name, out var property))
+        {
+            if (property is not OGraphProperty prop)
+            {
+                throw new Exception("Something Happened");
+            }
+            return new OGraphPropertyDescriptor<TProperty>(prop);
         }
 
         return new OGraphPropertyDescriptor<TProperty>(new OGraphProperty()

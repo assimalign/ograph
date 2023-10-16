@@ -20,11 +20,11 @@ public class CollectionType<TType> : IOGraphCollectionType
 
     public TType ItemType { get; }
     IOGraphType IOGraphCollectionType.ItemType => ItemType;
-    public TypeIdentifier Identifier => TypeIdentifier.Collection;
+    public TypeKind Kind => TypeKind.Collection;
     public Type RuntimeType => typeof(IEnumerable<>).MakeGenericType(ItemType.RuntimeType!);
     public bool IsNullable => true;
-    public virtual bool IsAssignable(object value)
+    public virtual bool IsAssignable(IOGraphType type)
     {
-        return RuntimeType.IsAssignableFrom(value.GetType());
+        return RuntimeType!.IsAssignableFrom(type.RuntimeType);
     }
 }

@@ -18,6 +18,7 @@ internal class EmployeeNode : OGraphNode<EmployeeType>
             });
 
         descriptor.AddEdge("addresses")
+            .UseTargetNode<EmployeeAddressNode>()
             .UseResolver((context, cancellationToken) =>
             {
                 return default;

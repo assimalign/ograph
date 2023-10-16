@@ -3,7 +3,7 @@
 /// <summary>
 /// Types are categorized by their identifiers.
 /// </summary>
-public enum TypeIdentifier
+public enum TypeKind
 {
     None,
     /// <summary>

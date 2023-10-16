@@ -96,7 +96,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
     {
         var edge = new OGraphEdgeDefault() 
         { 
-            Name = name 
+            Label = name 
         };
         var descriptor = new OGraphEdgeDescriptor(edge)
         {

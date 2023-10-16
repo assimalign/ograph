@@ -1,39 +1,34 @@
 <?xml version="1.1" encoding="UTF-8"?>
-<?xml-model href="ograph.model.schema.xsd"?>
+<!-- <?xml-model href="ograph.model.schema.xsd"?> -->
 <ograph>
-    <model>
-        <node>
-            <type></type>
-        </node>
-    </model>
-
     <!-- Use the collection of models to stich together a single cohesive 
          Things to Consider:
          - Method & Route Combination Conflicts
     -->
     <model domain="users">
+        <type name="User" is-root="true">
+            <property name="userId" type="Guid" is-nullable="false" is-key="true" />
+            <property name="firstName" type="String" is-nullable="true">
+                <meta key="description" value="The first name of the user." />
+            </property>
+            <property name="lastName" type="String" is-nullable="true" />
+            <property name="middleName" type="String" is-nullable="true" />
+            <property name="fullName" type="String" is-nullable="true" is-filterable="false" />
+            <property name="birthDate" type="DateTime" is-nullable="true" />
+        </type>
+        <type name="UserTagCollection">
+            <collection name="UserTag" />
+        </type>
+        <type name="UserTag">
+            <porperty name="key" type="String" is-nullable="false" />
+            <porperty name="value" type="String" is-nullable="false" />
+        </type>
         <node label="users">
-            <type name="User" is-root="true">
-                <property name="userId" type="Guid" is-nullable="false" is-key="true" />
-                <property name="firstName" type="String" is-nullable="true">
-                    <meta key="description" value="The first name of the user." />
-                </property>
-                <property name="lastName" type="String" is-nullable="true" />
-                <property name="middleName" type="String" is-nullable="true" />
-                <property name="fullName" type="String" is-nullable="true" is-filterable="false" />
-                <property name="birthDate" type="DateTime" is-nullable="true" />
-            </type>
-            <type name="UserTagCollection">
-                <collection name="UserTag" />
-            </type>
-            <type name="UserTag">
-                <porperty name="key" type="String" is-nullable="false" />
-                <porperty name="value" type="String" is-nullable="false" />
-            </type>
-            <edge name="addresses" source-node="user" target-node="addresses" is-filterable="true"
-                is-pageable="true" />
-            <edge name="profile" source-node="user" target-node="profiles" />
+
+
         </node>
+        <edge name="addresses" source-node="user" target-node="addresses" is-filterable="true" is-pageable="true" />
+        <edge name="profile" source-node="user" target-node="profiles" />
         <node label="addresses">
             <test></test>
             <property name="addressId" type="Guid" is-nullable="false" is-key="true" />

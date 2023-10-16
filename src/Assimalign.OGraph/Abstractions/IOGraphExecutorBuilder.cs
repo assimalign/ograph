@@ -20,7 +20,6 @@ public interface IOGraphExecutorBuilder
     /// <param name="options"></param>
     /// <returns></returns>
     IOGraphExecutorBuilder AddOptions(Action<OGraphOptions> options);
-
     /// <summary>
     /// Builds the executor.
     /// </summary>

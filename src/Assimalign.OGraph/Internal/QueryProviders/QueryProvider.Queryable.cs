@@ -24,22 +24,22 @@ internal class QueryableQueryProvider : QueryProviderDefault
 
         var node = context.Query.Root as VertexNode;
 
-        if (node.TryGetProjection(out var projections))
-        {
-            foreach (var identifier in projections.Properties)
-            {
-                if (grpahType!.Properties.TryGetProperty(identifier.Name, out var graphProperty)) 
-                {
-                    //var handler = graphProperty.BuildHandlerChain();
+        //if (node.TryGetProjection(out var projections))
+        //{
+        //    foreach (var identifier in projections.Properties)
+        //    {
+        //        if (grpahType!.Properties.TryGetProperty(identifier.Name, out var graphProperty)) 
+        //        {
+        //            //var handler = graphProperty.BuildHandlerChain();
 
-                    //handler.
-                }
-                else
-                {
-                    throw new Exception("Invalid projections");
-                }
-            }
-        }
+        //            //handler.
+        //        }
+        //        else
+        //        {
+        //            throw new Exception("Invalid projections");
+        //        }
+        //    }
+        //}
 
         throw new NotImplementedException();
     }

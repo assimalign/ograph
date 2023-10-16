@@ -47,7 +47,7 @@ public interface IOGraphNodeDescriptor
     /// <typeparam name="T"></typeparam>
     /// <param name="configure"></param>
     /// <returns></returns>
-    IOGraphNodeDescriptor UseType<T>(Action<IOGraphComplexTypeDescriptor<T>> configure);
+    IOGraphNodeDescriptor UseType<T>(Action<IOGraphComplexTypeDescriptor<T>> configure) where T : class, new();
     /// <summary>
     /// 
     /// </summary>

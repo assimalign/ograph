@@ -15,6 +15,12 @@ public readonly struct Route :
     private readonly string route;
     private readonly RouteSegment[] segments;
 
+
+    private static ReadOnlySpan<string> reserved => new string[] 
+    { 
+        "$root"
+    };
+
     public Route(string route)
     {
         if (string.IsNullOrEmpty(route))

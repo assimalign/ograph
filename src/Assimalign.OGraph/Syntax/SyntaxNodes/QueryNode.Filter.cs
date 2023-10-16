@@ -11,17 +11,6 @@ public sealed class FilterNode : QueryNode
         Predicate = predicate;
     }
 
-    public FilterNode(BinaryNode predicate, IdentifierNode identifier)
-    {
-        Predicate = predicate;
-        Identifier = identifier;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public IdentifierNode? Identifier { get; set; }
-
     /// <summary>
     /// 
     /// </summary>

@@ -32,6 +32,7 @@ public abstract class QueryNode
     {
         return visitor.Visit(this);
     }
+
     /// <summary>
     /// Returns a collection of nodes within the tree that match the type of: <typeparamref name="TNode"/>.
     /// </summary>

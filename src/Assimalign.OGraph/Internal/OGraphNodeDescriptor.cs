@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Internal;
@@ -62,7 +61,7 @@ internal class OGraphNodeDescriptor : IOGraphNodeDescriptor
     {
         throw new NotImplementedException();
     }
-    public IOGraphNodeDescriptor UseType<T>(Action<IOGraphComplexTypeDescriptor<T>> configure)
+    public IOGraphNodeDescriptor UseType<T>(Action<IOGraphComplexTypeDescriptor<T>> configure) where T : class, new()
     {
         OnConfigure.Add(graph =>
         {
@@ -72,6 +71,8 @@ internal class OGraphNodeDescriptor : IOGraphNodeDescriptor
             }
 
             var complexType = new ComplexType<T>();
+
+            graph.Types.TryAdd(complexType);
 
             var descriptor = new OGraphComplexTypeDescriptor<T>(complexType);
 
@@ -87,7 +88,7 @@ internal class OGraphNodeDescriptor : IOGraphNodeDescriptor
     {
         return new OGraphEdgeDescriptor(new OGraphEdgeDefault()
         {
-            Name = name,
+            Label = name,
         });
     }
 

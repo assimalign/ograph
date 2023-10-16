@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Assimalign.OGraph.Syntax;
 
 using Assimalign.OGraph.Syntax.Analyzer;
+using Assimalign.OGraph.Syntax.Internal;
 
 public sealed class QueryParserOptions
 {
@@ -12,7 +13,10 @@ public sealed class QueryParserOptions
 
     public QueryParserOptions()
     {
-        this.analyzers = new List<QueryAnalyzer>();
+        this.analyzers = new List<QueryAnalyzer>()
+        {
+            new InvalidNodeTypesInVertexAnalyzer()
+        };
     }
 
     /// <summary>

@@ -9,91 +9,33 @@ namespace Assimalign.OGraph.Syntax;
 /// </summary>
 public sealed class EdgeNode : QueryNode
 {
-    private readonly IEnumerable<QueryNode>? nodes;
-
     internal EdgeNode() { }
-    public EdgeNode(IEnumerable<QueryNode> nodes)
+    public EdgeNode(LabelNode labelNode, IEnumerable<VertexNode> vertexNodes)
     {
-        this.Nodes = nodes ?? new QueryNode[0];
+        this.Label = labelNode;
+        this.Vertices = vertexNodes;
     }
+
+    /// <summary>
+    /// The edge identifier.
+    /// </summary>
+    public LabelNode Label { get; init; }
+    /// <summary>
+    /// The target vertex
+    /// </summary>
+    public IEnumerable<VertexNode> Vertices { get; init; }
+    /// <summary>
+    /// A temporary name to be assigned in replacement of the property name.
+    /// </summary>
+    public string? Alias { get; init; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public bool HasAlias => !string.IsNullOrEmpty(Alias);
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Edge;
-
-    /// <summary>
-    /// The edge name to be invoked.
-    /// </summary>
-    public IdentifierNode? Identifier { get; init; }
-
-    /// <summary>
-    /// Gets the projections, filtering, paging, and 
-    /// sorting of the edge as well as any nested edges.
-    /// </summary>
-    public IEnumerable<QueryNode>? Nodes
-    {
-        get => nodes;
-        init
-        {
-            var isValid = value.Any(node =>
-                node is not ProjectionNode &&
-                node is not FilterNode &&
-                node is not SortNode &&
-                node is not PageNode &&
-                node is not EdgeNode);
-
-            if (!isValid)
-            {
-                throw new InvalidOperationException("Wrong node");
-            }
-
-            nodes = value;
-        }
-    }
-
-    /// <summary>
-    /// Returns
-    /// </summary>
-    /// <param name="node"></param>
-    /// <returns></returns>
-    public bool TryGetProjection(out ProjectionNode? node) => TryGetNode(out node);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="node"></param>
-    /// <returns></returns>
-    public bool TryGetFilter(out FilterNode? node) => TryGetNode(out node);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="node"></param>
-    /// <returns></returns>
-    public bool TryGetSort(out SortNode? node) => TryGetNode(out node);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="nodes"></param>
-    /// <returns></returns>
-    public bool TryGetPage(out PageNode? node) => TryGetNode(out node);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="edges"></param>
-    /// <returns></returns>
-    public bool TryGetEdges(out IEnumerable<EdgeNode> edges)
-    {
-        edges = Nodes!.OfType<EdgeNode>();
-
-        if (edges.Any())
-        {
-            return true;
-        }
-
-        return false;
-    }
 
     /// <inheritdoc />
     public override void Accept(IQueryNodeVisitor visitor)
@@ -107,19 +49,14 @@ public sealed class EdgeNode : QueryNode
         return visitor.Visit(this);
     }
 
-    private bool TryGetNode<TNode>(out TNode? node)
+    /// <inheritdoc />
+    public override IEnumerable<TNode> GetNodesOfType<TNode>()
     {
-        node = default;
-
-        foreach (var n in Nodes!)
+        if (this is TNode n1) yield return n1;
+        if (Label is TNode n2) yield return n2;
+        foreach (var v in Vertices)
         {
-            if (n is TNode tn)
-            {
-                node = tn;
-                return true;
-            }
+            if (v is TNode n3) yield return n3;
         }
-
-        return false;
     }
 }

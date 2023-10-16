@@ -14,5 +14,5 @@ public interface IOGraphPropertyResult : IOGraphResult
     /// <summary>
     /// 
     /// </summary>
-    object Value { get; }
+    object? Value { get; }
 }

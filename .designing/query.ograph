@@ -19,7 +19,7 @@ https://endpoint.com/api/employees?query= # This endpoint represents the startin
         skip 0
         take 25
     })
-    .edge(companies as employeeCompany)                       <-- Returns a single vertex
+    .edge(companies as employeeCompany)                         <-- Returns a single vertex
         .project({                                              <-- A projection is required when returning a single vertex
             companyName
         })
@@ -35,9 +35,13 @@ https://endpoint.com/api/employees?query= # This endpoint represents the startin
                     typeId
                     typeName
                 })
+    .edge(primaryAddress)
+        .project({
+            streetOne
+        })
     .edge(addresses)
         .project({
-
+            streetTwo
         })
 
 

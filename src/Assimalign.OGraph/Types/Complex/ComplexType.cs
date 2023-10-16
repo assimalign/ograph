@@ -12,13 +12,12 @@ public class ComplexType : IOGraphComplexType
     }
 
     public Name Name { get; init; }
-    public TypeIdentifier Identifier => TypeIdentifier.Complex;
+    public TypeKind Kind => TypeKind.Complex;
     public IOGraphPropertyCollection Properties { get; }
     public Type? RuntimeType { get; init; }
     public bool IsNullable => true;
-
-    public virtual bool IsAssignable(object value)
+    public virtual bool IsAssignable(IOGraphType type)
     {
-        return RuntimeType!.IsAssignableFrom(value.GetType());
+        return RuntimeType!.IsAssignableFrom(type.RuntimeType);
     }
 }

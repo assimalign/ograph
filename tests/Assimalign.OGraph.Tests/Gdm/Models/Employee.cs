@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Assimalign.OGraph.Gdm;
 
-namespace Assimalign.OGraph.Gdm;
-
-public class Employee
+public class Employee : EmployeeBase
 {
-    public Guid? EmployeeId { get; set; }
+    public EmployeeKind? Kind { get; set; }
     public EmployeeDetails? Details { get; set; }
+    public IEnumerable<EmployeeRole>? Roles { get; set; }
 }

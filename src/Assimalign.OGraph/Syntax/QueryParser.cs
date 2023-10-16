@@ -40,7 +40,8 @@ public sealed partial class QueryParser
             {
                 Root = new VertexNode()
                 {
-                    Identifier = new LabelNode(options.StartingVertexName!)
+                    Label = new LabelNode(options.StartingVertexName!),
+                    IsRoot = true,
                 },
                 Encoding = options.Encoding,
                 ThrowExceptionOnDiagnosticError = options.ThrowExceptionOnDiagnosticError
@@ -68,7 +69,9 @@ public sealed partial class QueryParser
     private void Analyze(QueryDocument document)
     {
         using var cancellationTokenSource = new CancellationTokenSource(10000); // Max 10 seconds for analysis
-
+#if !DEBUG
+        cancellationTokenSource.Token.ThrowIfCancellationRequested();
+#endif
         var analyzers = new List<Task>();
 
         foreach (var analyzer in options.Analyzers)

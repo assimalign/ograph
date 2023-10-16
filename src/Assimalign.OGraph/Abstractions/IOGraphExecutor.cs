@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
@@ -10,7 +9,7 @@ namespace Assimalign.OGraph;
 public interface IOGraphExecutor
 {
     /// <summary>
-    /// Executes the OGrpah request and returns a response to be sent back to the client.
+    /// Executes the OGraph request and returns a response to be sent back to the client.
     /// </summary>
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>

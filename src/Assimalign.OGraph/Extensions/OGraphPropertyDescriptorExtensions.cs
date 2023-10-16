@@ -46,7 +46,7 @@ public static class OGraphPropertyDescriptorExtensions
 
         return descriptor.UseResolver(context =>
         {
-            return ValueTask.FromResult<IOGraphPropertyResult>(new ValueResult()
+            return ValueTask.FromResult<IOGraphPropertyResult>(new PropertyResult()
             {
                 Value = resolver.Invoke(context)
             });

@@ -3,7 +3,7 @@
 namespace Assimalign.OGraph;
 
 /// <summary>
-/// Types represent primitive, complex, or collection structure that can be 
+/// Types represent primitive, complex, collections, or enum structure that can be 
 /// used to define a property, inputs, and outputs of operations within the graph.
 /// </summary>
 /// <remarks>
@@ -18,7 +18,7 @@ public interface IOGraphType
     /// <summary>
     /// The identifier of the type.
     /// </summary>
-    TypeIdentifier Identifier { get; }
+    TypeKind Kind { get; }
     /// <summary>
     /// The underlying .NET Type.
     /// </summary>
@@ -38,5 +38,5 @@ public interface IOGraphType
     /// </remarks>
     /// <param name="value"></param>
     /// <returns></returns>
-    bool IsAssignable(object value);
+    bool IsAssignable(IOGraphType type);
 }

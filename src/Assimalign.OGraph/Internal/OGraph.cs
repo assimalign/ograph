@@ -9,6 +9,7 @@ internal class OGraph : IOGraph
         Edges = new OGraphEdgeCollection();
         Nodes = new OGraphNodeCollection();
         Operations = new OGraphOperationCollection();
+        Types = new OGraphTypeCollection();
     }
 
 
@@ -22,4 +23,9 @@ internal class OGraph : IOGraph
 
     public OGraphOperationCollection Operations { get; }
     IOGraphOperationCollection IOGraph.Operations => this.Operations;
+
+    public OGraphTypeCollection Types { get; }
+    IOGraphTypeCollection IOGraph.Types => this.Types;
+
+    
 }

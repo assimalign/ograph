@@ -10,6 +10,10 @@ public interface IOGraph
     /// </summary>
     Name Name { get; }
     /// <summary>
+    /// 
+    /// </summary>
+    IOGraphTypeCollection Types { get; }
+    /// <summary>
     /// A collection of node definitions within the OGraph Model.
     /// </summary>
     IOGraphNodeCollection Nodes { get; }

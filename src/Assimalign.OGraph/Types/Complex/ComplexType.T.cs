@@ -8,16 +8,15 @@ namespace Assimalign.OGraph;
 
 using Assimalign.OGraph.Internal;
 
-public class ComplexType<T> : ComplexType
+public partial class ComplexType<T> : ComplexType
+    where T : class, new()
 {
     public ComplexType()
     {
         base.RuntimeType    = typeof(T);
-        base.Name       = typeof(T).Name;
-
+        base.Name           = typeof(T).Name;
+        Initialize(); 
         Configure(new OGraphComplexTypeDescriptor<T>(this));
-
-        Initialize(); // Initialization must happen after Configure
     }
 
     protected virtual void Configure(IOGraphComplexTypeDescriptor<T> descriptor) { }
@@ -25,310 +24,158 @@ public class ComplexType<T> : ComplexType
     private void Initialize()
     {
         // Get all public runtimeProperties that are both read and write
-        var runtimeProperties = typeof(T).GetProperties().Where(prop=> prop.CanWrite && prop.CanRead);
+        var props = typeof(T).GetProperties().Where(prop => prop.CanWrite && prop.CanRead);
 
-        foreach (var runtimeProperty in runtimeProperties)
+        foreach (var prop in props)
         {
-            if (Properties.TryGetProperty(runtimeProperty.Name, out var property))
+            var propName = prop.Name;
+            var propType = prop.PropertyType;
+            var propTypeArgs = prop.PropertyType.GetGenericArguments();
+
+            // Let's do a check for nullable type and pull it out
+            if (propType.IsValueType) /// Enum's are also value types
             {
-                if (property is null)
+                if (propTypeArgs.Length == 1)
                 {
-                    throw new Exception();
+                    var nullType = typeof(Nullable<>).MakeGenericType(propTypeArgs[0]);
+                    if (nullType.IsAssignableTo(propType))
+                    {
+                        propType = propTypeArgs[0];
+                    }
                 }
-                // Check if resolver was set
-                if (property.Resolver is null)
+            }
+            if (propType.IsEnum)
+            {
+                var enumType = typeof(EnumType<>).MakeGenericType(propType);
+                var enumObj = Activator.CreateInstance(enumType) as IOGraphType;
+
+                Properties.Add(new OGraphProperty()
                 {
-                    ((OGraphProperty)property).Resolver = GetPropertyResolver(runtimeProperty);
+                    Name = propName,
+                    Type = enumObj,
+                    Resolver = GetPropertyResolver(prop)
+                });
+                continue;
+            }
+            if (propType.IsValueType || propType == typeof(string))
+            {
+                Properties.Add(new OGraphProperty()
+                {
+                    Name = propName,
+                    Type = GetPrimitiveType(propType),
+                    Resolver = GetPropertyResolver(prop)
+                });
+                continue;
+            }
+            if (propType.IsEnumerableType(out var enumerableType))
+            {
+                Properties.Add(new OGraphProperty()
+                {
+                    Name = propName,
+                    Type = GetCollectionType(enumerableType),
+                    Resolver = GetPropertyResolver(prop)
+                });
+                continue;
+            }
+            if (propType.IsComplexType())
+            {
+                var complexType = typeof(ComplexType<>).MakeGenericType(propType);
+                var complexObj = Activator.CreateInstance(complexType) as IOGraphType;
+
+                Properties.Add(new OGraphProperty()
+                {
+                    Name = propName,
+                    Type =complexObj,
+                    Resolver = GetPropertyResolver(prop)
+                });
+                continue;
+            }
+
+            throw new Exception($"The following property: '{prop.Name}' on type '{prop.DeclaringType.Name}' has an unsupported type.");
+        }
+    }
+
+    private IOGraphType GetCollectionType(Type type)
+    {
+        var propType = type;
+        var propTypeArgs = type.GetGenericArguments();
+
+        if (propType.IsValueType) /// Enum's are also value types
+        {
+            if (propTypeArgs.Length == 1)
+            {
+                var nullType = typeof(Nullable<>).MakeGenericType(propTypeArgs[0]);
+                if (nullType.IsAssignableTo(propType))
+                {
+                    propType = propTypeArgs[0];
                 }
             }
-            else
-            {
-                Properties.Add(GetProperty(runtimeProperty));
-            }
         }
-    }
-
-    private IOGraphProperty GetProperty(PropertyInfo propertyInfo)
-    {
-        if (propertyInfo.PropertyType.IsValueType(out var valueType))
+        if (propType.IsEnum)
         {
-            return valueType.Name switch
-            {
-                nameof(Guid) => GetGuidProperty(propertyInfo),
-                nameof(Boolean) => GetBooleanProperty(propertyInfo),
-                nameof(Int16) => GetInt16Property(propertyInfo),
-                nameof(Int32) => GetInt32Property(propertyInfo),
-                nameof(Int64) => GetInt64Property(propertyInfo),
-                nameof(UInt16) => GetUInt16Property(propertyInfo),
-                nameof(UInt32) => GetUInt32Property(propertyInfo),
-                nameof(DateOnly) => GetDateProperty(propertyInfo),
-                nameof(DateTime) => GetDateTimeProperty(propertyInfo),
-                nameof(DateTimeOffset) => GetDateTimeOffsetProperty(propertyInfo),
-                nameof(Byte) => GetByteProperty(propertyInfo),
-                nameof(Char) => GetCharProperty(propertyInfo),
-                nameof(Decimal) => GetDecimalProperty(propertyInfo),
-                nameof(Double) => GetDoubleProperty(propertyInfo),
-                nameof(Single) => GetFloatProperty(propertyInfo),
-                _ => throw new Exception()
-            };
+            var collectionType = typeof(CollectionType<>).MakeGenericType(
+                typeof(EnumType<>).MakeGenericType(propType));
+
+            return (Activator.CreateInstance(collectionType) as IOGraphType)!;
         }
-        if (propertyInfo.PropertyType.IsStringType())
+        if (propType.IsValueType || propType == typeof(string))
         {
-            return GetStringProperty(propertyInfo);
+            var collectionType = typeof(CollectionType<>).MakeGenericType(
+                GetPrimitiveType(propType).GetType().MakeGenericType(propType));
+
+            return (Activator.CreateInstance(collectionType) as IOGraphType)!;
         }
-        if (propertyInfo.PropertyType.IsEnumerableType(out var enumerableType)) 
+        if (propType.IsEnumerableType(out var enumerableType))
         {
-            if (enumerableType.IsComplexType())
-            {
-                var collectionType = typeof(CollectionType<>).MakeGenericType(
-                    typeof(ComplexType<>).MakeGenericType(propertyInfo.PropertyType));
-                var collectionInstance = Activator.CreateInstance(collectionType) as IOGraphCollectionType;
+            var collectionType = typeof(CollectionType<>).MakeGenericType(
+                typeof(CollectionType<>).MakeGenericType(
+                    GetCollectionType(enumerableType).GetType()));
 
-
-                var complexType = typeof(ComplexType<>).MakeGenericType(enumerableType);
-                var complexInstance = Activator.CreateInstance(complexType) as IOGraphComplexType;
-
-                var collectionTypeProperty = collectionType.GetProperty(nameof(CollectionType<ComplexType>.ItemType));
-
-                collectionTypeProperty.SetValue(collectionInstance, complexInstance, null);
-
-
-                return new OGraphProperty()
-                {
-                    Name = propertyInfo.Name,
-                    Type = collectionInstance,
-                    Resolver = GetPropertyResolver(propertyInfo)
-                };
-            }
+            return (Activator.CreateInstance(collectionType) as IOGraphType)!;
         }
-        if (propertyInfo.PropertyType.IsComplexType())
+        if (propType.IsComplexType())
         {
-            var complexType = typeof(ComplexType<>).MakeGenericType(propertyInfo.PropertyType);
-            var complexInstance = Activator.CreateInstance(complexType) as IOGraphComplexType;
+            var collectionType = typeof(CollectionType<>).MakeGenericType(
+                typeof(ComplexType<>).MakeGenericType(propType));
 
-            return new OGraphProperty()
-            {
-                Name = propertyInfo.Name,
-                Type = complexInstance,
-                Resolver = GetPropertyResolver(propertyInfo)
-            };
+            return (Activator.CreateInstance(collectionType) as IOGraphType)!;
         }
-        throw new Exception();
+        throw new Exception("");
     }
-    private IOGraphProperty GetGuidProperty(PropertyInfo propertyInfo)
-    {
-        return new OGraphProperty()
-        {
-            Name = propertyInfo.Name,
-            Type = new GuidType()
-            {
-                IsNullable = propertyInfo.PropertyType.IsNullable(),
-            },
-            Resolver = GetPropertyResolver(propertyInfo)
-        };
-    }
-    private IOGraphProperty GetStringProperty(PropertyInfo propertyInfo)
-    {
-        return new OGraphProperty()
-        {
-            Name = propertyInfo.Name,
-            Type = new StringType(),
-            Resolver = GetPropertyResolver(propertyInfo)
-        };
-    }
-    private IOGraphProperty GetInt16Property(PropertyInfo propertyInfo)
-    {
-        return new OGraphProperty()
-        {
-            Name = propertyInfo.Name,
-            Type = new ShortType()
-            {
-                IsNullable = propertyInfo.PropertyType.IsNullable(),
-            },
-            Resolver = GetPropertyResolver(propertyInfo)
-        };
-    }
-    private IOGraphProperty GetInt32Property(PropertyInfo propertyInfo)
-    {
-        return new OGraphProperty()
-        {
-            Name = propertyInfo.Name,
-            Type = new IntType()
-            {
-                IsNullable = propertyInfo.PropertyType.IsNullable(),
-            },
-            Resolver = GetPropertyResolver(propertyInfo)
-        };
-    }
-    private IOGraphProperty GetInt64Property(PropertyInfo propertyInfo)
-    {
-        return new OGraphProperty()
-        {
-            Name = propertyInfo.Name,
-            Type = new LongType()
-            {
-                IsNullable = propertyInfo.PropertyType.IsNullable(),
-            },
-            Resolver = GetPropertyResolver(propertyInfo)
-        };
-    }
-    private IOGraphProperty GetUInt16Property(PropertyInfo propertyInfo)
-    {
-        return new OGraphProperty()
-        {
-            Name = propertyInfo.Name,
-            Type = new UShortType()
-            {
-                IsNullable = propertyInfo.PropertyType.IsNullable(),
-            },
-            Resolver = GetPropertyResolver(propertyInfo)
-        };
-    }
-    private IOGraphProperty GetUInt32Property(PropertyInfo propertyInfo)
-    {
-        return new OGraphProperty()
-        {
-            Name = propertyInfo.Name,
-            Type = new UIntType()
-            {
-                IsNullable = propertyInfo.PropertyType.IsNullable(),
-            },
-            Resolver = GetPropertyResolver(propertyInfo)
-        };
-    }
-    private IOGraphProperty GetUInt64Property(PropertyInfo propertyInfo)
-    {
-        return new OGraphProperty()
-        {
-            Name = propertyInfo.Name,
-            Type = new ULongType()
-            {
-                IsNullable = propertyInfo.PropertyType.IsNullable(),
-            },
-            Resolver = GetPropertyResolver(propertyInfo)
-        };
-    }
-    private IOGraphProperty GetBooleanProperty(PropertyInfo propertyInfo)
-    {
-        return new OGraphProperty()
-        {
-            Name = propertyInfo.Name,
-            Type = new BooleanType()
-            {
-                IsNullable = propertyInfo.PropertyType.IsNullable(),
-            },
-            Resolver = GetPropertyResolver(propertyInfo)
-        };
-    }
-    private IOGraphProperty GetDateProperty(PropertyInfo propertyInfo)
-    {
-        return new OGraphProperty()
-        {
-            Name = propertyInfo.Name,
-            Type = new DateType()
-            {
-                IsNullable = propertyInfo.PropertyType.IsNullable(),
-            },
-            Resolver = GetPropertyResolver(propertyInfo)
-        };
-    }
-    private IOGraphProperty GetDateTimeProperty(PropertyInfo propertyInfo)
-    {
-        return new OGraphProperty()
-        {
-            Name = propertyInfo.Name,
-            Type = new DateTimeType()
-            {
-                IsNullable = propertyInfo.PropertyType.IsNullable(),
-            },
-            Resolver = GetPropertyResolver(propertyInfo)
-        };
-    }
-    private IOGraphProperty GetDateTimeOffsetProperty(PropertyInfo propertyInfo)
-    {
-        return new OGraphProperty()
-        {
-            Name = propertyInfo.Name,
-            Type = new DateTimeOffsetType()
-            {
-                IsNullable = propertyInfo.PropertyType.IsNullable(),
-            },
-            Resolver = GetPropertyResolver(propertyInfo)
-        };
-    }
-    private IOGraphProperty GetByteProperty(PropertyInfo propertyInfo)
-    {
-        return new OGraphProperty()
-        {
-            Name = propertyInfo.Name,
-            Type = new ByteType()
-            {
-                IsNullable = propertyInfo.PropertyType.IsNullable(),
-            },
-            Resolver = GetPropertyResolver(propertyInfo)
-        };
-    }
-    private IOGraphProperty GetCharProperty(PropertyInfo propertyInfo)
-    {
-        return new OGraphProperty()
-        {
-            Name = propertyInfo.Name,
-            Type = new CharType()
-            {
-                IsNullable = propertyInfo.PropertyType.IsNullable(),
-            },
-            Resolver = GetPropertyResolver(propertyInfo)
-        };
-    }
-    private IOGraphProperty GetDecimalProperty(PropertyInfo propertyInfo)
-    {
-        return new OGraphProperty()
-        {
-            Name = propertyInfo.Name,
-            Type = new DecimalType()
-            {
-                IsNullable = propertyInfo.PropertyType.IsNullable(),
-            },
-            Resolver = GetPropertyResolver(propertyInfo)
-        };
-    }
-    private IOGraphProperty GetDoubleProperty(PropertyInfo propertyInfo)
-    {
-        return new OGraphProperty()
-        {
-            Name = propertyInfo.Name,
-            Type = new DoubleType()
-            {
-                IsNullable = propertyInfo.PropertyType.IsNullable(),
-            },
-            Resolver = GetPropertyResolver(propertyInfo)
-        };
 
-    }
-    private IOGraphProperty GetFloatProperty(PropertyInfo propertyInfo)
+    private IOGraphType GetPrimitiveType(Type type) => type.Name switch
     {
-        return new OGraphProperty()
-        {
-            Name = propertyInfo.Name,
-            Type = new FloatType()
-            {
-                IsNullable = propertyInfo.PropertyType.IsNullable(),
-            },
-            Resolver = GetPropertyResolver(propertyInfo)
-        };
-    }
+        nameof(Guid) => new GuidType(),
+        nameof(Boolean) => new BooleanType(),
+        nameof(Int16) => new ShortType(),
+        nameof(Int32) => new IntType(),
+        nameof(Int64) =>new LongType(),
+        nameof(UInt16) => new UShortType(),
+        nameof(UInt32) => new UIntType(),
+        nameof(DateOnly) => new DateType(),
+        nameof(DateTime) => new DateTimeType(),
+        nameof(DateTimeOffset) => new DateTimeOffsetType(),
+        nameof(Byte) => new ByteType(),
+        nameof(Char) => new CharType(),
+        nameof(Decimal) => new DecimalType(),
+        nameof(Double) => new DoubleType(),
+        nameof(Single) => new FloatType(),
+        nameof(String) => new StringType(),
+        _ => throw new Exception("")
+    };
+
     private IOGraphPropertyResolver GetPropertyResolver(PropertyInfo propertyInfo)
     {
-        var parameterExpression = Expression.Parameter(typeof(T));
-        var memberExpression = Expression.Property(parameterExpression, propertyInfo);
-        var labdaExpression = Expression.Lambda(memberExpression, parameterExpression);
-        var method = labdaExpression.Compile();
+        var parameter = Expression.Parameter(typeof(T));
+        var member = Expression.Property(parameter, propertyInfo);
+        var lambda = Expression.Lambda(member, parameter);
+        var method = lambda.Compile();
 
         return new OGraphPropertyResolverDefault((context, cancellationToken) =>
         {
             var parent = context.GetParent<T>();
 
-            return ValueTask.FromResult<IOGraphResult>(new ValueResult()
+            return ValueTask.FromResult<IOGraphResult>(new PropertyResult()
             {
                 Value = method!.DynamicInvoke(parent)
             });

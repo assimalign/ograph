@@ -7,8 +7,8 @@ public interface IOGraphEdgeCollection : ICollection<IOGraphEdge>
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="name"></param>
+    /// <param name="label"></param>
     /// <param name="edge"></param>
     /// <returns></returns>
-    bool TryGetEdge(Name name, out IOGraphEdge? edge);
+    bool TryGetEdge(Name label, out IOGraphEdge? edge);
 }

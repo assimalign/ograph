@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Gdm.Models
+namespace Assimalign.OGraph.Gdm;
+
+public class EmployeeTaxInfo : EmployeeBase
 {
-    internal class EmployeeTaxInfo
-    {
-    }
+    public Guid? TaxInfoId { get; set; }
 }

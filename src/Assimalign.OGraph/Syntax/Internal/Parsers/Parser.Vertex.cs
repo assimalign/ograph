@@ -47,7 +47,7 @@ internal class VertexParser : Parser<VertexNode>
 
         return new VertexNode()
         {
-            Identifier = queryNode.Identifier,
+            Label = queryNode.Label,
             Nodes = nodes
         };
     }
@@ -69,7 +69,7 @@ internal class VertexParser : Parser<VertexNode>
 
         return new VertexNode()
         {
-            Identifier = queryNode.Identifier,
+            Label = queryNode.Label,
             Nodes = nodes
         };
     }
@@ -154,7 +154,7 @@ internal class VertexParser : Parser<VertexNode>
 
         return new VertexNode()
         {
-            Identifier = queryNode.Identifier,
+            Label = queryNode.Label,
             Nodes = nodes
         };
     }

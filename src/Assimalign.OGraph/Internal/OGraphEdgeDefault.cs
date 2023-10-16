@@ -15,7 +15,7 @@ internal class OGraphEdgeDefault : IOGraphEdge
         this.Middleware = new OGraphEdgeMiddlewareQueue();
     }
 
-    public Name Name { get; set; }
+    public Name Label { get; set; }
     public IOGraphNode Source { get; set; }
     public IOGraphNode Target { get; set; }
     public IOGraphMetadata Metadata { get; }

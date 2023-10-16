@@ -14,7 +14,7 @@ public interface IOGraphEdge
     /// <summary>
     /// The name of the edge.
     /// </summary>
-    Name Name { get; }
+    Name Label { get; }
     /// <summary>
     /// The source node.
     /// </summary>
@@ -27,6 +27,8 @@ public interface IOGraphEdge
     /// Metadata for the edge.
     /// </summary>
     IOGraphMetadata Metadata { get; }
+    
+    
     /// <summary>
     /// The edge resolver.
     /// </summary>
