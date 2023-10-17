@@ -12,6 +12,9 @@ public interface IOGraphQueryResult : IOGraphResult
     /// The query error the occurred.
     /// </summary>
     IOGraphError Error { get; }
+    /// <summary>
+    /// 
+    /// </summary>
     IOGraphNodeCollection Nodes { get; }
 }
 

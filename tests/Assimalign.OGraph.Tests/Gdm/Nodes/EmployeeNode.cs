@@ -22,11 +22,9 @@ internal class EmployeeNode : OGraphNode<EmployeeType>
             .UseResolver((context, cancellationToken) =>
             {
                 return default;
-
             });
 
-        descriptor.AddQuery("GetUserById")
-            ;
+        descriptor.AddQuery("GetUserById");
 
         descriptor.AddQuery("GetUsers");
     }

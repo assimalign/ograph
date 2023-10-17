@@ -14,7 +14,7 @@ public readonly struct Name :
     IComparable<Name>
 {
     // Allowed characters for name
-    private const string expression = "^[a-zA-Z0-9]+$";
+    private const string pattern = "^[a-zA-Z0-9]+$";
 
     public Name(string value)
     {
@@ -22,7 +22,7 @@ public readonly struct Name :
         {
             throw new ArgumentNullException(nameof(value));
         }
-        if (!Regex.IsMatch(value, expression))
+        if (!Regex.IsMatch(value, pattern))
         {
             throw new ArgumentException($"The following name: '{value}' contains invalid characters. Only the following characters are: [A-Z, a-z, 0-9]");
         }

@@ -3,11 +3,11 @@
 public enum OperationType
 {
     /// <summary>
-    /// Represent state change. 
+    /// Represent state change.
     /// </summary>
     Command,
     /// <summary>
-    /// Represent data retrieval asdf
+    /// Represent data retrieval.
     /// </summary>
     Query
 }

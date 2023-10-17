@@ -27,6 +27,7 @@
 	  <Folder Include="Gdm\Edges\" />
 	  <Folder Include="Gdm\Edges\" />
 	  <Folder Include="Gdm\Resolvers\" />
+	  <Folder Include="Utilities\" />
 	</ItemGroup>
 
 </Project>

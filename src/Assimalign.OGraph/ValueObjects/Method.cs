@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 
 namespace Assimalign.OGraph;
 
@@ -12,17 +12,17 @@ public readonly struct Method :
 	IEquatable<Method>,
 	IEqualityComparer<Method>
 {
-	private const string allowedCharacters = "abcdefghijklmnopqrstuvwxwzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private const string pattern = "^[a-zA-Z]+$"; // Alphabetic characters only
 	public Method(string value)
 	{
 		if (string.IsNullOrEmpty(value))
 		{
             throw new ArgumentNullException(nameof(value));
         }
-		if (value.Any(character => !allowedCharacters.Contains(character)))
+		if (!Regex.IsMatch(value, pattern))
 		{
-			throw new Exception("Only Alphabetic characters are allowed as Method names");
-		}
+            throw new Exception("Only Alphabetic characters are allowed as Method names");
+        }
 		Value = value.ToUpperInvariant();
 	}
 
@@ -38,14 +38,13 @@ public readonly struct Method :
 		{
 			return Equals(method);
 		}
-
 		return false;
 	}
 
 	/// <inheritdoc />
 	public override int GetHashCode()
 	{
-		return base.GetHashCode();
+		return HashCode.Combine(typeof(Method), Value);
 	}
 
 	/// <inheritdoc />
@@ -57,19 +56,19 @@ public readonly struct Method :
 	/// <inheritdoc />
 	public bool Equals(Method other)
 	{
-		throw new NotImplementedException();
+		return Value.Equals(other.Value);
 	}
 
 	/// <inheritdoc />
 	public bool Equals(Method left, Method right)
 	{
-		throw new NotImplementedException();
+		return left.Equals(right);
 	}
 
 	/// <inheritdoc />
 	public int GetHashCode([DisallowNull] Method instance)
 	{
-		throw new NotImplementedException();
+		return instance.GetHashCode();
 	}
 
 	public static implicit operator Method(string value) => new Method(value);

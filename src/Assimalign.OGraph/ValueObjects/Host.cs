@@ -39,9 +39,10 @@ public readonly struct Host
 
     public string Value { get; }
     public int? Port { get; }
-
     public override string ToString()
     {
         return Value;
     }
+
+    public static implicit operator string(Host host) => host.Value;
 }

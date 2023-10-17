@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Diagnostics;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
 
 namespace Assimalign.OGraph;
 
@@ -42,7 +42,7 @@ public readonly struct Path : IEquatable<Path>, IEqualityComparer<Path>
                 // Let's skip leading slashes
                 if (i == 0) continue;
 
-                segments[index] = new PathSegment(segment);
+                segments[index] = new PathSegment(segment, index);
                 index++;
                 segment = string.Empty;
 
@@ -51,6 +51,13 @@ public readonly struct Path : IEquatable<Path>, IEqualityComparer<Path>
                 {
                     Array.Resize(ref segments, 5);
                 }
+            }
+            else if ((i + 1) >= path.Length)
+            {
+                segment = segment + character;
+                segments[index] = new PathSegment(segment, index);
+                index++;
+                segment = string.Empty;
             }
             else
             {

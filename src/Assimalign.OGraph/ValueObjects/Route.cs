@@ -4,17 +4,18 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
+using System.Runtime.InteropServices;
+using System.Reflection;
 
 namespace Assimalign.OGraph;
 
-[DebuggerDisplay("Route: /{ToString()}")]
+[DebuggerDisplay("Route: {Value}")]
 public readonly struct Route :
     IEquatable<Route>,
     IEqualityComparer<Route>
 {
     private readonly string route;
     private readonly RouteSegment[] segments;
-
 
     private static ReadOnlySpan<string> reserved => new string[] 
     { 
@@ -47,7 +48,7 @@ public readonly struct Route :
                 // Let's skip leading slashes
                 if (i == 0) continue;
 
-                segments[index] = new RouteSegment(segment);
+                segments[index] = new RouteSegment(segment, index);
                 index++;
                 segment = string.Empty;
 
@@ -56,6 +57,13 @@ public readonly struct Route :
                 {
                     Array.Resize(ref segments, 5);
                 }
+            }
+            else if ((i + 1) >= route.Length)
+            {
+                segment = segment + character;
+                segments[index] = new RouteSegment(segment, index);
+                index++;
+                segment = string.Empty;
             }
             else
             {
@@ -91,7 +99,7 @@ public readonly struct Route :
     /// </summary>
     public override string ToString()
     {
-        return "/" + string.Join('/', Segments.Select(x => x.Value));
+        return string.Join('/', Segments.Select(x => x.Value));
     }
     /// <summary>
     /// 
@@ -157,79 +165,51 @@ public readonly struct Route :
     /// <param name="path"></param>
     public bool IsMatch(Path path)
     {
-        return IsMatch(path);
+        return IsMatch(path, null);
     }
     /// <summary>
     /// Matches the Path to the Route
     /// </summary>
     /// <param name="path"></param>
-    /// <param name="prefix"></param>
+    /// <param name="prefix">The prefix in the route to ignore.</param>
     /// <returns></returns>
-    public bool IsMatch(Path path, string prefix = null)
+    public bool IsMatch(Path path, string? prefix = null)
     {
-        for (int i = 0; i < segments.Length; i++)
+        var route = this;
+
+        if (!string.IsNullOrEmpty(prefix))
         {
-
+            route = route.Value.Trim('/').Trim('\\').Replace(prefix, "");
         }
-        var pathSegments = path.Segments;
-        var routeSegments = Segments;
 
-        if (pathSegments.Length != routeSegments.Length)
+        var pSegments = path.Segments;
+        var rSegments = route.Segments;
+
+        // Ensure same segment length
+        if (pSegments.Length != rSegments.Length)
         {
             return false;
         }
-
-        for (int i = 0; i < pathSegments.Length; i++)
+        for (int i = 0; i < pSegments.Length; i++)
         {
-
+            if (!rSegments[i].IsMatch(pSegments[i]))
+            {
+                return false;
+            }
         }
-
-
-
-        //path.Segments
-        //		path = path.ToString().Replace(prefix, "");
-        //
-        //		if (path.Segments.Length != Segments.Length)
-        //		{
-        //			return false;
-        //		}
-        //		for (int i = 0; i < Segments.Length; i++)
-        //		{
-        //			var routeSegment = Segments[i];
-        //			var pathSegment = path.Segments[i];
-        //
-        //			if (routeSegment.IsParameter)
-        //			{
-        //				if (!routeSegment.IsValid(pathSegment))
-        //				{
-        //					return false;
-        //				}
-        //				continue;
-        //			}
-        //			if (!routeSegment.Value.Equals(pathSegment.Value, StringComparison.CurrentCultureIgnoreCase))
-        //			{
-        //				return false;
-        //			}
-        //		}
         return true;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="paramName"></param>
-    /// <returns></returns>
-    public T GetRouteValue<T>(string paramName)
-        where T : struct
+
+    public T GetRouteValue<T>(Path path, string paramName)
     {
-        for (int i = 0; i < segments.Length; i++)
-        {
-
-        }
-
-        throw new InvalidOperationException($"No route value with parameter name: {paramName} was found");
+        throw new NotImplementedException();
+        //var segment = 
     }
+
+
+    public static bool operator ==(Route left, Route right) => left.Equals(right);
+    public static bool operator !=(Route left, Route right) => !left.Equals(right);
 
     public static implicit operator Route(string route) => new Route(route);
     public static implicit operator string(Route route) => route.ToString();

@@ -28,10 +28,10 @@ public class OGraphExecutor : IOGraphExecutor
 
         options ??= new OGraphOptions();
 
-        this.graph              = graph;
-        this.options            = options;
-        this.parser             = new QueryParser(options.ParserOptions);
-        this.serviceProvider    = options.ServiceProvider;
+        this.graph = graph;
+        this.options = options;
+        this.parser = new QueryParser(options.ParserOptions);
+        this.serviceProvider = options.ServiceProvider;
     }
 
 
@@ -59,7 +59,7 @@ public class OGraphExecutor : IOGraphExecutor
                     return response;
                 }
             }
-            var result = await operation.ExecuteAsync(new OGraphResolverContext()
+            var result = await operation!.ExecuteAsync(new OGraphResolverContext()
             {
                 //Query           = query,
                 //Operation       = operation,
@@ -67,18 +67,25 @@ public class OGraphExecutor : IOGraphExecutor
                 //Graph           = graph
             }, CancellationToken.None);
 
+            switch (operation.OperationType)
+            {
+                case OperationType.Query when result is not IOGraphQueryResult && result is not IOGraphError:
+                    {
+                        // TODO: A query operation must return a IOGraphQueryResult or IOGraphErrorResult
+                        break;
+                    }
+                case OperationType.Command:
+                    {
+                        break;
+                    }
+            }
+
             var responseBody = response.Body;
 
-            await JsonSerializer.SerializeAsync(responseBody, result, options.JsonSerializerOptions);
-
-
-            //await result.ExecuteAsync(new OGraphExecutorContext()
-            //{
-            //    Request = request,
-            //    Response = response,
-            //    ContentType = request.Headers.Accept.HasValue ? request.Headers.Accept.Value : options.DefaultMediaType
-            
-            //}, cancellationToken);
+            await JsonSerializer.SerializeAsync(
+                responseBody, 
+                result, 
+                options.JsonSerializerOptions);
 
             return response;
         }
@@ -105,18 +112,15 @@ public class OGraphExecutor : IOGraphExecutor
         return true;
 
     }
-    private bool TryGetOperation(IOGraphExecutorRequest request, out IOGraphOperation operation)
+    private bool TryGetOperation(IOGraphExecutorRequest request, out IOGraphOperation? operation)
     {
-        operation = default!;
-        foreach (var opr in graph.Operations)
-        {
-            if (opr.Method == request.Method && opr.Route.IsMatch(request.Path, options.RoutePrefix!))
+        operation = graph.Operations
+            .FirstOrDefault(operation =>
             {
-                operation = opr;
-                return true;
-            }
-        }
-        return false;
+                return  operation.Method.Equals(request.Method) && 
+                        operation.Route.IsMatch(request.Path, options.RoutePrefix!);
+            });
+        return operation is not null;
     }
     private bool TryGetQuery(IOGraphExecutorRequest request, out QueryDocument queryDocument)
     {
