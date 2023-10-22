@@ -3,12 +3,19 @@
 namespace Assimalign.OGraph;
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-public class OGraphHttpMethodAttribute : Attribute
+public abstract class OGraphHttpMethodAttribute : Attribute
 {
-    public OGraphHttpMethodAttribute(string method)
+    public OGraphHttpMethodAttribute(string method, string route)
     {
-        this.Method = method;
+        Method = method;
+        Route = route;
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public Method Method { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    public Route Route { get; set; }
 }

@@ -10,5 +10,5 @@ public interface IOGraphPropertyCollection : ICollection<IOGraphProperty>
     /// <param name="name"></param>
     /// <param name="property"></param>
     /// <returns></returns>
-    bool TryGetProperty(Name name, out IOGraphProperty? property);
+    bool TryGet(Name name, out IOGraphProperty? property);
 }

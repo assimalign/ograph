@@ -4,9 +4,9 @@ namespace Assimalign.OGraph.Internal;
 
 internal class OGraphPropertyDescriptor<T> : IOGraphPropertyDescriptor<T>
 {
-    private readonly OGraphProperty property;
+    private readonly Property property;
 
-    public OGraphPropertyDescriptor(OGraphProperty? property)
+    public OGraphPropertyDescriptor(Property? property)
     {
         if (property is null)
         {
@@ -72,7 +72,7 @@ internal class OGraphPropertyDescriptor<T> : IOGraphPropertyDescriptor<T>
         {
             throw new ArgumentNullException(nameof(resolver));
         }
-        property.Resolver = new OGraphPropertyResolverDefault(resolver);
+        property.Resolver = new PropertyResolverDefault(resolver);
         return this;
     }
     public IOGraphPropertyDescriptor<T> UseResolver<TResolver>() where TResolver : IOGraphPropertyResolver, new()

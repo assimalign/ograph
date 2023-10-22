@@ -24,6 +24,10 @@ public interface IOGraphProperty
     /// </summary>
     IOGraphType Type { get; }
     /// <summary>
+    /// 
+    /// </summary>
+    bool IsKey { get; }
+    /// <summary>
     /// Metadata of the property.
     /// </summary>
     IOGraphMetadata Metadata { get; }

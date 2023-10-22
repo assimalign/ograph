@@ -16,7 +16,7 @@ internal class OGraphEdgeDescriptor : IOGraphEdgeDescriptor
         this.edge = edge;
     }
 
-    public IList<Action<OGraph>> OnConfigure { get; init; }
+    public IList<Action<Graph>> OnConfigure { get; init; }
 
     public IOGraphEdgeDescriptor UseMetadata(string key, object value)
     {
@@ -116,7 +116,7 @@ internal class OGraphEdgeDescriptor : IOGraphEdgeDescriptor
         });
         return this;
     }
-    public IOGraphEdgeDescriptor UseSourceNode<TNode>() where TNode : IOGraphNode, new()
+    public IOGraphEdgeDescriptor UseSourceNode<TNode>() where TNode : IOGraphVertex, new()
     {
         edge.Source = new TNode();
         return this;
@@ -133,7 +133,7 @@ internal class OGraphEdgeDescriptor : IOGraphEdgeDescriptor
         });
         return this;
     }
-    public IOGraphEdgeDescriptor UseTargetNode<TNode>() where TNode : IOGraphNode, new()
+    public IOGraphEdgeDescriptor UseTarget<TNode>() where TNode : IOGraphVertex, new()
     {
         edge.Target = new TNode();
         return this;

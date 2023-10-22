@@ -15,84 +15,86 @@ internal class OGraphQueryOperationDescriptor : IOGraphQueryOperationDescriptor
         this.operation = operation;
     }
 
-    public IList<Action<OGraph>> OnConfigure { get; init; }
+    public IList<Action<Graph>> OnConfigure { get; init; }
     public IOGraphQueryOperationDescriptor UseMiddleware<TMiddleware>() where TMiddleware : IOGraphOperationMiddleware, new()
     {
-        throw new NotImplementedException();
+        return this;
     }
 
     public IOGraphQueryOperationDescriptor UseMiddleware(IOGraphOperationMiddleware middleware)
     {
-        throw new NotImplementedException();
+        return this;
     }
 
     public IOGraphQueryOperationDescriptor UseMiddleware(OGraphOperationMiddleware middleware)
     {
-        throw new NotImplementedException();
+        return this;
     }
 
     public IOGraphQueryOperationDescriptor UseName(Name name)
     {
-        throw new NotImplementedException();
+        operation.name = name;
+        return this;
     }
 
     public IOGraphQueryOperationDescriptor UseNode(Name name)
     {
-        throw new NotImplementedException();
+        return this;
     }
 
-    public IOGraphQueryOperationDescriptor UseNode<TNode>() where TNode : IOGraphNode, new()
+    public IOGraphQueryOperationDescriptor UseNode<TNode>() where TNode : IOGraphVertex, new()
     {
-        throw new NotImplementedException();
+        return this;
     }
 
     public IOGraphQueryOperationDescriptor UseQueryOptions(OGraphQueryOptions options)
     {
-        throw new NotImplementedException();
+        return this;
     }
 
     public IOGraphQueryOperationDescriptor UseQueryOptions<TQueryOptions>(Action<TQueryOptions> configure) where TQueryOptions : OGraphQueryOptions, new()
     {
-        throw new NotImplementedException();
+        return this;
     }
 
     public IOGraphQueryOperationDescriptor UseQueryOptions(Action<OGraphQueryOptions> configure)
     {
-        throw new NotImplementedException();
+        return this;
     }
 
     public IOGraphQueryOperationDescriptor UseQueryParam(string paramKey)
     {
-        throw new NotImplementedException();
+        return this;
     }
 
     public IOGraphQueryOperationDescriptor UseQueryProvider<TQueryProvider>() where TQueryProvider : IOGraphQueryProvider, new()
     {
-        throw new NotImplementedException();
+        return this;
     }
 
     public IOGraphQueryOperationDescriptor UseQueryProvider(IOGraphQueryProvider queryProvider)
     {
-        throw new NotImplementedException();
+        return this;
     }
 
     public IOGraphQueryOperationDescriptor UseResolver<TResolver>() where TResolver : IOGraphOperationResolver, new()
     {
-        throw new NotImplementedException();
+        return this;
     }
 
     public IOGraphQueryOperationDescriptor UseResolver(IOGraphOperationResolver resolver)
     {
-        throw new NotImplementedException();
+        return this;
     }
 
     public IOGraphQueryOperationDescriptor UseResolver(OGraphOperationResolver resolver)
     {
-        throw new NotImplementedException();
+        return this;
     }
 
     public IOGraphQueryOperationDescriptor UseRoute(Route route)
     {
-        throw new NotImplementedException();
+        operation.route = route;
+        return this;
     }
 }

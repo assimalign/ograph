@@ -15,7 +15,7 @@ public interface IOGraphOperation
     /// <summary>
     /// The name of the command.
     /// </summary>
-    Name Name { get; }
+    Name Label { get; }
     /// <summary>
     /// The route associated with this operation.
     /// </summary>
@@ -25,17 +25,13 @@ public interface IOGraphOperation
     /// </summary>
     Method Method { get; }
     /// <summary>
-    /// Specifies whether the operation is enabled.
-    /// </summary>
-    bool IsEnabled { get; }
-    /// <summary>
     /// Specifies whether the operation is a command or query.
     /// </summary>
     OperationType OperationType { get; }
     /// <summary>
     /// Represents the node that is bound to this operation.
     /// </summary>
-    IOGraphNode Node { get; }
+    IOGraphVertex Node { get; }
     /// <summary>
     /// The resolver for the operation.
     /// </summary>

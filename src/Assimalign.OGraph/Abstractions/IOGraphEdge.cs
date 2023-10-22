@@ -7,49 +7,24 @@ namespace Assimalign.OGraph;
 /// An edge links two nodes together.
 /// </summary>
 /// <remarks>
-/// An edge is also referred to as a Link.
+/// <i>An edge is also referred to as a Link.</i>
 /// </remarks>
 public interface IOGraphEdge
 {
     /// <summary>
-    /// The name of the edge.
+    /// A unique name of the edge.
     /// </summary>
-    Name Label { get; }
+    Name Label { get; } //! The Edge Label must match the label of an operation. Operation Methods must not be mismatched
     /// <summary>
-    /// The source node.
+    /// The source vertex.
     /// </summary>
-    IOGraphNode Source { get; }
+    IOGraphVertex Source { get; }
     /// <summary>
     /// The target is the node in which is linked to the source.
     /// </summary>
-    IOGraphNode Target { get; }
+    IOGraphVertex Target { get; }
     /// <summary>
     /// Metadata for the edge.
     /// </summary>
     IOGraphMetadata Metadata { get; }
-    
-    
-    /// <summary>
-    /// The edge resolver.
-    /// </summary>
-    IOGraphEdgeResolver Resolver { get; }
-    /// <summary>
-    /// A collection of middleware that will be executed before the edge is resolved.
-    /// </summary>
-    IOGraphEdgeMiddlewareQueue Middleware { get; }
-    /// <summary>
-    /// Gets the OGraph query provider.
-    /// </summary>
-    IOGraphQueryProvider QueryProvider { get; }
-    /// <summary>
-    /// Gets the OGraph query options.
-    /// </summary>
-    OGraphQueryOptions QueryOptions { get; }
-    /// <summary>
-    /// Executes the edge.
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    Task<IOGraphResult> ExecuteAsync(IOGraphEdgeContext context, CancellationToken cancellationToken = default);
 }

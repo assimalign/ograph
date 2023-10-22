@@ -15,7 +15,7 @@ public interface IOGraphQueryResult : IOGraphResult
     /// <summary>
     /// 
     /// </summary>
-    IOGraphNodeCollection Nodes { get; }
+    IOGraphVertexCollection Nodes { get; }
 }
 
 
@@ -41,11 +41,3 @@ public interface IOGraphQueryResultNodeEdges : IDictionary<Name, IOGraphQueryRes
 
 }
 
-
-public class Test
-{
-    public void Traverse()
-    {
-
-    }
-}

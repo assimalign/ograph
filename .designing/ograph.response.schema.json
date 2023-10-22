@@ -34,7 +34,7 @@
                         "hasPrevious"
                     ]
                 },
-                "nodes": {
+                "data": {
                     "oneOf": [
                         {
                             "type": "array",

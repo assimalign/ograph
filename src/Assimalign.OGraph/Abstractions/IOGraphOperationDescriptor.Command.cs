@@ -41,7 +41,7 @@ public interface IOGraphCommandOperationDescriptor
     /// </summary>
     /// <typeparam name="TNode"></typeparam>
     /// <returns>The current descriptor.</returns>
-    IOGraphCommandOperationDescriptor UseNode<TNode>() where TNode : IOGraphNode, new();
+    IOGraphCommandOperationDescriptor UseNode<TNode>() where TNode : IOGraphVertex, new();
     
     /// <summary>
     /// 

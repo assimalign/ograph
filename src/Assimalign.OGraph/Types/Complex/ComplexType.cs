@@ -8,7 +8,7 @@ public class ComplexType : IOGraphComplexType
 {
     public ComplexType()
     {
-        this.Properties = new OGraphPropertyCollection();
+        this.Properties = new PropertyCollection();
     }
 
     public Name Name { get; init; }

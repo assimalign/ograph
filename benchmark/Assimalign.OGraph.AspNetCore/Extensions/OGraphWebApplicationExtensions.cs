@@ -33,9 +33,9 @@ public static class OGraphWebApplicationExtensions
         {
             if (app.Environment.IsDevelopment())
             {
-                var max = graph.Operations.Select(x => x.Name.Value).Max(x => x.Length);
+                var max = graph.Operations.Select(x => x.Label.Value).Max(x => x.Length);
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write(operation.Name.Value.PadRight(max + 1, ' '));
+                Console.Write(operation.Label.Value.PadRight(max + 1, ' '));
 
                 switch (operation.Method)
                 {
@@ -76,7 +76,6 @@ public static class OGraphWebApplicationExtensions
                     var graphResponse = await graphExecutor.ExecuteAsync(new OGraphRequest(context.Request));
 
                     context.Response.StatusCode = graphResponse.StatusCode;
-
                     context.Response.ContentType = "application/json";
 
                     if (graphResponse.Body.Length > 0)
@@ -91,7 +90,7 @@ public static class OGraphWebApplicationExtensions
                     //context.Response.Body.C
                 }
 
-            }).WithDisplayName(operation.Name);
+            }).WithDisplayName(operation.Label);
         }
 
 

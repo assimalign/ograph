@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm;
 
-internal class EmployeeNode : OGraphNode<EmployeeType>
+internal class EmployeeNode : OGraphVertex<EmployeeType>
 {
-    protected override void Configure(IOGraphNodeDescriptor descriptor)
+    protected override void Configure(IOGraphVertexDescriptor descriptor)
     {
         descriptor.AddEdge("addresses:primary")
             .UseResolver((context, cancellationToken) =>

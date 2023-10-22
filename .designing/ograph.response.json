@@ -17,7 +17,7 @@
             }
         ]
     },
-    "nodes": [
+    "data": [
         {
             // Context Information
             "@ograph.label": "employees",
@@ -36,7 +36,7 @@
                         "hasPrevious": false,
                         "totalCount": 200
                     },
-                    "nodes": [
+                    "data": [
                         {
                             "@ograph.link": "/api/employees/255acd9b-9db4-4a38-85a5-93504cbeeeae/companies/a2eb5d63-9dd9-47bb-a94f-dbed32fcaa15",
                             "@ograph.label": "company",

@@ -1,17 +1,19 @@
-﻿namespace Assimalign.OGraph.Internal;
+﻿using System;
+
+namespace Assimalign.OGraph.Internal;
 
 internal class OGraphComplexTypeDescriptor : IOGraphComplexTypeDescriptor
 {
-    private readonly IOGraphComplexType complexType;
+    private readonly ComplexType complexType;
 
-    public OGraphComplexTypeDescriptor(IOGraphComplexType complexTyp)
+    public OGraphComplexTypeDescriptor(ComplexType complexTyp)
     {
         this.complexType = complexTyp;
     }
 
     public IOGraphPropertyDescriptor HasProperty(Name name)
     {
-        var property = new OGraphProperty()
+        var property = new Property()
         {
             Name = name,
         };
@@ -20,5 +22,20 @@ internal class OGraphComplexTypeDescriptor : IOGraphComplexTypeDescriptor
         complexType.Properties.Add(property);
 
         return descriptor;
+    }
+
+    public IOGraphComplexTypeDescriptor HasUnderlyingType(Type type)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IOGraphComplexTypeDescriptor HasUnderlyingType<T>() where T : class, new()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IOGraphComplexTypeDescriptor Ignore(Name name)
+    {
+        throw new NotImplementedException();
     }
 }

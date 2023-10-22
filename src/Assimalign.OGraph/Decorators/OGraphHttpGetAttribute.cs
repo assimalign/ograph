@@ -2,8 +2,8 @@
 
 public sealed class OGraphHttpGetAttribute : OGraphHttpMethodAttribute
 {
-    public OGraphHttpGetAttribute() 
-        : base("GET")
+    public OGraphHttpGetAttribute(string route) 
+        : base("GET", route)
     {
     }
 }

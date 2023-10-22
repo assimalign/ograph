@@ -2,5 +2,12 @@
 
 public interface IOGraphCommandOperation : IOGraphOperation
 {
-    //IOGraphType RequestType { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    IOGraphType RequestType { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    IOGraphType ResponseType { get; }
 }

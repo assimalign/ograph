@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.RegularExpressions;
-using System.Runtime.InteropServices;
-using System.Reflection;
 
 namespace Assimalign.OGraph;
 
 [DebuggerDisplay("Route: {Value}")]
 public readonly struct Route :
     IEquatable<Route>,
-    IEqualityComparer<Route>
+    IEqualityComparer<Route>,
+    IComparable<Route>
 {
-    private readonly string route;
     private readonly RouteSegment[] segments;
 
-    private static ReadOnlySpan<string> reserved => new string[] 
-    { 
-        "$root"
+    private static string[] reserved => new string[]
+    {
+        "$query",
+        "$transactions" // for sending 
     };
 
     public Route(string route)
@@ -28,7 +27,6 @@ public readonly struct Route :
         {
             throw new ArgumentNullException(nameof(route));
         }
-        this.route = route;
         this.segments = GetSegments(route);
     }
 
@@ -47,6 +45,11 @@ public readonly struct Route :
             {
                 // Let's skip leading slashes
                 if (i == 0) continue;
+
+                if (reserved.Contains(segment, StringComparer.OrdinalIgnoreCase))
+                {
+                    throw new Exception($"Invalid route. Using Reserved route: {segment} is not allowed.");
+                }
 
                 segments[index] = new RouteSegment(segment, index);
                 index++;
@@ -80,7 +83,7 @@ public readonly struct Route :
     /// <summary>
     /// Gets the raw route value.
     /// </summary>
-    public string Value => route;
+    public string Value => ToString();
     /// <summary>
     /// Gets a copy of the route segment.
     /// </summary>
@@ -94,16 +97,10 @@ public readonly struct Route :
             return copy;
         }
     }
-    /// <summary>
-    /// Returns a formatted route value.
-    /// </summary>
     public override string ToString()
     {
         return string.Join('/', Segments.Select(x => x.Value));
     }
-    /// <summary>
-    /// 
-    /// </summary>
     public override int GetHashCode()
     {
         var hashCode = new HashCode();
@@ -113,9 +110,6 @@ public readonly struct Route :
         }
         return hashCode.ToHashCode();
     }
-    /// <summary>
-    /// 
-    /// </summary>
     public override bool Equals([NotNullWhen(true)] object? instance)
     {
         if (instance is Route route)
@@ -124,41 +118,7 @@ public readonly struct Route :
         }
         return false;
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    public bool Equals(Route route)
-    {
-        var left = Segments;
-        var right = route.Segments;
-
-        if (left.Length != right.Length)
-        {
-            return false;
-        }
-        for (int i = 0; i < left.Length; i++)
-        {
-            if (!left[i].Equals(right[i]))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    public bool Equals(Route left, Route right)
-    {
-        return left.Equals(right);
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    public int GetHashCode([DisallowNull] Route instance)
-    {
-        return instance.GetHashCode();
-    }
+    
     /// <summary>
     /// 
     /// </summary>
@@ -199,18 +159,96 @@ public readonly struct Route :
         }
         return true;
     }
-
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="path"></param>
+    /// <param name="paramName"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
     public T GetRouteValue<T>(Path path, string paramName)
     {
         throw new NotImplementedException();
         //var segment = 
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="args"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public Path Format(params object[] args)
+    {
+        var stringBuilder = new StringBuilder();
+        var segments = Segments;
+        var parameterCount = segments.Count(p => p.SegmentType.Equals(RouteSegmentType.Parameter));
+        
+        if (parameterCount.Equals(args.Length))
+        {
+            throw new ArgumentException($"Argument count does not match the number of route parameters. Expected {parameterCount}, received {args.Length}");
+        }
 
+        for (int i = 0; i < segments.Length; i++)
+        {
+            var segment = segments[i];
 
+            switch (segment.SegmentType)
+            {
+                case RouteSegmentType.Literal:
+                    {
+                        stringBuilder.Append(segment.Value);
+                        break;
+                    }
+                case RouteSegmentType.Parameter:
+                    {
+                        // TODO: 
+                        break;
+                    }
+            }
+        }
+
+        return stringBuilder.ToString();
+    }
+
+    #region Implicit Interfaces
+    bool IEquatable<Route>.Equals(Route route)
+    {
+        var left = Segments;
+        var right = route.Segments;
+
+        if (left.Length != right.Length)
+        {
+            return false;
+        }
+        for (int i = 0; i < left.Length; i++)
+        {
+            if (!left[i].Equals(right[i]))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    bool IEqualityComparer<Route>.Equals(Route left, Route right)
+    {
+        return left.Equals(right);
+    }
+    int IEqualityComparer<Route>.GetHashCode([DisallowNull] Route instance)
+    {
+        return instance.GetHashCode();
+    }
+    int IComparable<Route>.CompareTo(Route other)
+    {
+        return Value.ToLowerInvariant().CompareTo(other.Value.ToLowerInvariant());
+    }
+    #endregion
+
+    #region Operators
     public static bool operator ==(Route left, Route right) => left.Equals(right);
     public static bool operator !=(Route left, Route right) => !left.Equals(right);
 
     public static implicit operator Route(string route) => new Route(route);
     public static implicit operator string(Route route) => route.ToString();
+    #endregion
 }

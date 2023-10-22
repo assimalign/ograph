@@ -106,7 +106,7 @@ public readonly struct Name :
     /// <inheritdoc />
     public override int GetHashCode()
     {
-        // TODO: Need to revisit. Not sure if I want the HashCode for the name to be the same as the instace of the string.
+        // TODO: Need to revisit. Not sure if I want the HashCode for the name to be the same as the instance of the string.
         return Value.ToLowerInvariant().GetHashCode();
     }
 
@@ -142,4 +142,12 @@ public readonly struct Name :
     public static bool operator >(Name left, Name right) => left.CompareTo(right) > 0;
     public static bool operator <=(Name left, Name right) => left.CompareTo(right) <= 0;
     public static bool operator >=(Name left, Name right) => left.CompareTo(right) >= 0;
+
+
+    /// <summary>
+    /// Specifies whether the <paramref name="name"/> is a valid name.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    public static bool IsValid(string name) => Regex.IsMatch(name, pattern);
 }

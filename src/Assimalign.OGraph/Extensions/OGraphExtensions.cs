@@ -18,14 +18,14 @@ public static class OGraphExtensions
     {
         var routes = new Queue<Route>();
 
-        foreach (var node in graph.Nodes)
+        foreach (var node in graph.Vertices)
         {
             Get(routes, node);
         }
 
         return routes;
 
-        void Get(Queue<Route> routes, IOGraphNode node, string segment = default)
+        void Get(Queue<Route> routes, IOGraphVertex node, string segment = default)
         {
             // Push Route Route
             routes.Enqueue($"/{segment}/{node.Label}");
@@ -46,12 +46,12 @@ public static class OGraphExtensions
     {
         var list = new List<Route>();
 
-        foreach (var node in graph.Nodes)
+        foreach (var node in graph.Vertices)
         {
             TraverseNode(node);
         }
 
-        void TraverseNode(IOGraphNode node)
+        void TraverseNode(IOGraphVertex node)
         {
             var root = node.Label.ToCamalCase();
 

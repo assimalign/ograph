@@ -11,4 +11,6 @@ public interface IOGraphEdgeCollection : ICollection<IOGraphEdge>
     /// <param name="edge"></param>
     /// <returns></returns>
     bool TryGetEdge(Name label, out IOGraphEdge? edge);
+
+    bool TryAddEdge(IOGraphEdge edge);
 }

@@ -1,6 +1,5 @@
 ﻿namespace Assimalign.OGraph;
 
-
 /// <summary>
 /// Represents the required Media Types that 
 /// need to be specified in the HTTP header.

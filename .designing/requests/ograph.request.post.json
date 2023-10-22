@@ -1,0 +1,17 @@
+{
+    "data": {
+
+        "@edges": {
+            "addresses": {
+                "create": {
+                    
+                }
+            },
+            "createAddress": {
+                "data": {
+
+                }
+            }
+        }
+    }
+}

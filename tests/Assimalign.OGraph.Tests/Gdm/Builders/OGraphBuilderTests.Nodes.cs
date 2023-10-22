@@ -17,7 +17,7 @@ public partial class OGraphBuilderTests
             //builder.AddNode();
         });
 
-        Assert.Equal(1, ograph.Nodes.Count);
+        Assert.Equal(1, ograph.Vertices.Count);
 
     }
 }

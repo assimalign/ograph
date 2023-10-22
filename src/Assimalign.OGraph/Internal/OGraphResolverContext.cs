@@ -5,7 +5,6 @@ using Assimalign.OGraph.Syntax;
 namespace Assimalign.OGraph.Internal;
 
 internal class OGraphResolverContext :
-    IOGraphEdgeContext,
     IOGraphPropertyContext,
     IOGraphOperationContext
 {

@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm;
 
-internal class EmployeeAddressNode : OGraphNode<EmployeeAddressType>
+internal class EmployeeAddressNode : OGraphVertex<EmployeeAddressType>
 {
 }

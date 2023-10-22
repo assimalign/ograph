@@ -5,23 +5,29 @@ namespace Assimalign.OGraph.Internal;
 
 internal class OGraphComplexTypeDescriptor<T> : IOGraphComplexTypeDescriptor<T>
 {
-    private readonly IOGraphComplexType complexType;
+    private readonly ComplexType type;
 
-    public OGraphComplexTypeDescriptor(IOGraphComplexType complexTyp)
+    public OGraphComplexTypeDescriptor(ComplexType complexTyp)
     {
         if (complexTyp is null)
         {
             throw new ArgumentNullException(nameof(complexTyp));
         }
-        this.complexType = complexTyp;
+        this.type = complexTyp;
     }
 
     public IOGraphPropertyDescriptor HasProperty(Name name)
     {
-        return new OGraphPropertyDescriptor(new OGraphProperty()
+        var property = new Property()
         {
-            Name = name,
-        });
+            Name = name
+        };
+        if (type.Properties.TryGetProperty(name, out var prop) && prop is Property prop1)
+        {
+            property = prop1;
+        }
+        type.Properties.Add(property);
+        return new OGraphPropertyDescriptor(property);
     }
 
     public IOGraphPropertyDescriptor<TProperty> HasProperty<TProperty>(Expression<Func<T, TProperty>> expression)
@@ -38,16 +44,19 @@ internal class OGraphComplexTypeDescriptor<T> : IOGraphComplexTypeDescriptor<T>
         {
             throw new Exception();
         }
-        if (complexType.Properties.TryGetProperty(memberExpression.Member.Name, out var property))
+
+        var propertyName = memberExpression.Member.Name;
+
+        if (type.Properties.TryGetProperty(propertyName, out var property))
         {
-            if (property is not OGraphProperty prop)
+            if (property is not Property prop)
             {
                 throw new Exception("Something Happened");
             }
             return new OGraphPropertyDescriptor<TProperty>(prop);
         }
 
-        return new OGraphPropertyDescriptor<TProperty>(new OGraphProperty()
+        return new OGraphPropertyDescriptor<TProperty>(new Property()
         {
             Name = memberExpression.Member.Name
         });
@@ -55,9 +64,9 @@ internal class OGraphComplexTypeDescriptor<T> : IOGraphComplexTypeDescriptor<T>
 
     public IOGraphComplexTypeDescriptor<T> Ignore(Name name)
     {
-        if (complexType.Properties.TryGetProperty(name, out var property))
+        if (type.Properties.TryGetProperty(name, out var property))
         {
-            complexType.Properties.Remove(property);
+            type.Properties.Remove(property);
         }
 
         return this;
@@ -67,9 +76,9 @@ internal class OGraphComplexTypeDescriptor<T> : IOGraphComplexTypeDescriptor<T>
     {
         var memberExpression = (MemberExpression)expression.Body;
 
-        if (complexType.Properties.TryGetProperty(memberExpression.Member.Name, out var property))
+        if (type.Properties.TryGetProperty(memberExpression.Member.Name, out var property))
         {
-            complexType.Properties.Remove(property);
+            type.Properties.Remove(property);
         }
 
         return this;

@@ -8,19 +8,19 @@ public interface IOGraph
     /// <summary>
     /// The name of the graph model.
     /// </summary>
-    Name Name { get; }
+    Name Label { get; }
     /// <summary>
     /// 
     /// </summary>
     IOGraphTypeCollection Types { get; }
     /// <summary>
-    /// A collection of node definitions within the OGraph Model.
-    /// </summary>
-    IOGraphNodeCollection Nodes { get; }
-    /// <summary>
     /// Gets the edge collection.
     /// </summary>
     IOGraphEdgeCollection Edges { get; }
+    /// <summary>
+    /// A collection of vertex definitions within the OGraph Model.
+    /// </summary>
+    IOGraphVertexCollection Vertices { get; }
     /// <summary>
     /// Represents a collection of HTTP Operations
     /// </summary>

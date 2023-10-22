@@ -2,8 +2,8 @@
 
 public sealed class OGraphHttpPostAttribute : OGraphHttpMethodAttribute
 {
-    public OGraphHttpPostAttribute() 
-        : base("POST")
+    public OGraphHttpPostAttribute(string route) 
+        : base("POST", route)
     {
     }
 }

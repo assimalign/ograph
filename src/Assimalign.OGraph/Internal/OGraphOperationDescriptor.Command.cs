@@ -17,7 +17,7 @@ internal class OGraphCommandOperationDescriptor : IOGraphCommandOperationDescrip
         this.operation = operation;
     }
 
-    public IList<Action<OGraph>> OnConfigure { get; init; }
+    public IList<Action<Graph>> OnConfigure { get; init; }
 
     public IOGraphCommandOperationDescriptor UseName(Name name)
     {
@@ -63,7 +63,7 @@ internal class OGraphCommandOperationDescriptor : IOGraphCommandOperationDescrip
         });
         return this;
     }
-    public IOGraphCommandOperationDescriptor UseNode<TNode>() where TNode : IOGraphNode, new()
+    public IOGraphCommandOperationDescriptor UseNode<TNode>() where TNode : IOGraphVertex, new()
     {
         OnConfigure.Add(graph =>
         {

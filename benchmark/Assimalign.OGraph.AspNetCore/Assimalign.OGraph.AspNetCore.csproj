@@ -2,15 +2,21 @@
 
 
 	<ItemGroup>
+	  <Compile Remove="Exceptions\**" />
+	  <Compile Remove="Internal\**" />
+	  <EmbeddedResource Remove="Exceptions\**" />
+	  <EmbeddedResource Remove="Internal\**" />
+	  <None Remove="Exceptions\**" />
+	  <None Remove="Internal\**" />
+	</ItemGroup>
+
+
+	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 	<ItemGroup>
 		
 		<ProjectReference Include="..\..\src\Assimalign.OGraph\Assimalign.OGraph.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Exceptions\" />
-	  <Folder Include="Internal\" />
 	</ItemGroup>
 
 </Project>

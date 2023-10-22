@@ -13,7 +13,7 @@ public interface IOGraphQueryContext
     /// <summary>
     /// The starting node/vertex of the query.
     /// </summary>
-    IOGraphNode Node { get;  }
+    IOGraphVertex Node { get;  }
     /// <summary>
     /// The paresed query from the request.
     /// </summary>

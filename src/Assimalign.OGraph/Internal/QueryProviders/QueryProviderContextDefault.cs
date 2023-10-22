@@ -10,7 +10,7 @@ namespace Assimalign.OGraph.Internal;
 
 internal class QueryProviderContextDefault : IOGraphQueryContext
 {
-    public IOGraphNode Node { get; init; }
+    public IOGraphVertex Node { get; init; }
     public QueryDocument Query { get; init; }
     public IServiceProvider ServiceProvider { get; init; }
 

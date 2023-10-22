@@ -8,35 +8,42 @@ namespace Assimalign.OGraph;
 public interface IOGraphBuilder
 {
     /// <summary>
-    /// Adds a node to the model.
+    /// 
     /// </summary>
-    /// <param label="node"></param>
+    /// <param name="vertex"></param>
     /// <returns></returns>
-    IOGraphBuilder AddNode(IOGraphNode node);
+    IOGraphBuilder AddVertex(IOGraphVertex vertex);
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TNode"></typeparam>
+    /// <typeparam name="TVertex"></typeparam>
     /// <returns></returns>
-    IOGraphBuilder AddNode<TNode>() where TNode : IOGraphNode, new();
+    IOGraphBuilder AddVertex<TVertex>() where TVertex : IOGraphVertex, new();
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="edge"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="descriptor"></param>
     /// <returns></returns>
-    IOGraphBuilder AddEdge(IOGraphEdge edge);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="configure"></param>
-    /// <returns></returns>
-    IOGraphBuilder AddEdge(Func<IOGraph, IOGraphEdge> configure);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TEdge"></typeparam>
-    /// <returns></returns>
-    IOGraphBuilder AddEdge<TEdge>() where TEdge : IOGraphEdge, new();
+    IOGraphBuilder AddVertex<T>(Action<IOGraphVertexDescriptor<T>> descriptor) where T : class, new();
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <param name="edge"></param>
+    ///// <returns></returns>
+    //IOGraphBuilder AddEdge(IOGraphEdge edge);
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <param name="configure"></param>
+    ///// <returns></returns>
+    //IOGraphBuilder AddEdge(Func<IOGraph, IOGraphEdge> configure);
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <typeparam name="TEdge"></typeparam>
+    ///// <returns></returns>
+    //IOGraphBuilder AddEdge<TEdge>() where TEdge : IOGraphEdge, new();
     /// <summary>
     /// Add a raw operation to the graph model.
     /// </summary>
@@ -59,19 +66,19 @@ public interface IOGraphBuilder
     /// Builds the graph model.
     /// </summary>
     /// <returns>OGraph Model</returns>
-    IOGraph Build();
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    IOGraphEdgeDescriptor AddEdge(Name name);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="label"></param>
-    /// <returns></returns>
-    IOGraphNodeDescriptor AddNode(Name label);
+    //IOGraph Build();
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <param name="name"></param>
+    ///// <returns></returns>
+    //IOGraphEdgeDescriptor AddEdge(Name name);
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <param name="label"></param>
+    ///// <returns></returns>
+    //IOGraphVertexDescriptor AddNode(Name label);
     /// <summary>
     /// Adds a query operation.
     /// </summary>

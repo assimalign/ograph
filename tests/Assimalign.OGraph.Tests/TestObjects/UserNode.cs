@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.TestObjects;
 
-public class UserNode : OGraphNode<UserType>
+public class UserNode : OGraphVertex<UserType>
 {
-    protected override void Configure(IOGraphNodeDescriptor descriptor)
+    protected override void Configure(IOGraphVertexDescriptor descriptor)
     {
         
 

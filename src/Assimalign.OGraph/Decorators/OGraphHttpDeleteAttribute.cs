@@ -2,8 +2,8 @@
 
 public sealed class OGraphHttpDeleteAttribute : OGraphHttpMethodAttribute
 {
-    public OGraphHttpDeleteAttribute() 
-        : base("DELETE")
+    public OGraphHttpDeleteAttribute(string route) 
+        : base("DELETE", route)
     {
     }
 }

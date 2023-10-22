@@ -5,9 +5,9 @@ public class UserRepository : IRepository<User>
 
     private static User[] users => new User[]
     {
-        new () { FirstName  = "Chase" },
-        new () { FirstName  = "John", LastName = "Doe" },
-        new () { FirstName  = "Jane", LastName = "Doe", MiddleName = "Foster" }
+        //new () { FirstName  = "Chase" },
+        //new () { FirstName  = "John", LastName = "Doe" },
+        //new () { FirstName  = "Jane", LastName = "Doe", MiddleName = "Foster" }
     };
 
 

@@ -10,28 +10,29 @@ public sealed class OGraphBuilder : IOGraphBuilder
 {
     private readonly static ConcurrentDictionary<Name, IOGraph> cache = new();
 
-    // These are our build actions
-    private readonly IList<Action<OGraph>> onNodeAdd;
-    private readonly IList<Action<OGraph>> onEdgeAdd;
-    private readonly IList<Action<OGraph>> onOperationAdd;
-    private readonly IList<Action<OGraph>> onBuild;
+    private readonly IList<Action<Graph>> onNodeAdd;
+    private readonly IList<Action<Graph>> onEdgeAdd;
+    private readonly IList<Action<Graph>> onOperationAdd;
+    private readonly IList<Action<Graph>> onBuild;
 
     private OGraphBuilder()
     {
-        this.onNodeAdd = new List<Action<OGraph>>();
-        this.onEdgeAdd = new List<Action<OGraph>>();
-        this.onOperationAdd = new List<Action<OGraph>>();
-        this.onBuild = new List<Action<OGraph>>();  
+        this.onNodeAdd = new List<Action<Graph>>();
+        this.onEdgeAdd = new List<Action<Graph>>();
+        this.onOperationAdd = new List<Action<Graph>>();
+        this.onBuild = new List<Action<Graph>>();  
     }
 
-    internal OGraph Graph { get; init; } 
+    internal Graph Graph { get; init; } = default!;
 
     #region Node
-    IOGraphBuilder IOGraphBuilder.AddNode<TNode>()
+    IOGraphBuilder IOGraphBuilder.AddVertex<TNode>()
     {
-        return (this as IOGraphBuilder).AddNode(new TNode());
+        var node = new TNode();
+
+        return (this as IOGraphBuilder).AddVertex(node);
     }
-    IOGraphBuilder IOGraphBuilder.AddNode(IOGraphNode node)
+    IOGraphBuilder IOGraphBuilder.AddVertex(IOGraphVertex node)
     {
         if (node is null)
         {
@@ -43,20 +44,9 @@ public sealed class OGraphBuilder : IOGraphBuilder
         });
         return this;
     }
-    IOGraphNodeDescriptor IOGraphBuilder.AddNode(Name label)
+    IOGraphBuilder IOGraphBuilder.AddVertex<T>(Action<IOGraphVertexDescriptor<T>> descriptor)
     {
-        var node = new OGraphNodeDefault()
-        {
-            label = label
-        };
-        var descriptor = new OGraphNodeDescriptor(node)
-        {
-            OnConfigure = onNodeAdd
-        };
-
-        (this as IOGraphBuilder).AddNode(node);
-
-        return descriptor;
+        throw new NotImplementedException();
     }
     #endregion
 
@@ -185,7 +175,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
 
     IOGraph IOGraphBuilder.Build()
     {
-        return cache.GetOrAdd(Graph.Name, name =>
+        return cache.GetOrAdd(Graph.Label, name =>
         {
             OnBuild(onNodeAdd);
             OnBuild(onEdgeAdd);
@@ -195,7 +185,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
             return Graph;
         });
 
-        void OnBuild(IList<Action<OGraph>> actions)
+        void OnBuild(IList<Action<Graph>> actions)
         {
             foreach (var action in actions)
             {
@@ -218,9 +208,13 @@ public sealed class OGraphBuilder : IOGraphBuilder
             throw new ArgumentNullException(nameof(configure));
         }
 
-        var builder = new OGraphBuilder();
-
-        builder.Graph.Name = name;
+        var builder = new OGraphBuilder()
+        {
+            Graph = new()
+            {
+                Label = name
+            }
+        };
 
         configure.Invoke(builder);
 
@@ -238,8 +232,10 @@ public sealed class OGraphBuilder : IOGraphBuilder
         {
             Graph = new()
             {
-                Name = name
+                Label = name
             }
         };
     }
+
+    
 }

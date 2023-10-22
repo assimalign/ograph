@@ -8,7 +8,7 @@ namespace Assimalign.OGraph;
 
 public class OGraphHttpPutAttribute : OGraphHttpMethodAttribute
 {
-    public OGraphHttpPutAttribute() : base("PUT")
+    public OGraphHttpPutAttribute(string route) : base("PUT", route)
     {
         
     }

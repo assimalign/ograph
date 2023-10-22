@@ -49,7 +49,7 @@ public partial class ComplexType<T> : ComplexType
                 var enumType = typeof(EnumType<>).MakeGenericType(propType);
                 var enumObj = Activator.CreateInstance(enumType) as IOGraphType;
 
-                Properties.Add(new OGraphProperty()
+                Properties.Add(new Property()
                 {
                     Name = propName,
                     Type = enumObj,
@@ -59,7 +59,7 @@ public partial class ComplexType<T> : ComplexType
             }
             if (propType.IsValueType || propType == typeof(string))
             {
-                Properties.Add(new OGraphProperty()
+                Properties.Add(new Property()
                 {
                     Name = propName,
                     Type = GetPrimitiveType(propType),
@@ -69,7 +69,7 @@ public partial class ComplexType<T> : ComplexType
             }
             if (propType.IsEnumerableType(out var enumerableType))
             {
-                Properties.Add(new OGraphProperty()
+                Properties.Add(new Property()
                 {
                     Name = propName,
                     Type = GetCollectionType(enumerableType),
@@ -82,7 +82,7 @@ public partial class ComplexType<T> : ComplexType
                 var complexType = typeof(ComplexType<>).MakeGenericType(propType);
                 var complexObj = Activator.CreateInstance(complexType) as IOGraphType;
 
-                Properties.Add(new OGraphProperty()
+                Properties.Add(new Property()
                 {
                     Name = propName,
                     Type =complexObj,
@@ -91,7 +91,7 @@ public partial class ComplexType<T> : ComplexType
                 continue;
             }
 
-            throw new Exception($"The following property: '{prop.Name}' on type '{prop.DeclaringType.Name}' has an unsupported type.");
+            //throw new Exception($"The following property: '{prop.Name}' on type '{prop.DeclaringType.Name}' has an unsupported type.");
         }
     }
 
@@ -171,7 +171,7 @@ public partial class ComplexType<T> : ComplexType
         var lambda = Expression.Lambda(member, parameter);
         var method = lambda.Compile();
 
-        return new OGraphPropertyResolverDefault((context, cancellationToken) =>
+        return new PropertyResolverDefault((context, cancellationToken) =>
         {
             var parent = context.GetParent<T>();
 
