@@ -16,12 +16,12 @@ internal class VertexDescriptor<T> : IOGraphVertexDescriptor<T> where T : class,
     {
         this.vertex = vertex;
     }
-    public IOGraphVertexEdgeDescriptor HasEdge(Name label)
+    public IOGraphVertexEdgeDescriptor HasEdge(Label label)
     {
         throw new NotImplementedException();
     }
 
-    public IOGraphVertexDescriptor<T> HasKey(Name key)
+    public IOGraphVertexDescriptor<T> HasKey(Label key)
     {
         throw new NotImplementedException();
     }
@@ -31,7 +31,7 @@ internal class VertexDescriptor<T> : IOGraphVertexDescriptor<T> where T : class,
         throw new NotImplementedException();
     }
 
-    public IOGraphVertexDescriptor<T> HasLabel(Name label)
+    public IOGraphVertexDescriptor<T> HasLabel(Label label)
     {
         if (!vertex.labels.Contains(label))
         {
@@ -46,7 +46,7 @@ internal class VertexDescriptor<T> : IOGraphVertexDescriptor<T> where T : class,
         vertex.metadata.Add(key, value);
         return this;
     }
-    public IOGraphPropertyDescriptor HasProperty(Name name)
+    public IOGraphPropertyDescriptor HasProperty(Label name)
     {
         throw new NotImplementedException();
     }
@@ -56,12 +56,12 @@ internal class VertexDescriptor<T> : IOGraphVertexDescriptor<T> where T : class,
         throw new NotImplementedException();
     }
 
-    public IOGraphVertexQueryOperationDescriptor HasQuery(Name label)
+    public IOGraphVertexQueryOperationDescriptor HasQuery(Label label)
     {
         throw new NotImplementedException();
     }
 
-    public IOGraphVertexDescriptor<T> Ignore(Name name)
+    public IOGraphVertexDescriptor<T> Ignore(Label name)
     {
         throw new NotImplementedException();
     }

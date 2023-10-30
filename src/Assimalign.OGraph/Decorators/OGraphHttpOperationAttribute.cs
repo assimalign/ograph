@@ -22,5 +22,5 @@ public sealed class OGraphHttpOperationAttribute : Attribute
     /// <summary>
     /// The Operation Name.
     /// </summary>
-    public Name Name { get; }
+    public Label Name { get; }
 }

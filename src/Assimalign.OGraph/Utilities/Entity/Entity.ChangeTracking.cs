@@ -95,8 +95,11 @@ public abstract partial record class Entity<T>
     }
 
     /// <summary>
-    /// 
+    /// Begins tracing all property changes
     /// </summary>
+    /// <remarks>
+    /// <i>Clears out any existing property changes.</i>
+    /// </remarks>
     protected void BeginPropertyChange([CallerMemberName] string propertyName = "")
     {
         propertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));

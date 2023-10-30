@@ -11,7 +11,7 @@ public class ComplexType : IOGraphComplexType
         this.Properties = new PropertyCollection();
     }
 
-    public Name Name { get; init; }
+    public Label Label { get; init; }
     public TypeKind Kind => TypeKind.Complex;
     public IOGraphPropertyCollection Properties { get; }
     public Type? RuntimeType { get; init; }

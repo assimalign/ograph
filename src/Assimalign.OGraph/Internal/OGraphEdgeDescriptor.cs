@@ -104,7 +104,7 @@ internal class OGraphEdgeDescriptor : IOGraphEdgeDescriptor
         edge.Resolver = new OGraphEdgeResolverDefault(resolver);
         return this;
     }
-    public IOGraphEdgeDescriptor UseSourceNode(Name label)
+    public IOGraphEdgeDescriptor UseSourceNode(Label label)
     {
         OnConfigure.Add(graph =>
         {
@@ -121,7 +121,7 @@ internal class OGraphEdgeDescriptor : IOGraphEdgeDescriptor
         edge.Source = new TNode();
         return this;
     }
-    public IOGraphEdgeDescriptor UseTargetNode(Name label)
+    public IOGraphEdgeDescriptor UseTargetNode(Label label)
     {
         OnConfigure.Add(graph =>
         {

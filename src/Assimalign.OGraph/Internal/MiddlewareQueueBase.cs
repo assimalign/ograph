@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Internal;
 
-internal abstract class OGraphMiddlewareQueueBase<TMiddleware> : IEnumerable<TMiddleware>
+internal abstract class MiddlewareQueueBase<TMiddleware> : IEnumerable<TMiddleware>
 {
     protected Queue<TMiddleware> queue;
 
-    public OGraphMiddlewareQueueBase()
+    public MiddlewareQueueBase()
     {
         this.queue = new();
     }

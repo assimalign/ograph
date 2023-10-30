@@ -24,7 +24,7 @@ internal class PropertyCollection : HashSet<IOGraphProperty>,
         AssertReadOnly();
         base.Remove(property);
     }
-    public bool TryGet(Name name, out IOGraphProperty? property)
+    public bool TryGetProperty(Label name, out IOGraphProperty? property)
     {
         property = this.FirstOrDefault(p => p.Name == name);
         return property is null ? false : true;

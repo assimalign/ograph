@@ -10,7 +10,12 @@ public interface IOGraphEdgeCollection : ICollection<IOGraphEdge>
     /// <param name="label"></param>
     /// <param name="edge"></param>
     /// <returns></returns>
-    bool TryGetEdge(Name label, out IOGraphEdge? edge);
-
-    bool TryAddEdge(IOGraphEdge edge);
+    bool TryGet(Label label, out IOGraphEdge? edge);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    IOGraphEdge GetOrLink(IOGraphVertex source, IOGraphVertex target);
 }

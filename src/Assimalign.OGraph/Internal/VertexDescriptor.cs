@@ -19,7 +19,7 @@ internal class VertexDescriptor : IOGraphVertexDescriptor
 
     public IList<Action<Graph>> OnConfigure { get; init; } = new List<Action<Graph>>();
 
-    public IOGraphVertexDescriptor UseLabel(Name label)
+    public IOGraphVertexDescriptor UseLabel(Label label)
     {
         if (!node.labels.Contains(label))
         {
@@ -29,7 +29,7 @@ internal class VertexDescriptor : IOGraphVertexDescriptor
         }
         return this;
     }
-    public IOGraphVertexDescriptor UseMetadata(string key, object value)
+    public IOGraphVertexDescriptor HasMetadata(string key, object value)
     {
         if (key is null)
         {
@@ -52,7 +52,7 @@ internal class VertexDescriptor : IOGraphVertexDescriptor
         }
         OnConfigure.Add(graph =>
         {
-            graph.Types.TryAdd(type);
+            graph.Types.TryAddType(type);
         });
         node.type = type;
         return this;
@@ -64,7 +64,7 @@ internal class VertexDescriptor : IOGraphVertexDescriptor
 
         OnConfigure.Add(graph =>
         {
-            graph.Types.TryAdd(type);
+            graph.Types.TryAddType(type);
         });
         return this;
     }
@@ -87,7 +87,7 @@ internal class VertexDescriptor : IOGraphVertexDescriptor
 
             var complexType = new ComplexType<T>();
 
-            graph.Types.TryAdd(complexType);
+            graph.Types.TryAddType(complexType);
 
             var descriptor = new OGraphComplexTypeDescriptor<T>(complexType);
 
@@ -99,7 +99,7 @@ internal class VertexDescriptor : IOGraphVertexDescriptor
         return this;
     }
 
-    public IOGraphEdgeDescriptor AddEdge(Name label)
+    public IOGraphEdgeDescriptor AddEdge(Label label)
     {
         var edge = new OGraphEdgeDefault()
         {
@@ -128,7 +128,7 @@ internal class VertexDescriptor : IOGraphVertexDescriptor
         throw new NotImplementedException();
     }
 
-    public IOGraphQueryOperationDescriptor AddQuery(Name operationName)
+    public IOGraphQueryOperationDescriptor AddQuery(Label operationName)
     {
         var operation = new OGraphQueryOperationDefault()
         {
@@ -149,7 +149,7 @@ internal class VertexDescriptor : IOGraphVertexDescriptor
         return descriptor;
     }
 
-    public IOGraphCommandOperationDescriptor AddCommand(Name operationName)
+    public IOGraphCommandOperationDescriptor AddCommand(Label operationName)
     {
         var operation = new OGraphCommandOperationDefault()
         {

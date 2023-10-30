@@ -24,11 +24,11 @@ public interface IOGraphComplexTypeDescriptor
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    IOGraphPropertyDescriptor HasProperty(Name name);
+    IOGraphPropertyDescriptor HasProperty(Label name);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="name">The property name to ignore.</param>
     /// <returns></returns>
-    IOGraphComplexTypeDescriptor Ignore(Name name);
+    IOGraphComplexTypeDescriptor Ignore(Label name);
 }

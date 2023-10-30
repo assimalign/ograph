@@ -8,15 +8,15 @@ namespace Assimalign.OGraph;
 /// <summary>
 /// 
 /// </summary>
-public readonly struct Name : 
-    IEquatable<Name>, 
-    IEqualityComparer<Name>,
-    IComparable<Name>
+public readonly struct Label : 
+    IEquatable<Label>, 
+    IEqualityComparer<Label>,
+    IComparable<Label>
 {
     // Allowed characters for name
     private const string pattern = "^[a-zA-Z0-9]+$";
 
-    public Name(string value)
+    public Label(string value)
     {
         if (string.IsNullOrEmpty(value))
         {
@@ -95,7 +95,7 @@ public readonly struct Name :
     /// <inheritdoc />
     public override bool Equals([NotNullWhen(true)] object? instance)
     {
-        if (instance is not Name name)
+        if (instance is not Label name)
         {
             return false;
         }
@@ -111,37 +111,37 @@ public readonly struct Name :
     }
 
     /// <inheritdoc />
-    public bool Equals(Name name)
+    public bool Equals(Label name)
     {
         return Value.Equals(name.Value, StringComparison.OrdinalIgnoreCase);
     }
 
     /// <inheritdoc />
-    public bool Equals(Name left, Name right)
+    public bool Equals(Label left, Label right)
     {
         return left.Equals(right);
     }
 
     /// <inheritdoc />
-    public int GetHashCode([DisallowNull] Name name)
+    public int GetHashCode([DisallowNull] Label name)
     {
         return name.GetHashCode();
     }
 
     /// <inheritdoc />
-    public int CompareTo(Name name)
+    public int CompareTo(Label name)
     {
         return Value.ToLowerInvariant().CompareTo(name.Value.ToLowerInvariant());
     }
 
-    public static implicit operator Name(string value) => new Name(value);
-    public static implicit operator string(Name name) => name.Value;
-    public static bool operator ==(Name left, Name right) => left.Equals(right);
-    public static bool operator !=(Name left, Name right) => !left.Equals(right);
-    public static bool operator <(Name left, Name right) => left.CompareTo(right) < 0;
-    public static bool operator >(Name left, Name right) => left.CompareTo(right) > 0;
-    public static bool operator <=(Name left, Name right) => left.CompareTo(right) <= 0;
-    public static bool operator >=(Name left, Name right) => left.CompareTo(right) >= 0;
+    public static implicit operator Label(string value) => new Label(value);
+    public static implicit operator string(Label name) => name.Value;
+    public static bool operator ==(Label left, Label right) => left.Equals(right);
+    public static bool operator !=(Label left, Label right) => !left.Equals(right);
+    public static bool operator <(Label left, Label right) => left.CompareTo(right) < 0;
+    public static bool operator >(Label left, Label right) => left.CompareTo(right) > 0;
+    public static bool operator <=(Label left, Label right) => left.CompareTo(right) <= 0;
+    public static bool operator >=(Label left, Label right) => left.CompareTo(right) >= 0;
 
 
     /// <summary>

@@ -14,21 +14,27 @@ public interface IOGraphVertex
     /// <summary>
     /// Represents the label each node should contain.
     /// </summary>
-    Name[] Labels { get; }
+    Label Label { get; }
     /// <summary>
-    /// Represents arbitrary metadata that can be associated with this node.
+    /// The type bound to this vertex.
     /// </summary>
-    IOGraphMetadata Metadata { get; }
-    /// <summary>
-    /// The type being bound to this node.
-    /// </summary>
-    IOGraphType Type { get; }
+    IOGraphType Type { get; } // TODO: Revisit whether I should specify IOGraphEntityType
     /// <summary>
     /// A collection of edges that are connected to this node.
     /// </summary>
     IOGraphEdgeCollection Edges { get; }
     /// <summary>
-    /// A collection of operations bound to this node.
+    /// Represents arbitrary metadata that can be associated with this node.
     /// </summary>
-    IOGraphOperationCollection Operations { get; }
+    IOGraphMetadata Metadata { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    IOGraphPropertyCollection GetProperties();
+    /// <summary>
+    /// Gets the collection of operations bound to this vertex.
+    /// </summary>
+    /// <returns></returns>
+    IOGraphOperationCollection GetOperations();
 }

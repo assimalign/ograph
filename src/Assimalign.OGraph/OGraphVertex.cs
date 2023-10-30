@@ -6,7 +6,7 @@ using Assimalign.OGraph.Internal;
 
 public abstract class OGraphVertex : IOGraphVertex
 {
-    internal Name[] labels;
+    internal Label[] labels;
     internal IOGraphType? type;
     internal IOGraphMetadata metadata;
     internal IOGraphEdgeCollection edges;
@@ -14,15 +14,15 @@ public abstract class OGraphVertex : IOGraphVertex
 
     public OGraphVertex()
     {
-        this.labels = new Name[0];
+        this.labels = new Label[0];
         this.metadata = new Metadata();
-        this.edges = new OGraphEdgeCollection();
+        this.edges = new EdgeCollection();
         this.operations = new OGraphOperationCollection();
 
         Configure(new VertexDescriptor(this));
     }
 
-    Name[] IOGraphVertex.Labels => this.labels;
+    Label[] IOGraphVertex.Labels => this.labels;
     IOGraphType IOGraphVertex.Type => this.type!;
     IOGraphMetadata IOGraphVertex.Metadata => this.metadata;
     IOGraphEdgeCollection IOGraphVertex.Edges => this.edges;

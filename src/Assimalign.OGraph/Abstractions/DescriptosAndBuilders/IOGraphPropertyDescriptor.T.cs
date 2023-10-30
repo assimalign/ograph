@@ -17,7 +17,7 @@ public interface IOGraphPropertyDescriptor<T>
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    IOGraphPropertyDescriptor<T> UseName(Name name);
+    IOGraphPropertyDescriptor<T> UseName(Label name);
     /// <summary>
     /// 
     /// </summary>

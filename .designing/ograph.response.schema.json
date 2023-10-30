@@ -9,9 +9,6 @@
                 "$schema": {
                     "type": "string"
                 },
-                "@ograph.node": {
-                    "type": "string"
-                },
                 "@ograph.status": {
                     "type": "number"
                 },
@@ -68,10 +65,7 @@
                     ]
                 }
             },
-            "additionalProperties": false,
-            "required": [
-                "@ograph.node"
-            ]
+            "additionalProperties": false
         },
         "ograph-node": {
             "type": "object",

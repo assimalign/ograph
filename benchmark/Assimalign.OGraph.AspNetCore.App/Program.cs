@@ -14,91 +14,61 @@ builder.Services
     {
         options.RoutePrefix = "api";
     })
-    .AddOGraph("Users", builder =>
+    .AddOGraph("users", builder =>
     {
         // Composite Implementation
         builder.AddVertex<User>(vertex =>
         {
             // Define Type information
-            vertex.HasLabel("users");
-            vertex.HasKey(p => p.UserId); // Composite keys NOT allowed currently
-
+            vertex.HasLabel("user");
             vertex.HasProperty(p => p.Details)
-                .UseType(details => // Extending the details type
-                {
-                    details.HasProperty("fullName")
-                        .UseMiddleware(async (context, next) =>
-                        {
-                            if (!context!.GetClaimsPrincipal()!.Identity!.IsAuthenticated )
+
+                    .UseType(details => // Extending the details type
+                    {
+                        details.HasProperty("fullName")
+                            .UseMiddleware(async (context, next) =>
                             {
-                                return OGraphResult.Unauthorized("The user is not authorized to access this resource.");
-                            }
+                                if (!context!.GetClaimsPrincipal()!.Identity!.IsAuthenticated)
+                                {
+                                    return OGraphResult.Unauthorized("The user is not authorized to access this resource.");
+                                }
+                                return await next(context);
+                            })
+                            .UseResolver(context => // Creating a resolver for a computed property
+                            {
+                                var parent = context.GetParent<UserDetails>();
 
-                            return await next(context);
-                        })
-                        .UseResolver(context => // Creating a resolver for a computed property
-                        {
-                            var parent = context.GetParent<UserDetails>();
-
-                            return $"{parent.LastName}, {parent.FirstName} {parent.MiddleName}";
-                        });
-                });
+                                return $"{parent.LastName}, {parent.FirstName} {parent.MiddleName}";
+                            });
+                    });
 
             // Define Edges
-            vertex.HasEdge("addresses")
-                .UseMetadata("routeRepresentation", "/users/{userId}/addresses") //There should be a corresponding operation bound to the addresses vertex
-                .UseTarget<UserAddressVertex>();
+            vertex.HasEdge("addresses") //There should be a corresponding operation bound to the addresses vertex
+                .WithMany<UserAddressVertex>();
 
             vertex.HasEdge("primaryAddress")
-                .UseMetadata("routeRepresentation", "/users/{userId}/primaryAddress")
-                .UseTarget<UserAddressVertex>();
+                .WithOne<UserAddressVertex>();
 
             vertex.HasEdge("profile")
-                .UseMetadata("routeRepresentation", "/users/{userId}/profile")
-                .UseTarget<UserProfileVertex>();
-
-
-            // Define Operations
-            vertex.HasQuery("GetUsers")
-                .UseResolver(async (context, cancellationToken) =>
-                {
-                    return default;
-                });
-
-            vertex.HasQuery("GetUserById")
-                .UseRoute("{userId}")
-                .UseResolver(async (context, cancellationToken) =>
-                {
-                    return default;
-                }); 
-            
+                .WithOne<UserProfileVertex>();
         });
         builder.AddVertex<UserAddress>(vertex =>
         {
-
+            vertex.HasLabel("address");
         });
         builder.AddVertex<UserProfile>(vertex =>
         {
+            vertex.HasLabel("profile");
 
         });
-
-        builder.AddQuery("GetUsers")
-            .UseNode("users")
-            .UseRoute("/users")
-            .UseResolver(async (context, cancellationToken) =>
-            {
-                return default;
-            });
     });
-    //.AddOGraph("Employees", builder =>
-    //{
-    //})
-    //.AddOGraph("Organization", builder =>
-    //{
-
-    //});
 
 var app = builder.Build();
+
+app.MapGet("", async context =>
+{
+
+});
 
 app.UseOGraph();
 app.Run();

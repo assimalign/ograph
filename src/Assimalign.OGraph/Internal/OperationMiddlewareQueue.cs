@@ -3,10 +3,10 @@ using System.Linq;
 
 namespace Assimalign.OGraph.Internal;
 
-internal class OGraphEdgeMiddlewareQueue : OGraphMiddlewareQueueBase<IOGraphEdgeMiddleware>,
-    IOGraphEdgeMiddlewareQueue
+internal class OperationMiddlewareQueue : MiddlewareQueueBase<IOGraphOperationMiddleware>,
+    IOGraphOperationMiddlewareQueue
 {
-    public OGraphEdgeHandler BuildHandlerChain(IOGraphEdgeResolver resolver)
+    public OGraphOperationHandler BuildHandlerChain(IOGraphOperationResolver resolver)
     {
         if (resolver is null)
         {
@@ -14,7 +14,7 @@ internal class OGraphEdgeMiddlewareQueue : OGraphMiddlewareQueueBase<IOGraphEdge
         }
 
         var index = 0;
-        var root = new OGraphEdgeHandler(resolver.InvokeAsync);
+        var root = new OGraphOperationHandler(resolver.InvokeAsync);
 
         if (Count == 0)
         {
@@ -22,10 +22,10 @@ internal class OGraphEdgeMiddlewareQueue : OGraphMiddlewareQueueBase<IOGraphEdge
         }
         return Chain(root);
 
-        OGraphEdgeHandler Chain(OGraphEdgeHandler root)
+        OGraphOperationHandler Chain(OGraphOperationHandler root)
         {
             var middleware = queue.Reverse().Skip(index).First();
-            var next = new OGraphEdgeHandler((context, cancellationToken) =>
+            var next = new OGraphOperationHandler((context, cancellationToken) =>
             {
                 return middleware.InvokeAsync(context, root);
             });

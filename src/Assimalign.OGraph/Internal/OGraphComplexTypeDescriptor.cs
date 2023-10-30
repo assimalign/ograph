@@ -11,7 +11,7 @@ internal class OGraphComplexTypeDescriptor : IOGraphComplexTypeDescriptor
         this.complexType = complexTyp;
     }
 
-    public IOGraphPropertyDescriptor HasProperty(Name name)
+    public IOGraphPropertyDescriptor HasProperty(Label name)
     {
         var property = new Property()
         {
@@ -34,7 +34,7 @@ internal class OGraphComplexTypeDescriptor : IOGraphComplexTypeDescriptor
         throw new NotImplementedException();
     }
 
-    public IOGraphComplexTypeDescriptor Ignore(Name name)
+    public IOGraphComplexTypeDescriptor Ignore(Label name)
     {
         throw new NotImplementedException();
     }

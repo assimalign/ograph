@@ -29,11 +29,10 @@ public abstract class OGraphQueryOptions
     /// Sets the default page size on a query if none is provided.
     /// </summary>
     public int? DefaultPageSize { get; set; } = 100;
-    // TODO: Need to evaluate this option. Sometimes for discovery it is nice to see what is returned in a query.
     /// <summary>
-    /// Specifies whether to select all properties of no projections are supplied.
+    /// Specifies whether to project all properties if no projections are supplied.
     /// </summary>
-    //public bool DefaultProjectAll { get; set; }
+    public bool DefaultProjectAll { get; set; } = true; // TODO: Need to evaluate this option. Sometimes for discovery it is nice to see what is returned in a query.
     /// <summary>
     /// 
     /// </summary>

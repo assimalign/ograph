@@ -16,7 +16,7 @@ internal class OGraphComplexTypeDescriptor<T> : IOGraphComplexTypeDescriptor<T>
         this.type = complexTyp;
     }
 
-    public IOGraphPropertyDescriptor HasProperty(Name name)
+    public IOGraphPropertyDescriptor HasProperty(Label name)
     {
         var property = new Property()
         {
@@ -53,16 +53,15 @@ internal class OGraphComplexTypeDescriptor<T> : IOGraphComplexTypeDescriptor<T>
             {
                 throw new Exception("Something Happened");
             }
-            return new OGraphPropertyDescriptor<TProperty>(prop);
+            return new PropertyDescriptor<TProperty>(prop);
         }
 
-        return new OGraphPropertyDescriptor<TProperty>(new Property()
+        return new PropertyDescriptor<TProperty>(new Property()
         {
             Name = memberExpression.Member.Name
         });
     }
-
-    public IOGraphComplexTypeDescriptor<T> Ignore(Name name)
+    public IOGraphComplexTypeDescriptor<T> Ignore(Label name)
     {
         if (type.Properties.TryGetProperty(name, out var property))
         {
@@ -71,7 +70,6 @@ internal class OGraphComplexTypeDescriptor<T> : IOGraphComplexTypeDescriptor<T>
 
         return this;
     }
-
     public IOGraphComplexTypeDescriptor<T> Ignore<TProperty>(Expression<Func<T, TProperty>> expression)
     {
         var memberExpression = (MemberExpression)expression.Body;

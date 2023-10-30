@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Assimalign.OGraph;
 
@@ -12,13 +11,19 @@ public interface IOGraphTypeCollection : ICollection<IOGraphType>
     /// 
     /// </summary>
     /// <param name="name"></param>
-    /// <param name="type"></param>
     /// <returns></returns>
-    bool TryGet(Name name, out IOGraphType type);
+    IOGraphType this[Label name] { get; }
     /// <summary>
     /// 
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    bool TryAdd(IOGraphType type);
+    bool TryAddType(IOGraphType type);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    bool TryGetType(Label name, out IOGraphType? type);
 }

@@ -12,7 +12,4 @@ public interface IOGraphComplexType : IOGraphType
     /// A collection of properties
     /// </summary>
     IOGraphPropertyCollection Properties { get; }
-
-
-    //string ResolveRuntimePropertyName(string propertyName);
 }

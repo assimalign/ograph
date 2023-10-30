@@ -29,11 +29,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph.Core", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmark", "benchmark", "{BB314F4C-A0B7-4861-BA8A-DA7C9831566E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.OGraph.Security", "src\Assimalign.OGraph.Security\Assimalign.OGraph.Security.csproj", "{41649C17-C42C-4C8D-8F78-A0F1F7D2D7EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph.Security", "src\Assimalign.OGraph.Security\Assimalign.OGraph.Security.csproj", "{41649C17-C42C-4C8D-8F78-A0F1F7D2D7EC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph.AspNetCore.App", "benchmark\Assimalign.OGraph.AspNetCore.App\Assimalign.OGraph.AspNetCore.App.csproj", "{96C5228B-9A5A-48B7-B384-FF62E10ED237}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.OGraph.AspNetCore", "benchmark\Assimalign.OGraph.AspNetCore\Assimalign.OGraph.AspNetCore.csproj", "{A4840505-083C-48C0-A93D-410027661194}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph.AspNetCore", "benchmark\Assimalign.OGraph.AspNetCore\Assimalign.OGraph.AspNetCore.csproj", "{A4840505-083C-48C0-A93D-410027661194}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{282449FB-DCA3-46D6-A2C1-A9A812B0A115}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.ErpCore", "sample\Assimalign.ErpCore\Assimalign.ErpCore.csproj", "{734BBBC6-362E-4BDE-AA57-D2ABC644677D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +73,10 @@ Global
 		{A4840505-083C-48C0-A93D-410027661194}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4840505-083C-48C0-A93D-410027661194}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4840505-083C-48C0-A93D-410027661194}.Release|Any CPU.Build.0 = Release|Any CPU
+		{734BBBC6-362E-4BDE-AA57-D2ABC644677D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{734BBBC6-362E-4BDE-AA57-D2ABC644677D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{734BBBC6-362E-4BDE-AA57-D2ABC644677D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{734BBBC6-362E-4BDE-AA57-D2ABC644677D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +89,7 @@ Global
 		{41649C17-C42C-4C8D-8F78-A0F1F7D2D7EC} = {A7772D96-73BB-4CA9-AA56-A6083767F27F}
 		{96C5228B-9A5A-48B7-B384-FF62E10ED237} = {BB314F4C-A0B7-4861-BA8A-DA7C9831566E}
 		{A4840505-083C-48C0-A93D-410027661194} = {BB314F4C-A0B7-4861-BA8A-DA7C9831566E}
+		{734BBBC6-362E-4BDE-AA57-D2ABC644677D} = {282449FB-DCA3-46D6-A2C1-A9A812B0A115}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {64E79EA5-8DCB-4919-BA27-1A5EB89F839B}

@@ -14,7 +14,7 @@ internal class VertexCollection : HashSet<IOGraphVertex>,
 
 
     public bool IsReadOnly { get; set; }
-    public bool TryGetVertex(Name label, out IOGraphVertex? node)
+    public bool TryGetVertex(Label label, out IOGraphVertex? node)
     {
         node = this.FirstOrDefault(vertex => vertex.Labels.Contains(label));
 

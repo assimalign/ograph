@@ -9,7 +9,7 @@ public interface IOGraphQueryOperationDescriptor
     /// </summary>
     /// <param name="name">A string name.</param>
     /// <returns>The current descriptor.</returns>
-    IOGraphQueryOperationDescriptor UseName(Name name);
+    IOGraphQueryOperationDescriptor UseName(Label name);
     /// <summary>
     /// Sets the route to use for the operation.
     /// </summary>
@@ -28,19 +28,27 @@ public interface IOGraphQueryOperationDescriptor
     /// <remarks></remarks>
     /// <param name="label"></param>
     /// <returns>The current descriptor.</returns>
-    IOGraphQueryOperationDescriptor UseNode(Name name);
+    IOGraphQueryOperationDescriptor UseVertex(Label label);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="vertex"></param>
+    /// <returns></returns>
+    IOGraphQueryOperationDescriptor UseVertex(IOGraphVertex vertex);
     /// <summary>
     /// Binds a node to the operation. 
     /// </summary>
     /// <typeparam name="TNode"></typeparam>
     /// <returns>The current descriptor.</returns>
-    IOGraphQueryOperationDescriptor UseNode<TNode>() where TNode : IOGraphVertex, new();
+    IOGraphQueryOperationDescriptor UseVertex<TNode>() 
+        where TNode : IOGraphVertex, new();
     /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="TMiddleware"></typeparam>
     /// <returns>The current descriptor.</returns>
-    IOGraphQueryOperationDescriptor UseMiddleware<TMiddleware>() where TMiddleware : IOGraphOperationMiddleware, new();
+    IOGraphQueryOperationDescriptor UseMiddleware<TMiddleware>() 
+        where TMiddleware : IOGraphOperationMiddleware, new();
     /// <summary>
     /// 
     /// </summary>
@@ -58,7 +66,8 @@ public interface IOGraphQueryOperationDescriptor
     /// </summary>
     /// <typeparam name="TResolver"></typeparam>
     /// <returns>The current descriptor.</returns>
-    IOGraphQueryOperationDescriptor UseResolver<TResolver>() where TResolver : IOGraphOperationResolver, new();
+    IOGraphQueryOperationDescriptor UseResolver<TResolver>() 
+        where TResolver : IOGraphOperationResolver, new();
     /// <summary>
     /// 
     /// </summary>
@@ -76,7 +85,8 @@ public interface IOGraphQueryOperationDescriptor
     /// </summary>
     /// <typeparam name="TQueryProvider"></typeparam>
     /// <returns>The current descriptor.</returns>
-    IOGraphQueryOperationDescriptor UseQueryProvider<TQueryProvider>() where TQueryProvider : IOGraphQueryProvider, new();
+    IOGraphQueryOperationDescriptor UseQueryProvider<TQueryProvider>() 
+        where TQueryProvider : IOGraphQueryProvider, new();
     /// <summary>
     /// Overrides the default query provider.
     /// </summary>
@@ -95,7 +105,8 @@ public interface IOGraphQueryOperationDescriptor
     /// <typeparam name="TQueryOptions"></typeparam>
     /// <param name="configure"></param>
     /// <returns>The current descriptor.</returns>
-    IOGraphQueryOperationDescriptor UseQueryOptions<TQueryOptions>(Action<TQueryOptions> configure) where TQueryOptions : OGraphQueryOptions, new();
+    IOGraphQueryOperationDescriptor UseQueryOptions<TQueryOptions>(Action<TQueryOptions> configure) 
+        where TQueryOptions : OGraphQueryOptions, new();
     /// <summary>
     /// 
     /// </summary>

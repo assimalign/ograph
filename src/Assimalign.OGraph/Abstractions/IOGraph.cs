@@ -6,9 +6,13 @@
 public interface IOGraph
 {
     /// <summary>
-    /// The name of the graph model.
+    ///The label of the Graph Model.
     /// </summary>
-    Name Label { get; }
+    /// <remarks>
+    /// The label of the Graph model acts as a namespace. In terms a of a domain,
+    /// there can be multiple models
+    /// </remarks>
+    Label Label { get; }
     /// <summary>
     /// 
     /// </summary>
@@ -25,4 +29,10 @@ public interface IOGraph
     /// Represents a collection of HTTP Operations
     /// </summary>
     IOGraphOperationCollection Operations { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    IOGraphExecutor GetExecutor();
 }

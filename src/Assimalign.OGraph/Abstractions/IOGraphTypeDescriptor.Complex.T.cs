@@ -10,7 +10,7 @@ public interface IOGraphComplexTypeDescriptor<T>
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    IOGraphComplexTypeDescriptor<T> Ignore(Name name);
+    IOGraphComplexTypeDescriptor<T> Ignore(Label name);
     /// <summary>
     /// Specify a property to be ignored.
     /// </summary>
@@ -23,7 +23,7 @@ public interface IOGraphComplexTypeDescriptor<T>
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    IOGraphPropertyDescriptor HasProperty(Name name);
+    IOGraphPropertyDescriptor HasProperty(Label name);
     /// <summary>
     /// 
     /// </summary>

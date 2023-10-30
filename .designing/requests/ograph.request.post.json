@@ -1,16 +1,15 @@
 {
     "data": {
-
-        "@edges": {
-            "addresses": {
-                "create": {
-                    
+        "@ograph.edges": {
+            "addresses": [
+                {
+                    "method": "POST",
+                    "route": "",
+                    "data": {}
                 }
-            },
+            ],
             "createAddress": {
-                "data": {
-
-                }
+                "data": {}
             }
         }
     }

@@ -6,19 +6,19 @@ internal class Graph : IOGraph
 {
     public Graph()
     {
-        Edges = new OGraphEdgeCollection();
+        Edges = new EdgeCollection();
         Nodes = new VertexCollection();
         Operations = new OGraphOperationCollection();
         Types = new TypeCollection();
     }
 
 
-    public Name Label { get; set; }
+    public Label Label { get; set; }
 
     public VertexCollection Nodes { get; }
     IOGraphVertexCollection IOGraph.Vertices => this.Nodes;
     
-    public OGraphEdgeCollection Edges { get; }
+    public EdgeCollection Edges { get; }
     IOGraphEdgeCollection IOGraph.Edges => this.Edges;
 
     public OGraphOperationCollection Operations { get; }

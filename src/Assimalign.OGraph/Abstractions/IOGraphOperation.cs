@@ -15,7 +15,7 @@ public interface IOGraphOperation
     /// <summary>
     /// The name of the command.
     /// </summary>
-    Name Label { get; }
+    Label Label { get; }
     /// <summary>
     /// The route associated with this operation.
     /// </summary>
@@ -31,7 +31,7 @@ public interface IOGraphOperation
     /// <summary>
     /// Represents the node that is bound to this operation.
     /// </summary>
-    IOGraphVertex Node { get; }
+    IOGraphVertex Vertex { get; }
     /// <summary>
     /// The resolver for the operation.
     /// </summary>

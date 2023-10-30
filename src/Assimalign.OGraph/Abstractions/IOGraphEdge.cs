@@ -14,13 +14,18 @@ public interface IOGraphEdge
     /// <summary>
     /// A unique name of the edge.
     /// </summary>
-    Name Label { get; } //! The Edge Label must match the label of an operation. Operation Methods must not be mismatched
+    Label Label { get; } //! The Edge Label must match a literal segment of on operation on the target vertex. Operation Methods must not be mismatched
+    /// <summary>
+    /// Gets the cardinality of the Target 
+    /// Vertex/Vertices being resolved.
+    /// </summary>
+    CardinalityType Cardinality { get; }
     /// <summary>
     /// The source vertex.
     /// </summary>
     IOGraphVertex Source { get; }
     /// <summary>
-    /// The target is the node in which is linked to the source.
+    /// The target vertex.
     /// </summary>
     IOGraphVertex Target { get; }
     /// <summary>

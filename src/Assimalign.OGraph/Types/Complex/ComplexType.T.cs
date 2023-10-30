@@ -14,7 +14,7 @@ public partial class ComplexType<T> : ComplexType
     public ComplexType()
     {
         base.RuntimeType    = typeof(T);
-        base.Name           = typeof(T).Name;
+        base.Label           = typeof(T).Name;
         Initialize(); 
         Configure(new OGraphComplexTypeDescriptor<T>(this));
     }

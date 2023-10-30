@@ -11,7 +11,7 @@ internal class OGraphOperationCollection : HashSet<IOGraphOperation>,
     {
         
     }
-    public bool TryGetOperation(Name name, out IOGraphOperation operation)
+    public bool TryGetOperation(Label name, out IOGraphOperation operation)
     {
         throw new NotImplementedException();
     }

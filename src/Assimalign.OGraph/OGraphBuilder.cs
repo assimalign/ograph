@@ -8,7 +8,7 @@ using Assimalign.OGraph.Internal;
 
 public sealed class OGraphBuilder : IOGraphBuilder
 {
-    private readonly static ConcurrentDictionary<Name, IOGraph> cache = new();
+    private readonly static ConcurrentDictionary<Label, IOGraph> cache = new();
 
     private readonly IList<Action<Graph>> onNodeAdd;
     private readonly IList<Action<Graph>> onEdgeAdd;
@@ -82,7 +82,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
 
         return this;
     }
-    IOGraphEdgeDescriptor IOGraphBuilder.AddEdge(Name name)
+    IOGraphEdgeDescriptor IOGraphBuilder.AddEdge(Label name)
     {
         var edge = new OGraphEdgeDefault() 
         { 
@@ -112,7 +112,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
         }
         this.onBuild.Add(graph =>
         {
-            var node = operation.Node;
+            var node = operation.Vertex;
             var root = operation.Route.Segments[0].Value;
 
             if (!node.Label.Equals(root))
@@ -140,7 +140,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
 
         return this;
     }
-    IOGraphCommandOperationDescriptor IOGraphBuilder.AddCommand(Name name)
+    IOGraphCommandOperationDescriptor IOGraphBuilder.AddCommand(Label name)
     {
         var operation = new OGraphCommandOperationDefault()
         {
@@ -155,7 +155,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
 
         return descriptor;
     }
-    IOGraphQueryOperationDescriptor IOGraphBuilder.AddQuery(Name name)
+    IOGraphQueryOperationDescriptor IOGraphBuilder.AddQuery(Label name)
     {
         var operation = new OGraphQueryOperationDefault()
         {
@@ -201,7 +201,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
     /// <param name="configure"></param>
     /// <returns>OGraph model</returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static IOGraph Create(Name name, Action<IOGraphBuilder> configure)
+    public static IOGraph Create(Label name, Action<IOGraphBuilder> configure)
     {
         if (configure is null)
         {
@@ -226,7 +226,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public static IOGraphBuilder Create(Name name)
+    public static IOGraphBuilder Create(Label name)
     {
         return new OGraphBuilder()
         {

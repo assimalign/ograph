@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Assimalign.OGraph.Internal;
 
-internal class PropertyMiddlewareQueue : OGraphMiddlewareQueueBase<IOGraphPropertyMiddleware>, 
+internal class PropertyMiddlewareQueue : MiddlewareQueueBase<IOGraphPropertyMiddleware>, 
     IOGraphPropertyMiddlewareQueue
 {
     public OGraphPropertyHandler BuildHandlerChain(IOGraphPropertyResolver resolver)

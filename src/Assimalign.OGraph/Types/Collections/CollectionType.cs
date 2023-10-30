@@ -10,11 +10,11 @@ public class CollectionType<TType> : IOGraphCollectionType
     {
         ItemType = new TType();
     }
-    public virtual Name Name
+    public virtual Label Label
     {
         get
         {
-            return $"{ItemType.Name}Collection";
+            return $"{ItemType.Label}Collection";
         }
     }
 

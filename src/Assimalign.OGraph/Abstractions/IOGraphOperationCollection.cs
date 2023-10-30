@@ -6,5 +6,5 @@ namespace Assimalign.OGraph;
 public interface IOGraphOperationCollection : ICollection<IOGraphOperation>
 {
     
-    bool TryGetOperation(Name name, out IOGraphOperation operation);
+    bool TryGetOperation(Label name, out IOGraphOperation operation);
 }

@@ -31,18 +31,18 @@ internal class OGraphQueryOperationDescriptor : IOGraphQueryOperationDescriptor
         return this;
     }
 
-    public IOGraphQueryOperationDescriptor UseName(Name name)
+    public IOGraphQueryOperationDescriptor UseName(Label name)
     {
         operation.name = name;
         return this;
     }
 
-    public IOGraphQueryOperationDescriptor UseNode(Name name)
+    public IOGraphQueryOperationDescriptor UseVertex(Label name)
     {
         return this;
     }
 
-    public IOGraphQueryOperationDescriptor UseNode<TNode>() where TNode : IOGraphVertex, new()
+    public IOGraphQueryOperationDescriptor UseVertex<TNode>() where TNode : IOGraphVertex, new()
     {
         return this;
     }

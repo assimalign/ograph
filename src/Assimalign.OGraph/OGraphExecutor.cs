@@ -59,7 +59,7 @@ public class OGraphExecutor : IOGraphExecutor
                     return response;
                 }
             }
-            var result = await operation!.ExecuteAsync(new OGraphResolverContext()
+            var result = await operation!.ExecuteAsync(new ResolverContext()
             {
                 //Query           = query,
                 //Operation       = operation,
@@ -132,7 +132,7 @@ public class OGraphExecutor : IOGraphExecutor
         }
         return false;
     }
-    public static IOGraphExecutor Create(Name name, Action<OGraphOptions, IOGraphBuilder> configure)
+    public static IOGraphExecutor Create(Label name, Action<OGraphOptions, IOGraphBuilder> configure)
     {
         var options = new OGraphOptions();
         var graph = OGraphBuilder.Create(name, builder =>

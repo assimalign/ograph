@@ -14,7 +14,7 @@ public interface IOGraphType
     /// <summary>
     /// The name of the type.
     /// </summary>
-    Name Name { get; }
+    Label Label { get; }
     /// <summary>
     /// The identifier of the type.
     /// </summary>

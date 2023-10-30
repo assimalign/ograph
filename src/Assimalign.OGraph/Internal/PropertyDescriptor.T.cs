@@ -2,11 +2,11 @@
 
 namespace Assimalign.OGraph.Internal;
 
-internal class OGraphPropertyDescriptor<T> : IOGraphPropertyDescriptor<T>
+internal class PropertyDescriptor<T> : IOGraphPropertyDescriptor<T>
 {
     private readonly Property property;
 
-    public OGraphPropertyDescriptor(Property? property)
+    public PropertyDescriptor(Property? property)
     {
         if (property is null)
         {
@@ -26,7 +26,7 @@ internal class OGraphPropertyDescriptor<T> : IOGraphPropertyDescriptor<T>
         {
             throw new ArgumentNullException(nameof(value));
         }
-        //property.Metadata[key] = value;
+        property.Metadata[key] = value;
         return this;
     }
     public IOGraphPropertyDescriptor<T> UseMiddleware(IOGraphPropertyMiddleware middleware)
@@ -44,15 +44,16 @@ internal class OGraphPropertyDescriptor<T> : IOGraphPropertyDescriptor<T>
         {
             throw new ArgumentNullException(nameof(middleware));
         }
-        property.Middleware.Enqueue(new OGraphPropertyMiddlewareDefault(middleware));
+        property.Middleware.Enqueue(new PropertyMiddlewareDefault(middleware));
         return this;
     }
-    public IOGraphPropertyDescriptor<T> UseMiddleware<TMiddleware>() where TMiddleware : IOGraphPropertyMiddleware, new()
+    public IOGraphPropertyDescriptor<T> UseMiddleware<TMiddleware>() 
+        where TMiddleware : IOGraphPropertyMiddleware, new()
     {
         property.Middleware.Enqueue(new TMiddleware());
         return this;
     }
-    public IOGraphPropertyDescriptor<T> UseName(Name name)
+    public IOGraphPropertyDescriptor<T> UseName(Label name)
     {
         property.Name = name;
         return this;

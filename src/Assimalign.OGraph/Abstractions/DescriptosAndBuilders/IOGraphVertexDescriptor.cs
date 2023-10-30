@@ -8,12 +8,11 @@ namespace Assimalign.OGraph;
 public interface IOGraphVertexDescriptor
 {
     /// <summary>
-    /// 
+    /// Sets the unique label for the defined vertex.
     /// </summary>
-    /// <param name="key"></param>
-    /// <param name="value"></param>
-    /// <returns>The current descriptor.</returns>
-    IOGraphVertexDescriptor UseMetadata(string key, object value);
+    /// <param name="label"></param>
+    /// <returns></returns>
+    IOGraphVertexDescriptor HasLabel(Label label);
     /// <summary>
     /// 
     /// </summary>
@@ -42,4 +41,11 @@ public interface IOGraphVertexDescriptor
     /// <param name="configure"></param>
     /// <returns></returns>
     IOGraphVertexDescriptor HasType<T>(Action<IOGraphComplexTypeDescriptor<T>> configure) where T : class, new();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    /// <returns>The current descriptor.</returns>
+    IOGraphVertexDescriptor HasMetadata(string key, object value);
 }

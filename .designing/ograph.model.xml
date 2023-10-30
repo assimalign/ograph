@@ -43,8 +43,11 @@
     -->
     <model domain="users">
         <types>
-            <type name="User">
-                <property name="userId" type="Guid" />
+            <entityType name="User">
+                <property name="userId" type="Guid" isKey="true" />
+                <property name="details" type="UserDetails"/>
+            </entityType>
+            <complexType name="UserDetails">
                 <property name="firstName" type="String">
                     <meta key="description" value="The first name of the user." />
                 </property>
@@ -52,18 +55,25 @@
                 <property name="middleName" type="String" />
                 <property name="fullName" type="String" />
                 <property name="birthDate" type="DateTime" />
-            </type>
-            <type name="UserCollection">
+            </complexType>
+            <complexType name="UserCreate">
+                <property name="firstName" type="String"/>
+                <property name="lastName" type="String" />
+                <property name="middleName" type="String" />
+                <property name="fullName" type="String" />
+                <property name="birthDate" type="DateTime" />
+            </complexType>
+            <collectionType name="UserCollection">
                 <collection itemType="User" />
-            </type>
-            <type name="UserTagCollection">
+            </collectionType>
+            <complexType name="UserTag">
+                <property name="key" type="String" />
+                <property name="value" type="String" />
+            </complexType>
+            <collectionType name="UserTagCollection">
                 <collection itemType="UserTag" />
-            </type>
-            <type name="UserTag">
-                <porperty name="key" type="String" />
-                <porperty name="value" type="String" />
-            </type>
-            <type name="UserAddress">
+            </collectionType>
+            <entityType name="UserAddress">
                 <property name="streetOne" type="String" />
                 <property name="streetTwo" type="String" />
                 <property name="streetThree" type="String" />
@@ -71,19 +81,19 @@
                 <property name="state" type="String" />
                 <property name="zipCode" type="String" />
                 <property name="postalCode" type="String" />
-            </type>
-            <type name="UserProfile">
+            </entityType>
+            <collectionType name="UserAddressCollection">
+                <collection type="UserAddress"/>
+            </collectionType>
+            <entityType name="UserProfile">
 
-            </type>
+            </entityType>
         </types>
         <vertices>
             <vertex label="users" type="User">
-                <edge label="addresses" targetNode="addresses" />
-                <edge label="primaryAddress" targetNode="addresses" />
-                <edge label="profile" targetNode="profile" />
-                <operation label="GetUsers" />
-                <operation label="GetUserById" />
-                <operation label="CreateUser" />
+                <edge label="addresses" target="addresses" />
+                <edge label="primaryAddress" target="addresses" cardinality="1"/>
+                <edge label="profile" target="profile" />
             </vertex>
             <vertex label="addresses" type="UserAddress">
 
@@ -93,11 +103,11 @@
             </vertex>
         </vertices>
         <edges>
-            <edge label="addresses">
+            <edge label="addresses" cardinality="2">
                 <sourceNode label="users" /> <!-- XPath: //node[@label='user'] -->
                 <targetNode label="addresses" />
             </edge>
-            <edge label="profile">
+            <edge label="profile" cardinality="1">
                 <sourceNode label="users" /> <!-- XPath: //node[@label='user'] -->
                 <targetNode label="profile" />
             </edge>
@@ -108,22 +118,29 @@
         -->
         <operations>
             <!-- User Operations -->
-            <operation label="GetUsers" node="users">
+            <operation label="GetUsers" vertex="users">
                 <method>GET</method>
                 <type>QUERY</type>
                 <route value="/users">
                     <segment ordinal="1" isLiteral="true">users</segment>
                 </route>
+                <queryParams>
+                    <param key="query" type="String"/>
+                </queryParams>
+                <response type="UserCollection"/>
             </operation>
-            <operation label="GetUserById" node="users">
+            <operation label="GetUserById" vertex="users">
                 <method>GET</method>
                 <type>QUERY</type>
                 <route value="/users/{userId}">
                     <segment ordinal="1" is-literal="true">users</segment>
                     <segment ordinal="2" is-parameter="true">{userId:Guid}</segment>
                 </route>
+                <queryParams>
+                    <param key="query" valueType="String" isRequired="false"/>
+                </queryParams>
             </operation>
-            <operation label="CreateUser" node="users">
+            <operation label="CreateUser" vertex="users">
                 <method>POST</method>
                 <type>COMMAND</type>
                 <route value="/users">
@@ -131,7 +148,7 @@
                 </route>
             </operation>
             <!-- User Address Operations  -->
-            <operation label="CreateUserAddress" node="addresses">
+            <operation label="CreateUserAddress" vertex="addresses">
                 <method>POST</method>
                 <type>QUERY</type>
                 <route value="/users/{userId}/addresses">
@@ -140,7 +157,7 @@
                     <segment ordinal="3" isLiteral="true">addresses</segment>
                 </route>
             </operation>
-            <operation label="GetUserProfile" node="profile">
+            <operation label="GetUserProfile" vertex="profile">
                 <method>GET</method>
                 <type>QUERY</type>
                 <route value="/users/{userId}/profile">
@@ -151,7 +168,7 @@
             </operation>
 
             <!-- User Address Type Operations -->
-            <operation label="GetAddressTypes" node="addressTypes">
+            <operation label="GetAddressTypes" vertex="addressTypes">
                 <method>GET</method>
                 <type>QUERY</type>
                 <route value="/users/addressTypes">

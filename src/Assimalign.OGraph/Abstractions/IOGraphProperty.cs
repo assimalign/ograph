@@ -16,21 +16,36 @@ namespace Assimalign.OGraph;
 public interface IOGraphProperty
 {
     /// <summary>
-    /// The name of the property.
+    /// The property name.
     /// </summary>
-    Name Name { get; }
+    Label Name { get; }
     /// <summary>
     /// The OGraph Property Type.
     /// </summary>
     IOGraphType Type { get; }
     /// <summary>
-    /// 
-    /// </summary>
-    bool IsKey { get; }
-    /// <summary>
     /// Metadata of the property.
     /// </summary>
     IOGraphMetadata Metadata { get; }
+    /// <summary>
+    /// Specifies whether the property the primary key.
+    /// </summary>
+    bool IsKey { get; }
+    /// <summary>
+    /// Computed properties extend complex or entity types that 
+    /// are invoked at runtime.
+    /// </summary>
+    bool IsComputed { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    bool IsNullable { get; }
+
+
+
+
+
+
     /// <summary>
     /// 
     /// </summary>

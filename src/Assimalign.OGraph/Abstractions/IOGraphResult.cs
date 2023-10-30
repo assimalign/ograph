@@ -1,7 +1,7 @@
 ﻿namespace Assimalign.OGraph;
 
 /// <summary>
-/// 
+/// The base result used in all resolvers.
 /// </summary>
 public interface IOGraphResult
 {

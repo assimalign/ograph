@@ -10,7 +10,7 @@ internal class Property : IOGraphProperty
         this.Metadata = new Metadata();
         this.Middleware = new PropertyMiddlewareQueue();
     }
-    public Name Name { get; set; }
+    public Label Name { get; set; }
     public bool IsKey { get; set; }
     public IOGraphType Type { get; set; } 
     public IOGraphMetadata Metadata { get; }

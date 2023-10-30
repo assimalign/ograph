@@ -19,7 +19,7 @@ internal class OGraphCommandOperationDescriptor : IOGraphCommandOperationDescrip
 
     public IList<Action<Graph>> OnConfigure { get; init; }
 
-    public IOGraphCommandOperationDescriptor UseName(Name name)
+    public IOGraphCommandOperationDescriptor UseName(Label name)
     {
         OnConfigure.Add(graph =>
         {
@@ -51,7 +51,7 @@ internal class OGraphCommandOperationDescriptor : IOGraphCommandOperationDescrip
         });
         return this;
     }
-    public IOGraphCommandOperationDescriptor UseNode(Name label)
+    public IOGraphCommandOperationDescriptor UseNode(Label label)
     {
         OnConfigure.Add(graph =>
         {

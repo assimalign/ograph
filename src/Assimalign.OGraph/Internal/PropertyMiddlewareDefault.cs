@@ -2,11 +2,11 @@
 
 namespace Assimalign.OGraph.Internal;
 
-internal class OGraphPropertyMiddlewareDefault : IOGraphPropertyMiddleware
+internal class PropertyMiddlewareDefault : IOGraphPropertyMiddleware
 {
     private readonly OGraphPropertyMiddleware middleware;
 
-    public OGraphPropertyMiddlewareDefault(OGraphPropertyMiddleware middleware)
+    public PropertyMiddlewareDefault(OGraphPropertyMiddleware middleware)
     {
         this.middleware = middleware;
     }

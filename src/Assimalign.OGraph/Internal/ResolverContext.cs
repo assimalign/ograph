@@ -4,7 +4,7 @@ using Assimalign.OGraph.Syntax;
 
 namespace Assimalign.OGraph.Internal;
 
-internal class OGraphResolverContext :
+internal class ResolverContext :
     IOGraphPropertyContext,
     IOGraphOperationContext
 {

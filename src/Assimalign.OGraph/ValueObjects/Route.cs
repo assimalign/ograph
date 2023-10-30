@@ -18,7 +18,8 @@ public readonly struct Route :
     private static string[] reserved => new string[]
     {
         "$query",
-        "$transactions" // for sending 
+        "$transactions",    // for sending multiple commands 
+        "$schema"           // GET /users/$schema?operation=CreateUser&format={json/xsd}
     };
 
     public Route(string route)

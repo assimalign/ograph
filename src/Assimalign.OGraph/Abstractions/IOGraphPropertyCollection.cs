@@ -8,7 +8,19 @@ public interface IOGraphPropertyCollection : ICollection<IOGraphProperty>
     /// 
     /// </summary>
     /// <param name="name"></param>
+    /// <returns></returns>
+    IOGraphProperty this[Label name] { get; }
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="property"></param>
     /// <returns></returns>
-    bool TryGet(Name name, out IOGraphProperty? property);
+    bool TryAddProperty(IOGraphProperty property);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="property"></param>
+    /// <returns></returns>
+    bool TryGetProperty(Label name, out IOGraphProperty? property);
 }

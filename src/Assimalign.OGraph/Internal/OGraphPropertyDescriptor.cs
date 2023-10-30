@@ -16,7 +16,7 @@ internal class OGraphPropertyDescriptor : IOGraphPropertyDescriptor
         this.property = property;
     }
 
-    public IOGraphPropertyDescriptor UseName(Name name)
+    public IOGraphPropertyDescriptor UseName(Label name)
     {
         property.Name = name;
         return this;
@@ -31,7 +31,7 @@ internal class OGraphPropertyDescriptor : IOGraphPropertyDescriptor
         {
             throw new ArgumentNullException(nameof(value));
         }
-        //property.Metadata[key] = value;
+        property.Metadata[key] = value;
         return this;
     }
     public IOGraphPropertyDescriptor UseMiddleware(IOGraphPropertyMiddleware middleware)
@@ -49,7 +49,7 @@ internal class OGraphPropertyDescriptor : IOGraphPropertyDescriptor
         {
             throw new ArgumentNullException(nameof(middleware));
         }
-        property.Middleware.Enqueue(new OGraphPropertyMiddlewareDefault(middleware));
+        property.Middleware.Enqueue(new PropertyMiddlewareDefault(middleware));
         return this;
     }
     public IOGraphPropertyDescriptor UseMiddleware<TMiddleware>() where TMiddleware : IOGraphPropertyMiddleware, new()
@@ -98,5 +98,3 @@ internal class OGraphPropertyDescriptor : IOGraphPropertyDescriptor
         return this;
     }
 }
-
-

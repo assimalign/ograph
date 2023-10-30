@@ -9,6 +9,10 @@ public enum TypeKind
     /// <summary>
     /// 
     /// </summary>
+    Entity,
+    /// <summary>
+    /// 
+    /// </summary>
     Collection,
     /// <summary>
     /// 

@@ -19,7 +19,7 @@ public sealed class EnumType<TEnum> : IOGraphEnumType
         }
     }
 
-    public Name Name => $"{typeof(TEnum).Name}Enum";
+    public Label Label => $"{typeof(TEnum).Name}Enum";
     public TypeKind Kind => TypeKind.Enum;
     public EnumValue[] Values { get; }
     public Type RuntimeType => typeof(TEnum);

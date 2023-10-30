@@ -10,7 +10,7 @@ public interface IOGraphCommandOperationDescriptor
     /// </summary>
     /// <param name="name">A string name.</param>
     /// <returns>The current descriptor.</returns>
-    IOGraphCommandOperationDescriptor UseName(Name name);
+    IOGraphCommandOperationDescriptor UseName(Label name);
     /// <summary>
     /// Sets the route to use for the operation.
     /// </summary>
@@ -35,7 +35,7 @@ public interface IOGraphCommandOperationDescriptor
     /// <remarks></remarks>
     /// <param name="label"></param>
     /// <returns>The current descriptor.</returns>
-    IOGraphCommandOperationDescriptor UseNode(Name name);
+    IOGraphCommandOperationDescriptor UseNode(Label name);
     /// <summary>
     /// Binds a node to the operation. 
     /// </summary>

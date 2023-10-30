@@ -12,14 +12,14 @@ internal class TypeCollection : HashSet<IOGraphType>,
     public bool IsReadOnly { get; set; }
     bool ICollection<IOGraphType>.IsReadOnly => IsReadOnly;
 
-    public bool TryAdd(IOGraphType type)
+    public bool TryAddType(IOGraphType type)
     {
        
        
         throw new NotImplementedException();
     }
 
-    public bool TryGet(Name name, out IOGraphType type)
+    public bool TryGetType(Label name, out IOGraphType type)
     {
         throw new NotImplementedException();
     }
