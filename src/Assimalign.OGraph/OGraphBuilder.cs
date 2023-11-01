@@ -10,168 +10,51 @@ public sealed class OGraphBuilder : IOGraphBuilder
 {
     private readonly static ConcurrentDictionary<Label, IOGraph> cache = new();
 
-    private readonly IList<Action<Graph>> onNodeAdd;
-    private readonly IList<Action<Graph>> onEdgeAdd;
-    private readonly IList<Action<Graph>> onOperationAdd;
-    private readonly IList<Action<Graph>> onBuild;
+    private readonly IList<Action<OGraph>> onNodeAdd;
+    private readonly IList<Action<OGraph>> onEdgeAdd;
+    private readonly IList<Action<OGraph>> onOperationAdd;
+    private readonly IList<Action<OGraph>> onBuild;
 
     private OGraphBuilder()
     {
-        this.onNodeAdd = new List<Action<Graph>>();
-        this.onEdgeAdd = new List<Action<Graph>>();
-        this.onOperationAdd = new List<Action<Graph>>();
-        this.onBuild = new List<Action<Graph>>();  
+        this.onNodeAdd = new List<Action<OGraph>>();
+        this.onEdgeAdd = new List<Action<OGraph>>();
+        this.onOperationAdd = new List<Action<OGraph>>();
+        this.onBuild = new List<Action<OGraph>>();  
     }
 
-    internal Graph Graph { get; init; } = default!;
+    internal OGraph Graph { get; init; } = default!;
 
-    #region Node
-    IOGraphBuilder IOGraphBuilder.AddVertex<TNode>()
-    {
-        var node = new TNode();
 
-        return (this as IOGraphBuilder).AddVertex(node);
-    }
-    IOGraphBuilder IOGraphBuilder.AddVertex(IOGraphVertex node)
+    IOGraphBuilder IOGraphBuilder.ConfigureOptions(Action<OGraphOptions> configure)
     {
-        if (node is null)
-        {
-            throw new ArgumentNullException(nameof(node));
-        }
-        this.onNodeAdd.Add(graph =>
-        {
-            graph.Nodes.Add(node);
-        });
+        AssertConfigureNotNull(configure);
+
         return this;
     }
-    IOGraphBuilder IOGraphBuilder.AddVertex<T>(Action<IOGraphVertexDescriptor<T>> descriptor)
-    {
-        throw new NotImplementedException();
-    }
-    #endregion
 
-    #region Edge
-    IOGraphBuilder IOGraphBuilder.AddEdge<TEdge>() 
+    IOGraphBuilder IOGraphBuilder.ConfigureModel(Action<IOGraphModelDescriptor> configure)
     {
-        return (this as IOGraphBuilder).AddEdge(new TEdge());
-    }
-    IOGraphBuilder IOGraphBuilder.AddEdge(IOGraphEdge edge)
-    {
-        if (edge is null)
-        {
-            throw new ArgumentNullException(nameof(edge));
-        }
-        this.onEdgeAdd.Add(graph =>
-        {
-            graph.Edges.Add(edge);
-        });
+        AssertConfigureNotNull(configure);
+
         return this;
     }
-    IOGraphBuilder IOGraphBuilder.AddEdge(Func<IOGraph, IOGraphEdge> configure)
+
+    IOGraphBuilder IOGraphBuilder.ConfigureApplication(Action<IOGraphApplication> configure)
+    {
+        AssertConfigureNotNull(configure);
+
+        return this;
+    }
+
+    private void AssertConfigureNotNull<T>(Action<T> configure)
     {
         if (configure is null)
         {
             throw new ArgumentNullException(nameof(configure));
         }
-        this.onEdgeAdd.Add(graph =>
-        {
-            var edge = configure.Invoke(graph);
-            
-            graph.Edges.Add(edge);
-        });
-
-        return this;
     }
-    IOGraphEdgeDescriptor IOGraphBuilder.AddEdge(Label name)
-    {
-        var edge = new OGraphEdgeDefault() 
-        { 
-            Label = name 
-        };
-        var descriptor = new OGraphEdgeDescriptor(edge)
-        {
-            OnConfigure = onEdgeAdd
-        };
 
-        (this as IOGraphBuilder).AddEdge(edge);
-
-        return descriptor;
-    }
-    #endregion
-
-    #region Operations
-    IOGraphBuilder IOGraphBuilder.AddOperation<TOperation>()
-    {
-        return (this as IOGraphBuilder).AddOperation(new TOperation());
-    }
-    IOGraphBuilder IOGraphBuilder.AddOperation(IOGraphOperation operation)
-    {
-        if (operation is null)
-        {
-            throw new ArgumentNullException(nameof(operation));
-        }
-        this.onBuild.Add(graph =>
-        {
-            var node = operation.Vertex;
-            var root = operation.Route.Segments[0].Value;
-
-            if (!node.Label.Equals(root))
-            {
-                throw new InvalidOperationException($"The operation node label '{node.Label}' does not match the root segment '/{root}' of the route.");
-            }
-
-            graph.Operations.Add(operation);
-        });
-
-        return this;
-    }
-    IOGraphBuilder IOGraphBuilder.AddOperation(Func<IOGraph, IOGraphOperation> configure)
-    {
-        if (configure is null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
-        this.onOperationAdd.Add(graph =>
-        {
-            var operation = configure.Invoke(graph);
-
-            graph.Operations.Add(operation);
-        });
-
-        return this;
-    }
-    IOGraphCommandOperationDescriptor IOGraphBuilder.AddCommand(Label name)
-    {
-        var operation = new OGraphCommandOperationDefault()
-        {
-            name = name
-        };
-        var descriptor = new OGraphCommandOperationDescriptor(operation)
-        {
-            OnConfigure = onOperationAdd
-        };
-
-        (this as IOGraphBuilder).AddOperation(operation);
-
-        return descriptor;
-    }
-    IOGraphQueryOperationDescriptor IOGraphBuilder.AddQuery(Label name)
-    {
-        var operation = new OGraphQueryOperationDefault()
-        {
-            name = name
-        };
-        var descriptor = new OGraphQueryOperationDescriptor(operation)
-        {
-            OnConfigure = onOperationAdd
-        };
-
-        (this as IOGraphBuilder).AddOperation(operation);
-
-        return descriptor;
-        throw new NotImplementedException();
-    }
-    #endregion
 
     IOGraph IOGraphBuilder.Build()
     {
@@ -185,7 +68,7 @@ public sealed class OGraphBuilder : IOGraphBuilder
             return Graph;
         });
 
-        void OnBuild(IList<Action<Graph>> actions)
+        void OnBuild(IList<Action<OGraph>> actions)
         {
             foreach (var action in actions)
             {
@@ -193,6 +76,8 @@ public sealed class OGraphBuilder : IOGraphBuilder
             }
         }
     }
+
+    #region Static Members
 
     /// <summary>
     /// Creates a <see cref="IOGraph"/> model.
@@ -237,5 +122,156 @@ public sealed class OGraphBuilder : IOGraphBuilder
         };
     }
 
-    
+    #endregion
 }
+
+
+
+
+//#region Node
+//IOGraphBuilder IOGraphBuilder.AddVertex<TNode>()
+//{
+//    var node = new TNode();
+
+//    return (this as IOGraphBuilder).AddVertex(node);
+//}
+//IOGraphBuilder IOGraphBuilder.AddVertex(IOGraphVertex node)
+//{
+//    if (node is null)
+//    {
+//        throw new ArgumentNullException(nameof(node));
+//    }
+//    this.onNodeAdd.Add(graph =>
+//    {
+//        graph.Nodes.Add(node);
+//    });
+//    return this;
+//}
+//IOGraphBuilder IOGraphBuilder.AddVertex<T>(Action<IOGraphVertexDescriptor<T>> descriptor)
+//{
+//    throw new NotImplementedException();
+//}
+//#endregion
+
+//#region Edge
+//IOGraphBuilder IOGraphBuilder.AddEdge<TEdge>() 
+//{
+//    return (this as IOGraphBuilder).AddEdge(new TEdge());
+//}
+//IOGraphBuilder IOGraphBuilder.AddEdge(IOGraphEdge edge)
+//{
+//    if (edge is null)
+//    {
+//        throw new ArgumentNullException(nameof(edge));
+//    }
+//    this.onEdgeAdd.Add(graph =>
+//    {
+//        graph.Edges.Add(edge);
+//    });
+//    return this;
+//}
+//IOGraphBuilder IOGraphBuilder.AddEdge(Func<IOGraph, IOGraphEdge> configure)
+//{
+//    if (configure is null)
+//    {
+//        throw new ArgumentNullException(nameof(configure));
+//    }
+//    this.onEdgeAdd.Add(graph =>
+//    {
+//        var edge = configure.Invoke(graph);
+
+//        graph.Edges.Add(edge);
+//    });
+
+//    return this;
+//}
+//IOGraphEdgeDescriptor IOGraphBuilder.AddEdge(Label name)
+//{
+//    var edge = new OGraphEdgeDefault() 
+//    { 
+//        Label = name 
+//    };
+//    var descriptor = new OGraphEdgeDescriptor(edge)
+//    {
+//        OnConfigure = onEdgeAdd
+//    };
+
+//    (this as IOGraphBuilder).AddEdge(edge);
+
+//    return descriptor;
+//}
+//#endregion
+
+//#region Operations
+//IOGraphBuilder IOGraphBuilder.AddOperation<TOperation>()
+//{
+//    return (this as IOGraphBuilder).AddOperation(new TOperation());
+//}
+//IOGraphBuilder IOGraphBuilder.AddOperation(IOGraphOperation operation)
+//{
+//    if (operation is null)
+//    {
+//        throw new ArgumentNullException(nameof(operation));
+//    }
+//    this.onBuild.Add(graph =>
+//    {
+//        var node = operation.Vertex;
+//        var root = operation.Route.Segments[0].Value;
+
+//        if (!node.Label.Equals(root))
+//        {
+//            throw new InvalidOperationException($"The operation node label '{node.Label}' does not match the root segment '/{root}' of the route.");
+//        }
+
+//        graph.Operations.Add(operation);
+//    });
+
+//    return this;
+//}
+//IOGraphBuilder IOGraphBuilder.AddOperation(Func<IOGraph, IOGraphOperation> configure)
+//{
+//    if (configure is null)
+//    {
+//        throw new ArgumentNullException(nameof(configure));
+//    }
+//    this.onOperationAdd.Add(graph =>
+//    {
+//        var operation = configure.Invoke(graph);
+
+//        graph.Operations.Add(operation);
+//    });
+
+//    return this;
+//}
+//IOGraphCommandOperationDescriptor IOGraphBuilder.AddCommand(Label name)
+//{
+//    var operation = new OGraphCommandOperationDefault()
+//    {
+//        name = name
+//    };
+//    var descriptor = new OGraphCommandOperationDescriptor(operation)
+//    {
+//        OnConfigure = onOperationAdd
+//    };
+
+//    (this as IOGraphBuilder).AddOperation(operation);
+
+//    return descriptor;
+//}
+//IOGraphQueryOperationDescriptor IOGraphBuilder.AddQuery(Label name)
+//{
+//    var operation = new OGraphQueryOperationDefault()
+//    {
+//        name = name
+//    };
+//    var descriptor = new OGraphQueryOperationDescriptor(operation)
+//    {
+//        OnConfigure = onOperationAdd
+//    };
+
+//    (this as IOGraphBuilder).AddOperation(operation);
+
+//    return descriptor;
+//    throw new NotImplementedException();
+//}
+//#endregion

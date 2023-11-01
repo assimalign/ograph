@@ -1,8 +1,6 @@
 ﻿
 using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +11,25 @@ namespace Assimalign.OGraph.AspNetCore;
 
 public static class OGraphWebApplicationExtensions
 {
+    private static readonly IOGraphBuilder builder;
+
+    public static WebApplication MapOGraphGet<TVertex>(this WebApplication app)
+    {
+        //var graph = app.Services.GetRequiredService<IOGraph>();
+
+        var graph = builder.Build();
+
+        app.Use(async (context, next) =>
+        {
+
+
+           await next(context);
+        });
+
+        return app;
+    }
+
+
     public static WebApplication UseOGraph(this WebApplication app)
     {
         var graph = app.Services.GetService<IOGraph>();

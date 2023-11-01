@@ -27,10 +27,6 @@ public interface IOGraphType
     /// </remarks>
     Type? RuntimeType { get; }
     /// <summary>
-    /// 
-    /// </summary>
-    bool IsNullable { get; }
-    /// <summary>
     /// Checks whether the <paramref name="value"/> is assignable to the type.
     /// </summary>
     /// <remarks>
@@ -38,5 +34,5 @@ public interface IOGraphType
     /// </remarks>
     /// <param name="value"></param>
     /// <returns></returns>
-    bool IsAssignable(IOGraphType type);
+    bool IsAssignableTo(IOGraphType type);
 }

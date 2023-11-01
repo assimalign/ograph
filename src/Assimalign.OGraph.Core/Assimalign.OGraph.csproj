@@ -1,0 +1,6 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<ItemGroup>
+		<ProjectReference Include="..\Assimalign.OGraph.Gdm\Assimalign.OGraph.Gdm.csproj" />
+		<ProjectReference Include="..\Assimalign.OGraph.Syntax\Assimalign.OGraph.Syntax.csproj" />
+	</ItemGroup>
+</Project>

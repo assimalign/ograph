@@ -20,14 +20,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\Assimalign.OGraph\Assimalign.OGraph.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Folder Include="Gdm\Edges\" />
 	  <Folder Include="Gdm\Edges\" />
 	  <Folder Include="Gdm\Resolvers\" />
 	  <Folder Include="Utilities\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\src\Assimalign.OGraph.Core\Assimalign.OGraph.csproj" />
 	</ItemGroup>
 
 </Project>

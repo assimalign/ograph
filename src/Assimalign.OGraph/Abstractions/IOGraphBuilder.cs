@@ -12,6 +12,12 @@ public interface IOGraphBuilder
     /// </summary>
     /// <param name="configure"></param>
     /// <returns></returns>
+    IOGraphBuilder ConfigureOptions(Action<OGraphOptions> configure);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configure"></param>
+    /// <returns></returns>
     IOGraphBuilder ConfigureModel(Action<IOGraphModelDescriptor> configure);
     /// <summary>
     /// 

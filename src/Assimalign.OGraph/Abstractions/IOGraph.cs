@@ -29,9 +29,8 @@ public interface IOGraph
     /// Represents a collection of HTTP Operations
     /// </summary>
     IOGraphOperationCollection Operations { get; }
-
     /// <summary>
-    /// 
+    /// Generate an executor from the current graph model.
     /// </summary>
     /// <returns></returns>
     IOGraphExecutor GetExecutor();

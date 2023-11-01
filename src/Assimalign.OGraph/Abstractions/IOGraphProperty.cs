@@ -1,14 +1,7 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
-
-/// <summary>
-/// Computed properties are non filterable or sortable properties that are executed 
-/// after entities are returned from the query provider;
-/// </summary>
-//bool IsComputed { get; } // TODO: May need to come up with a different convention for managing filterable and sortable properties.
 
 /// <summary>
 /// 

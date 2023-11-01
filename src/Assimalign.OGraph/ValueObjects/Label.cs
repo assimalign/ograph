@@ -14,7 +14,7 @@ public readonly struct Label :
     IComparable<Label>
 {
     // Allowed characters for name
-    private const string pattern = "^[a-zA-Z0-9]+$";
+    private const string pattern = "^[a-zA-Z0-9_-]+$";
 
     public Label(string value)
     {

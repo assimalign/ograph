@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
-
-namespace Assimalign.OGraph;
+﻿namespace Assimalign.OGraph;
 
 /// <summary>
 /// Represents a single entity and it's structure within the graph Model.
@@ -18,7 +15,7 @@ public interface IOGraphVertex
     /// <summary>
     /// The type bound to this vertex.
     /// </summary>
-    IOGraphType Type { get; } // TODO: Revisit whether I should specify IOGraphEntityType
+    IOGraphType Type { get; } // TODO: Revisit whether IOGraphEntityType should be specified explicitly
     /// <summary>
     /// A collection of edges that are connected to this node.
     /// </summary>

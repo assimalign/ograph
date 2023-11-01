@@ -9,7 +9,7 @@ namespace Assimalign.OGraph.Gdm;
 public class EmployeeType : ComplexType<Employee>
 {
 
-    protected override void Configure(IOGraphComplexTypeDescriptor<Employee> descriptor)
+    protected override void Configure(IOGraphGdmComplexTypeDescriptor<Employee> descriptor)
     {
         descriptor.HasProperty(p => p.Details)
             .UseName("EmployeeDetails")

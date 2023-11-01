@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Assimalign.OGraph\Assimalign.OGraph.csproj" />
+    <ProjectReference Include="..\Assimalign.OGraph\Assimalign.OGraph.Old.csproj" />
   </ItemGroup>
 
 </Project>
