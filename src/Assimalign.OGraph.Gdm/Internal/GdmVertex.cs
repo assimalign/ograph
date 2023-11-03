@@ -1,24 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
-internal class GdmVertex : IOGraphGdmVertex
+internal class GdmVertex<T> : IOGraphGdmVertex
+    where T : class, new()
 {
+    private readonly IList<IOGraphGdmBinding> bindings = new List<IOGraphGdmBinding>();
     public GdmVertex()
     {
-        
+        Metadata = new GdmMetadata();
     }
-    public Label Label { get; set; }
-    public IOGraphGdmTypeReference? Type { get; set; }
-    public IOGraphGdmEdgeReference[] Edges { get; set; }
-    public IOGraphGdmMetadata Metadata { get; set; }
 
-    public IOGraphGdmPropertyCollection GetProperties()
+    public Label Label { get; set; }
+    public GdmTypeReference<GdmEntityType<T>> Type { get; set; } = default!;
+    IOGraphGdmTypeReference IOGraphGdmVertex.Type => Type;
+    public IOGraphGdmEdgeReferenceCollection Edges { get; } = default!;
+    public IOGraphGdmMetadata Metadata { get; }
+    public void AddBinding(IOGraphGdmBinding binding)
     {
-        throw new NotImplementedException();
+        if (binding is null)
+        {
+            throw new ArgumentNullException(nameof(binding));
+        }
+        bindings.Add(binding);
+    }
+
+    public IEnumerable<IOGraphGdmBinding> GetBindings()
+    {
+        return bindings;
     }
 }

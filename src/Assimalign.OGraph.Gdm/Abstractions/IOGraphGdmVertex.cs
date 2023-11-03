@@ -1,4 +1,6 @@
-﻿namespace Assimalign.OGraph.Gdm;
+﻿using System.Collections.Generic;
+
+namespace Assimalign.OGraph.Gdm;
 
 /// <summary>
 /// Represents a single entity and it's structure within the graph Model.
@@ -19,9 +21,26 @@ public interface IOGraphGdmVertex
     /// <summary>
     /// A collection of edges that are connected to this node.
     /// </summary>
-    IOGraphGdmEdgeReference[] Edges { get; }
+    IOGraphGdmEdgeReferenceCollection Edges { get; }
     /// <summary>
     /// Represents arbitrary metadata that can be associated with this node.
     /// </summary>
     IOGraphGdmMetadata Metadata { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    IEnumerable<IOGraphGdmBinding> GetBindings();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="binding"></param>
+    /// <returns></returns>
+    void AddBinding(IOGraphGdmInputBinding binding);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="binding"></param>
+    /// <returns></returns>
+    void AddBinding(IOGraphGdmOutputBinding binding);
 }

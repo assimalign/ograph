@@ -11,7 +11,7 @@ namespace Assimalign.OGraph.Gdm;
 /// <remarks>
 /// An <see cref="IOGraphGdmType"/> represents a
 /// </remarks>
-public interface IOGraphGdmType 
+public interface IOGraphGdmType
 {
     /// <summary>
     /// The name of the type.
@@ -20,7 +20,7 @@ public interface IOGraphGdmType
     /// <summary>
     /// The identifier of the type.
     /// </summary>
-    TypeKind Kind { get; }
+    GdmTypeKind Kind { get; }
     /// <summary>
     /// The underlying .NET Type.
     /// </summary>
@@ -29,12 +29,12 @@ public interface IOGraphGdmType
     /// </remarks>
     Type? RuntimeType { get; }
     /// <summary>
-    /// Checks whether the <paramref name="value"/> is assignable to the type.
+    /// Checks whether the <paramref name="type"/> is assignable to the type.
     /// </summary>
     /// <remarks>
     /// <i>This usually entails checking the value against the underlying runtime type.</i>
     /// </remarks>
-    /// <param name="value"></param>
+    /// <param name="type"></param>
     /// <returns></returns>
     bool IsAssignableTo(IOGraphGdmType type);
     /// <summary>

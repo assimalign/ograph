@@ -7,8 +7,8 @@ public interface IOGraphGdmBuilder
 {
     IOGraphGdmBuilder AddVertex(IOGraphGdmVertex vertex);
     IOGraphGdmBuilder AddVertex<TVertex>() where TVertex : IOGraphGdmVertex, new();
-    IOGraphGdmBuilder AddVertex<T>(Action<IOGraphGdmVertexDescriptor<T>> configure)  where T : class, new();
-    IOGraphGdmBuilder AddType<T>(Label label, Action<IOGraphGdmComplexTypeDescriptor<T>> configure) where T : class;
+    IOGraphGdmBuilder AddVertex<T>(Action<IOGraphGdmVertexEntityDescriptor<T>> configure)  where T : class, new();
+    //IOGraphGdmBuilder AddType<T>(Label label, Action<IOGraphGdmComplexTypeDescriptor<T>> configure) where T : class;
     IOGraphGdm Build();
 }
 

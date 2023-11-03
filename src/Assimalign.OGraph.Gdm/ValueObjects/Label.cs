@@ -38,7 +38,7 @@ public readonly struct Label :
     /// Converts the string to pascal case.
     /// </summary>
     /// <returns></returns>
-    public string ToPascalCase()
+    public Label ToPascalCase()
     {
         return string.Create(Value.Length, Value, (chars, name) =>
         {
@@ -64,7 +64,7 @@ public readonly struct Label :
     /// Converts the name to camal case
     /// </summary>
     /// <returns></returns>
-    public string ToCamalCase()
+    public Label ToCamalCase()
     {
         return string.Create(Value.Length, Value, (chars, name) =>
         {
@@ -107,13 +107,13 @@ public readonly struct Label :
     public override int GetHashCode()
     {
         // TODO: Need to revisit. Not sure if I want the HashCode for the name to be the same as the instance of the string.
-        return Value.ToLowerInvariant().GetHashCode();
+        return Value.GetHashCode();
     }
 
     /// <inheritdoc />
     public bool Equals(Label name)
     {
-        return Value.Equals(name.Value, StringComparison.OrdinalIgnoreCase);
+        return Value.Equals(name.Value, StringComparison.Ordinal);
     }
 
     /// <inheritdoc />
@@ -131,7 +131,7 @@ public readonly struct Label :
     /// <inheritdoc />
     public int CompareTo(Label name)
     {
-        return Value.ToLowerInvariant().CompareTo(name.Value.ToLowerInvariant());
+        return Value.CompareTo(name.Value);
     }
 
     public static implicit operator Label(string value) => new Label(value);

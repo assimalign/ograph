@@ -8,7 +8,5 @@ namespace Assimalign.OGraph.Gdm;
 
 public interface IOGraphGdmPropertyDescriptor
 {
-    IOGraphGdmPropertyDescriptor UseGetter<TGetter>() where TGetter : IOGraphGdmPropertyGetter, new();
-    IOGraphGdmPropertyDescriptor UseSetter<TSetter>() where TSetter : IOGraphGdmPropertySetter, new();
     IOGraphGdmPropertyDescriptor UseType<TType>() where TType : IOGraphGdmType, new();
 }

@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Gdm;
 
@@ -21,14 +20,6 @@ public interface IOGraphGdmProperty
     /// </summary>
     IOGraphGdmMetadata Metadata { get; }
     /// <summary>
-    /// 
-    /// </summary>
-    IOGraphGdmPropertyGetter Getter { get; }
-    /// <summary>
-    /// 
-    /// </summary>
-    IOGraphGdmPropertySetter Setter { get; }
-    /// <summary>
     /// Specifies whether the property the primary key.
     /// </summary>
     bool IsKey { get; }
@@ -41,4 +32,29 @@ public interface IOGraphGdmProperty
     /// 
     /// </summary>
     bool IsNullable { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    GdmPropertyGetter Getter { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    GdmPropertySetter Setter { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    IEnumerable<IOGraphGdmBinding> GetBindings();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="binding"></param>
+    /// <returns></returns>
+    void AddBinding(IOGraphGdmInputBinding binding);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="binding"></param>
+    /// <returns></returns>
+    void AddBinding(IOGraphGdmOutputBinding binding);
 }

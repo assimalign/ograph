@@ -14,8 +14,5 @@ public interface IOGraphGdmEntityType : IOGraphGdmComplexType
     /// <summary>
     /// 
     /// </summary>
-    OGraphEntityKeyResolver KeyResolver { get; }
+    GdmEntityKeyResolver KeyResolver { get; }
 }
-
-
-public delegate object OGraphEntityKeyResolver(object entity);

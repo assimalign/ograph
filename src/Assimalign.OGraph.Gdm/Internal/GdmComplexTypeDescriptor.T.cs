@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
-internal class GdmComplexTypeDescriptor<T> : IOGraphGdmComplexTypeDescriptor<T> where T : class, new()
+internal class GdmComplexTypeDescriptor<T> : IOGraphGdmComplexTypeDescriptor<T> 
+    where T : class, new()
 {
     private readonly ComplexType<T> complexType;
 
@@ -14,9 +16,6 @@ internal class GdmComplexTypeDescriptor<T> : IOGraphGdmComplexTypeDescriptor<T> 
     {
         this.complexType = complexType;
     }
-
-
-
 
     public IOGraphGdmComplexTypeDescriptor<T> HasName(Label label)
     {
@@ -28,7 +27,7 @@ internal class GdmComplexTypeDescriptor<T> : IOGraphGdmComplexTypeDescriptor<T> 
         throw new NotImplementedException();
     }
 
-    public IOGraphGdmPropertyDescriptor<TProperty> HasProperty<TProperty>(System.Linq.Expressions.Expression<Func<T, TProperty>> expression)
+    public IOGraphGdmPropertyDescriptor<TProperty> HasProperty<TProperty>(Expression<Func<T, TProperty>> expression)
     {
         throw new NotImplementedException();
     }
@@ -38,7 +37,7 @@ internal class GdmComplexTypeDescriptor<T> : IOGraphGdmComplexTypeDescriptor<T> 
         throw new NotImplementedException();
     }
 
-    public IOGraphGdmComplexTypeDescriptor<T> Ignore<TProperty>(System.Linq.Expressions.Expression<Func<T, TProperty>> expression)
+    public IOGraphGdmComplexTypeDescriptor<T> Ignore<TProperty>(Expression<Func<T, TProperty>> expression)
     {
         throw new NotImplementedException();
     }

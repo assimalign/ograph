@@ -12,14 +12,14 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
 
     private OGraphGdmBuilder() { }
 
-    IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex<T>(Action<IOGraphGdmVertexDescriptor<T>> configure)
+    IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex<T>(Action<IOGraphGdmVertexEntityDescriptor<T>> configure)
     {
         if (configure is null)
         {
             throw new ArgumentNullException(nameof(configure));
         }
 
-        var vertex = new GdmVertex()
+        var vertex = new GdmVertex<T>()
         {
             Label = typeof(T).Name
         };
@@ -41,10 +41,10 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
         throw new NotImplementedException();
     }
 
-    IOGraphGdmBuilder IOGraphGdmBuilder.AddType<T>(Label label, Action<IOGraphGdmComplexTypeDescriptor<T>> configure)
-    {
-        throw new NotImplementedException();
-    }
+    //IOGraphGdmBuilder IOGraphGdmBuilder.AddType<T>(Label label, Action<IOGraphGdmComplexTypeDescriptor<T>> configure)
+    //{
+    //    throw new NotImplementedException();
+    //}
 
     IOGraphGdm IOGraphGdmBuilder.Build()
     {

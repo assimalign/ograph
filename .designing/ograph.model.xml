@@ -41,7 +41,7 @@
             - PUT       /api/users/addressTypes/{addressTypeId}
             - DELETE    /api/users/addressTypes/{addressTypeId}
     -->
-    <model domain="users">
+    <model domain="users" host="">
         <types>
             <entityType name="User">
                 <property name="userId" type="Guid" isKey="true" />

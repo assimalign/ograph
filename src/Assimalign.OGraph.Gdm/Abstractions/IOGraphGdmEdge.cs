@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm;
@@ -21,10 +22,6 @@ public interface IOGraphGdmEdge
     /// </summary>
     CardinalityType Cardinality { get; }
     /// <summary>
-    /// 
-    /// </summary>
-    IOGraphGdmTypeReference ReturnType { get; }
-    /// <summary>
     /// The source vertex.
     /// </summary>
     IOGraphGdmVertexReference Source { get; }
@@ -36,4 +33,22 @@ public interface IOGraphGdmEdge
     /// Metadata for the edge.
     /// </summary>
     IOGraphGdmMetadata Metadata { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    IEnumerable<IOGraphGdmBinding> GetBindings();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="binding"></param>
+    /// <returns></returns>
+    void AddBinding(IOGraphGdmInputBinding binding);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="binding"></param>
+    /// <returns></returns>
+    void AddBinding(IOGraphGdmOutputBinding binding);
 }

@@ -14,7 +14,3 @@ public interface IOGraphGdmEdgeDescriptor<T> where T : class, new()
 }
 
 
-public interface IOGraphGdmEdgeKeyDescriptor<T>
-{
-    void HasReferenceKey<TMember>(Expression<Func<T, TMember>> expression);
-}

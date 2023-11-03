@@ -1,6 +1,9 @@
 ﻿namespace Assimalign.OGraph.Gdm.Internal;
 
-internal class GdmTypeReference : IOGraphGdmTypeReference
+internal abstract class GdmTypeReference<T> : IOGraphGdmTypeReference
+    where T : IOGraphGdmType
 {
-    public IOGraphGdmType Definition { get; init; } = default!;
+    public T Definition { get; init; } = default!;
+
+    IOGraphGdmType IOGraphGdmTypeReference.Definition => Definition
 }

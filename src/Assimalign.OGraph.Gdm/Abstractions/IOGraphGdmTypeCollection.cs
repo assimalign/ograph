@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Gdm;
 
@@ -13,6 +14,9 @@ public interface IOGraphGdmTypeCollection : ICollection<IOGraphGdmType>
     /// <param name="name"></param>
     /// <returns></returns>
     IOGraphGdmType this[Label name] { get; }
+
+
+
     /// <summary>
     /// 
     /// </summary>

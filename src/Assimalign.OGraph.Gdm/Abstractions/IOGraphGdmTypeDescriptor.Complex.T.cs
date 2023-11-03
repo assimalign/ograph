@@ -3,7 +3,8 @@ using System.Linq.Expressions;
 
 namespace Assimalign.OGraph.Gdm;
 
-public interface IOGraphGdmComplexTypeDescriptor<T> where T : class
+public interface IOGraphGdmComplexTypeDescriptor<T> 
+    where T : class, new()
 {
     /// <summary>
     /// Overrides the default type name.
@@ -23,7 +24,7 @@ public interface IOGraphGdmComplexTypeDescriptor<T> where T : class
     /// <typeparam name="TProperty"></typeparam>
     /// <param name="expression"></param>
     /// <returns></returns>
-    IOGraphGdmComplexTypeDescriptor<T> Ignore<TProperty>(Expression<Func<T, TProperty>> expression);
+    IOGraphGdmComplexTypeDescriptor<T> Ignore<TProperty>(Expression<Func<T?, TProperty?>> expression);
     /// <summary>
     /// 
     /// </summary>

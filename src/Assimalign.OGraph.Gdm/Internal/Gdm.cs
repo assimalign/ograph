@@ -8,6 +8,11 @@ namespace Assimalign.OGraph.Gdm.Internal;
 
 internal class Gdm : IOGraphGdm
 {
+    public Gdm()
+    {
+        
+    }
+
     public Label Label { get; set; }
     public IOGraphGdmTypeCollection Types { get; set; }
     public IOGraphGdmEdgeCollection Edges { get; set; }

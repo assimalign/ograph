@@ -11,6 +11,4 @@ using Assimalign.OGraph.Gdm;
 public interface IOGraph
 {
     IOGraphGdm Model { get; }
-
-    IOGraphExecutor GetExecutor();
 }

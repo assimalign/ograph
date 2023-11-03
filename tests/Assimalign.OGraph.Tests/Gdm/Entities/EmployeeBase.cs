@@ -9,5 +9,6 @@ namespace Assimalign.OGraph.Gdm;
 public abstract record class EmployeeBase<T> : Entity<T> 
     where T : Entity<T>
 {
-    public Guid? EmployeeId { get; set; }
+    public AuditField? CreatedBy { get; set; }
+    public AuditField? UpdatedBy { get; set; }
 }

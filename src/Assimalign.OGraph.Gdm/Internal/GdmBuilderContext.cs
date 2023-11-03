@@ -16,7 +16,7 @@ internal class GdmBuilderContext
     }
 
 
-    IOGraphGdmTypeCollection Types { get; }
+    public IOGraphGdmTypeCollection Types { get; }
 
 
 
