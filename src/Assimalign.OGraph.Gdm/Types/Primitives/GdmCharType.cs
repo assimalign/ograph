@@ -25,16 +25,16 @@ public sealed class GdmCharType : GdmPrimitiveType<char>
 
     public override char Read(XmlReader reader)
     {
-        return reader.ReadElementContentAsBoolean();
+        return reader.ReadElementContentAsString()[0];
     }
 
     public override void Write(Utf8JsonWriter writer, char value)
     {
-        writer.WriteBooleanValue(value);
+        //writer.WriteBooleanValue(value);
     }
 
     public override void Write(XmlWriter writer, char value)
     {
-        writer.WriteValue(value);
+        //writer.WriteValue(value);
     }
 }

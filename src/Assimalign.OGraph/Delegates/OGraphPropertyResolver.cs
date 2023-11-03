@@ -9,4 +9,4 @@ namespace Assimalign.OGraph;
 /// </summary>
 /// <param name="context"></param>
 /// <returns></returns>
-public delegate ValueTask<IOGraphResult> OGraphPropertyResolver(IOGraphPropertyContext context, CancellationToken cancellationToken = default);
+public delegate ValueTask<IOGraphResult> OGraphPropertyResolver(IOGraphPropertyResolverContext context, CancellationToken cancellationToken = default);

@@ -13,6 +13,7 @@ public interface IOGraphQueryProvider
     /// Represents the runtime type 
     /// </summary>
     Type ElementType { get; }
+
     /// <summary>
     /// 
     /// </summary>

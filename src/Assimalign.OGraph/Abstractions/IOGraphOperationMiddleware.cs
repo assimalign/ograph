@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-/// <summary>
-/// 
-/// </summary>
 public interface IOGraphOperationMiddleware
 {
     /// <summary>
@@ -12,5 +13,5 @@ public interface IOGraphOperationMiddleware
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task<IOGraphResult> InvokeAsync(IOGraphOperationContext context, OGraphOperationHandler next);
+    Task<IOGraphResult> InvokeAsync(IOGraphOperationResolverContext context, OGraphOperationHandler next);
 }

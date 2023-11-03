@@ -1,33 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-/// <summary>
-/// A fluent builder for creating a <see cref="IOGraph"/> model.
-/// </summary>
+using Assimalign.OGraph.Gdm;
+
 public interface IOGraphBuilder
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="configure"></param>
-    /// <returns></returns>
-    IOGraphBuilder ConfigureOptions(Action<OGraphOptions> configure);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="configure"></param>
-    /// <returns></returns>
-    IOGraphBuilder ConfigureModel(Action<IOGraphModelDescriptor> configure);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="configure"></param>
-    /// <returns></returns>
-    IOGraphBuilder ConfigureApplication(Action<IOGraphApplication> configure);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
+    IOGraphBuilder ConfigureModel(Action<IOGraphGdmBuilder> configure);
+    IOGraphBuilder ConfigureApplication(Action<IOGraphApplicationBuilder> configure);
     IOGraph Build();
 }
+
+
+
+
+
+
+

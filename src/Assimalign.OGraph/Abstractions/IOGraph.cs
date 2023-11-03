@@ -1,37 +1,17 @@
-﻿namespace Assimalign.OGraph;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-/// <summary>
-/// Represents a single graph Model.
-/// </summary>
+namespace Assimalign.OGraph;
+
+using Assimalign.OGraph.Gdm;
+
 public interface IOGraph
 {
     /// <summary>
-    ///The label of the Graph Model.
+    /// Gets the Graph Data Model.
     /// </summary>
-    /// <remarks>
-    /// The label of the Graph model acts as a namespace. In terms a of a domain,
-    /// there can be multiple models
-    /// </remarks>
-    Label Label { get; }
-    /// <summary>
-    /// 
-    /// </summary>
-    IOGraphTypeCollection Types { get; }
-    /// <summary>
-    /// Gets the edge collection.
-    /// </summary>
-    IOGraphEdgeCollection Edges { get; }
-    /// <summary>
-    /// A collection of vertex definitions within the OGraph Model.
-    /// </summary>
-    IOGraphVertexCollection Vertices { get; }
-    /// <summary>
-    /// Represents a collection of HTTP Operations
-    /// </summary>
-    IOGraphOperationCollection Operations { get; }
-    /// <summary>
-    /// Generate an executor from the current graph model.
-    /// </summary>
-    /// <returns></returns>
-    IOGraphExecutor GetExecutor();
+    IOGraphGdm Model { get; }
 }

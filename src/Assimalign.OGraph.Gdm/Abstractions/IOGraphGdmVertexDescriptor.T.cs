@@ -8,5 +8,5 @@ namespace Assimalign.OGraph.Gdm;
 
 public interface IOGraphGdmVertexDescriptor
 {
-    IOGraphGdmVertexDescriptor UseBinding<TBinding>() where TBinding : IOGraphGdmBinding;
+    
 }

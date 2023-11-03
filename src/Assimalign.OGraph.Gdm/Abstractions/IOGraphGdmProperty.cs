@@ -44,17 +44,11 @@ public interface IOGraphGdmProperty
     /// 
     /// </summary>
     /// <returns></returns>
-    IEnumerable<IOGraphGdmBinding> GetBindings();
+    IEnumerable<IOGraphGdmPropertyBinding> GetBindings();
     /// <summary>
     /// 
     /// </summary>
     /// <param name="binding"></param>
     /// <returns></returns>
-    void AddBinding(IOGraphGdmInputBinding binding);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="binding"></param>
-    /// <returns></returns>
-    void AddBinding(IOGraphGdmOutputBinding binding);
+    void AddBinding(IOGraphGdmPropertyBinding binding);
 }

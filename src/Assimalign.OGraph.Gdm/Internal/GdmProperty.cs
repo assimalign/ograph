@@ -5,11 +5,15 @@ namespace Assimalign.OGraph.Gdm.Internal;
 
 internal class GdmProperty : IOGraphGdmProperty
 {
-    private readonly IList<IOGraphGdmBinding> bindings = new List<IOGraphGdmBinding>();
+    private readonly IList<IOGraphGdmPropertyBinding> bindings = new List<IOGraphGdmPropertyBinding>();
     public GdmProperty()
     {
         Metadata = new GdmMetadata();
+        Getter = () => this.value;
+        Setter = (value) => this.value = value;
     }
+
+    private volatile object? value;
 
     public Label Name { get; set; }
     public IOGraphGdmTypeReference Type { get; set; } = default!;
@@ -17,10 +21,9 @@ internal class GdmProperty : IOGraphGdmProperty
     public bool IsKey { get; set; }
     public bool IsComputed { get; set; }
     public bool IsNullable { get; set; }
-    public GdmPropertyGetter Getter { get; set; } = default!;
-    public GdmPropertySetter Setter { get; set; } = default!;
-
-    public void AddBinding(IOGraphGdmBinding binding)
+    public GdmPropertyGetter Getter { get; }
+    public GdmPropertySetter Setter { get; }
+    public void AddBinding(IOGraphGdmPropertyBinding binding)
     {
         if (binding is null)
         {
@@ -28,7 +31,7 @@ internal class GdmProperty : IOGraphGdmProperty
         }
         bindings.Add(binding);
     }
-    public IEnumerable<IOGraphGdmBinding> GetBindings()
+    public IEnumerable<IOGraphGdmPropertyBinding> GetBindings()
     {
         return bindings;
     }

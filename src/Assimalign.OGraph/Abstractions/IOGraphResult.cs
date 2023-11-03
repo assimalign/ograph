@@ -1,12 +1,22 @@
-﻿namespace Assimalign.OGraph;
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace Assimalign.OGraph;
 
 /// <summary>
-/// The base result used in all resolvers.
+/// 
 /// </summary>
 public interface IOGraphResult
 {
     /// <summary>
-    /// The status code of the result set.
+    /// 
     /// </summary>
     StatusCode StatusCode { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task ExecuteAsync(IOGraphExecutorContext context, CancellationToken cancellationToken = default);
 }

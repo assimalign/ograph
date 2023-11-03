@@ -1,18 +1,28 @@
-﻿using System.Threading;
+﻿using System;
+using System.Linq;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-/// <summary>
-/// 
-/// </summary>
 public interface IOGraphExecutor
 {
-    /// <summary>
-    /// Executes the OGraph request and returns a response to be sent back to the client.
-    /// </summary>
-    /// <param name="request"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
     Task<IOGraphExecutorResponse> ExecuteAsync(IOGraphExecutorRequest request, CancellationToken cancellationToken = default);
+}
+
+
+public interface IOGraphExecutorContext
+{
+    IOGraphExecutorRequest Request { get; }
+    IOGraphExecutorResponse Response { get; }
+}
+
+public interface IOGraphExecutorRequest
+{
+
+}
+public interface IOGraphExecutorResponse
+{
+
 }

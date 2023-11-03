@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphExecutor
+public interface IOGraphVertexOutputBinding
 {
 }

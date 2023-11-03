@@ -16,8 +16,4 @@
 		<Folder Include="Client\" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\..\src\Assimalign.OGraph\Assimalign.OGraph.Old.csproj" />
-	</ItemGroup>
-
 </Project>

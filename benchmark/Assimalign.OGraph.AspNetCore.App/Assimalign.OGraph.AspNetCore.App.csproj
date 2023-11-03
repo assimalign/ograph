@@ -12,7 +12,6 @@
 	  <None Remove="Events\**" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\Assimalign.OGraph\Assimalign.OGraph.Old.csproj" />
 		<ProjectReference Include="..\Assimalign.OGraph.AspNetCore\Assimalign.OGraph.AspNetCore.csproj" />
 	</ItemGroup>
 	<ItemGroup>

@@ -37,18 +37,11 @@ public interface IOGraphGdmEdge
     /// 
     /// </summary>
     /// <returns></returns>
-    IEnumerable<IOGraphGdmBinding> GetBindings();
+    IEnumerable<IOGraphGdmEdgeBinding> GetBindings();
     /// <summary>
     /// 
     /// </summary>
     /// <param name="binding"></param>
     /// <returns></returns>
-    void AddBinding(IOGraphGdmInputBinding binding);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="binding"></param>
-    /// <returns></returns>
-    void AddBinding(IOGraphGdmOutputBinding binding);
+    void AddBinding(IOGraphGdmEdgeBinding binding);
 }

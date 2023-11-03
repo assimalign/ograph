@@ -6,7 +6,7 @@ namespace Assimalign.OGraph.Gdm.Internal;
 internal class GdmVertex<T> : IOGraphGdmVertex
     where T : class, new()
 {
-    private readonly IList<IOGraphGdmBinding> bindings = new List<IOGraphGdmBinding>();
+    private readonly IList<IOGraphGdmVertexBinding> bindings = new List<IOGraphGdmVertexBinding>();
     public GdmVertex()
     {
         Metadata = new GdmMetadata();
@@ -17,7 +17,7 @@ internal class GdmVertex<T> : IOGraphGdmVertex
     IOGraphGdmTypeReference IOGraphGdmVertex.Type => Type;
     public IOGraphGdmEdgeReferenceCollection Edges { get; } = default!;
     public IOGraphGdmMetadata Metadata { get; }
-    public void AddBinding(IOGraphGdmBinding binding)
+    public void AddBinding(IOGraphGdmVertexBinding binding)
     {
         if (binding is null)
         {
@@ -25,8 +25,7 @@ internal class GdmVertex<T> : IOGraphGdmVertex
         }
         bindings.Add(binding);
     }
-
-    public IEnumerable<IOGraphGdmBinding> GetBindings()
+    public IEnumerable<IOGraphGdmVertexBinding> GetBindings()
     {
         return bindings;
     }

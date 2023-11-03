@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-using Assimalign.OGraph.Gdm;
-
-public interface IOGraph
+public interface IOGraphOperationDescriptor
 {
-    IOGraphGdm Model { get; }
+
+
 }

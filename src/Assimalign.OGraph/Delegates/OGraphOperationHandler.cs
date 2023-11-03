@@ -9,4 +9,4 @@ namespace Assimalign.OGraph;
 /// </summary>
 /// <param name="context"></param>
 /// <returns></returns>
-public delegate Task<IOGraphResult> OGraphOperationHandler(IOGraphOperationContext context, CancellationToken cancellationToken = default);
+public delegate Task<IOGraphResult> OGraphOperationHandler(IOGraphOperationResolverContext context, CancellationToken cancellationToken = default);

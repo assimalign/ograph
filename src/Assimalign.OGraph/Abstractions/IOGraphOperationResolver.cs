@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
+
+using Assimalign.OGraph.Gdm;
 
 /// <summary>
 /// 
@@ -18,5 +16,5 @@ public interface IOGraphOperationResolver
     /// <param name="context"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IOGraphResult> InvokeAsync(IOGraphOperationContext context, CancellationToken cancellationToken = default);
+    Task<IOGraphResult> InvokeAsync(IOGraphOperationResolverContext context, CancellationToken cancellationToken = default);
 }

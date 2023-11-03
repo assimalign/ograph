@@ -30,17 +30,11 @@ public interface IOGraphGdmVertex
     /// 
     /// </summary>
     /// <returns></returns>
-    IEnumerable<IOGraphGdmBinding> GetBindings();
+    IEnumerable<IOGraphGdmVertexBinding> GetBindings();
     /// <summary>
     /// 
     /// </summary>
     /// <param name="binding"></param>
     /// <returns></returns>
-    void AddBinding(IOGraphGdmInputBinding binding);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="binding"></param>
-    /// <returns></returns>
-    void AddBinding(IOGraphGdmOutputBinding binding);
+    void AddBinding(IOGraphGdmVertexBinding binding);
 }

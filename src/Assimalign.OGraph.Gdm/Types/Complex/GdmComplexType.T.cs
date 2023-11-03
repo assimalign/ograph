@@ -11,9 +11,8 @@ using Assimalign.OGraph.Gdm.Internal;
 public partial class ComplexType<T> : GdmComplexType
     where T : class, new()
 {
-    public ComplexType()
+    public ComplexType() : base(typeof(T))
     {
-        base.RuntimeType = typeof(T);
         base.Label = typeof(T).Name;
         Initialize();
         Configure(new GdmComplexTypeDescriptor<T>(this));
@@ -63,10 +62,10 @@ public partial class ComplexType<T> : GdmComplexType
                 Properties.Add(new GdmProperty()
                 {
                     Name = propName,
-                    Type = new GdmTypeReference()
-                    {
-                        Definition = GetPrimitiveType(propType)
-                    },
+                    //Type = new GdmTypeReference()
+                    //{
+                    //    Definition = GetPrimitiveType(propType)
+                    //},
                     //Resolver = GetPropertyResolver(prop)
                 });
                 continue;
@@ -76,10 +75,10 @@ public partial class ComplexType<T> : GdmComplexType
                 Properties.Add(new GdmProperty()
                 {
                     Name = propName,
-                    Type = new GdmTypeReference()
-                    {
-                        Definition = GetCollectionType(enumerableType)
-                    },
+                    //Type = new GdmTypeReference()
+                    //{
+                    //    Definition = GetCollectionType(enumerableType)
+                    //},
                     //Resolver = GetPropertyResolver(prop)
                 });
                 continue;
@@ -92,10 +91,10 @@ public partial class ComplexType<T> : GdmComplexType
                 Properties.Add(new GdmProperty()
                 {
                     Name = propName,
-                    Type = new GdmTypeReference()
-                    {
-                        Definition = complexObj
-                    },
+                    //Type = new GdmTypeReference()
+                    //{
+                    //    Definition = complexObj
+                    //},
                     //Resolver = GetPropertyResolver(prop)
                 });
                 continue;
