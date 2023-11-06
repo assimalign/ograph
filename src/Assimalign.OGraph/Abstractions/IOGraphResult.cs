@@ -12,11 +12,4 @@ public interface IOGraphResult
     /// 
     /// </summary>
     StatusCode StatusCode { get; }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    Task ExecuteAsync(IOGraphExecutorContext context, CancellationToken cancellationToken = default);
 }

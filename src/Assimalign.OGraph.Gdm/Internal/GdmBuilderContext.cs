@@ -10,15 +10,12 @@ internal class GdmBuilderContext
 {
     private static readonly GdmBuilderContext? context;
     
-    public GdmBuilderContext()
+    public GdmBuilderContext(Gdm model)
     {
-
+        Model = model;
     }
 
-
-    public IOGraphGdmTypeCollection Types { get; }
-
-
+    public Gdm Model { get; }
 
     public IOGraphGdmType GetTypeByName(Label name)
     {
@@ -29,5 +26,4 @@ internal class GdmBuilderContext
     {
         throw new NotImplementedException();
     }
-
 }

@@ -10,9 +10,9 @@ namespace Assimalign.OGraph.Gdm.Internal;
 internal class GdmComplexTypeDescriptor<T> : IOGraphGdmComplexTypeDescriptor<T> 
     where T : class, new()
 {
-    private readonly ComplexType<T> complexType;
+    private readonly GdmComplexType<T> complexType;
 
-    public GdmComplexTypeDescriptor(ComplexType<T> complexType)
+    public GdmComplexTypeDescriptor(GdmComplexType<T> complexType)
     {
         this.complexType = complexType;
     }

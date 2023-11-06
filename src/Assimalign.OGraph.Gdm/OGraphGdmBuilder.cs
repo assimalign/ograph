@@ -1,5 +1,4 @@
-﻿using Assimalign.OGraph.Gdm.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,39 +6,67 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm;
 
+using Assimalign.OGraph.Gdm.Internal;
+
 public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
 {
+    private readonly Gdm model;
+    private readonly GdmValidator validator;
 
-    private OGraphGdmBuilder() { }
+    private OGraphGdmBuilder(Label label)
+    {
+        this.validator = new();
+        this.model = new()
+        {
+            Label = label
+        };
+    }
 
-    IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex<T>(Action<IOGraphGdmVertexEntityDescriptor<T>> configure)
+    IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex<T>(Action<IOGraphGdmEntityTypeDescriptor<T>> configure)
+    {
+        return (this as IOGraphGdmBuilder).AddVertex(typeof(T).Name, configure);
+    }
+    IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex<T>(Label label, Action<IOGraphGdmEntityTypeDescriptor<T>> configure)
     {
         if (configure is null)
         {
             throw new ArgumentNullException(nameof(configure));
         }
-
-        var vertex = new GdmVertex<T>()
+        var type = new GdmEntityType<T>();
+        var vertex = new GdmVertex<GdmEntityType<T>>()
         {
-            Label = typeof(T).Name
+            label = label,
+            type = type
         };
-
-        var descriptor = new GdmVertexDescriptor<T>(vertex);
+        var descriptor = new GdmEntityTypeDescriptor<T>(type)
+        {
+            Context = new GdmBuilderContext(model)
+        };
 
         configure.Invoke(descriptor);
 
+        model.Vertices.Add(vertex);
+
         return this;
     }
-
-    IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex(IOGraphGdmVertex vertex)
-    {
-        throw new NotImplementedException();
-    }
-
     IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex<TVertex>()
     {
-        throw new NotImplementedException();
+        return (this as IOGraphGdmBuilder).AddVertex(new TVertex());
     }
+    IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex(IOGraphGdmVertex vertex)
+    {
+        if (vertex is null)
+        {
+            throw new ArgumentNullException(nameof(vertex));
+        }
+        model.Vertices.Add(vertex);
+        return this;
+    }
+    IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex(Action<IOGraphGdmVertexDescriptor> configure)
+    {
+        return (this as IOGraphGdmBuilder).AddVertex(GdmVertex.Create(configure));
+    }
+
 
     //IOGraphGdmBuilder IOGraphGdmBuilder.AddType<T>(Label label, Action<IOGraphGdmComplexTypeDescriptor<T>> configure)
     //{
@@ -48,7 +75,16 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
 
     IOGraphGdm IOGraphGdmBuilder.Build()
     {
-        throw new NotImplementedException();
+
+
+        var result = validator.Validate(model);
+
+        if (!result.IsValid)
+        {
+
+        }
+
+        return model;
     }
 
     #region Static Memebers
@@ -67,7 +103,7 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
             throw new ArgumentNullException(nameof(configure));
         }
 
-        IOGraphGdmBuilder builder = new OGraphGdmBuilder();
+        IOGraphGdmBuilder builder = new OGraphGdmBuilder(label);
 
         configure.Invoke(builder);
 
@@ -81,10 +117,8 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
     /// <returns></returns>
     public static IOGraphGdmBuilder Create(Label label)
     {
-        return new OGraphGdmBuilder();
+        return new OGraphGdmBuilder(label);
     }
-
-    
 
     #endregion
 }

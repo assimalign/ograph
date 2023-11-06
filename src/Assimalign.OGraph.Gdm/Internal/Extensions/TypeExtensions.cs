@@ -47,6 +47,10 @@ internal static class TypeExtensions
 	public static bool IsEnumerableType(this Type type, out Type implementation)
 	{
 		implementation = null;
+		if (!type.IsAssignableTo(typeof(IEnumerable)))
+		{
+			return false;
+		}
 		if (type.IsGenericType)
 		{
 			var arguments = type.GetGenericArguments();
@@ -69,11 +73,11 @@ internal static class TypeExtensions
 		}
 		else
 		{
-			var hasIntefaces = type.GetInterfaces().Length > 0;
+			var hasInterfaces = type.GetInterfaces().Length > 0;
 
-			if (hasIntefaces)
+			if (hasInterfaces)
 			{
-				var other = type.FindInterfaces((filter, criteria) => IsEnumerableType(filter), null).First();
+				var other = type.FindInterfaces((filter, criteria) => IsEnumerableType(filter), null).FirstOrDefault();
 
 				if (null != other)
 				{
@@ -89,7 +93,7 @@ internal static class TypeExtensions
 	/// <summary>
 	/// 
 	/// </summary>
-	public static bool ICollectionType(this Type type, bool checkNullable = true)
+	public static bool IsCollectionType(this Type type, bool checkNullable = true)
 	{
 		throw new NotImplementedException();
 	}
@@ -102,7 +106,7 @@ internal static class TypeExtensions
 	/// <param name=""></param>
 	/// <param name=""></param>
 	/// <param name=""></param>
-	public static bool ICollectionType(this Type type, out Type implementation, bool checkNullable = true)
+	public static bool IsCollectionType(this Type type, out Type implementation, bool checkNullable = true)
 	{
 		throw new NotImplementedException();
 	}

@@ -14,20 +14,17 @@ public interface IOGraphGdmTypeCollection : ICollection<IOGraphGdmType>
     /// <param name="name"></param>
     /// <returns></returns>
     IOGraphGdmType this[Label name] { get; }
-
-
-
     /// <summary>
     /// 
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    bool TryAddType(IOGraphGdmType type);
+    bool TryAdd(IOGraphGdmType type);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="name"></param>
     /// <param name="type"></param>
     /// <returns></returns>
-    bool TryGetType(Label name, out IOGraphGdmType? type);
+    bool TryGet(Label name, out IOGraphGdmType? type);
 }

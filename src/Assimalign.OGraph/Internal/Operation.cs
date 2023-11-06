@@ -1,8 +1,10 @@
 ﻿using Assimalign.OGraph.Gdm;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,16 +34,47 @@ internal class Operation : IOGraphOperation
             throw new Exception();
         }
 
-
-
-        var result = await GetHandlerChain()
-            .Invoke(opContext, cancellationToken);
+        var result = await GetHandlerChain().Invoke(opContext, cancellationToken);
 
         var vertex = opContext.Vertex;
-        var vertexType = vertex.Type.Definition;
+        var vertexType = vertex.Type.Definition as IOGraphGdmEntityType;
 
+        var writer = new Utf8JsonWriter(default(Stream), new()
+        {
+            Indented = false,
+            SkipValidation = true // OGraph Typing should protect this
+        });
+
+        writer.WriteStartObject();
+
+        foreach (var property in vertexType.Properties)
+        {
+            var propertyResolver = property.GetBindings()
+                .OfType<IOGraphPropertyResolver>()
+                .First();
+
+            var propertyResult =  await propertyResolver.InvokeAsync(default!, cancellationToken);
+        }
+
+        switch (result)
+        {
+            case IOGraphQueryResult query:
+                {
+                    
+                    break;
+                }
+            case IOGraphErrorResult error:
+                {
+                    break;
+                }
+        }
+
+        writer.WriteEndObject();
+    }
+
+
+    private async Task HandleQueryResultAsync(IOGraphQueryResult result)
+    {
         
-
-
     }
 }

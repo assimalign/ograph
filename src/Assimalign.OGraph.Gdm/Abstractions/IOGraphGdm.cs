@@ -27,4 +27,7 @@ public interface IOGraphGdm
     /// A collection of vertex definitions within the OGraph Model.
     /// </summary>
     IOGraphGdmVertexCollection Vertices { get; }
+
+    //void SerializeToXml(Stream stream);
+    //void SerializeToJson(Stream stream);
 }

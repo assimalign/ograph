@@ -29,15 +29,6 @@ public interface IOGraphGdmType
     /// </remarks>
     Type? RuntimeType { get; }
     /// <summary>
-    /// Checks whether the <paramref name="type"/> is assignable to the type.
-    /// </summary>
-    /// <remarks>
-    /// <i>This usually entails checking the value against the underlying runtime type.</i>
-    /// </remarks>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    bool IsAssignableTo(IOGraphGdmType type);
-    /// <summary>
     /// 
     /// </summary>
     /// <param name="writer"></param>

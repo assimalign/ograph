@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm;
 
-public interface IOGraphGdmVertexDescriptor
+public interface IOGraphGdmVertexDescriptor<T> 
+    where T : class, IOGraphGdmType, new()
 {
+    IOGraphGdmVertexDescriptor<T> HasLabel(Label label);
     
+
 }

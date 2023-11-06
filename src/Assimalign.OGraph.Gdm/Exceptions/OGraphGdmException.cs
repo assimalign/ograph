@@ -1,11 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm;
 
 public abstract class OGraphGdmException : Exception
 {
+    protected OGraphGdmException(string? message) 
+        : base(message)
+    {
+    }
+    protected OGraphGdmException(string? message, Exception? innerException) 
+        : base(message, innerException)
+    {
+    }
 }

@@ -3,6 +3,7 @@ using System.IO;
 
 namespace Assimalign.OGraph;
 
+using Assimalign.OGraph.Gdm;
 using Assimalign.OGraph.Syntax;
 
 /// <summary>
@@ -13,9 +14,9 @@ public interface IOGraphQueryContext
     /// <summary>
     /// The starting node/vertex of the query.
     /// </summary>
-    IOGraphVertex Node { get;  }
+    IOGraphGdmVertex Vertex { get;  }
     /// <summary>
-    /// The paresed query from the request.
+    /// The parsed query from the request.
     /// </summary>
     QueryDocument Query { get; }
     /// <summary>

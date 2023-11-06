@@ -103,7 +103,7 @@
             </vertex>
         </vertices>
         <edges>
-            <edge label="addresses" cardinality="2">
+            <edge label="addresses" cardinality="2" route="users/{userId}/addresses">
                 <sourceNode label="users" /> <!-- XPath: //node[@label='user'] -->
                 <targetNode label="addresses" />
             </edge>

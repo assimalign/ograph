@@ -1,10 +1,9 @@
-﻿using System;
-using System.Xml;
+﻿using System.Xml;
 using System.Text.Json;
 
 namespace Assimalign.OGraph.Gdm;
 
-public sealed class GdmNullBoolean : GdmPrimitiveType<bool?>
+public sealed class GdmNullBooleanType : GdmPrimitiveType<bool?>
 {
     public override bool? Read(ref Utf8JsonReader reader)
     {

@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public sealed class OGraphHeaderCollection : Dictionary<string, HeaderValue>,
-    IOGraphHeaderCollection
+public sealed class OGraphHeaderCollection : Dictionary<string, HeaderValue>
 {
     public OGraphHeaderCollection() : base(StringComparer.CurrentCultureIgnoreCase) { }
 

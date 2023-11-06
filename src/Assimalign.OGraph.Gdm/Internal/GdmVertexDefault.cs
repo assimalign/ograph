@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
-internal class GdmVertex<T> : IOGraphGdmVertex
+internal class GdmVertexDefault<T> : IOGraphGdmVertex
     where T : class, new()
 {
     private readonly IList<IOGraphGdmVertexBinding> bindings = new List<IOGraphGdmVertexBinding>();
-    public GdmVertex()
+    public GdmVertexDefault()
     {
         Metadata = new GdmMetadata();
     }

@@ -16,21 +16,21 @@ internal class GdmVertexCollection : HashSet<IOGraphGdmVertex>,
     {
         get
         {
-            if (TryGetVertex(label, out var vertex))
+            if (TryGet(label, out var vertex))
             {
                 return vertex;
             }
-            throw new Exception();
+            throw new KeyNotFoundException();
         }
     }
     public bool IsReadOnly { get; set; }
-    public bool TryGetVertex(Label label, out IOGraphGdmVertex? node)
+    public bool TryGet(Label label, out IOGraphGdmVertex? node)
     {
         node = this.FirstOrDefault(vertex => vertex.Label == label);
 
         return node is null ? false : true;
     }
-    public bool TryAddVertex(IOGraphGdmVertex vertex)
+    public bool TryAdd(IOGraphGdmVertex vertex)
     {
         throw new NotImplementedException();
     }
@@ -51,8 +51,6 @@ internal class GdmVertexCollection : HashSet<IOGraphGdmVertex>,
             throw new InvalidOperationException("The Collection is ReadOnly.");
         }
     }
-
-   
 
     private class VertexComparer : IEqualityComparer<IOGraphGdmVertex>
     {

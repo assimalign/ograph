@@ -5,4 +5,4 @@
 /// </summary>
 /// <param name="instance">The instance in which to set the property value.</param>
 /// <param name="value"></param>
-public delegate void GdmPropertySetter(object value);
+public delegate void GdmPropertySetter(object instance, object value);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assimalign.OGraph.Gdm;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +25,11 @@ internal class PropertyResolverDefault : IOGraphPropertyResolver
     }
 
     public Task<object> InvokeAsync(object context, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task InvokeAsync(IOGraphGdmPropertyBindingContext context, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

@@ -1,59 +1,61 @@
 ﻿using System;
 using System.Xml;
 using System.Text.Json;
-using System.Linq;
-using System.Reflection;
 
 namespace Assimalign.OGraph.Gdm;
 
 using Assimalign.OGraph.Gdm.Internal;
+using System.Diagnostics;
 
+[DebuggerDisplay("Gdm Type ({Kind}): {Label}")]
 public class GdmComplexType : IOGraphGdmComplexType
 {
-    public GdmComplexType(Type? type)
+    internal Label label;
+
+    public GdmComplexType() { }
+    public GdmComplexType(Type type)
     {
-        RuntimeType = AssertType(type);
-        Properties = new GdmPropertyCollection();
+        if (type is null)
+        {
+            throw new ArgumentNullException(nameof(type));
+        }
+        RuntimeType = type;
+        Initialize();
+        Configure(new GdmComplexTypeDescriptor(this));
     }
 
-    public Label Label { get; init; }
+    private void Initialize()
+    {
+        foreach (var property in RuntimeType.GetGdmComplexTypeProperties())
+        {
+            Properties.Add(property);
+        }
+    }
+
+    protected virtual void Configure(IOGraphGdmComplexTypeDescriptor descriptor) { }
+
+    public Label Label
+    {
+        get => label;
+        init => label = value;
+    }
     public GdmTypeKind Kind => GdmTypeKind.Complex;
-    public IOGraphGdmPropertyCollection Properties { get; init; }
-    public Type RuntimeType { get; }
-
-    public virtual bool IsAssignableTo(IOGraphGdmType type)
-    {
-        if (type is not IOGraphGdmComplexType complexType)
-        {
-            return false;
-        }
-        if (complexType.Properties.Count != Properties.Count)
-        {
-            return false;
-        }
-        if (!RuntimeType!.IsAssignableFrom(type.RuntimeType))
-        {
-            return false;
-        }
-        foreach (var property in Properties)
-        {
-            if (!complexType.Properties.Contains(property))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
+    public IOGraphGdmPropertyCollection Properties { get; init; } = new GdmPropertyCollection();
+    public Type RuntimeType { get; } = default!;
     public virtual object Read(ref Utf8JsonReader reader)
     {
-        if (reader.TokenType != JsonTokenType.StartObject)
+        if (!reader.IsStartOfObjectToken())
         {
-            throw new JsonException();
+            //ThrowE
         }
+        string propertyName;
 
         var instance = Activator.CreateInstance(RuntimeType!);
 
-        string propertyName;
+        if (instance is null)
+        {
+            throw new Exception();
+        }
 
         while ((reader.Read() && reader.TokenType != JsonTokenType.EndObject))
         {
@@ -71,8 +73,7 @@ public class GdmComplexType : IOGraphGdmComplexType
 
             var propertyValue = propertyType.Read(ref reader);
 
-
-
+            property.Setter.Invoke(instance, propertyValue);
         }
 
         return instance;
@@ -83,17 +84,34 @@ public class GdmComplexType : IOGraphGdmComplexType
     }
     public virtual void Write(Utf8JsonWriter writer, object value)
     {
-        var type = value.GetType();
-
-        if (!type.IsAssignableTo(RuntimeType))
+        if (value is null)
         {
-            throw new InvalidOperationException("");
+            writer.WriteNullValue();
         }
+        else
+        {
+            var type = value.GetType();
 
+            if (!type.IsAssignableTo(RuntimeType))
+            {
+                throw new InvalidOperationException("");
+            }
 
+            writer.WriteStartObject();
 
+            foreach (var property in Properties)
+            {
+                var propertyName = property.Name;
+                var propertyType = property.Type.Definition;
+                var propertyValue = property.Getter.Invoke(value)!;
 
-        throw new NotImplementedException();
+                writer.WritePropertyName(propertyName);
+
+                propertyType.Write(writer, propertyValue);
+            }
+
+            writer.WriteEndObject();
+        }
     }
     public virtual void Write(XmlWriter writer, object value)
     {
@@ -105,42 +123,5 @@ public class GdmComplexType : IOGraphGdmComplexType
         }
 
         throw new NotImplementedException();
-    }
-
-
-    private Type AssertType(Type? type)
-    {
-        // 1. Check that Type is not null
-        if (type is null)
-        {
-            throw new Exception();
-        }
-
-        if (!type.IsClass)
-        {
-            throw new Exception();
-        }
-        // Since a delegate are actually compiled into a class. Let's check that 
-        if (type.IsSubclassOf(typeof(Delegate)))
-        {
-            throw new Exception("Delegates are not allowed as complex types.");
-        }
-        // 3. Check if type has default constructor
-        if (type.GetConstructor(Type.EmptyTypes) is null)
-        {
-            throw new InvalidOperationException($"The type {type.Name} does not have a default constructor. {type.Name}.ctor()");
-        }
-        return type;
-    }
-
-    private void PopulateProperties(Type type)
-    {
-        var properties = type.GetProperties(BindingFlags.Public)
-            .Where(p => p.CanWrite && p.CanRead);
-
-        foreach (var property in properties)
-        {
-
-        }
     }
 }

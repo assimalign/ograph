@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
@@ -8,13 +9,14 @@ namespace Assimalign.OGraph;
 /// <summary>
 /// 
 /// </summary>
+[DebuggerDisplay("{Value}")]
 public readonly struct Label : 
     IEquatable<Label>, 
     IEqualityComparer<Label>,
     IComparable<Label>
 {
     // Allowed characters for name
-    private const string pattern = "^[a-zA-Z0-9_-@]+$";
+    private const string pattern = "^[a-zA-Z0-9_-]+$";
 
     public Label(string value)
     {

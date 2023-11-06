@@ -27,7 +27,7 @@ internal class Executor : IOGraphExecutor
 
         var vertexBinding = vertexBindings.First();
 
-        var result = await vertexBinding.InvokeAsync(default!);
+        //var result = await vertexBinding.InvokeAsync(default!);
 
 
        

@@ -3,4 +3,7 @@
 		<ProjectReference Include="..\Assimalign.OGraph.Gdm\Assimalign.OGraph.Gdm.csproj" />
 		<ProjectReference Include="..\Assimalign.OGraph.Syntax\Assimalign.OGraph.Syntax.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Internal\QueryProviders\" />
+	</ItemGroup>
 </Project>

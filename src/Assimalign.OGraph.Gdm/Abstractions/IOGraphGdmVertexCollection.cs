@@ -18,12 +18,12 @@ public interface IOGraphGdmVertexCollection : ICollection<IOGraphGdmVertex>
     /// </summary>
     /// <param name="vertex"></param>
     /// <returns></returns>
-    bool TryAddVertex(IOGraphGdmVertex vertex);
+    bool TryAdd(IOGraphGdmVertex vertex);
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="Label"></param>
+    /// <param name="label"></param>
     /// <param name="node"></param>
     /// <returns></returns>
-    bool TryGetVertex(Label label, out IOGraphGdmVertex? node);
+    bool TryGet(Label label, out IOGraphGdmVertex? node);
 }

@@ -1,8 +1,14 @@
-﻿namespace Assimalign.OGraph.Gdm.Internal;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-internal abstract class GdmTypeReference<T> : IOGraphGdmTypeReference
-    where T : IOGraphGdmType
+namespace Assimalign.OGraph.Gdm.Internal;
+
+[DebuggerDisplay("Gdm Type Reference: {Definition?.Label}")]
+internal class GdmTypeReference : IOGraphGdmTypeReference
 {
-    public T Definition { get; init; } = default!;
-    IOGraphGdmType IOGraphGdmTypeReference.Definition => Definition;
+    public IOGraphGdmType Definition { get; init; } = default!;
 }

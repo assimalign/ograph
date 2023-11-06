@@ -1,50 +1,44 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text.Json;
 using System.Xml;
+using System.Text.Json;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm;
 
-public class GdmCollectionType<TType> : IOGraphGdmCollectionType
-    where TType : IOGraphGdmType, new()
+[DebuggerDisplay("Gdm Type ({Kind}): {Label}")]
+public class GdmCollectionType<TGdmType> : IOGraphGdmCollectionType
+    where TGdmType : IOGraphGdmType, new()
 {
+    internal Label label;
+
     public GdmCollectionType()
     {
-        ItemType = new TType();
-    }
-    public virtual Label Label
-    {
-        get
-        {
-            return $"{ItemType.Label}Collection";
-        }
+        ItemType = new TGdmType();
+        label = $"{ItemType.Label}Collection"; 
     }
 
-    public TType ItemType { get; }
+    public virtual Label Label => label;
+    public TGdmType ItemType { get; }
     IOGraphGdmType IOGraphGdmCollectionType.ItemType => ItemType;
     public GdmTypeKind Kind => GdmTypeKind.Collection;
     public Type RuntimeType => typeof(IEnumerable<>).MakeGenericType(ItemType.RuntimeType!);
-    public virtual bool IsAssignableTo(IOGraphGdmType type)
-    {
-        return RuntimeType!.IsAssignableFrom(type.RuntimeType);
-    }
-
-    public void Write(Utf8JsonWriter writer, object value)
+    public virtual void Write(Utf8JsonWriter writer, object value)
     {
         throw new NotImplementedException();
     }
 
-    public void Write(XmlWriter writer, object value)
+    public virtual void Write(XmlWriter writer, object value)
     {
         throw new NotImplementedException();
     }
 
-    public object Read(ref Utf8JsonReader reader)
+    public virtual object Read(ref Utf8JsonReader reader)
     {
         throw new NotImplementedException();
     }
 
-    public object Read(XmlReader reader)
+    public virtual object Read(XmlReader reader)
     {
         throw new NotImplementedException();
     }

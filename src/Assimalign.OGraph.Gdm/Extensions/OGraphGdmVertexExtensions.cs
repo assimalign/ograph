@@ -6,6 +6,5 @@ namespace Assimalign.OGraph.Gdm;
 
 public static class OGraphGdmVertexExtensions
 {
-
    
 }

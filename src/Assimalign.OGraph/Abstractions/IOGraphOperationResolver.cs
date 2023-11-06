@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-using Assimalign.OGraph.Gdm;
-
 /// <summary>
 /// 
 /// </summary>

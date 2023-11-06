@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ internal class GdmPropertyDescriptor<T> : IOGraphGdmPropertyDescriptor<T>
     {
         this.property = property;
     }
+
+    public GdmBuilderContext Context { get; init; } = default!;
 
 
     public IOGraphGdmPropertyDescriptor<T> UsePropertyName(Label label)
