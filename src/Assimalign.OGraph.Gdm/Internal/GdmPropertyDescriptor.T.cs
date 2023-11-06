@@ -27,11 +27,21 @@ internal class GdmPropertyDescriptor<T> : IOGraphGdmPropertyDescriptor<T>
 
     public IOGraphGdmPropertyDescriptor<T> UseType<TType>() where TType : IOGraphGdmType, new()
     {
-        throw new NotImplementedException();
+        return UseType(new TType());
     }
 
     public IOGraphGdmPropertyDescriptor<T> UseType(IOGraphGdmType type)
     {
-        throw new NotImplementedException();
+        if (type is null)
+        {
+            throw new ArgumentNullException(nameof(type));
+        }
+
+        property.Type = new GdmTypeReference()
+        {
+            Definition = type
+        };
+
+        return this;
     }
 }

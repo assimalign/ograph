@@ -15,7 +15,7 @@ public class GdmCollectionType<TGdmType> : IOGraphGdmCollectionType
     public GdmCollectionType()
     {
         ItemType = new TGdmType();
-        label = $"{ItemType.Label}Collection"; 
+        label = Label.AsCamalCase($"{ItemType.Label}Collection");
     }
 
     public virtual Label Label => label;
@@ -25,9 +25,12 @@ public class GdmCollectionType<TGdmType> : IOGraphGdmCollectionType
     public Type RuntimeType => typeof(IEnumerable<>).MakeGenericType(ItemType.RuntimeType!);
     public virtual void Write(Utf8JsonWriter writer, object value)
     {
-        throw new NotImplementedException();
-    }
+        writer.WriteStartArray();
 
+
+
+        writer.WriteEndArray();
+    }
     public virtual void Write(XmlWriter writer, object value)
     {
         throw new NotImplementedException();

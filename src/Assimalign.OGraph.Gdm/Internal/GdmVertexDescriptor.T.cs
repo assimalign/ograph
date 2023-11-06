@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Assimalign.OGraph.Gdm.Internal;
 
 internal class GdmVertexDescriptor<T> : IOGraphGdmVertexDescriptor<T>
-    where T : class, IOGraphGdmType, new()
+    where T : class, new()
 {
     private readonly GdmVertex<T> vertex;
 

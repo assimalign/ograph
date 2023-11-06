@@ -42,7 +42,53 @@ public readonly struct Label :
     /// <returns></returns>
     public Label ToPascalCase()
     {
-        return string.Create(Value.Length, Value, (chars, name) =>
+        return AsPascalCase(Value);
+    }
+
+    /// <summary>
+    /// Converts the name to camal case
+    /// </summary>
+    /// <returns></returns>
+    public Label ToCamalCase()
+    {
+        return AsCamalCase(Value);
+    }
+
+    /// <summary>
+    /// Creates a label by converting the the string value to camal case.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static Label AsCamalCase(string value)
+    {
+        return string.Create(value.Length, value, (chars, name) =>
+        {
+            name.CopyTo(chars);
+
+            for (int i = 0; i < chars.Length && (i != 1 || char.IsUpper(chars[i])); i++)
+            {
+                bool flag = i + 1 < chars.Length;
+                if (i > 0 && flag && !char.IsUpper(chars[i + 1]))
+                {
+                    if (chars[i + 1] == ' ')
+                    {
+                        chars[i] = char.ToLowerInvariant(chars[i]);
+                    }
+                    break;
+                }
+                chars[i] = char.ToLowerInvariant(chars[i]);
+            }
+        });
+    }
+
+    /// <summary>
+    ///  Creates a label by converting the the string value to pascal case.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static Label AsPascalCase(string value)
+    {
+        return string.Create(value.Length, value, (chars, name) =>
         {
             name.CopyTo(chars);
 
@@ -62,31 +108,6 @@ public readonly struct Label :
         });
     }
 
-    /// <summary>
-    /// Converts the name to camal case
-    /// </summary>
-    /// <returns></returns>
-    public Label ToCamalCase()
-    {
-        return string.Create(Value.Length, Value, (chars, name) =>
-        {
-            name.CopyTo(chars);
-
-            for (int i = 0; i < chars.Length && (i != 1 || char.IsUpper(chars[i])); i++)
-            {
-                bool flag = i + 1 < chars.Length;
-                if (i > 0 && flag && !char.IsUpper(chars[i + 1]))
-                {
-                    if (chars[i + 1] == ' ')
-                    {
-                        chars[i] = char.ToLowerInvariant(chars[i]);
-                    }
-                    break;
-                }
-                chars[i] = char.ToLowerInvariant(chars[i]);
-            }
-        });
-    }
 
     /// <inheritdoc />
     public override string ToString()

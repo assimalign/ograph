@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm;
 
-public static class GdmPropertyCollectionExtensions
+public static class OGraphGdmPropertyCollectionExtensions
 {
 }

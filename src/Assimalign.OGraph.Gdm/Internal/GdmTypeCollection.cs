@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
+[DebuggerDisplay("Gdm Type Collection: {Count}")]
 internal class GdmTypeCollection : List<IOGraphGdmType>,
     IOGraphGdmTypeCollection
 {

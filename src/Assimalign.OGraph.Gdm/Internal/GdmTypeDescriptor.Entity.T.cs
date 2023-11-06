@@ -14,16 +14,6 @@ internal class GdmEntityTypeDescriptor<T> : IOGraphGdmEntityTypeDescriptor<T> wh
     }
     public GdmBuilderContext Context { get; init; } = default!;
 
-    public IOGraphGdmEdgeDescriptor HasEdge(Label label)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IOGraphGdmEdgeDescriptor<TVertex> HasEdge<TVertex>(Label label) where TVertex : class, new()
-    {
-        throw new NotImplementedException();
-    }
-
     public IOGraphGdmEntityTypeDescriptor<T> HasKey(Label label)
     {
         var propertyInfo = typeof(T).GetProperty(label, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
@@ -38,7 +28,7 @@ internal class GdmEntityTypeDescriptor<T> : IOGraphGdmEntityTypeDescriptor<T> wh
         {
             if (p is GdmProperty ip) // ip = internal property
             {
-                return ip.PropertyInfo == propertyInfo;
+                return ip.PropertyInfo.Name == propertyInfo.Name;
             }
             return p.Name == label;
         });
@@ -64,7 +54,7 @@ internal class GdmEntityTypeDescriptor<T> : IOGraphGdmEntityTypeDescriptor<T> wh
         {
             if (p is GdmProperty ip) // ip = internal property
             {
-                return ip.PropertyInfo == propertyInfo;
+                return ip.PropertyInfo.Name == propertyInfo.Name;
             }
             return p.Name == propertyInfo.Name;
         });
@@ -94,7 +84,7 @@ internal class GdmEntityTypeDescriptor<T> : IOGraphGdmEntityTypeDescriptor<T> wh
         {
             if (p is GdmProperty ip) // ip = internal property
             {
-                return ip.PropertyInfo == propertyInfo;
+                return ip.PropertyInfo.Name == propertyInfo.Name;
             }
             return p.Name == propertyName;
         });
@@ -134,7 +124,7 @@ internal class GdmEntityTypeDescriptor<T> : IOGraphGdmEntityTypeDescriptor<T> wh
         {
             if (p is GdmProperty ip) // ip = internal property
             {
-                return ip.PropertyInfo == propertyInfo;
+                return ip.PropertyInfo.Name == propertyInfo.Name;
             }
             return p.Name == propertyInfo.Name;
         });
@@ -153,7 +143,7 @@ internal class GdmEntityTypeDescriptor<T> : IOGraphGdmEntityTypeDescriptor<T> wh
         {
             if (p is GdmProperty ip) // ip = internal property
             {
-                return ip.PropertyInfo == propertyInfo;
+                return ip.PropertyInfo.Name == propertyInfo.Name;
             }
             return p.Name == propertyInfo.Name;
         });
@@ -198,10 +188,10 @@ internal class GdmEntityTypeDescriptor<T> : IOGraphGdmEntityTypeDescriptor<T> wh
         {
             throw new ArgumentException("");
         }
-        if (!memberExpression.Member.DeclaringType.IsAssignableTo(typeof(T)))
-        {
-            throw new Exception();
-        }
+        //if (!memberExpression.Member.DeclaringType.IsAssignableTo(typeof(T)))
+        //{
+        //    throw new Exception();
+        //}
         if (memberExpression.Member is not PropertyInfo propertyInfo)
         {
             throw new Exception();

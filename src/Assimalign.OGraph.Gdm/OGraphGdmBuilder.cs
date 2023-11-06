@@ -12,7 +12,7 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
 {
     private readonly Gdm model;
     private readonly GdmValidator validator;
-
+    private readonly GdmBuilderContext context;
     private OGraphGdmBuilder(Label label)
     {
         this.validator = new();
@@ -20,6 +20,7 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
         {
             Label = label
         };
+        this.context = new(model);
     }
 
     IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex<T>(Action<IOGraphGdmEntityTypeDescriptor<T>> configure)
@@ -36,7 +37,10 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
         var vertex = new GdmVertex<GdmEntityType<T>>()
         {
             label = label,
-            type = type
+            type = new GdmTypeReference()
+            {
+                Definition = type
+            }
         };
         var descriptor = new GdmEntityTypeDescriptor<T>(type)
         {
@@ -45,13 +49,20 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
 
         configure.Invoke(descriptor);
 
-        model.Vertices.Add(vertex);
-
-        return this;
+        return (this as IOGraphGdmBuilder).AddVertex(vertex);
     }
     IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex<TVertex>()
     {
         return (this as IOGraphGdmBuilder).AddVertex(new TVertex());
+    }
+    
+    IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex(Action<IOGraphGdmVertexDescriptor> configure)
+    {
+        return (this as IOGraphGdmBuilder).AddVertex(GdmVertex.Create(configure));
+    }
+    IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex<T>(Action<IOGraphGdmVertexDescriptor<T>> configure)
+    {
+        return (this as IOGraphGdmBuilder).AddVertex(GdmVertex<T>.Create(configure));
     }
     IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex(IOGraphGdmVertex vertex)
     {
@@ -59,19 +70,9 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
         {
             throw new ArgumentNullException(nameof(vertex));
         }
-        model.Vertices.Add(vertex);
+        context.AddVertex(vertex);
         return this;
     }
-    IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex(Action<IOGraphGdmVertexDescriptor> configure)
-    {
-        return (this as IOGraphGdmBuilder).AddVertex(GdmVertex.Create(configure));
-    }
-
-
-    //IOGraphGdmBuilder IOGraphGdmBuilder.AddType<T>(Label label, Action<IOGraphGdmComplexTypeDescriptor<T>> configure)
-    //{
-    //    throw new NotImplementedException();
-    //}
 
     IOGraphGdm IOGraphGdmBuilder.Build()
     {

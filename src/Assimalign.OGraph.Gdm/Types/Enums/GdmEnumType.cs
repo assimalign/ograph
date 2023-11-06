@@ -22,7 +22,6 @@ public class GdmEnumType<TEnum> : IOGraphGdmEnumType
             throw new Exception($"'{typeof(TEnum).Name}' has no values. Enum values cannot be empty.");
         }
     }
-
     public Label Label => $"{typeof(TEnum).Name}Enum";
     public GdmTypeKind Kind => GdmTypeKind.Enum;
     public EnumValue[] Values { get; }

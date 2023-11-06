@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm;
 
-[DebuggerDisplay("Gdm Type ({Kind}): {Label}")]
+[DebuggerDisplay("Gdm Type ({Kind}): {Label.ToPascalCase()}")]
 public abstract class GdmPrimitiveType<T> : IOGraphGdmPrimitiveType
 {
     public GdmPrimitiveType()
@@ -25,11 +25,11 @@ public abstract class GdmPrimitiveType<T> : IOGraphGdmPrimitiveType
                 var typeAsNull = typeof(Nullable<>).MakeGenericType(typeArg);
                 if (typeAsNull.IsAssignableTo(type))
                 {
-                    return new Label(typeArg.Name).ToCamalCase();
+                    return Label.AsCamalCase($"{typeArg.Name}Type");
                 }
             }
         }
-        return new Label(type.Name).ToCamalCase();
+        return Label.AsCamalCase($"{type.Name}Type");
     }
 
     public string[]? Formats { get; }

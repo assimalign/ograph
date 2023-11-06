@@ -71,10 +71,6 @@ public partial class OGraphBuilderTests
     [Fact]
     public void Test1()
     {
-
-        var type = new EmployeeEntityType();
-
-
         var builder = new OGraphBuilder("employees");
 
         var graph = builder
@@ -133,6 +129,7 @@ public partial class OGraphBuilderTests
                 });
                 gdm.AddVertex<EmployeeAddress>(vertex =>
                 {
+                    vertex.HasKey(p => p.AddressId);
                     //vertex.HasLabel("address");
                     //vertex.HasKey(p => p.AddressId);
 
@@ -144,11 +141,13 @@ public partial class OGraphBuilderTests
                 });
                 gdm.AddVertex<EmployeeAddressType>(vertex =>
                 {
+                    vertex.HasKey(p => p.TypeId);
                     //vertex.HasLabel("addressType");
 
                 });
                 gdm.AddVertex<EmployeeTaxInfo>(vertex =>
                 {
+                    vertex.HasKey(p => p.TaxInfoId);
                     //vertex.HasLabel("taxInfo");
                 });
 

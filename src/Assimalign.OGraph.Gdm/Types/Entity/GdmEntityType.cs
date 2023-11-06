@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Xml;
 using System.Text.Json;
+using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm;
 
 using Assimalign.OGraph.Gdm.Internal;
 
+[DebuggerDisplay("Gdm Type ({Kind}): {Label}")]
 public class GdmEntityType<T> : IOGraphGdmEntityType
     where T : class, new()
 {
-    internal Label label = new Label(typeof(T).Name).ToCamalCase();
+    internal Label label = Label.AsCamalCase($"{typeof(T).Name}Entity");
     internal GdmEntityKeyResolver keyResolver = default!;
 
     public GdmEntityType()

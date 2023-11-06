@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace Assimalign.OGraph.Gdm;
 
 public interface IOGraphGdmVertexDescriptor<T> 
-    where T : class, IOGraphGdmType, new()
+    where T : class, new()
 {
     IOGraphGdmVertexDescriptor<T> HasLabel(Label label);
-    
+    IOGraphGdmVertexDescriptor<T> HasType(Action<IOGraphGdmEntityTypeDescriptor<T>> configure);
 
 }

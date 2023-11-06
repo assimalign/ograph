@@ -9,13 +9,14 @@ namespace Assimalign.OGraph.Gdm.Internal;
 internal class GdmProperty : IOGraphGdmProperty
 {
     private readonly IList<IOGraphGdmPropertyBinding> bindings = new List<IOGraphGdmPropertyBinding>();
+    
     public GdmProperty()
     {
         Metadata = new GdmMetadata();
     }
 
     public Label Name { get; set; }
-    public PropertyInfo PropertyInfo { get; set; }
+    public PropertyInfo PropertyInfo { get; set; } = default!;
     public IOGraphGdmTypeReference Type { get; set; } = default!;
     public IOGraphGdmMetadata Metadata { get; init; }
     public bool IsKey { get; set; }

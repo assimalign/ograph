@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace Assimalign.OGraph.Gdm.Internal;
 
 internal class GdmPropertyCollection : IOGraphGdmPropertyCollection
@@ -66,14 +65,12 @@ internal class GdmPropertyCollection : IOGraphGdmPropertyCollection
             throw new ArgumentNullException(nameof(item));
         }
     }
-
     private class GdmPropertyComparer : IEqualityComparer<IOGraphGdmProperty>
     {
         public bool Equals(IOGraphGdmProperty? left, IOGraphGdmProperty? right)
         {
             return left.Name == right.Name;
         }
-
         public int GetHashCode(IOGraphGdmProperty obj)
         {
             if (obj is GdmProperty ip)

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Xml;
 using System.Text.Json;
+using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm;
 
 using Assimalign.OGraph.Gdm.Internal;
-using System.Diagnostics;
 
 [DebuggerDisplay("Gdm Type ({Kind}): {Label}")]
 public class GdmComplexType : IOGraphGdmComplexType
@@ -123,5 +123,13 @@ public class GdmComplexType : IOGraphGdmComplexType
         }
 
         throw new NotImplementedException();
+    }
+    public override string ToString()
+    {
+        return Label;
+    }
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Label);
     }
 }
