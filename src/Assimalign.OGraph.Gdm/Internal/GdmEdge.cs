@@ -6,6 +6,7 @@ namespace Assimalign.OGraph.Gdm.Internal;
 internal class GdmEdge : IOGraphGdmEdge
 {
     private readonly IList<IOGraphGdmEdgeBinding> bindings = new List<IOGraphGdmEdgeBinding>();
+    
     public GdmEdge()
     {
         Metadata = new GdmMetadata();
@@ -16,6 +17,8 @@ internal class GdmEdge : IOGraphGdmEdge
     public IOGraphGdmVertexReference Source { get; set; } = default!;
     public IOGraphGdmVertexReference Target { get; set; } = default!;
     public IOGraphGdmMetadata Metadata { get; }
+    public GdmElementType ElementType => GdmElementType.Edge;
+
     public void AddBinding(IOGraphGdmEdgeBinding binding)
     {
         if (binding is null)

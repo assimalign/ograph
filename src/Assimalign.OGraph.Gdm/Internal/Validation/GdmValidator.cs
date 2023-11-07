@@ -10,6 +10,7 @@ internal class GdmValidator
     public GdmValidator()
     {
         AddRule<GdmComplexTypeCheckRule>();
+        AddRule<GdmEntityTypeMissingKeyValidatorRule>();
     }
 
     private void AddRule<TRule>() where TRule : GdmValidatorRule, new()

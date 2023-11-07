@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
-[DebuggerDisplay("Gdm Property: {Name}")]
+[DebuggerDisplay("Gdm Property: {Label}")]
 internal class GdmProperty : IOGraphGdmProperty
 {
     private readonly IList<IOGraphGdmPropertyBinding> bindings = new List<IOGraphGdmPropertyBinding>();
@@ -15,15 +15,17 @@ internal class GdmProperty : IOGraphGdmProperty
         Metadata = new GdmMetadata();
     }
 
-    public Label Name { get; set; }
+    public Label Label { get; set; }
     public PropertyInfo PropertyInfo { get; set; } = default!;
     public IOGraphGdmTypeReference Type { get; set; } = default!;
+    public IOGraphGdmTypeReference DeclaringType { get; set; } = default!;
     public IOGraphGdmMetadata Metadata { get; init; }
     public bool IsKey { get; set; }
     public bool IsComputed { get; set; }
-    public bool IsNullable { get; set; }
+    public bool IsNullable { get; set; } = true;
     public GdmPropertyGetter Getter { get; set; } = default!;
     public GdmPropertySetter Setter { get; set; } = default!;
+    public GdmElementType ElementType => GdmElementType.Property;
     public void AddBinding(IOGraphGdmPropertyBinding binding)
     {
         if (binding is null)
@@ -38,7 +40,7 @@ internal class GdmProperty : IOGraphGdmProperty
     }
     public override string ToString()
     {
-        return Name;
+        return Label;
     }
     public override int GetHashCode()
     {

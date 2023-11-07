@@ -10,29 +10,51 @@ using Assimalign.OGraph.Gdm.Internal;
 [DebuggerDisplay("Gdm Type ({Kind}): {Label}")]
 public class GdmComplexType : IOGraphGdmComplexType
 {
+    private readonly Action<IOGraphGdmComplexTypeDescriptor> configure;
+
+
     internal Label label;
 
-    public GdmComplexType() { }
-    public GdmComplexType(Type type)
+    private GdmComplexType(Action<IOGraphGdmComplexTypeDescriptor> configure)
     {
-        if (type is null)
-        {
-            throw new ArgumentNullException(nameof(type));
-        }
+        this.configure = configure;
+        Configure(new GdmComplexTypeDescriptor(this));
+    }
+    private GdmComplexType(Type type, Action<IOGraphGdmComplexTypeDescriptor> configure)
+    {
+        this.configure = configure;
         RuntimeType = type;
         Initialize();
         Configure(new GdmComplexTypeDescriptor(this));
+    }
+
+    public GdmComplexType() 
+        : this(descriptor => { }) 
+    { 
+    }
+
+    public GdmComplexType(Type type) 
+        : this(type, descriptor => { }) 
+    {   
     }
 
     private void Initialize()
     {
         foreach (var property in RuntimeType.GetGdmComplexTypeProperties())
         {
+            property.DeclaringType = new GdmTypeReference()
+            {
+                Definition = this
+            };
+
             Properties.Add(property);
         }
     }
 
-    protected virtual void Configure(IOGraphGdmComplexTypeDescriptor descriptor) { }
+    protected virtual void Configure(IOGraphGdmComplexTypeDescriptor descriptor)
+    {
+        configure?.Invoke(descriptor);
+    }
 
     public Label Label
     {
@@ -40,8 +62,9 @@ public class GdmComplexType : IOGraphGdmComplexType
         init => label = value;
     }
     public GdmTypeKind Kind => GdmTypeKind.Complex;
-    public IOGraphGdmPropertyCollection Properties { get; init; } = new GdmPropertyCollection();
+    public IOGraphGdmPropertyCollection Properties { get; } = new GdmPropertyCollection();
     public Type RuntimeType { get; } = default!;
+    public GdmElementType ElementType => GdmElementType.Type;
     public virtual object Read(ref Utf8JsonReader reader)
     {
         if (!reader.IsStartOfObjectToken())
@@ -101,7 +124,7 @@ public class GdmComplexType : IOGraphGdmComplexType
 
             foreach (var property in Properties)
             {
-                var propertyName = property.Name;
+                var propertyName = property.Label;
                 var propertyType = property.Type.Definition;
                 var propertyValue = property.Getter.Invoke(value)!;
 
@@ -130,6 +153,45 @@ public class GdmComplexType : IOGraphGdmComplexType
     }
     public override int GetHashCode()
     {
-        return HashCode.Combine(Label);
+        return HashCode.Combine(Label, typeof(IOGraphGdmComplexType));
+    }
+    public override bool Equals(object? instance)
+    {
+        if (instance is not null)
+        {
+            return GetHashCode() == instance.GetHashCode();
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static GdmComplexType Create(Action<IOGraphGdmComplexTypeDescriptor> configure)
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(nameof(configure));
+        }
+        return new GdmComplexType(configure);
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static GdmComplexType Create(Type type, Action<IOGraphGdmComplexTypeDescriptor> configure)
+    {
+        if (configure is null)
+        {
+            throw new ArgumentNullException(nameof(configure));
+        }
+        return new GdmComplexType(type, configure);
     }
 }

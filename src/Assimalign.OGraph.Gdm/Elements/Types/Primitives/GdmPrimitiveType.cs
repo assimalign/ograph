@@ -25,17 +25,18 @@ public abstract class GdmPrimitiveType<T> : IOGraphGdmPrimitiveType
                 var typeAsNull = typeof(Nullable<>).MakeGenericType(typeArg);
                 if (typeAsNull.IsAssignableTo(type))
                 {
-                    return Label.AsCamalCase($"{typeArg.Name}Type");
+                    return typeArg.Name;
                 }
             }
         }
-        return Label.AsCamalCase($"{type.Name}Type");
+        return type.Name;
     }
 
-    public string[]? Formats { get; }
+    public virtual string[]? Formats { get; }
     public virtual Label Label { get; }
     public GdmTypeKind Kind => GdmTypeKind.Primitive;
     public virtual Type RuntimeType => typeof(T);
+    public GdmElementType ElementType => GdmElementType.Type;
     public virtual T Read(ref Utf8JsonReader reader)
     {
         throw new NotImplementedException();
@@ -53,6 +54,11 @@ public abstract class GdmPrimitiveType<T> : IOGraphGdmPrimitiveType
         throw new NotImplementedException();
     }
 
+    //public virtual bool IsValid(T valie)
+    //{
+    //    return true;
+    //}
+
     object IOGraphGdmType.Read(ref Utf8JsonReader reader) => Read(ref reader)!;
     object IOGraphGdmType.Read(XmlReader reader) => Read(reader)!;
     void IOGraphGdmType.Write(Utf8JsonWriter writer, object value) => Write(writer, AssertType(value));
@@ -64,5 +70,23 @@ public abstract class GdmPrimitiveType<T> : IOGraphGdmPrimitiveType
             throw new InvalidOperationException($"Could not write type {value.GetType().Name}. Expected {typeof(T).Name}");
         }
         return type;
+    }
+
+    public override string ToString()
+    {
+        return Label;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is not null)
+        {
+            return GetHashCode() == obj.GetHashCode();
+        }
+        return false;
+    }
+    public override int GetHashCode()
+    {
+        return Label.GetHashCode();
     }
 }

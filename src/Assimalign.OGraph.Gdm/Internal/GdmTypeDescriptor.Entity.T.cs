@@ -5,14 +5,15 @@ using System.Reflection;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
-internal class GdmEntityTypeDescriptor<T> : IOGraphGdmEntityTypeDescriptor<T> where T : class, new()
+internal class GdmEntityTypeDescriptor<T> : IOGraphGdmEntityTypeDescriptor<T> 
+    where T : class, new()
 {
     private readonly GdmEntityType<T> entityType;
+    
     public GdmEntityTypeDescriptor(GdmEntityType<T> entityType)
     {
         this.entityType = entityType;
     }
-    public GdmBuilderContext Context { get; init; } = default!;
 
     public IOGraphGdmEntityTypeDescriptor<T> HasKey(Label label)
     {
@@ -30,7 +31,7 @@ internal class GdmEntityTypeDescriptor<T> : IOGraphGdmEntityTypeDescriptor<T> wh
             {
                 return ip.PropertyInfo.Name == propertyInfo.Name;
             }
-            return p.Name == label;
+            return p.Label == label;
         });
         if (property is not GdmProperty ip)
         {
@@ -56,7 +57,7 @@ internal class GdmEntityTypeDescriptor<T> : IOGraphGdmEntityTypeDescriptor<T> wh
             {
                 return ip.PropertyInfo.Name == propertyInfo.Name;
             }
-            return p.Name == propertyInfo.Name;
+            return p.Label == propertyInfo.Name;
         });
         //TODO: revisit logic
         if (property is not GdmProperty ip)
@@ -86,13 +87,23 @@ internal class GdmEntityTypeDescriptor<T> : IOGraphGdmEntityTypeDescriptor<T> wh
             {
                 return ip.PropertyInfo.Name == propertyInfo.Name;
             }
-            return p.Name == propertyName;
+            return p.Label == propertyName;
         });
-
-        entityType.keyResolver = instance =>
+        //TODO: revisit logic
+        if (property is not GdmProperty ip)
         {
-            return propertyInfo.GetValue(instance)!;
+            ip = WrapProperty(property, propertyInfo);
+        }
+        var method = expression.Compile();
+        entityType.keyResolver = value =>
+        {
+            if (value is not T t)
+            {
+                throw new InvalidOperationException("");
+            }
+            return method.Invoke(t);
         };
+        ip.IsKey = true;
 
         return this;
     }
@@ -106,7 +117,7 @@ internal class GdmEntityTypeDescriptor<T> : IOGraphGdmEntityTypeDescriptor<T> wh
         
         var propertyName = propertyInfo.Name;
         var properties = entityType.Properties;
-        var property = properties.FirstOrDefault(p => p.Name == propertyName);
+        var property = properties.FirstOrDefault(p => p.Label == propertyName);
 
         if (property is not null)
         {
@@ -126,7 +137,7 @@ internal class GdmEntityTypeDescriptor<T> : IOGraphGdmEntityTypeDescriptor<T> wh
             {
                 return ip.PropertyInfo.Name == propertyInfo.Name;
             }
-            return p.Name == propertyInfo.Name;
+            return p.Label == propertyInfo.Name;
         });
 
         if (property is not null)
@@ -145,7 +156,7 @@ internal class GdmEntityTypeDescriptor<T> : IOGraphGdmEntityTypeDescriptor<T> wh
             {
                 return ip.PropertyInfo.Name == propertyInfo.Name;
             }
-            return p.Name == propertyInfo.Name;
+            return p.Label == propertyInfo.Name;
         });
         if (property is not null && property is GdmProperty internalProp)
         {
@@ -170,7 +181,7 @@ internal class GdmEntityTypeDescriptor<T> : IOGraphGdmEntityTypeDescriptor<T> wh
             PropertyInfo = propertyInfo,
             IsNullable = property.IsNullable,
             Metadata = property.Metadata,
-            Name = property.Name,
+            Label = property.Label,
             Type = property.Type
         };
 

@@ -11,12 +11,8 @@ namespace Assimalign.OGraph.Gdm;
 /// <remarks>
 /// An <see cref="IOGraphGdmType"/> represents a
 /// </remarks>
-public interface IOGraphGdmType
+public interface IOGraphGdmType : IOGraphGdmElement
 {
-    /// <summary>
-    /// The name of the type.
-    /// </summary>
-    Label Label { get; }
     /// <summary>
     /// The identifier of the type.
     /// </summary>

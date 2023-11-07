@@ -16,12 +16,27 @@ internal class GdmPropertyDescriptor<T> : IOGraphGdmPropertyDescriptor<T>
         this.property = property;
     }
 
-    public GdmBuilderContext Context { get; init; } = default!;
+    public IOGraphGdmPropertyDescriptor<T> IsComputed()
+    {
+        property.IsComputed = true;
+        return this;
+    }
 
+    public IOGraphGdmPropertyDescriptor<T> IsRequired()
+    {
+        property.IsNullable = false;
+        return this;
+    }
+
+    public IOGraphGdmPropertyDescriptor<T> UseMetadata(Label key, object value)
+    {
+        property.Metadata.Add(key, value);
+        return this;
+    }
 
     public IOGraphGdmPropertyDescriptor<T> UsePropertyName(Label label)
     {
-        property.Name = label;
+        property.Label = label;
         return this;
     }
 

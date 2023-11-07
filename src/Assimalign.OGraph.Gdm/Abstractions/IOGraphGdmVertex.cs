@@ -8,12 +8,8 @@ namespace Assimalign.OGraph.Gdm;
 /// <remarks>
 /// A Node is also referred to as a Vertex.
 /// </remarks>
-public interface IOGraphGdmVertex
+public interface IOGraphGdmVertex : IOGraphGdmElement
 {
-    /// <summary>
-    /// Represents the label each node should contain.
-    /// </summary>
-    Label Label { get; }
     /// <summary>
     /// The type bound to this vertex.
     /// </summary>

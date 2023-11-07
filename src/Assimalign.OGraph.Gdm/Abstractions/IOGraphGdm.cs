@@ -16,18 +16,7 @@ public interface IOGraphGdm
     /// </remarks>
     Label Label { get; }
     /// <summary>
-    /// Gets the collection of types in the graph model.
+    /// Get the collection of elements in the model.
     /// </summary>
-    IOGraphGdmTypeCollection Types { get; }
-    /// <summary>
-    /// Gets the edge collection.
-    /// </summary>
-    IOGraphGdmEdgeCollection Edges { get; }
-    /// <summary>
-    /// A collection of vertex definitions within the OGraph Model.
-    /// </summary>
-    IOGraphGdmVertexCollection Vertices { get; }
-
-    //void SerializeToXml(Stream stream);
-    //void SerializeToJson(Stream stream);
+    IOGraphGdmElementCollection Elements { get; }
 }

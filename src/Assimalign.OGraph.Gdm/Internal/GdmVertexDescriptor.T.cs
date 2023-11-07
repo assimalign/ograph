@@ -26,6 +26,10 @@ internal class GdmVertexDescriptor<T> : IOGraphGdmVertexDescriptor<T>
 
     public IOGraphGdmVertexDescriptor<T> HasType(Action<IOGraphGdmEntityTypeDescriptor<T>> configure)
     {
-        throw new NotImplementedException();
+        vertex.type = new GdmTypeReference()
+        {
+            Definition = GdmEntityType<T>.Create(configure)
+        };
+        return this;
     }
 }

@@ -8,7 +8,14 @@ namespace Assimalign.OGraph.Gdm;
 
 public static class OGraphGdmPropertyDescriptorExtensions
 {
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="descriptor"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
     public static IOGraphGdmPropertyDescriptor<T?> UseType<T>(
         this IOGraphGdmPropertyDescriptor<T?> descriptor,
         Action<IOGraphGdmComplexTypeDescriptor<T>> configure) where T : class, new()
@@ -18,7 +25,6 @@ public static class OGraphGdmPropertyDescriptorExtensions
             throw new ArgumentNullException(nameof(configure));
         }
 
-
-        return descriptor;
+        return descriptor.UseType(GdmComplexType<T>.Create(configure));
     }
 }

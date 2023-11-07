@@ -11,21 +11,34 @@ public class GdmEnumType<TEnum> : IOGraphGdmEnumType
     where TEnum : struct, Enum
 {
     public GdmEnumType()
-    {        
-        Values = Enum.GetValues<TEnum>().Select(value =>
-            new EnumValue(
-                Enum.GetName<TEnum>(value)!,
-                value)).ToArray();
+    {
+        Values = Enum.GetValues<TEnum>()
+            .Select(@enum =>
+            {
+                var name = Enum.GetName(typeof(TEnum), @enum)!;
+                return Enum.GetUnderlyingType(typeof(TEnum)).Name switch
+                {
+                    nameof(Byte) => new GdmEnumValue(name, Convert.ToByte(@enum)),
+                    nameof(SByte) => new GdmEnumValue(name, Convert.ToSByte(@enum)),
+                    nameof(Int16) => new GdmEnumValue(name, Convert.ToInt16(@enum)),
+                    nameof(UInt16) => new GdmEnumValue(name, Convert.ToUInt16(@enum)),
+                    nameof(Int32) => new GdmEnumValue(name, Convert.ToInt32(@enum)),
+                    nameof(UInt32) => new GdmEnumValue(name, Convert.ToUInt32(@enum)),
+                    nameof(Int64) => new GdmEnumValue(name, Convert.ToInt64(@enum)),
+                    nameof(UInt64) => new GdmEnumValue(name, Convert.ToUInt64(@enum)),
+                };
+            }).ToArray();
 
         if (Values.Length == 0)
         {
             throw new Exception($"'{typeof(TEnum).Name}' has no values. Enum values cannot be empty.");
         }
     }
-    public Label Label => $"{typeof(TEnum).Name}Enum";
+    public Label Label => $"{typeof(TEnum).Name}EnumType";
     public GdmTypeKind Kind => GdmTypeKind.Enum;
-    public EnumValue[] Values { get; }
+    public GdmEnumValue[] Values { get; }
     public Type RuntimeType => typeof(TEnum);
+    public GdmElementType ElementType => GdmElementType.Type;
 
     public virtual TEnum Read(ref Utf8JsonReader reader)
     {

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
-internal class GdmEntityTypeDescriptor
+internal class GdmModelException : OGraphGdmException
 {
+    public GdmModelException(string? message) : base(message)
+    {
+    }
 }

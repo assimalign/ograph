@@ -64,7 +64,7 @@
                 <property name="birthDate" type="DateTime" />
             </complexType>
             <collectionType name="UserCollection">
-                <collection itemType="User" />
+                <item itemType="User" />
             </collectionType>
             <complexType name="UserTag">
                 <property name="key" type="String" />

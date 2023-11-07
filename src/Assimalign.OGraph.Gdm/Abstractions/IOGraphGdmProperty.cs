@@ -5,16 +5,16 @@ namespace Assimalign.OGraph.Gdm;
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphGdmProperty
+public interface IOGraphGdmProperty : IOGraphGdmElement
 {
-    /// <summary>
-    /// The property name.
-    /// </summary>
-    Label Name { get; }
     /// <summary>
     /// The OGraph Property Type.
     /// </summary>
     IOGraphGdmTypeReference Type { get; }
+    /// <summary>
+    /// References the entity or complex type in which the property is a member of.
+    /// </summary>
+    IOGraphGdmTypeReference DeclaringType { get; }
     /// <summary>
     /// Metadata of the property.
     /// </summary>
@@ -31,7 +31,7 @@ public interface IOGraphGdmProperty
     /// <summary>
     /// 
     /// </summary>
-    bool IsNullable { get; }
+    bool IsNullable { get; } 
     /// <summary>
     /// 
     /// </summary>

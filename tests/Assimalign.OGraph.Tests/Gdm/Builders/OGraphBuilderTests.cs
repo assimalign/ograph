@@ -25,49 +25,6 @@ public partial class OGraphBuilderTests
     //}
 
 
-    public class EmployeeEntityType : GdmEntityType<Employee>
-    {
-        protected override void Configure(IOGraphGdmEntityTypeDescriptor<Employee> vertex)
-        {
-            vertex.HasKey(p => p.EmployeeId);
-
-            vertex.HasProperty(p => p.EmployeeId).UsePropertyName("employeeId")
-                .UseType<GdmStringType>();
-
-            vertex.HasProperty(p => p.Details)
-                .UsePropertyName("details")
-                .UseType(details =>
-                {
-                    details.HasProperty("fullName");
-                    details.HasProperty(p => p!.FirstName).UsePropertyName("firstName");
-                    details.HasProperty(p => p!.LastName).UsePropertyName("lastName");
-                    details.HasProperty(p => p!.MiddleName).UsePropertyName("middleName");
-                    details.HasProperty(p => p!.Birthdate).UsePropertyName("birthdate");
-                });
-
-            vertex.HasProperty(p => p.CreatedBy)
-                .UsePropertyName("createdBy")
-                .UseType(audit =>
-                {
-                    audit.HasName("EmployeeCreatedByAuditField");
-                    audit.HasProperty(p => p!.UserId).UsePropertyName("userId");
-                    audit.HasProperty(p => p!.Timestamp).UsePropertyName("timestamp");
-                });
-
-            vertex.HasProperty(p => p.UpdatedBy)
-                .UsePropertyName("updatedBy")
-                .UseType(audit =>
-                {
-                    audit.HasName("EmployeeUpdatedByAuditField");
-                    audit.HasProperty(p => p!.UserId).UsePropertyName("userId");
-                    audit.HasProperty(p => p!.Timestamp).UsePropertyName("timestamp");
-                });
-
-            vertex.HasProperty(p => p.Roles)
-                .UsePropertyName("roles");
-        }
-    }
-
     [Fact]
     public void Test1()
     {
@@ -80,14 +37,15 @@ public partial class OGraphBuilderTests
                 {
                     vertex.HasKey(p => p.EmployeeId);
 
-                    vertex.HasProperty(p => p.EmployeeId).UsePropertyName("employeeId")
-                        .UseType<GdmStringType>();
+                    vertex.HasProperty(p => p.EmployeeId)
+                        .UsePropertyName("employeeId")
+                        .UseType<GdmStringType>()
+                        .UseMetadata("description", "The unique identifier of the employee"); ;
 
                     vertex.HasProperty(p => p.Details)
                         .UsePropertyName("details")
                         .UseType(details =>
                         {
-                            details.HasProperty("fullName");
                             details.HasProperty(p => p!.FirstName).UsePropertyName("firstName");
                             details.HasProperty(p => p!.LastName).UsePropertyName("lastName");
                             details.HasProperty(p => p!.MiddleName).UsePropertyName("middleName");
@@ -133,7 +91,7 @@ public partial class OGraphBuilderTests
                     //vertex.HasLabel("address");
                     //vertex.HasKey(p => p.AddressId);
 
-
+                    vertex.HasProperty(p => p.Address);
 
                     //vertex.HasEdge<Employee>("employee") 
                     //    .WithOne()
@@ -216,6 +174,12 @@ public partial class OGraphBuilderTests
             .Build();
 
         var model = graph.Model;
+
+        var vertices = model.GetGdmVertices();
+        var types = model.GetGdmTypes();
+        var primitives = model.GetGdmPrimitiveTypes();
+        var entities = model.GetGdmEntityTypes();
+        var collection = model.GetGdmCollectionTypes();
 
     }
 }

@@ -9,6 +9,14 @@ namespace Assimalign.OGraph;
 /// <summary>
 /// 
 /// </summary>
+/// <remarks>
+/// Allowed values: 
+/// <list type="bullet">
+/// <item>Arabic Letters: a-z, A-Z</item>
+/// <item>Numeric Values: 0-9</item>
+/// <item>Special Characters: - _ @</item>
+/// </list>
+/// </remarks>
 [DebuggerDisplay("{Value}")]
 public readonly struct Label : 
     IEquatable<Label>, 
@@ -16,7 +24,7 @@ public readonly struct Label :
     IComparable<Label>
 {
     // Allowed characters for name
-    private const string pattern = "^[a-zA-Z0-9_-]+$";
+    private const string pattern = "^[a-zA-Z0-9_@-]+$";
 
     public Label(string value)
     {
@@ -26,7 +34,7 @@ public readonly struct Label :
         }
         if (!Regex.IsMatch(value, pattern))
         {
-            throw new ArgumentException($"The following name: '{value}' contains invalid characters. Only the following characters are: [A-Z, a-z, 0-9]");
+            throw new ArgumentException($"The following name: '{value}' contains invalid characters. Only the following characters are: [A-Z, a-z, 0-9, - _ @]");
         }
         Value = value;
     }

@@ -6,6 +6,6 @@ namespace Assimalign.OGraph.Gdm;
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphGdmMetadata : IDictionary<Label, MetaValue>
+public interface IOGraphGdmMetadata : IDictionary<Label, object>
 {
 }

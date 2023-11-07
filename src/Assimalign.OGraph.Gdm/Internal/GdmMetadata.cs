@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
-internal class GdmMetadata : Dictionary<Label, MetaValue>,
+internal class GdmMetadata : Dictionary<Label, object>,
     IOGraphGdmMetadata
 {
 }

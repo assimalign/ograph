@@ -16,16 +16,16 @@ internal class Executor : IOGraphExecutor
 
     public async Task<IOGraphExecutorResponse> ExecuteAsync(IOGraphExecutorRequest request, CancellationToken cancellationToken = default)
     {
-        var vertex = Model.Vertices.First();
-        var vertexBindings = vertex.GetBindings()
-            .OfType<IOGraphOperation>();
+        //var vertex = Model.Vertices.First();
+        //var vertexBindings = vertex.GetBindings()
+        //    .OfType<IOGraphOperation>();
 
-        if (vertexBindings.Count() > 1)
-        {
-            throw new Exception("Only one output binding is allowed");
-        }
+        //if (vertexBindings.Count() > 1)
+        //{
+        //    throw new Exception("Only one output binding is allowed");
+        //}
 
-        var vertexBinding = vertexBindings.First();
+        //var vertexBinding = vertexBindings.First();
 
         //var result = await vertexBinding.InvokeAsync(default!);
 

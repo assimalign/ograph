@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm;
 
@@ -10,12 +8,11 @@ namespace Assimalign.OGraph.Gdm;
 /// <remarks>
 /// <i>An edge is also referred to as a Link.</i>
 /// </remarks>
-public interface IOGraphGdmEdge
+public interface IOGraphGdmEdge : IOGraphGdmElement
 {
-    /// <summary>
-    /// A unique name of the edge.
-    /// </summary>
-    Label Label { get; } //! The Edge Label must match a literal segment of on operation on the target vertex. Operation Methods must not be mismatched
+    //Label - ! The Edge Label must match a literal segment of on operation on the target vertex. Operation Methods must not be mismatched
+    
+    
     /// <summary>
     /// Gets the cardinality of the Target 
     /// Vertex/Vertices being resolved.

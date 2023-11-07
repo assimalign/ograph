@@ -11,6 +11,6 @@ public interface IOGraphGdmEnumType : IOGraphGdmType
     /// <summary>
     /// 
     /// </summary>
-    public EnumValue[] Values { get; }
+    public GdmEnumValue[] Values { get; }
 }
 

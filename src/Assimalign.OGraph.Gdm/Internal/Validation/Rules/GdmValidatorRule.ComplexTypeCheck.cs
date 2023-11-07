@@ -8,9 +8,14 @@ namespace Assimalign.OGraph.Gdm.Internal;
 
 internal class GdmComplexTypeCheckRule : GdmValidatorRule
 {
+    /*
+        Rules:
+            1. No Complex Type property should be a key 
+     
+     */
     public override void OnValidate(GdmValidatorContext context)
     {
-        var complexTypes = context.Model.Types.OfType<IOGraphGdmComplexType>();
+        var complexTypes = context.Model.Elements.OfType<IOGraphGdmComplexType>();
 
         foreach (var complexType in complexTypes)
         {

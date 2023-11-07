@@ -14,7 +14,7 @@ internal class GdmPropertyCollection : IOGraphGdmPropertyCollection
         properties = new(new GdmPropertyComparer());
     }
 
-    public IOGraphGdmProperty this[Label name] => properties.First(p=>p.Name == name);
+    public IOGraphGdmProperty this[Label name] => properties.First(p=>p.Label == name);
     public int Count => properties.Count;
     public bool IsReadOnly { get; set; }
     public void Add(IOGraphGdmProperty item)
@@ -69,7 +69,7 @@ internal class GdmPropertyCollection : IOGraphGdmPropertyCollection
     {
         public bool Equals(IOGraphGdmProperty? left, IOGraphGdmProperty? right)
         {
-            return left.Name == right.Name;
+            return left.Label == right.Label;
         }
         public int GetHashCode(IOGraphGdmProperty obj)
         {
@@ -77,7 +77,7 @@ internal class GdmPropertyCollection : IOGraphGdmPropertyCollection
             {
                 return ip.GetHashCode();
             }
-            return obj.Name.GetHashCode();
+            return obj.Label.GetHashCode();
         }
     }
 }

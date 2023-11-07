@@ -12,4 +12,12 @@ internal class GdmValidatorResult
     }
     public bool IsValid => !Errors.Any();
     public IList<GdmValidatorError> Errors { get; }
+
+    public OGraphGdmException ToException()
+    {
+        return new GdmModelException(Errors.First().Message)
+        {
+            Source = Errors.First().Source,
+        };
+    }
 }
