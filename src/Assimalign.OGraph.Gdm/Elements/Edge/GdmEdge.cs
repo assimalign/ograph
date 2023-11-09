@@ -17,14 +17,14 @@ internal class GdmEdge<TSource, TTarget> : IOGraphGdmEdge
 
     public Label Label => throw new NotImplementedException();
 
-    public GdmElementType ElementType => throw new NotImplementedException();
+    public GdmElementType ElementType => GdmElementType.Edge;
 
-    public void AddBinding(IOGraphGdmEdgeBinding binding)
+    public void AddBinding(IOGraphGdmBinding binding)
     {
         throw new NotImplementedException();
     }
 
-    public IEnumerable<IOGraphGdmEdgeBinding> GetBindings()
+    public IEnumerable<IOGraphGdmBinding> GetBindings()
     {
         throw new NotImplementedException();
     }

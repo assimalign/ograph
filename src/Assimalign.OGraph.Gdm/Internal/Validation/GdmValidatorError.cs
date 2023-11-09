@@ -2,7 +2,7 @@
 
 internal class GdmValidatorError
 {
-    public string Code { get; set; }
-    public string Message { get; set; }
-    public string Source { get; set; }
+    public OGraphGdmErrorCode Code { get; set; }
+    public string? Message { get; set; }
+    public string? Source { get; set; }
 }

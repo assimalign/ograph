@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm;
 
-public interface IOGraphGdmEdgeDescriptor<T> where T : class, new()
+public interface IOGraphGdmEdgeDescriptor<TSource, TTarget> 
+    where TSource : class, new()
+    where TTarget : class, new()
 {
-    IOGraphGdmEdgeKeyDescriptor<T> WithOne();
-    IOGraphGdmEdgeKeyDescriptor<T> WithMany();
+    IOGraphGdmEdgeDescriptor<TSource, TTarget> HasLabel(Label label);
+    IOGraphGdmEdgeDescriptor<TSource, TTarget> WithOne();
+    IOGraphGdmEdgeDescriptor<TSource, TTarget> WithMany();
 }
-
-

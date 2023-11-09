@@ -1,4 +1,6 @@
-﻿namespace Assimalign.OGraph;
+﻿using System.IO;
+
+namespace Assimalign.OGraph;
 
 /// <summary>
 /// 
@@ -16,5 +18,5 @@ public interface IOGraphQueryResult : IOGraphResult
     /// <summary>
     /// 
     /// </summary>
-    object Data { get; }
+    Stream Data { get; }
 }

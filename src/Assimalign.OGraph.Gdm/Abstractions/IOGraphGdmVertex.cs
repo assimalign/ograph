@@ -26,11 +26,11 @@ public interface IOGraphGdmVertex : IOGraphGdmElement
     /// 
     /// </summary>
     /// <returns></returns>
-    IEnumerable<IOGraphGdmVertexBinding> GetBindings();
+    IEnumerable<IOGraphGdmBinding> GetBindings();
     /// <summary>
     /// 
     /// </summary>
     /// <param name="binding"></param>
     /// <returns></returns>
-    void AddBinding(IOGraphGdmVertexBinding binding);
+    void AddBinding(IOGraphGdmBinding binding);
 }

@@ -1,30 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
 namespace Assimalign.OGraph.Gdm.Internal;
+
+using Properties;
 
 internal class GdmEntityTypeMissingKeyValidatorRule : GdmValidatorRule
 {
     public override void OnValidate(GdmValidatorContext context)
     {
-        var entityTypes = context.Model.Elements.OfType<IOGraphGdmEntityType>();
+        var entityTypes = context.Model.GetGdmEntityTypes();
 
         foreach (var entityType in entityTypes)
         {
-            // 1. Check for no key
-            if (!entityType.Properties.Any(p => p.IsKey))
+            var property = entityType.Properties.FirstOrDefault(p => p.IsKey);
+
+            if (property is null)
             {
                 context.AddFailure(error =>
                 {
-                    error.Message = $"No Key was specified in entity: {entityType.Label}.";
+                    error.Code = OGraphGdmErrorCode.GDM0401;
+                    error.Message = Resources.GDM0401;
+                    error.Source = $"{entityType.Label}";
                 });
-            }
-            if (entityType.Properties.Where(p=>p.IsKey).Count() > 2)
-            {
-
             }
         }
     }

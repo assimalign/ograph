@@ -8,5 +8,8 @@ namespace Assimalign.OGraph;
 /// A wrapper delegate for executing operation middleware and resolver.
 /// </summary>
 /// <param name="context"></param>
+/// <param name="cancellationToken"></param>
 /// <returns></returns>
-public delegate Task<IOGraphResult> OGraphOperationHandler(IOGraphOperationResolverContext context, CancellationToken cancellationToken = default);
+public delegate Task<IOGraphResult> OGraphOperationHandler(
+    IOGraphOperationBindingResolverContext context, 
+    CancellationToken cancellationToken = default);

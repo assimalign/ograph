@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace Assimalign.OGraph.Gdm;
+﻿namespace Assimalign.OGraph.Gdm;
 
 /// <summary>
 /// Represents a single graph Model.

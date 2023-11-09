@@ -5,37 +5,41 @@ using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm;
 
-using Assimalign.OGraph.Gdm.Internal;
+using Internal;
 
 [DebuggerDisplay("Gdm Type ({Kind}): {Label}")]
 public class GdmComplexType : IOGraphGdmComplexType
 {
     private readonly Action<IOGraphGdmComplexTypeDescriptor> configure;
 
-
     internal Label label;
 
-    private GdmComplexType(Action<IOGraphGdmComplexTypeDescriptor> configure)
-    {
-        this.configure = configure;
-        Configure(new GdmComplexTypeDescriptor(this));
-    }
-    private GdmComplexType(Type type, Action<IOGraphGdmComplexTypeDescriptor> configure)
-    {
-        this.configure = configure;
-        RuntimeType = type;
-        Initialize();
-        Configure(new GdmComplexTypeDescriptor(this));
-    }
+    public GdmComplexType() : this(descriptor => { }) { }
+    public GdmComplexType(Type type) : this(type, descriptor => { }) { }
 
-    public GdmComplexType() 
-        : this(descriptor => { }) 
-    { 
+    GdmComplexType(Action<IOGraphGdmComplexTypeDescriptor> configure)
+    {
+        if (configure is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+        }
+        this.configure = configure;
+        this.Configure(new GdmComplexTypeDescriptor(this));
     }
-
-    public GdmComplexType(Type type) 
-        : this(type, descriptor => { }) 
-    {   
+    GdmComplexType(Type type, Action<IOGraphGdmComplexTypeDescriptor> configure)
+    {
+        if (configure is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+        }
+        if (type is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(type));
+        }
+        this.configure = configure;
+        this.RuntimeType = type;
+        this.Initialize();
+        this.Configure(new GdmComplexTypeDescriptor(this));
     }
 
     private void Initialize()
@@ -46,14 +50,13 @@ public class GdmComplexType : IOGraphGdmComplexType
             {
                 Definition = this
             };
-
             Properties.Add(property);
         }
     }
 
     protected virtual void Configure(IOGraphGdmComplexTypeDescriptor descriptor)
     {
-        configure?.Invoke(descriptor);
+        configure.Invoke(descriptor);
     }
 
     public Label Label
@@ -173,10 +176,6 @@ public class GdmComplexType : IOGraphGdmComplexType
     /// <exception cref="ArgumentNullException"></exception>
     public static GdmComplexType Create(Action<IOGraphGdmComplexTypeDescriptor> configure)
     {
-        if (configure is null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
         return new GdmComplexType(configure);
     }
     /// <summary>
@@ -188,10 +187,6 @@ public class GdmComplexType : IOGraphGdmComplexType
     /// <exception cref="ArgumentNullException"></exception>
     public static GdmComplexType Create(Type type, Action<IOGraphGdmComplexTypeDescriptor> configure)
     {
-        if (configure is null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
         return new GdmComplexType(type, configure);
     }
 }

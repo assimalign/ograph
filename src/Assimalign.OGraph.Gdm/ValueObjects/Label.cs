@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace Assimalign.OGraph;
 
+using Gdm;
+using Gdm.Internal;
+
 /// <summary>
 /// 
 /// </summary>
@@ -24,17 +27,23 @@ public readonly struct Label :
     IComparable<Label>
 {
     // Allowed characters for name
-    private const string pattern = "^[a-zA-Z0-9_@-]+$";
+    private const string pattern = "^[a-zA-Z0-9_@]+$";
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="value"></param>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="OGraphGdmException"></exception>
     public Label(string value)
     {
         if (string.IsNullOrEmpty(value))
         {
-            throw new ArgumentNullException(nameof(value));
+            GdmThrowHelper.ThrowArgumentNullException(nameof(value));
         }
         if (!Regex.IsMatch(value, pattern))
         {
-            throw new ArgumentException($"The following name: '{value}' contains invalid characters. Only the following characters are: [A-Z, a-z, 0-9, - _ @]");
+            GdmThrowHelper.ThrowInvalidLabel(value);
         }
         Value = value;
     }
@@ -116,7 +125,6 @@ public readonly struct Label :
         });
     }
 
-
     /// <inheritdoc />
     public override string ToString()
     {
@@ -130,7 +138,6 @@ public readonly struct Label :
         {
             return false;
         }
-
         return this.Equals(name);
     }
 

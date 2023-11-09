@@ -5,26 +5,31 @@ using System.Text.Json.Nodes;
 
 namespace Assimalign.OGraph.Gdm.Tests;
 
+public class EmployeeVertex : OGraphVertexBinding<Employee>
+{
+    protected override void Configure(IOGraphVertexBindingDescriptor<Employee> descriptor)
+    {
+        descriptor.Property(p => p.Details)
+            .UseResolver((context, cancellationToken) =>
+            {
+                return default;
+            });
+    }
+
+    protected override void Configure(IOGraphGdmVertexDescriptor<Employee> descriptor)
+    {
+        descriptor.HasLabel("employee");
+        descriptor.HasType(entity =>
+        {
+            entity.HasKey(p => p.EmployeeId);
+        });
+    }
+}
+
+
+
 public partial class OGraphBuilderTests
 {
-    //public interface IOGraphVertexBindingDescriptor<T>
-    //{
-    //    IOGraphVertexBindingDescriptor<T> Property<TMember>(Expression<Func<T, TMember>> expression);
-    //}
-    //public abstract class VertexBinding<T>
-    //{
-    //    protected abstract void Configure(IOGraphVertexBindingDescriptor<T> descriptor);
-    //}
-
-    //public class EmployeeVertexBinding : VertexBinding<Employee>
-    //{
-    //    protected override void Configure(IOGraphVertexBindingDescriptor<Employee> descriptor)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
-
-
     [Fact]
     public void Test1()
     {
@@ -33,57 +38,62 @@ public partial class OGraphBuilderTests
         var graph = builder
             .ConfigureModel(gdm =>
             {
+                gdm.AddVertex<EmployeeVertex>();
+
+                gdm.AddType<AuditField>(type =>
+                {
+                    type.HasProperty(p => p!.UserId).UsePropertyName("userId");
+                    type.HasProperty(p => p!.Timestamp).UsePropertyName("timestamp");
+                });
                 gdm.AddVertex<Employee>(vertex =>
                 {
-                    vertex.HasKey(p => p.EmployeeId);
-
-                    vertex.HasProperty(p => p.EmployeeId)
-                        .UsePropertyName("employeeId")
-                        .UseType<GdmStringType>()
-                        .UseMetadata("description", "The unique identifier of the employee"); ;
-
-                    vertex.HasProperty(p => p.Details)
-                        .UsePropertyName("details")
-                        .UseType(details =>
+                    vertex.HasType<EmployeeEntity>();
+                    vertex.HasLabel("employee")
+                        .HasType(entity =>
                         {
-                            details.HasProperty(p => p!.FirstName).UsePropertyName("firstName");
-                            details.HasProperty(p => p!.LastName).UsePropertyName("lastName");
-                            details.HasProperty(p => p!.MiddleName).UsePropertyName("middleName");
-                            details.HasProperty(p => p!.Birthdate).UsePropertyName("birthdate");
+                            entity.HasKey(p => p.EmployeeId);
+
+                            entity.HasProperty(p => p.EmployeeId)
+                                .UsePropertyName("employeeId")
+                                .UseType<GdmStringType>()
+                                .UseMetadata("description", "The unique identifier of the employee");
+
+                            entity.HasProperty(p => p.Details)
+                                .UsePropertyName("details")
+                                .UseType(details =>
+                                {
+                                    details.HasProperty(p => p!.FirstName).UsePropertyName("firstName");
+                                    details.HasProperty(p => p!.LastName).UsePropertyName("lastName");
+                                    details.HasProperty(p => p!.MiddleName).UsePropertyName("middleName");
+                                    details.HasProperty(p => p!.Birthdate).UsePropertyName("birthdate");
+                                });
+
+                            entity.HasProperty(p => p.CreatedBy)
+                                .UsePropertyName("createdBy");
+                            //.UseType(audit =>
+                            //{
+                            //    audit.HasName("EmployeeCreatedByAuditField");
+                            //    audit.HasProperty(p => p!.UserId).UsePropertyName("userId");
+                            //    audit.HasProperty(p => p!.Timestamp).UsePropertyName("timestamp");
+                            //});
+
+                            entity.HasProperty(p => p.UpdatedBy)
+                                .UsePropertyName("updatedBy");
+                            //.UseType(audit =>
+                            //{
+                            //    audit.HasName("EmployeeUpdatedByAuditField");
+                            //    audit.HasProperty(p => p!.UserId).UsePropertyName("userId");
+                            //    audit.HasProperty(p => p!.Timestamp).UsePropertyName("timestamp");
+                            //});
+
+                            entity.HasProperty(p => p.Roles)
+                                .UsePropertyName("roles")
+                                .UseType(role =>
+                                {
+                                    role.HasProperty(p => p.Id).UsePropertyName("id");
+                                    role.HasProperty(p => p.Name).UsePropertyName("name");
+                                });
                         });
-
-                    vertex.HasProperty(p => p.CreatedBy)
-                        .UsePropertyName("createdBy")
-                        .UseType(audit =>
-                        {
-                            audit.HasName("EmployeeCreatedByAuditField");
-                            audit.HasProperty(p => p!.UserId).UsePropertyName("userId");
-                            audit.HasProperty(p => p!.Timestamp).UsePropertyName("timestamp");
-                        });
-
-                    vertex.HasProperty(p => p.UpdatedBy)
-                        .UsePropertyName("updatedBy")
-                        .UseType(audit =>
-                        {
-                            audit.HasName("EmployeeUpdatedByAuditField");
-                            audit.HasProperty(p => p!.UserId).UsePropertyName("userId");
-                            audit.HasProperty(p => p!.Timestamp).UsePropertyName("timestamp");
-                        });
-
-                    vertex.HasProperty(p => p.Roles)
-                        .UsePropertyName("roles");
-
-                    //vertex.HasEdge<EmployeeAddress>("addresses")    // Route = /employees/{employeeId}/addresses
-                    //    .WithMany()
-                    //    .HasReferenceKey(p => p.EmployeeId);
-
-                    //vertex.HasEdge<EmployeeAddress>("primaryAddress")    // Route = /employees/{employeeId}/addresses
-                    //    .WithOne()
-                    //    .HasReferenceKey(p => p.EmployeeId);
-
-                    //vertex.HasEdge<EmployeeTaxInfo>("taxInfo")
-                    //    .WithOne()
-                    //    .HasReferenceKey(p => p.EmployeeId);
                 });
                 gdm.AddVertex<EmployeeAddress>(vertex =>
                 {
@@ -106,14 +116,7 @@ public partial class OGraphBuilderTests
                 gdm.AddVertex<EmployeeTaxInfo>(vertex =>
                 {
                     vertex.HasKey(p => p.TaxInfoId);
-                    //vertex.HasLabel("taxInfo");
                 });
-
-                // Added custom types
-                //gdm.AddType<Employee>("employeeCreateInput", employee =>
-                //{
-                //    employee.Ignore(p => p.EmployeeId);
-                //});
             })
             //.ConfigureApplication(app =>
             //{

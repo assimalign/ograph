@@ -8,7 +8,7 @@ namespace Assimalign.OGraph.Gdm.Internal;
 [DebuggerDisplay("Gdm Property: {Label}")]
 internal class GdmProperty : IOGraphGdmProperty
 {
-    private readonly IList<IOGraphGdmPropertyBinding> bindings = new List<IOGraphGdmPropertyBinding>();
+    private readonly IList<IOGraphGdmBinding> bindings = new List<IOGraphGdmBinding>();
     
     public GdmProperty()
     {
@@ -26,7 +26,7 @@ internal class GdmProperty : IOGraphGdmProperty
     public GdmPropertyGetter Getter { get; set; } = default!;
     public GdmPropertySetter Setter { get; set; } = default!;
     public GdmElementType ElementType => GdmElementType.Property;
-    public void AddBinding(IOGraphGdmPropertyBinding binding)
+    public void AddBinding(IOGraphGdmBinding binding)
     {
         if (binding is null)
         {
@@ -34,7 +34,7 @@ internal class GdmProperty : IOGraphGdmProperty
         }
         bindings.Add(binding);
     }
-    public IEnumerable<IOGraphGdmPropertyBinding> GetBindings()
+    public IEnumerable<IOGraphGdmBinding> GetBindings()
     {
         return bindings;
     }

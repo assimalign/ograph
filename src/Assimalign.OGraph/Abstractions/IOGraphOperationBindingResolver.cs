@@ -6,7 +6,7 @@ namespace Assimalign.OGraph;
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphOperationResolver
+public interface IOGraphOperationBindingResolver 
 {
     /// <summary>
     /// 
@@ -14,5 +14,5 @@ public interface IOGraphOperationResolver
     /// <param name="context"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IOGraphResult> InvokeAsync(IOGraphOperationResolverContext context, CancellationToken cancellationToken = default);
+    Task<IOGraphResult> InvokeAsync(IOGraphOperationBindingResolverContext context, CancellationToken cancellationToken = default);
 }

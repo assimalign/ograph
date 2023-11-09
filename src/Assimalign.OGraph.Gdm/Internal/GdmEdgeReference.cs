@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
-internal static class ThrowHelper
+internal class GdmEdgeReference : IOGraphGdmEdgeReference
 {
-
-   // public static void InvalidContentException(string expected)
+    public IOGraphGdmEdge Definition { get; init; } = default!;
 }

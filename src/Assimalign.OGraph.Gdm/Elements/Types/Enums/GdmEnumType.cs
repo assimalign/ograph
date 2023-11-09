@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assimalign.OGraph.Gdm.Internal;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
@@ -25,7 +26,7 @@ public class GdmEnumType<TEnum> : IOGraphGdmEnumType
                     nameof(Int32) => new GdmEnumValue(name, Convert.ToInt32(@enum)),
                     nameof(UInt32) => new GdmEnumValue(name, Convert.ToUInt32(@enum)),
                     nameof(Int64) => new GdmEnumValue(name, Convert.ToInt64(@enum)),
-                    nameof(UInt64) => new GdmEnumValue(name, Convert.ToUInt64(@enum)),
+                    nameof(UInt64) => new GdmEnumValue(name, Convert.ToUInt64(@enum))
                 };
             }).ToArray();
 

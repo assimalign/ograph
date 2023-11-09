@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Gdm;
 
-using Assimalign.OGraph.Gdm.Internal;
+using Internal;
 
 /// <summary>
 /// 
@@ -11,16 +13,39 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
 {
     private readonly Gdm model;
     private readonly GdmValidator validator;
+    private readonly IList<Action<Gdm>> onTypeAdd;
+    private readonly IList<Action<Gdm>> onVertexAdd;
 
     private OGraphGdmBuilder(Label label)
     {
+        this.onTypeAdd = new List<Action<Gdm>>();
+        this.onVertexAdd = new List<Action<Gdm>>();
         this.validator = new();
         this.model = new()
         {
             Label = label
         };
     }
-
+    IOGraphGdmBuilder IOGraphGdmBuilder.AddType<T>(Action<IOGraphGdmComplexTypeDescriptor<T>> configure)
+    {
+        return (this as IOGraphGdmBuilder).AddType(GdmComplexType<T>.Create(configure));
+    }
+    IOGraphGdmBuilder IOGraphGdmBuilder.AddType<TGdmType>()
+    {
+        return (this as IOGraphGdmBuilder).AddType(new TGdmType());
+    }
+    IOGraphGdmBuilder IOGraphGdmBuilder.AddType(IOGraphGdmType type)
+    {
+        if (type is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(type));
+        }
+        onTypeAdd.Add(gdm =>
+        {
+            gdm.Elements.Add(type);
+        });
+        return this;
+    }
     IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex<T>(Action<IOGraphGdmEntityTypeDescriptor<T>> configure)
     {
         return (this as IOGraphGdmBuilder).AddVertex(typeof(T).Name, configure);
@@ -57,13 +82,42 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
     {
         if (vertex is null)
         {
-            throw new ArgumentNullException(nameof(vertex));
+            GdmThrowHelper.ThrowArgumentNullException(nameof(vertex));
         }
-        model.Elements.Add(vertex);
+        onVertexAdd.Add(gdm =>
+        {
+            // Check for types already added and replace in properties
+            foreach (var property in vertex.GetProperties())
+            {
+                if (property is GdmProperty ip)
+                {
+                    var type = gdm.GetGdmTypes().FirstOrDefault(p =>
+                    {
+                        if (p.RuntimeType is null)
+                        {
+                            return false;
+                        }
+                        return p.RuntimeType.IsAssignableTo(ip.PropertyInfo.PropertyType);
+                    });
+                    if (type is not null)
+                    {
+                        ip.Type = new GdmTypeReference()
+                        {
+                            Definition = type
+                        };
+                    }
+                }
+            }
+
+            gdm.Elements.Add(vertex);
+        });
         return this;
     }
     IOGraphGdm IOGraphGdmBuilder.Build()
     {
+        Build(onTypeAdd);
+        Build(onVertexAdd);
+
         var result = validator.Validate(model);
 
         if (!result.IsValid)
@@ -71,13 +125,23 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
             throw result.ToException();
         }
 
+        (model.Elements as GdmElementCollection)!.IsReadOnly = true;
+
         return model;
+    }
+
+    private void Build(IList<Action<Gdm>> actions)
+    {
+        foreach (var action in actions)
+        {
+            action.Invoke(model);
+        }
     }
 
     #region Static Memebers
 
     /// <summary>
-    /// 
+    /// Creates a graph data model.
     /// </summary>
     /// <param name="label">The Graph Model name.</param>
     /// <param name="configure"></param>
@@ -96,9 +160,8 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
 
         return builder.Build();
     }
-
     /// <summary>
-    /// 
+    /// Creates a graph data model builder.
     /// </summary>
     /// <param name="label"></param>
     /// <returns></returns>

@@ -1,16 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assimalign.OGraph.Gdm.Internal;
+﻿namespace Assimalign.OGraph.Gdm.Internal;
 
 internal class GdmSerializationException : OGraphGdmException
 {
-    public GdmSerializationException(string? message, Exception? innerException) : base(message, innerException)
+    public GdmSerializationException(OGraphGdmErrorCode errorCode, string? message) 
+        : base(message)
     {
+        ErrorCode = errorCode;
+    }
+    public GdmSerializationException(OGraphGdmErrorCode errorCode, string source, string? message) 
+        : base(message)
+    {
+        ErrorCode = errorCode;
+        Source = source;
     }
 
     public override string? Source { get; set; }
+    public override OGraphGdmErrorCode ErrorCode { get; }
 }

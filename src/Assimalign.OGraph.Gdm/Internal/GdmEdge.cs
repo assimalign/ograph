@@ -5,7 +5,7 @@ namespace Assimalign.OGraph.Gdm.Internal;
 
 internal class GdmEdge : IOGraphGdmEdge
 {
-    private readonly IList<IOGraphGdmEdgeBinding> bindings = new List<IOGraphGdmEdgeBinding>();
+    private readonly IList<IOGraphGdmBinding> bindings = new List<IOGraphGdmBinding>();
     
     public GdmEdge()
     {
@@ -19,7 +19,7 @@ internal class GdmEdge : IOGraphGdmEdge
     public IOGraphGdmMetadata Metadata { get; }
     public GdmElementType ElementType => GdmElementType.Edge;
 
-    public void AddBinding(IOGraphGdmEdgeBinding binding)
+    public void AddBinding(IOGraphGdmBinding binding)
     {
         if (binding is null)
         {
@@ -27,7 +27,7 @@ internal class GdmEdge : IOGraphGdmEdge
         }
         bindings.Add(binding);
     }
-    public IEnumerable<IOGraphGdmEdgeBinding> GetBindings()
+    public IEnumerable<IOGraphGdmBinding> GetBindings()
     {
         return bindings;
     }

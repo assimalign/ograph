@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphOperationMiddleware
+public interface IOGraphPropertyBindingMiddleware
 {
     /// <summary>
     /// 
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    Task<IOGraphResult> InvokeAsync(IOGraphOperationResolverContext context, OGraphOperationHandler next);
+    ValueTask<IOGraphResult> InvokeAsync(IOGraphPropertyBindingResolverContext context, OGraphPropertyHandler next);
 }

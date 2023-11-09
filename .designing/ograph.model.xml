@@ -41,77 +41,70 @@
             - PUT       /api/users/addressTypes/{addressTypeId}
             - DELETE    /api/users/addressTypes/{addressTypeId}
     -->
-    <model domain="users" host="">
-        <types>
-            <entityType name="User">
-                <property name="userId" type="Guid" isKey="true" />
-                <property name="details" type="UserDetails"/>
-            </entityType>
-            <complexType name="UserDetails">
-                <property name="firstName" type="String">
-                    <meta key="description" value="The first name of the user." />
-                </property>
-                <property name="lastName" type="String" />
-                <property name="middleName" type="String" />
-                <property name="fullName" type="String" />
-                <property name="birthDate" type="DateTime" />
-            </complexType>
-            <complexType name="UserCreate">
-                <property name="firstName" type="String"/>
-                <property name="lastName" type="String" />
-                <property name="middleName" type="String" />
-                <property name="fullName" type="String" />
-                <property name="birthDate" type="DateTime" />
-            </complexType>
-            <collectionType name="UserCollection">
-                <item itemType="User" />
-            </collectionType>
-            <complexType name="UserTag">
-                <property name="key" type="String" />
-                <property name="value" type="String" />
-            </complexType>
-            <collectionType name="UserTagCollection">
-                <collection itemType="UserTag" />
-            </collectionType>
-            <entityType name="UserAddress">
-                <property name="streetOne" type="String" />
-                <property name="streetTwo" type="String" />
-                <property name="streetThree" type="String" />
-                <property name="city" type="String" />
-                <property name="state" type="String" />
-                <property name="zipCode" type="String" />
-                <property name="postalCode" type="String" />
-            </entityType>
-            <collectionType name="UserAddressCollection">
-                <collection type="UserAddress"/>
-            </collectionType>
-            <entityType name="UserProfile">
-
-            </entityType>
-        </types>
-        <vertices>
-            <vertex label="users" type="User">
-                <edge label="addresses" target="addresses" />
-                <edge label="primaryAddress" target="addresses" cardinality="1"/>
-                <edge label="profile" target="profile" />
-            </vertex>
-            <vertex label="addresses" type="UserAddress">
-
-            </vertex>
-            <vertex label="profile" type="UserProdile">
-
-            </vertex>
-        </vertices>
-        <edges>
-            <edge label="addresses" cardinality="2" route="users/{userId}/addresses">
-                <sourceNode label="users" /> <!-- XPath: //node[@label='user'] -->
-                <targetNode label="addresses" />
-            </edge>
-            <edge label="profile" cardinality="1">
-                <sourceNode label="users" /> <!-- XPath: //node[@label='user'] -->
-                <targetNode label="profile" />
-            </edge>
-        </edges>
+    <model label="users">
+        <primitiveType label="String" />
+        <primitiveType label="DateTime">
+            <format></format>
+        </primitiveType>
+        <primitiveType label="Date" />
+        <entityType label="User">
+            <property label="userId" type="Guid" isKey="true" />
+            <property label="details" type="UserDetails" />
+        </entityType>
+        <complexType label="UserDetails">
+            <property label="firstName" type="String">
+                <meta key="description" value="The first name of the user." />
+            </property>
+            <property label="lastName" type="String" />
+            <property label="middleName" type="String" />
+            <property label="fullName" type="String" />
+            <property label="birthDate" type="DateTime" />
+        </complexType>
+        <complexType label="UserCreate">
+            <property label="firstName" type="String" />
+            <property label="lastName" type="String" />
+            <property label="middleName" type="String" />
+            <property label="fullName" type="String" />
+            <property label="birthDate" type="DateTime" />
+        </complexType>
+        <collectionType label="UserCollection">
+            <item type="User" />
+        </collectionType>
+        <complexType label="UserTag">
+            <property label="key" type="String" />
+            <property label="value" type="String" />
+        </complexType>
+        <collectionType label="UserTagCollection">
+            <collection type="UserTag" />
+        </collectionType>
+        <entityType label="UserAddress">
+            <property label="streetOne" type="String" />
+            <property label="streetTwo" type="String" />
+            <property label="streetThree" type="String" />
+            <property label="city" type="String" />
+            <property label="state" type="String" />
+            <property label="zipCode" type="String" />
+            <property label="postalCode" type="String" />
+        </entityType>
+        <collectionType label="UserAddressCollection">
+            <collection type="UserAddress" />
+        </collectionType>
+        <entityType label="UserProfile">
+            <property label="emailAddress" type="String" />
+        </entityType>
+        <vertex label="user" type="User" />
+        <vertex label="address" type="UserAddress" />
+        <vertex label="profile" type="UserProdile">
+            
+        </vertex>
+        <edge label="addresses" source="user" target="address" cardinality="2" />
+        <edge label="profile" source="user" target="profile" cardinality="1" />
+        <edge label="primaryAddress" source="user" target="addresses" cardinality="1">
+            <meta>
+                <key></key>
+                <value type=""></value>
+            </meta>
+        </edge>
         <!-- Operation Rules:
             1. All Operations must return an error result or an object/collection matching the type binded to
         tthe node
@@ -125,9 +118,9 @@
                     <segment ordinal="1" isLiteral="true">users</segment>
                 </route>
                 <queryParams>
-                    <param key="query" type="String"/>
+                    <param key="query" type="String" />
                 </queryParams>
-                <response type="UserCollection"/>
+                <response type="UserCollection" />
             </operation>
             <operation label="GetUserById" vertex="users">
                 <method>GET</method>
@@ -137,7 +130,7 @@
                     <segment ordinal="2" is-parameter="true">{userId:Guid}</segment>
                 </route>
                 <queryParams>
-                    <param key="query" valueType="String" isRequired="false"/>
+                    <param key="query" valueType="String" isRequired="false" />
                 </queryParams>
             </operation>
             <operation label="CreateUser" vertex="users">
@@ -243,12 +236,7 @@
             </response>
         </operation>
     </model>
-    <model domain="employees">
-        <type name="employee">
-
-        </type>
-        <type name="employeeAddress">
-
-        </type>
+    <model label="employees">
+        
     </model>
 </ograph>

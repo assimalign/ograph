@@ -4,25 +4,29 @@ using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm;
 
-using Assimalign.OGraph.Gdm.Internal;
+using Internal;
 
 [DebuggerDisplay("Gdm Vertex: {Label}")]
 public class GdmVertex : IOGraphGdmVertex
 {
     private readonly Action<IOGraphGdmVertexDescriptor>? configure;
-    private readonly IList<IOGraphGdmVertexBinding> bindings = new List<IOGraphGdmVertexBinding>();
+    private readonly IList<IOGraphGdmBinding> bindings = new List<IOGraphGdmBinding>();
 
     internal Label label;
     internal GdmTypeReference? type;
 
-    private GdmVertex(Action<IOGraphGdmVertexDescriptor> configure)
-    {
-        this.configure = configure;
-        Configure(new GdmVertexDescriptor(this));
-    }
     public GdmVertex() : this(descriptor => { })
     {
-        
+    }
+    GdmVertex(Action<IOGraphGdmVertexDescriptor> configure)
+    {
+        if (configure is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+        }
+
+        this.configure = configure;
+        this.Configure(new GdmVertexDescriptor(this));
     }
 
     protected virtual void Configure(IOGraphGdmVertexDescriptor descriptor)
@@ -35,15 +39,15 @@ public class GdmVertex : IOGraphGdmVertex
     public IOGraphGdmEdgeReferenceCollection Edges { get; } = new GdmEdgeReferenceCollection();
     public IOGraphGdmMetadata Metadata { get; } = new GdmMetadata();
     public GdmElementType ElementType => GdmElementType.Vertex;
-    public void AddBinding(IOGraphGdmVertexBinding binding)
+    public void AddBinding(IOGraphGdmBinding binding)
     {
         if (binding is null)
         {
-            throw new ArgumentNullException(nameof(binding));
+            GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
         }
         bindings.Add(binding);
     }
-    public IEnumerable<IOGraphGdmVertexBinding> GetBindings()
+    public IEnumerable<IOGraphGdmBinding> GetBindings()
     {
         return bindings;
     }
@@ -56,10 +60,6 @@ public class GdmVertex : IOGraphGdmVertex
     /// <exception cref="ArgumentNullException"></exception>
     public static GdmVertex Create(Action<IOGraphGdmVertexDescriptor> configure)
     {
-        if (configure is null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
         return new GdmVertex(configure);
     }
 

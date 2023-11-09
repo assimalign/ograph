@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphPropertyMiddlewareQueue : IEnumerable<IOGraphPropertyMiddleware>
+public interface IOGraphPropertyBindingMiddlewareQueue : IEnumerable<IOGraphPropertyBindingMiddleware>
 {
 
     /// <summary>
@@ -21,16 +21,16 @@ public interface IOGraphPropertyMiddlewareQueue : IEnumerable<IOGraphPropertyMid
     /// 
     /// </summary>
     /// <param name="middleware"></param>
-    void Enqueue(IOGraphPropertyMiddleware middleware);
+    void Enqueue(IOGraphPropertyBindingMiddleware middleware);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="middleware"></param>
-    void Dequeue(IOGraphPropertyMiddleware middleware);
+    void Dequeue(IOGraphPropertyBindingMiddleware middleware);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="resolver"></param>
     /// <returns></returns>
-    OGraphPropertyHandler BuildHandlerChain(IOGraphPropertyResolver resolver);
+    OGraphPropertyHandler BuildHandlerChain(IOGraphPropertyBindingResolver resolver);
 }

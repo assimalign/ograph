@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Assimalign.OGraph;
 
-public interface IOGraphOperationMiddlewareQueue : IEnumerable<IOGraphOperationMiddleware>
+public interface IOGraphOperationBindingMiddlewareQueue : IEnumerable<IOGraphOperationBindingMiddleware>
 {
     /// <summary>
     /// 
@@ -20,10 +16,10 @@ public interface IOGraphOperationMiddlewareQueue : IEnumerable<IOGraphOperationM
     /// 
     /// </summary>
     /// <param name="middleware"></param>
-    void Enqueue(IOGraphOperationMiddleware middleware);
+    void Enqueue(IOGraphOperationBindingMiddleware middleware);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="middleware"></param>
-    void Dequeue(IOGraphOperationMiddleware middleware);
+    void Dequeue(IOGraphOperationBindingMiddleware middleware);
 }

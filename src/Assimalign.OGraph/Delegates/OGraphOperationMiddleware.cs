@@ -1,11 +1,17 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
+
 
 /// <summary>
 /// 
 /// </summary>
 /// <param name="context"></param>
+/// <param name="cancellationToken"></param>
 /// <param name="next"></param>
 /// <returns></returns>
-public delegate Task<IOGraphResult> OGraphOperationMiddleware(IOGraphOperationResolverContext context, OGraphOperationHandler next);
+public delegate Task<IOGraphResult> OGraphOperationMiddleware(
+    IOGraphOperationBindingResolverContext context,
+    CancellationToken cancellationToken,
+    OGraphOperationHandler next);

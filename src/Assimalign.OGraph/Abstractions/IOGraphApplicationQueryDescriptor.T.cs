@@ -16,13 +16,13 @@ public interface IOGraphApplicationQueryDescriptor<T>
     /// <typeparam name="TMiddleware"></typeparam>
     /// <returns>The current descriptor.</returns>
     IOGraphApplicationQueryDescriptor<T> UseMiddleware<TMiddleware>()
-        where TMiddleware : IOGraphOperationMiddleware, new();
+        where TMiddleware : IOGraphOperationBindingMiddleware, new();
     /// <summary>
     /// 
     /// </summary>
     /// <param name="middleware"></param>
     /// <returns>The current descriptor.</returns>
-    IOGraphApplicationQueryDescriptor<T> UseMiddleware(IOGraphOperationMiddleware middleware);
+    IOGraphApplicationQueryDescriptor<T> UseMiddleware(IOGraphOperationBindingMiddleware middleware);
     /// <summary>
     /// 
     /// </summary>
@@ -35,13 +35,13 @@ public interface IOGraphApplicationQueryDescriptor<T>
     /// <typeparam name="TResolver"></typeparam>
     /// <returns>The current descriptor.</returns>
     IOGraphApplicationQueryDescriptor<T> UseResolver<TResolver>()
-        where TResolver : IOGraphOperationResolver, new();
+        where TResolver : IOGraphOperationBindingResolver, new();
     /// <summary>
     /// 
     /// </summary>
     /// <param name="resolver"></param>
     /// <returns>The current descriptor.</returns>
-    IOGraphApplicationQueryDescriptor<T> UseResolver(IOGraphOperationResolver resolver);
+    IOGraphApplicationQueryDescriptor<T> UseResolver(IOGraphOperationBindingResolver resolver);
     /// <summary>
     /// 
     /// </summary>

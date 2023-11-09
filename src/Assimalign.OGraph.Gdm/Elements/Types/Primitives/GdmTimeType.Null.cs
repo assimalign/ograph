@@ -8,5 +8,5 @@ namespace Assimalign.OGraph.Gdm;
 
 public sealed class GdmNullTimeType : GdmPrimitiveType<TimeOnly?>
 {
-
+    public override Label Label => "Time";
 }

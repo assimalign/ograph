@@ -9,8 +9,9 @@ namespace Assimalign.OGraph.Gdm;
 public interface IOGraphGdmVertexDescriptor
 {
     IOGraphGdmVertexDescriptor HasLabel(Label label);
-    IOGraphGdmVertexDescriptor HasType(Type type);
-    IOGraphGdmVertexDescriptor HasType<T>() where T : class, new();
-    IOGraphGdmVertexDescriptor HasType<T>(Action<IOGraphGdmEntityTypeDescriptor<T>> configure) where T : class, new();
+
+    IOGraphGdmVertexDescriptor HasType(IOGraphGdmEntityType type);
+    IOGraphGdmVertexDescriptor HasType<TGdmType>() where TGdmType : IOGraphGdmEntityType, new();
+
 
 }

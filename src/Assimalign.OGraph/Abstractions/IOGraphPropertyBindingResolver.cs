@@ -8,12 +8,12 @@ using Assimalign.OGraph.Gdm;
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphPropertyResolver : IOGraphGdmPropertyBinding
+public interface IOGraphPropertyBindingResolver
 {
     /// <summary>
     /// 
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    ValueTask<IOGraphResult> InvokeAsync(IOGraphPropertyResolverContext context, CancellationToken cancellationToken = default);
+    ValueTask<IOGraphResult> InvokeAsync(IOGraphPropertyBindingResolverContext context, CancellationToken cancellationToken = default);
 }

@@ -14,25 +14,60 @@ internal class Executor : IOGraphExecutor
 {
     IOGraphGdm Model { get; } = default!;
 
+
+
     public async Task<IOGraphExecutorResponse> ExecuteAsync(IOGraphExecutorRequest request, CancellationToken cancellationToken = default)
     {
-        //var vertex = Model.Vertices.First();
-        //var vertexBindings = vertex.GetBindings()
-        //    .OfType<IOGraphOperation>();
+        try
+        {
+            using var cancellationTokenSource = new CancellationTokenSource();
 
-        //if (vertexBindings.Count() > 1)
-        //{
-        //    throw new Exception("Only one output binding is allowed");
-        //}
+            var response = new ExecutorResponse();
 
-        //var vertexBinding = vertexBindings.First();
+            foreach (var vertex in Model.GetGdmVertices())
+            {
+                var bindings = vertex.GetBindings()
+                    .OfType<IOGraphOperationBinding>();
 
-        //var result = await vertexBinding.InvokeAsync(default!);
+                foreach (var binding in bindings)
+                {
+                    if (binding.Method.Equals(request.Method) && binding.Route.IsMatch(request.Path))
+                    {
+                        await binding.ExecuteAsync(new OperationBindingContext()
+                        {
+                            Element = vertex,
+                            Request = request,
+                            Response = response
+                        });
+
+                        return response;
+                    }
+                }
+            }
+
+            return response;
+        }
+        catch (Exception exception)
+        {
+            throw;
+        }
+    }
 
 
-       
+    private void Temp()
+    {
+        var descriptor = default(IOGraphOperationBindingDescriptor)!;
 
-
-        throw new NotImplementedException();
+        descriptor.UseName("QueryUsers")
+            .UseQueryParam("")
+            .UseRoute("https://users/{userId}")
+            .UseMiddleware((context, cancellationToken, next) =>
+            {
+                return next.Invoke(context, cancellationToken);
+            })
+            .UseResolver((context, cancellationToken) =>
+            {
+                return default;
+            });
     }
 }

@@ -35,6 +35,10 @@ public interface IOGraphExecutorRequest
     /// <summary>
     /// 
     /// </summary>
+    Method Method { get; }
+    /// <summary>
+    /// 
+    /// </summary>
     Stream Body { get; }
 
 

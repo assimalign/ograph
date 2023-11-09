@@ -8,7 +8,7 @@ namespace Assimalign.OGraph;
 
 using Assimalign.OGraph.Gdm;
 
-public interface IOGraphPropertyResolverContext : IOGraphGdmPropertyBindingContext
+public interface IOGraphPropertyBindingResolverContext : IOGraphGdmBindingContext
 {
     /// <summary>
     /// Returns the most recent resolved parent object.

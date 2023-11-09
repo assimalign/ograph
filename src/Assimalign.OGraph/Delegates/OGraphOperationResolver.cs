@@ -8,5 +8,8 @@ namespace Assimalign.OGraph;
 /// 
 /// </summary>
 /// <param name="context"></param>
+/// <param name="cancellationToken"></param>
 /// <returns></returns>
-public delegate Task<IOGraphResult> OGraphOperationResolver(IOGraphOperationResolverContext context, CancellationToken cancellationToken = default);
+public delegate Task<IOGraphResult> OGraphOperationResolver(
+    IOGraphOperationBindingResolverContext context, 
+    CancellationToken cancellationToken = default);

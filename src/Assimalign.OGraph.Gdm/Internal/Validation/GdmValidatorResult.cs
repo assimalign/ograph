@@ -12,12 +12,8 @@ internal class GdmValidatorResult
     }
     public bool IsValid => !Errors.Any();
     public IList<GdmValidatorError> Errors { get; }
-
-    public OGraphGdmException ToException()
+    public AggregateException ToException()
     {
-        return new GdmModelException(Errors.First().Message)
-        {
-            Source = Errors.First().Source,
-        };
+        return new AggregateException(Errors.Select(p => new GdmModelException(p)));
     }
 }

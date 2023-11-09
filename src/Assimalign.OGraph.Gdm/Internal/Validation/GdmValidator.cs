@@ -5,15 +5,20 @@ namespace Assimalign.OGraph.Gdm.Internal;
 
 internal class GdmValidator
 {
-    private readonly IList<GdmValidatorRule> rules = new List<GdmValidatorRule>();
+    private static readonly IList<GdmValidatorRule> rules = new List<GdmValidatorRule>();
 
-    public GdmValidator()
+    static GdmValidator()
     {
         AddRule<GdmComplexTypeCheckRule>();
+        AddRule<GdmComplexTypeKeyDisallowedValidatorRule>();
+
         AddRule<GdmEntityTypeMissingKeyValidatorRule>();
+
+        AddRule<GdmVertexInvalidTypeReferenceIsNullValidatorRule>();
+        AddRule<GdmVertexInvalidTypeReferenceNotEntityTypeValidatorRule>();
     }
 
-    private void AddRule<TRule>() where TRule : GdmValidatorRule, new()
+    private static void AddRule<TRule>() where TRule : GdmValidatorRule, new()
     {
         rules.Add(new TRule());
     }

@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Internal;
 
-internal class ExecutorResponse
+internal class ExecutorResponse : IOGraphExecutorResponse
 {
 }
