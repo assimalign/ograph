@@ -1,0 +1,11 @@
+{
+    "data": {
+        "@ograph.edges": {
+            "addresses": [
+                {
+                    "action": "create"
+                }
+            ]
+        }
+    }
+}

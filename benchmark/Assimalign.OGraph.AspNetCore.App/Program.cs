@@ -1,92 +1,70 @@
 using Assimalign.OGraph;
 using Assimalign.OGraph.AspNetCore;
-using Microsoft.AspNetCore.Mvc;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddSingleton<IRepository<User>, UserRepository>();
+builder.Services
+    .AddSingleton<IRepository<User>, UserRepository>();
 
 builder.Services
     .AddOGraphOptions(options =>
     {
         options.RoutePrefix = "api";
     })
-    .AddOGraph("Users", builder =>
+    .AddOGraph("users", builder =>
     {
         // Composite Implementation
-        builder.AddNode<UserNode>();
-        builder.AddNode<UserAddressNode>();
-        builder.AddNode<CompanyNode>();
-        builder.AddNode<CompanyAddressNode>();
-        builder.AddNode<EmployeeNode>();
-        builder.AddNode<EmployeeAddressNode>();
-
-        //builder.AddOperation<UserCreateOperation>();
-
-        // Fluent Implementation
-        builder.AddCommand("GetUsers")
-            .UseMethod(Method.Post)
-            .UseRoute("/users")
-            .UseNode<UserNode>()
-            .UseTestResolver(async (context, token) =>
+        builder.AddVertex<User>(vertex =>
+        {
+            // Define Type information
+            vertex.HasLabel("user");
+            vertex.HasProperty(p => p.Details, details => // Extending the details type
             {
-                var value = context.GetQuery();
-
-                if (value is null)
-                {
-                    return default(IOGraphError);
-                }
-
-              
-
-                return new User();
-
+                details.HasProperty("fullName")
+                    .UseMiddleware(async (context, next) =>
+                    {
+                        if (!context!.GetClaimsPrincipal()!.Identity!.IsAuthenticated)
+                        {
+                            return OGraphResult.Unauthorized("The user is not authorized to access this resource.");
+                        }
+                        return await next(context);
+                    })
+                    .UseResolver(context => // Creating a resolver for a computed property
+                    {
+                        var parent = context.GetParent<UserDetails>();
+                        return $"{parent.LastName}, {parent.FirstName} {parent.MiddleName}";
+                    });
             });
-            //.UseMiddleware((context, next) =>
-            //{
-            //    Console.WriteLine("Middleware 1 Invoked");
 
-            //    return next.Invoke(context);
-            //})
-            //.UseMiddleware(async (context, next) =>
-            //{ 
-            //    var claimsPrincipal = context.GetClaimsPrincipal();
+            // Define Edges
+            vertex.HasEdge("addresses") //There should be a corresponding operation bound to the addresses vertex
+                .WithMany<UserAddressVertex>();
 
-            //    if (!claimsPrincipal.Identity.IsAuthenticated)
-            //    {
-            //        return OGraphResult
-            //            .Unauthorzed()
-            //            .Build();
-            //    }
+            vertex.HasEdge("primaryAddress")
+                .WithOne<UserAddressVertex>();
 
-            //    return await next.Invoke(context);
-            //})
-            //.UseEitherResolver(context =>
-            //{
-            //    var value = context.GetNode();
+            vertex.HasEdge("profile")
+                .WithOne<UserProfileVertex>();
+        });
+        builder.AddVertex<UserAddress>(vertex =>
+        {
+            vertex.HasLabel("address");
+        });
+        builder.AddVertex<UserProfile>(vertex =>
+        {
+            vertex.HasLabel("profile");
 
-            //    if (value is null)
-            //    {
-            //        return new QueryableResult();
-            //    }
-
-            //    return context.GetService<IRepository<User>>()
-            //        .Queryable;
-            //});
-
-
-        builder.AddCommand("UpdateUser")
-            .UseMethod(Method.Put)
-            .UseRoute("/users/{userId:Guid}")
-            .UseNode<UserNode>()
-            .UseResolver(async context =>
-            {
-                return default;
-            });
+        });
     });
 
 var app = builder.Build();
+
+app.MapGet("", async context =>
+{
+
+});
 
 app.UseOGraph();
 app.Run();

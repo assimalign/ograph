@@ -79,29 +79,28 @@ vertex('employees')
         .sort({
             companyName asc
         })
-        .edge('companies/address') # The Edge keyword takes in the edge path
+        .edge('companies/{companyId}/address') # The Edge keyword takes in the edge path
             .project({
                 streetOne
             })
             .filter({
                 addressType eq 1
             })
-            .edge('companies/addresses/types')
+            #.edge('companies/../addresses/../addressType')
+            .edge('companies/{companyId}/addresses/{addressId}/addressType')
                 .project({
                     typeId
                     typeName
                 })
     .edge('addresses')
         .project({
-
+            streetOne
+            streetTwo
         })
 vertex('users')
     .project({
         userId
     })
-
-
-
 
 # Vertex Keyword Rules
 #

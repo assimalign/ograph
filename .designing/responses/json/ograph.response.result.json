@@ -1,0 +1,28 @@
+{
+    "@ograph.statusCode": 200,
+    "data": {
+
+        "@ograph.edges": {
+            "addresses": {
+                "statusCode": 200,
+                "data": [
+                    {
+                        "streetOne": "",
+                        "streetTwo": "",
+                        "city": "",
+
+                        "@ograph.edges": {
+                            "addressType": {
+                                "@ograph.statusCode": 200,
+                                "data": {
+                                    "typeId": 12,
+                                    "type": "Primary Address"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

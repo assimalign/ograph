@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Assimalign.OGraph.Gdm.Internal;
+
+internal class GdmEdge : IOGraphGdmEdge
+{
+    private readonly IList<IOGraphGdmBinding> bindings = new List<IOGraphGdmBinding>();
+    
+    public GdmEdge()
+    {
+        Metadata = new GdmMetadata();
+    }
+
+    public Label Label { get; set; } = default!;
+    public CardinalityType Cardinality { get; set; } = default!;
+    public IOGraphGdmVertexReference Source { get; set; } = default!;
+    public IOGraphGdmVertexReference Target { get; set; } = default!;
+    public IOGraphGdmMetadata Metadata { get; }
+    public GdmElementType ElementType => GdmElementType.Edge;
+    IEnumerable<IOGraphGdmBinding> IOGraphGdmBindingElement.Bindings => bindings;
+    void IOGraphGdmBindingElement.Bind(IOGraphGdmBinding binding)
+    {
+        if (binding is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
+        }
+        bindings.Add(binding);
+    }
+}

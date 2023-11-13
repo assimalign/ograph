@@ -1,12 +1,8 @@
 {
-    "$schema": "ograph.response.schema.json",
+    //"$schema": "ograph.response.schema.json",
     "@ograph.status": 200,
-    "@ograph.node": "#model/nodes/employees", // A reference to the nodes schema in the OGraph Model
-    "pageInfo": {
-        "totalCount": 2345,
-        "hasNext": true,
-        "hasPrevious": true
-    },
+    "@ograph.total": 2345,
+    "@ograph.count": 50,
     "errors": {
         "code": "Unauthorized",
         "message": "The user is unauthorized.",
@@ -17,40 +13,60 @@
             }
         ]
     },
-    "nodes": [
+    "data": [
         {
-            // Context Information
+            /* 
+                Reserved Properties
+                    _id
+                    _label
+            */
+            "@ograph.id": "255acd9b-9db4-4a38-85a5-93504cbeeeae",
             "@ograph.label": "employees",
-
             // Attributes
             "employeeId": "255acd9b-9db4-4a38-85a5-93504cbeeeae",
             "firstName": "Chase",
             "lastName": "Crawford",
-
             // Edges
             "@ograph.edges": {
                 "companies": {
-                    "@ograph.node": "",
-                    "pageInfo": {
-                        "hasNext": true,
-                        "hasPrevious": false,
-                        "totalCount": 200
-                    },
-                    "nodes": [
+                    "@ograph.status": 200,
+                    "@ograph.count": 12,
+                    "data": [ // Vertices
                         {
-                            "@ograph.link": "/api/employees/255acd9b-9db4-4a38-85a5-93504cbeeeae/companies/a2eb5d63-9dd9-47bb-a94f-dbed32fcaa15",
+                            "@ograph.id": "a2eb5d63-9dd9-47bb-a94f-dbed32fcaa15",
                             "@ograph.label": "company",
                             "companyId": "a2eb5d63-9dd9-47bb-a94f-dbed32fcaa15",
-                            "companyName": "Assimalign LLC"
+                            "companyName": "Assimalign LLC",
+                            "@ograph.edges": {
+                                "addresses": {
+                                    "@ograph.status": 200,
+                                    "@ograph.count": 54,
+                                    "data": [
+                                        {
+                                            "@ograph.id": "a2eb5d63-9dd9-47bb-a94f-dbed32fcaa15",
+                                            "@ograph.label": "address"
+                                        }
+                                    ]
+                                }
+                            }
                         }
                     ]
                 },
                 "addresses": {
-                    "@ograph.node": "",
-                    "pageInfo": {
-                        "hasNext": true,
-                        "hasPrevious": false,
-                        "totalCount": 200
+                    "@ograph.status": 200,
+                    "@ograph.count": 12,
+                    "data": [
+                        {
+                            "@ograph.id": "8811f0fc-ba13-404e-8385-120fbda10780",
+                            "@ograph.label": "address"
+                        }
+                    ]
+                },
+                "primaryAddress": {
+                    "@ograph.status": 200,
+                    "data": { // Vertex
+                        "@ograph.id": "9fe6c60c-60c3-4e19-8030-ccc4f578e1fe",
+                        "@ograph.label": "primaryAddress"
                     }
                 }
             }

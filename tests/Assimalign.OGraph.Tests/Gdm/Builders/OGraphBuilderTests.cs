@@ -1,8 +1,78 @@
 using Assimalign.OGraph.Syntax;
+using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace Assimalign.OGraph.Tests;
+namespace Assimalign.OGraph.Gdm.Tests;
+
+public class EmployeeEntityType : GdmEntityType<Employee>
+{
+    protected override void Configure(IOGraphGdmEntityTypeDescriptor<Employee> descriptor)
+    {
+        descriptor.HasProperty(p => p.Details)
+            .UsePropertyName("details");
+            
+    }
+}
+
+public class EmployeeVertex : GdmVertex<Employee>
+{
+    protected override void Configure(IOGraphGdmVertexDescriptor<Employee> descriptor)
+    {
+        descriptor.HasType(entity =>
+        {
+            entity.HasKey(p => p.EmployeeId);
+
+
+            entity.HasProperty(p => p.Details)
+                .UsePropertyName("details");
+        });
+    }
+
+    protected override void Configure(IOGraphGdmVertexOperationBindingDescriptor<Employee> descriptor)
+    {
+       
+
+
+
+        descriptor.HasGet("GetEmployees")
+            .UseRoute("/api/employees")
+            .UseMiddleware((context, cancellationToken, next) =>
+            {
+                return next.Invoke(context, cancellationToken);
+            })
+            .UseResolver((context, cancellationToken) =>
+            {
+
+                return default!;
+            });
+
+        descriptor.HasGet("GetEmployeeById")
+            .UseRoute("/api/employees/{employeeId}")
+            .UseMiddleware((context, cancellationToken, next) =>
+            {
+                return next.Invoke(context, cancellationToken);
+            })
+            .UseResolver((context, cancellationToken) =>
+            {
+
+                return default!;
+            });
+
+        descriptor.HasPost("CreateEmployee")
+            .UseRoute("/api/employees")
+            .UseMiddleware((context, cancellationToken, next) =>
+            {
+                return next.Invoke(context, cancellationToken);
+            })
+            .UseResolver((context, cancellationToken) =>
+            {
+
+                return default!;
+            });
+    }
+}
+
 
 
 public partial class OGraphBuilderTests
@@ -10,160 +80,156 @@ public partial class OGraphBuilderTests
     [Fact]
     public void Test1()
     {
-        /*
-         * 
-            There three types of Resolvers: 
-        
-            1. Operation Resolver
-            2. Property Resolver
-            3. Identifier Resolver
-            3.1 Identifier Property Resolver
+        var builder = new OGraphBuilder("employees");
 
-            Execution Pipeline:
+        var graph = builder
+            .ConfigureModel(gdm =>
+            {
+                gdm.AddVertex<EmployeeVertex>();
 
-            1. Parse HTTP Request
-            2. Validate HTTP Request
-            3. Execute OnResolve Middleware (Pre-Resolver)  
-            3. Execute Operation Resolver
-            4. Execute Root Property Resolver
-            5. Execute Identifier Resolver
-         
-         */
+                gdm.AddType<AuditField>(type =>
+                {
+                    type.HasProperty(p => p!.UserId).UsePropertyName("userId");
+                    type.HasProperty(p => p!.Timestamp).UsePropertyName("timestamp");
+                });
+                gdm.AddVertex<Employee>(vertex =>
+                {
+                    vertex.HasType<EmployeeEntity>();
+                    vertex.HasLabel("employee")
+                        .HasType(entity =>
+                        {
+                            entity.HasKey(p => p.EmployeeId);
 
-        var graph = OGraphBuilder.Create("UsersDomain", builder =>
-        {
-            // Define Root Structures
+                            entity.HasProperty(p => p.EmployeeId)
+                                .UsePropertyName("employeeId")
+                                .UseType<GdmStringType>()
+                                .UseMetadata("description", "The unique identifier of the employee");
 
-            // Fluent Implementation
-            //    builder.AddNode<User>("users", descriptor =>
+                            entity.HasProperty(p => p.Details)
+                                .UsePropertyName("details")
+                                .UseType(details =>
+                                {
+                                    details.HasProperty(p => p!.FirstName).UsePropertyName("firstName");
+                                    details.HasProperty(p => p!.LastName).UsePropertyName("lastName");
+                                    details.HasProperty(p => p!.MiddleName).UsePropertyName("middleName");
+                                    details.HasProperty(p => p!.Birthdate).UsePropertyName("birthdate");
+                                });
+
+                            entity.HasProperty(p => p.CreatedBy)
+                                .UsePropertyName("createdBy");
+                            //.UseType(audit =>
+                            //{
+                            //    audit.HasName("EmployeeCreatedByAuditField");
+                            //    audit.HasProperty(p => p!.UserId).UsePropertyName("userId");
+                            //    audit.HasProperty(p => p!.Timestamp).UsePropertyName("timestamp");
+                            //});
+
+                            entity.HasProperty(p => p.UpdatedBy)
+                                .UsePropertyName("updatedBy");
+                            //.UseType(audit =>
+                            //{
+                            //    audit.HasName("EmployeeUpdatedByAuditField");
+                            //    audit.HasProperty(p => p!.UserId).UsePropertyName("userId");
+                            //    audit.HasProperty(p => p!.Timestamp).UsePropertyName("timestamp");
+                            //});
+
+                            entity.HasProperty(p => p.Roles)
+                                .UsePropertyName("roles")
+                                .UseType(role =>
+                                {
+                                    role.HasProperty(p => p.Id).UsePropertyName("id");
+                                    role.HasProperty(p => p.Name).UsePropertyName("name");
+                                });
+                        });
+                });
+                gdm.AddVertex<EmployeeAddress>(vertex =>
+                {
+                    vertex.HasKey(p => p.AddressId);
+                    //vertex.HasLabel("address");
+                    //vertex.HasKey(p => p.AddressId);
+
+                    vertex.HasProperty(p => p.Address);
+
+                    //vertex.HasEdge<Employee>("employee") 
+                    //    .WithOne()
+                    //    .HasReferenceKey(p => p.EmployeeId);
+                });
+                gdm.AddVertex<EmployeeAddressType>(vertex =>
+                {
+                    vertex.HasKey(p => p.TypeId);
+                    //vertex.HasLabel("addressType");
+
+                });
+                gdm.AddVertex<EmployeeTaxInfo>(vertex =>
+                {
+                    vertex.HasKey(p => p.TaxInfoId);
+                });
+            })
+            //.ConfigureApplication(app =>
+            //{
+            //    // TODO: Need to add a vertex resolver binding
+            //    app.Bind<Employee>(descriptor =>
             //    {
-            //        descriptor.HasProperty("FullName")
-            //            .UseResolver(async context =>
+            //        descriptor.MapGet("getEmployees")
+            //            .UseRoute("/employees")
+            //            .UseResolver(async (context, cancellationToken) =>
             //            {
-            //                var user = context.GetParent<User>();
-
-
-            //                return $"{user.LastName}, {user.FirstName} {user.MiddleName}";
+            //                return default!;
             //            });
 
-            //        descriptor.HasProperty(p => p.Password)
-            //            .UseName("UserPassword")
-            //            .UseMetadata("description", "")
-            //            .UseResolver(context =>
+            //        descriptor.MapGet("get")
+            //            .UseRoute("/employees/{employeeId}")
+            //            .UseResolver(async (context, cancellationToken) =>
             //            {
-
-
-            //                return string.Empty;
+            //                return default!;
             //            });
-
-            //        descriptor.HasProperty(p => p.Profile)
-            //            .UseName("UserProfile")
-            //            .UseMiddleware((context, next) =>
-            //            {
-
-
-            //                return next(context);
-            //            })
-            //            .UseMiddleware((context, next) =>
-            //            {
-
-
-            //                return next(context);
-            //            })
-            //            .UseResolver(context =>
-            //            {   
-            //                return context.GetParent<User>().Profile;
-            //            });
-
-
-            //        //// Define Edges:
-            //        //// One-to-One Relationship: /users/{userId}/profiles/{profileId} 
-            //        //descriptor.HasEdge(p => p.Profile)                    
-            //        //    .UseMiddleware(default)
-            //        //    .UseResolver(async context =>
-            //        //    {
-            //        //        return default;
-            //        //    });
-
-            //        //// One-to-Many Relationship: /users/{userId}/addresses
-            //        //descriptor.HasEdge(p => p.Addresses)
-            //        //    .UseResolver(async context =>
-            //        //    {
-            //        //        return default;
-            //        //    });
             //    });
-            //    //builder.AddNode<UserAddress>("addresses", descriptor =>
-            //    //{
+            //    app.Bind<EmployeeAddress>(descriptor =>
+            //    {
+            //        descriptor.MapGet("getAllEmployeeAddresses")
+            //            .UseRoute("/addresses")
+            //            .UseResolver(async (context, cancellationToken) =>
+            //            {
+            //                return default!;
+            //            });
 
-            //    //});
-            //    //builder.AddNode("settings", descriptor =>
-            //    //{
-            //    //    descriptor.HasProperty("addressType");
+            //        descriptor.MapGet("employeeAddresses")
+            //            .UseRoute("/employees/{employeeId}/addresses")
+            //            .UseResolver(async (context, cancellationToken) =>
+            //            {
+            //                return default!;
+            //            });
 
-            //    //});
-            //    //builder.AddNode<UserAddressNode>();
+            //        descriptor.MapGet("QueryUserPrimaryAddress")
+            //            .UseRoute("/employees/{employeeId}/primaryAddress")
+            //            .UseResolver(async (context, cancellationToken) =>
+            //            {
+            //                return default!;
+            //            });
 
+            //        descriptor.MapGet("QueryUserAddressById")
+            //            .UseRoute("/employees/{employeeId}/addresses/{addressId}")
+            //            .UseResolver(async (context, cancellationToken) =>
+            //            {
+            //                return default!;
+            //            });
 
-            //    //builder.AddOperation("CreateUser")
-            //    //    .UseMethod(Method.Post)
-            //    //    .UseRoute("/api/users");
+            //        descriptor.MapPost("createEmployeeAddress");
+            //    });
+            //    app.Bind<EmployeeTaxInfo>(descriptor =>
+            //    {
 
-            //    //builder.AddOperation("GetUsers")
-            //    //    .UseMethod(Method.Get)
-            //    //    .UseRoute("/api/users")
-            //    //    .UseMiddleware(async (context, next) =>
-            //    //    {
+            //    });
+            //})
+            .Build();
 
+        var model = graph.Model;
 
-            //    //        return await next(context);
-            //    //    })
-            //    //    .UseResolver(async context =>
-            //    //    {
+        var vertices = model.GetGdmVertices();
+        var types = model.GetGdmTypes();
+        var primitives = model.GetGdmPrimitiveTypes();
+        var entities = model.GetGdmEntityTypes();
+        var collection = model.GetGdmCollectionTypes();
 
-            //    //    });
-
-        });
     }
-
- 
 }
-
-#region Test Models
-public class User
-{
-    public Guid? UserId { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string MiddleName { get; set; }
-    public string Email { get; set; }
-    public string Password { get; set; }
-
-    // Edges
-    public UserProfile Profile { get; set; }
-    public IEnumerable<UserAddress> Addresses { get; set; }
-}
-public class UserAddress
-{
-    public Guid? AddressId { get; set; }
-    public string StreetOne { get; set; }
-    public string StreetTwo { get; set; }
-    public string StreetThree { get; set; }
-    public string City { get; set; }
-    public string State { get; set; }
-    public string ZipCode { get; set; }
-    public UserAddressType AddressType { get; set; }
-
-}
-public enum UserAddressType
-{
-    Primary,
-    Secondary,
-    Home,
-    Mailing
-}
-public class UserProfile
-{
-
-}
-
-#endregion

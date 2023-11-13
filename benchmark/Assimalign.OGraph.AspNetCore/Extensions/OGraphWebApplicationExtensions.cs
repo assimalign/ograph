@@ -1,8 +1,6 @@
 ﻿
 using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +11,25 @@ namespace Assimalign.OGraph.AspNetCore;
 
 public static class OGraphWebApplicationExtensions
 {
+    private static readonly IOGraphBuilder builder;
+
+    public static WebApplication MapOGraphGet<TVertex>(this WebApplication app)
+    {
+        //var graph = app.Services.GetRequiredService<IOGraph>();
+
+        var graph = builder.Build();
+
+        app.Use(async (context, next) =>
+        {
+
+
+           await next(context);
+        });
+
+        return app;
+    }
+
+
     public static WebApplication UseOGraph(this WebApplication app)
     {
         var graph = app.Services.GetService<IOGraph>();
@@ -27,15 +44,24 @@ public static class OGraphWebApplicationExtensions
             throw new Exception("");
         }
 
+        app.Use((httpContext, next) =>
+        {
+
+
+
+
+            return next(httpContext);
+        });
+
         var routes = graph.GetRoutes().ToList();
 
         foreach (var operation in graph.Operations)
         {
             if (app.Environment.IsDevelopment())
             {
-                var max = graph.Operations.Select(x => x.Name.Value).Max(x => x.Length);
+                var max = graph.Operations.Select(x => x.Label.Value).Max(x => x.Length);
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write(operation.Name.Value.PadRight(max + 1, ' '));
+                Console.Write(operation.Label.Value.PadRight(max + 1, ' '));
 
                 switch (operation.Method)
                 {
@@ -76,7 +102,6 @@ public static class OGraphWebApplicationExtensions
                     var graphResponse = await graphExecutor.ExecuteAsync(new OGraphRequest(context.Request));
 
                     context.Response.StatusCode = graphResponse.StatusCode;
-
                     context.Response.ContentType = "application/json";
 
                     if (graphResponse.Body.Length > 0)
@@ -91,7 +116,7 @@ public static class OGraphWebApplicationExtensions
                     //context.Response.Body.C
                 }
 
-            }).WithDisplayName(operation.Name);
+            }).WithDisplayName(operation.Label);
         }
 
 
