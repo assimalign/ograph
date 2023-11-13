@@ -5,7 +5,7 @@ namespace Assimalign.OGraph.Gdm;
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphGdmProperty : IOGraphGdmElement
+public interface IOGraphGdmProperty : IOGraphGdmBindingElement
 {
     /// <summary>
     /// The OGraph Property Type.
@@ -40,15 +40,4 @@ public interface IOGraphGdmProperty : IOGraphGdmElement
     /// 
     /// </summary>
     GdmPropertySetter Setter { get; }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    IEnumerable<IOGraphGdmBinding> GetBindings();
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="binding"></param>
-    /// <returns></returns>
-    void AddBinding(IOGraphGdmBinding binding);
 }

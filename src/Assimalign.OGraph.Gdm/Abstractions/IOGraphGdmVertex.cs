@@ -8,7 +8,7 @@ namespace Assimalign.OGraph.Gdm;
 /// <remarks>
 /// A Node is also referred to as a Vertex.
 /// </remarks>
-public interface IOGraphGdmVertex : IOGraphGdmElement
+public interface IOGraphGdmVertex : IOGraphGdmBindingElement
 {
     /// <summary>
     /// The type bound to this vertex.
@@ -22,15 +22,4 @@ public interface IOGraphGdmVertex : IOGraphGdmElement
     /// Represents arbitrary metadata that can be associated with this node.
     /// </summary>
     IOGraphGdmMetadata Metadata { get; }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    IEnumerable<IOGraphGdmBinding> GetBindings();
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="binding"></param>
-    /// <returns></returns>
-    void AddBinding(IOGraphGdmBinding binding);
 }

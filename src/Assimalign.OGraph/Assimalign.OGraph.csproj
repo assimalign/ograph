@@ -1,9 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
-		<ProjectReference Include="..\Assimalign.OGraph.Gdm\Assimalign.OGraph.Gdm.csproj" />
-		<ProjectReference Include="..\Assimalign.OGraph.Syntax\Assimalign.OGraph.Syntax.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Internal\Results\" />
+		<ProjectReference Include="..\Assimalign.OGraph.Client\Assimalign.OGraph.Client.csproj" />
+		<ProjectReference Include="..\Assimalign.OGraph.Server\Assimalign.OGraph.Server.csproj" />
 	</ItemGroup>
 </Project>

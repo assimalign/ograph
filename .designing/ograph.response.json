@@ -1,7 +1,8 @@
 {
     //"$schema": "ograph.response.schema.json",
     "@ograph.status": 200,
-    "@ograph.count": 2345,
+    "@ograph.total": 2345,
+    "@ograph.count": 50,
     "errors": {
         "code": "Unauthorized",
         "message": "The user is unauthorized.",

@@ -7,7 +7,7 @@ namespace Assimalign.OGraph.Gdm;
 using Internal;
 
 [DebuggerDisplay("Gdm Vertex: {Label}")]
-public class GdmVertex<T> : IOGraphGdmVertex
+public partial class GdmVertex<T> : IOGraphGdmVertex
     where T : class, new()
 {
     private readonly Action<IOGraphGdmVertexDescriptor<T>> configure;
@@ -29,6 +29,10 @@ public class GdmVertex<T> : IOGraphGdmVertex
         this.Configure(new GdmVertexDescriptor<T>(this));
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="descriptor"></param>
     protected virtual void Configure(IOGraphGdmVertexDescriptor<T> descriptor)
     {
         configure?.Invoke(descriptor);
@@ -39,19 +43,14 @@ public class GdmVertex<T> : IOGraphGdmVertex
     public IOGraphGdmEdgeReferenceCollection Edges { get; } = new GdmEdgeReferenceCollection();
     public IOGraphGdmMetadata Metadata { get; } = new GdmMetadata();
     public GdmElementType ElementType => GdmElementType.Vertex;
-    
-
-    void IOGraphGdmVertex.AddBinding(IOGraphGdmBinding binding)
+    IEnumerable<IOGraphGdmBinding> IOGraphGdmBindingElement.Bindings => bindings;
+    void IOGraphGdmBindingElement.Bind(IOGraphGdmBinding binding)
     {
         if (binding is null)
         {
             GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
         }
         bindings.Add(binding);
-    }
-    IEnumerable<IOGraphGdmBinding> IOGraphGdmVertex.GetBindings()
-    {
-        return bindings;
     }
 
     /// <summary>
@@ -61,7 +60,8 @@ public class GdmVertex<T> : IOGraphGdmVertex
     /// <param name="configure"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static GdmVertex<T> Create<T>(Action<IOGraphGdmVertexDescriptor<T>> configure) where T : class, new()
+    public static GdmVertex<T> Create<T>(Action<IOGraphGdmVertexDescriptor<T>> configure) 
+        where T : class, new()
     {
         return new GdmVertex<T>(configure);
     }

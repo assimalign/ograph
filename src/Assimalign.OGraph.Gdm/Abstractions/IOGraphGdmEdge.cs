@@ -8,7 +8,7 @@ namespace Assimalign.OGraph.Gdm;
 /// <remarks>
 /// <i>An edge is also referred to as a Link.</i>
 /// </remarks>
-public interface IOGraphGdmEdge : IOGraphGdmElement
+public interface IOGraphGdmEdge : IOGraphGdmBindingElement
 {
     //Label - ! The Edge Label must match a literal segment of on operation on the target vertex. Operation Methods must not be mismatched
     
@@ -30,15 +30,4 @@ public interface IOGraphGdmEdge : IOGraphGdmElement
     /// Metadata for the edge.
     /// </summary>
     IOGraphGdmMetadata Metadata { get; }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    IEnumerable<IOGraphGdmBinding> GetBindings();
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="binding"></param>
-    /// <returns></returns>
-    void AddBinding(IOGraphGdmBinding binding);
 }

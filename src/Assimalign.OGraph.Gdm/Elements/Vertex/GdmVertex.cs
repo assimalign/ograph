@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Gdm;
 
@@ -9,11 +9,12 @@ using Internal;
 [DebuggerDisplay("Gdm Vertex: {Label}")]
 public class GdmVertex : IOGraphGdmVertex
 {
-    private readonly Action<IOGraphGdmVertexDescriptor>? configure;
+    private readonly Action<IOGraphGdmVertexDescriptor> configure;
     private readonly IList<IOGraphGdmBinding> bindings = new List<IOGraphGdmBinding>();
 
     internal Label label;
     internal GdmTypeReference? type;
+
 
     public GdmVertex() : this(descriptor => { })
     {
@@ -29,9 +30,13 @@ public class GdmVertex : IOGraphGdmVertex
         this.Configure(new GdmVertexDescriptor(this));
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="descriptor"></param>
     protected virtual void Configure(IOGraphGdmVertexDescriptor descriptor)
     {
-        configure?.Invoke(descriptor);
+        configure.Invoke(descriptor);
     }
 
     public Label Label => label;
@@ -39,17 +44,14 @@ public class GdmVertex : IOGraphGdmVertex
     public IOGraphGdmEdgeReferenceCollection Edges { get; } = new GdmEdgeReferenceCollection();
     public IOGraphGdmMetadata Metadata { get; } = new GdmMetadata();
     public GdmElementType ElementType => GdmElementType.Vertex;
-    public void AddBinding(IOGraphGdmBinding binding)
+    IEnumerable<IOGraphGdmBinding> IOGraphGdmBindingElement.Bindings => bindings;
+    void IOGraphGdmBindingElement.Bind(IOGraphGdmBinding binding)
     {
         if (binding is null)
         {
             GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
         }
         bindings.Add(binding);
-    }
-    public IEnumerable<IOGraphGdmBinding> GetBindings()
-    {
-        return bindings;
     }
 
     /// <summary>

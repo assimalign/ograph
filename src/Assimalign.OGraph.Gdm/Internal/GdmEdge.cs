@@ -18,17 +18,13 @@ internal class GdmEdge : IOGraphGdmEdge
     public IOGraphGdmVertexReference Target { get; set; } = default!;
     public IOGraphGdmMetadata Metadata { get; }
     public GdmElementType ElementType => GdmElementType.Edge;
-
-    public void AddBinding(IOGraphGdmBinding binding)
+    IEnumerable<IOGraphGdmBinding> IOGraphGdmBindingElement.Bindings => bindings;
+    void IOGraphGdmBindingElement.Bind(IOGraphGdmBinding binding)
     {
         if (binding is null)
         {
-            throw new ArgumentNullException(nameof(binding));
+            GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
         }
         bindings.Add(binding);
-    }
-    public IEnumerable<IOGraphGdmBinding> GetBindings()
-    {
-        return bindings;
     }
 }

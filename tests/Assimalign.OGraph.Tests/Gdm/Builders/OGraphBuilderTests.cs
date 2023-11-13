@@ -5,24 +5,71 @@ using System.Text.Json.Nodes;
 
 namespace Assimalign.OGraph.Gdm.Tests;
 
-public class EmployeeVertex : OGraphVertexBinding<Employee>
+public class EmployeeEntityType : GdmEntityType<Employee>
 {
-    protected override void Configure(IOGraphVertexBindingDescriptor<Employee> descriptor)
+    protected override void Configure(IOGraphGdmEntityTypeDescriptor<Employee> descriptor)
     {
-        descriptor.Property(p => p.Details)
-            .UseResolver((context, cancellationToken) =>
-            {
-                return default;
-            });
+        descriptor.HasProperty(p => p.Details)
+            .UsePropertyName("details");
+            
     }
+}
 
+public class EmployeeVertex : GdmVertex<Employee>
+{
     protected override void Configure(IOGraphGdmVertexDescriptor<Employee> descriptor)
     {
-        descriptor.HasLabel("employee");
         descriptor.HasType(entity =>
         {
             entity.HasKey(p => p.EmployeeId);
+
+
+            entity.HasProperty(p => p.Details)
+                .UsePropertyName("details");
         });
+    }
+
+    protected override void Configure(IOGraphGdmVertexOperationBindingDescriptor<Employee> descriptor)
+    {
+       
+
+
+
+        descriptor.HasGet("GetEmployees")
+            .UseRoute("/api/employees")
+            .UseMiddleware((context, cancellationToken, next) =>
+            {
+                return next.Invoke(context, cancellationToken);
+            })
+            .UseResolver((context, cancellationToken) =>
+            {
+
+                return default!;
+            });
+
+        descriptor.HasGet("GetEmployeeById")
+            .UseRoute("/api/employees/{employeeId}")
+            .UseMiddleware((context, cancellationToken, next) =>
+            {
+                return next.Invoke(context, cancellationToken);
+            })
+            .UseResolver((context, cancellationToken) =>
+            {
+
+                return default!;
+            });
+
+        descriptor.HasPost("CreateEmployee")
+            .UseRoute("/api/employees")
+            .UseMiddleware((context, cancellationToken, next) =>
+            {
+                return next.Invoke(context, cancellationToken);
+            })
+            .UseResolver((context, cancellationToken) =>
+            {
+
+                return default!;
+            });
     }
 }
 

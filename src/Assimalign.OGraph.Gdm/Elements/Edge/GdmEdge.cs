@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assimalign.OGraph.Gdm.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,12 +20,9 @@ internal class GdmEdge<TSource, TTarget> : IOGraphGdmEdge
 
     public GdmElementType ElementType => GdmElementType.Edge;
 
-    public void AddBinding(IOGraphGdmBinding binding)
-    {
-        throw new NotImplementedException();
-    }
+    IEnumerable<IOGraphGdmBinding> IOGraphGdmBindingElement.Bindings => throw new NotImplementedException();
 
-    public IEnumerable<IOGraphGdmBinding> GetBindings()
+    void IOGraphGdmBindingElement.Bind(IOGraphGdmBinding binding)
     {
         throw new NotImplementedException();
     }

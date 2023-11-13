@@ -44,6 +44,15 @@ public static class OGraphWebApplicationExtensions
             throw new Exception("");
         }
 
+        app.Use((httpContext, next) =>
+        {
+
+
+
+
+            return next(httpContext);
+        });
+
         var routes = graph.GetRoutes().ToList();
 
         foreach (var operation in graph.Operations)

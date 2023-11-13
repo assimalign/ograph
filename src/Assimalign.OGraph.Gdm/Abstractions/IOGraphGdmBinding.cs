@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm;
 
+/// <summary>
+/// 
+/// </summary>
 public interface IOGraphGdmBinding
 {
     /// <summary>

@@ -26,17 +26,14 @@ internal class GdmProperty : IOGraphGdmProperty
     public GdmPropertyGetter Getter { get; set; } = default!;
     public GdmPropertySetter Setter { get; set; } = default!;
     public GdmElementType ElementType => GdmElementType.Property;
-    public void AddBinding(IOGraphGdmBinding binding)
+    IEnumerable<IOGraphGdmBinding> IOGraphGdmBindingElement.Bindings => bindings;
+    void IOGraphGdmBindingElement.Bind(IOGraphGdmBinding binding)
     {
         if (binding is null)
         {
-            throw new ArgumentNullException(nameof(binding));
+            GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
         }
         bindings.Add(binding);
-    }
-    public IEnumerable<IOGraphGdmBinding> GetBindings()
-    {
-        return bindings;
     }
     public override string ToString()
     {
