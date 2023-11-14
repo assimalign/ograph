@@ -1,0 +1,97 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="ograph">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="model">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="node">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="type">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="property">
+                                                        
+                                                    </xs:element>
+                                                    
+                                                </xs:sequence>
+                                                <xs:attribute name="name" type="xs:string"/>
+                                                <xs:attribute name="is-root" type="xs:boolean"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="label" type="xs:string"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="operation">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="method" />
+                                        <xs:element name="route">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="segment">
+                                                        <xs:complexType>
+                                                            <xs:simpleContent>
+                                                                <xs:extension base="xs:string">
+                                                                    <xs:attribute name="ordinal"
+                                                                        type="xs:string" />
+                                                                    <xs:attribute name="is-literal"
+                                                                        type="xs:string" />
+                                                                </xs:extension>
+                                                            </xs:simpleContent>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                                <xs:attribute name="value" type="xs:string" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element type="xs:string" name="query" />
+                                        <xs:element name="headers">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="header">
+                                                        <xs:complexType>
+                                                            <xs:sequence></xs:sequence>
+                                                            <xs:attribute name="key"
+                                                                type="xs:string" />
+                                                            <xs:attribute name="value"
+                                                                type="xs:string" />
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element type="xs:string" name="request" />
+                                        <xs:element type="xs:string" name="response" />
+                                        <xs:element name="query-parameters">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="query">
+                                                        <xs:complexType>
+                                                            <xs:sequence></xs:sequence>
+                                                            <xs:attribute name="key"
+                                                                type="xs:string" />
+                                                            <xs:attribute name="value-type"
+                                                                type="xs:string" />
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="name" type="xs:string" />
+                                    <xs:attribute name="node" type="xs:string" />
+                                    <xs:attribute name="type" type="xs:string" />
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="domain" type="xs:string" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

@@ -1,7 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<RootNamespace>Assimalign.OGraph</RootNamespace>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 
@@ -19,7 +20,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\Assimalign.OGraph\Assimalign.OGraph.csproj" />
+	  <Folder Include="Gdm\Edges\" />
+	  <Folder Include="Gdm\Edges\" />
+	  <Folder Include="Utilities\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\src\Assimalign.OGraph\Assimalign.OGraph.csproj" />
 	</ItemGroup>
 
 </Project>

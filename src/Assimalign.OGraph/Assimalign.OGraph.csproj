@@ -1,17 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-	<PropertyGroup>
-		<Description>
-			Open Graph Data is a protocol that allows for the creation and 
-			consumption of queryable and interoperable REST APIs similar to OData
-			but flexible enough of graph entity resolution like GraphQL.
-		</Description>
-	</PropertyGroup>
-
+<Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
-	  <Folder Include="Extensions\" />
-	  <Folder Include="Execution\" />
-	  <Folder Include="Internal\ILEmit\" />
-	  <Folder Include="Internal\Validators\" />
+		<ProjectReference Include="..\Assimalign.OGraph.Client\Assimalign.OGraph.Client.csproj" />
+		<ProjectReference Include="..\Assimalign.OGraph.Server\Assimalign.OGraph.Server.csproj" />
 	</ItemGroup>
 </Project>
