@@ -11,7 +11,7 @@ namespace Assimalign.OGraph.AspNetCore;
 
 public static class OGraphWebApplicationExtensions
 {
-    private static readonly IOGraphBuilder builder;
+    private static readonly IOGraphExecutorBuilder builder;
 
     public static WebApplication MapOGraphGet<TVertex>(this WebApplication app)
     {
@@ -32,7 +32,7 @@ public static class OGraphWebApplicationExtensions
 
     public static WebApplication UseOGraph(this WebApplication app)
     {
-        var graph = app.Services.GetService<IOGraph>();
+        var graph = app.Services.GetService<IOGraphContext>();
         var options = app.Services.GetService<IOptions<OGraphOptions>>().Value;
 
         if (graph is null)
@@ -128,7 +128,7 @@ public static class OGraphWebApplicationExtensions
     {
         app.MapGet("/$graph", async context =>
         {
-            var graph = app.Services.GetService<IOGraph>();
+            var graph = app.Services.GetService<IOGraphContext>();
         });
 
         return app;

@@ -11,13 +11,13 @@ public static class OGraphServiceCollectionExtensions
     {
         return services
             .AddOGraphOptions(options => { })
-            .AddSingleton<IOGraph>(serviceProvider =>
+            .AddSingleton<IOGraphContext>(serviceProvider =>
             {
                 return OGraphBuilder.Create(name, configure);
             })
             .AddSingleton<IOGraphExecutor>(serviceProvider =>
             {
-                var graph           = serviceProvider.GetRequiredService<IOGraph>();
+                var graph           = serviceProvider.GetRequiredService<IOGraphContext>();
                 var graphOptions    = serviceProvider.GetRequiredService<IOptions<OGraphOptions>>().Value;
 
                 graphOptions.ServiceProvider ??= serviceProvider.GetRequiredService<IServiceProvider>();

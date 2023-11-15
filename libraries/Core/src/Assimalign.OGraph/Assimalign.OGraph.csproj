@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Client\src\Assimalign.OGraph.Client\Assimalign.OGraph.Client.csproj" />
+		<ProjectReference Include="..\..\..\Server\src\Assimalign.OGraph.Server\Assimalign.OGraph.Server.csproj" />
+	</ItemGroup>
+</Project>
