@@ -6,6 +6,8 @@ using System.Runtime.CompilerServices;
 
 namespace Assimalign.OGraph;
 
+
+[DebuggerDisplay("{Value}")]
 public readonly partial struct HeaderValue :
     IList<string?>,
     IReadOnlyList<string?>,

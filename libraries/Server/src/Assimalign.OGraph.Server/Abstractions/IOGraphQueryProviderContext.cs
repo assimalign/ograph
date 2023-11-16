@@ -19,7 +19,7 @@ public interface IOGraphQueryProviderContext
     /// </summary>
     IOGraphGdmElement Element { get; }
     /// <summary>
-    /// 
+    /// The service provider to be used in the query.
     /// </summary>
     IServiceProvider ServiceProvider { get; }
 }

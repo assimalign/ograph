@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text;
-using System.Threading.Tasks;
+using Xunit;
 
 namespace Assimalign.OGraph.Syntax;
 
@@ -55,7 +55,7 @@ public partial class TokenLexerTests
 
     #region Keyword Literals
     [Fact(DisplayName = "Literal Test (Boolean): 'Null' value parsed successfully")]
-    public void TestNullLiteralParsedSuccesfully()
+    public void TestNullLiteralParsedSuccessfully()
     {
         var value = "null";
         var lexer = new TokenLexer(Encoding.UTF8.GetBytes(value));
@@ -65,7 +65,7 @@ public partial class TokenLexerTests
     }
 
     [Fact(DisplayName = "Literal Test (Boolean): 'False' value parsed successfully")]
-    public void TestBooleanFalseLiteralParsedSuccesfully()
+    public void TestBooleanFalseLiteralParsedSuccessfully()
     {
         var value = "false";
         var lexer = new TokenLexer(Encoding.UTF8.GetBytes(value));
@@ -76,7 +76,7 @@ public partial class TokenLexerTests
     }
 
     [Fact(DisplayName = "Literal Test (Boolean): 'True' value parsed successfully")]
-    public void TestBooleanTrueLiteralParsedSuccesfully()
+    public void TestBooleanTrueLiteralParsedSuccessfully()
     {
         var value = "true";
         var lexer = new TokenLexer(Encoding.UTF8.GetBytes(value));

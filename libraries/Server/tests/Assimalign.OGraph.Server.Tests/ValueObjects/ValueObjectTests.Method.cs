@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Assimalign.OGraph.ValueObjects;
+namespace Assimalign.OGraph.Server.ValueObjects;
 
 public partial class ValueObjectTests
 {

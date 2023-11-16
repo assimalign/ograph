@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,7 +8,7 @@ namespace Assimalign.OGraph;
 /// 
 /// </summary>
 /// <remarks>
-/// If building a custom query provider, it only needs to support filtering, paging, sorting. Disregard
+/// If building a custom query provider, it only needs to support filtering, paging, sorting.
 /// </remarks>
 public interface IOGraphQueryProvider
 {

@@ -13,7 +13,6 @@ internal class GdmEdge : IOGraphGdmEdge
     }
 
     public Label Label { get; set; } = default!;
-    public CardinalityType Cardinality { get; set; } = default!;
     public IOGraphGdmVertexReference Source { get; set; } = default!;
     public IOGraphGdmVertexReference Target { get; set; } = default!;
     public IOGraphGdmMetadata Metadata { get; }

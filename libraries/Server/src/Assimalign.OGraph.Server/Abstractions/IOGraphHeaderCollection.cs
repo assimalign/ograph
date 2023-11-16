@@ -3,8 +3,21 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph;
 
+/// <summary>
+/// 
+/// </summary>
 public interface IOGraphHeaderCollection : IDictionary<HeaderKey, HeaderValue>
 {
-    HeaderValue ContentType { get; }
-    HeaderValue Accept { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    HeaderValue ContentType { get; set; }
+    /// <summary>
+    /// 
+    /// </summary>
+    HeaderValue Accept { get; set; }
+    /// <summary>
+    /// 
+    /// </summary>
+    HeaderValue AcceptEncoding { get; set; }
 }

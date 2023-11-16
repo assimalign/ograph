@@ -1,7 +1,7 @@
 ﻿namespace Assimalign.OGraph;
 
 /// <summary>
-/// 
+/// An OGraph error result.
 /// </summary>
 public interface IOGraphErrorResult : IOGraphResult
 {

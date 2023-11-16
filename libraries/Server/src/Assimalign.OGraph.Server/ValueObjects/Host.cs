@@ -45,4 +45,5 @@ public readonly struct Host
     }
 
     public static implicit operator string(Host host) => host.Value;
+    public static implicit operator Host(string value) => new Host(value);
 }

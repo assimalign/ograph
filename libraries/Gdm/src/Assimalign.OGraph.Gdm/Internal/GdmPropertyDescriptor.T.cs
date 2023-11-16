@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,25 @@ internal class GdmPropertyDescriptor<T> : IOGraphGdmPropertyDescriptor<T>
         return this;
     }
 
+    public IOGraphGdmPropertyDescriptor<T> UseGetter(GdmPropertyGetter getter)
+    {
+        if (getter is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(getter));
+        }
+        property.Getter = getter;
+        return this;
+    }
+    public IOGraphGdmPropertyDescriptor<T> UseSetter(GdmPropertySetter setter)
+    {
+        if (setter is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(setter));
+        }
+        property.Setter = setter;
+        return this;
+    }
+
     public IOGraphGdmPropertyDescriptor<T> UseMetadata(Label key, object value)
     {
         property.Metadata.Add(key, value);
@@ -39,6 +59,8 @@ internal class GdmPropertyDescriptor<T> : IOGraphGdmPropertyDescriptor<T>
         property.Label = label;
         return this;
     }
+
+    
 
     public IOGraphGdmPropertyDescriptor<T> UseType<TType>() where TType : IOGraphGdmType, new()
     {

@@ -3,12 +3,14 @@ using System.Net;
 using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics;
 
 namespace Assimalign.OGraph;
 
 /// <summary>
 /// Represents an HTTP Status Code.
 /// </summary>
+[DebuggerDisplay("{ToString()}")]
 public readonly struct StatusCode :
     IEquatable<StatusCode>,
     IEqualityComparer<StatusCode>,
@@ -60,7 +62,7 @@ public readonly struct StatusCode :
     /// <inheritdoc />
     bool IEquatable<StatusCode>.Equals(StatusCode statusCode)
     {
-        return this.Code == statusCode.Code;
+        return Code == statusCode.Code;
     }
 
     /// <inheritdoc />
@@ -91,7 +93,7 @@ public readonly struct StatusCode :
     /// <inheritdoc />
     public override string ToString()
     {
-        return $"{Enum.GetName(typeof(HttpStatusCode), (HttpStatusCode)Code)} - {Code}";
+        return $"{Code} - {Enum.GetName(typeof(HttpStatusCode), (HttpStatusCode)Code)}";
     }
 
     /// <inheritdoc />

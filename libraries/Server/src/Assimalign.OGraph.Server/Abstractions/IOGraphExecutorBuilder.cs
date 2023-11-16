@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
@@ -10,7 +6,8 @@ using Assimalign.OGraph.Gdm;
 
 public interface IOGraphExecutorBuilder
 {
-    IOGraphExecutorBuilder ConfigureModel(Action<IOGraphGdmBuilder> configure);
+    IOGraphExecutorBuilder ConfigureOptions(Action<OGraphExecutorOptions> options);
+    IOGraphExecutorBuilder ConfigureModel(Label label, Action<IOGraphGdmBuilder> configure);
     IOGraphExecutorBuilder ConfigureApplication(Action<IOGraphApplicationBuilder> configure);
     IOGraphExecutor Build();
 }

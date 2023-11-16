@@ -26,6 +26,24 @@ internal class GdmPropertyDescriptor : IOGraphGdmPropertyDescriptor
         property.IsNullable = false;
         return this;
     }
+    public IOGraphGdmPropertyDescriptor UseGetter(GdmPropertyGetter getter)
+    {
+        if (getter is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(getter));
+        }
+        property.Getter = getter;
+        return this;
+    }
+    public IOGraphGdmPropertyDescriptor UseSetter(GdmPropertySetter setter)
+    {
+        if (setter is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(setter));
+        }
+        property.Setter = setter;
+        return this;
+    }
 
     public IOGraphGdmPropertyDescriptor UseMetadata(Label key, object value)
     {
@@ -42,7 +60,7 @@ internal class GdmPropertyDescriptor : IOGraphGdmPropertyDescriptor
     {
         if (type is null)
         {
-            throw new ArgumentNullException(nameof(type));
+            GdmThrowHelper.ThrowArgumentNullException(nameof(type));
         }
         property.Type = new GdmTypeReference()
         {

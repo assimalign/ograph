@@ -9,8 +9,6 @@ namespace Assimalign.OGraph.Syntax;
 
 public partial class QueryParserTests
 {
-
-
     public void AndBinaryTest()
     {
         var query = """
@@ -26,7 +24,4 @@ public partial class QueryParserTests
         var document = parser.Parse(query);
 
     }
-
-
-
 }

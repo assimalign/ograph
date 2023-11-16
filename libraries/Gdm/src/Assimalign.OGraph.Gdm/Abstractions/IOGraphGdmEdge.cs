@@ -11,13 +11,6 @@ namespace Assimalign.OGraph.Gdm;
 public interface IOGraphGdmEdge : IOGraphGdmBindingElement
 {
     //Label - ! The Edge Label must match a literal segment of on operation on the target vertex. Operation Methods must not be mismatched
-    
-    
-    /// <summary>
-    /// Gets the cardinality of the Target 
-    /// Vertex/Vertices being resolved.
-    /// </summary>
-    CardinalityType Cardinality { get; }
     /// <summary>
     /// The source vertex.
     /// </summary>

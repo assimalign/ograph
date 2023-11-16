@@ -10,9 +10,9 @@ namespace Assimalign.OGraph.Internal;
 
 using Assimalign.OGraph.Gdm;
 using Assimalign.OGraph.Syntax;
+using System.Security.Claims;
 
-
-internal class OperationBindingContext : IOGraphOperationBindingContext, IOGraphOperationBindingResolverContext
+internal class OperationBindingContext : IOGraphOperationBindingContext
 {
 
     public volatile object Parent;
@@ -24,6 +24,11 @@ internal class OperationBindingContext : IOGraphOperationBindingContext, IOGraph
     public IServiceProvider ServiceProvider { get; init; } = default!;
 
     IOGraphGdmElement IOGraphGdmBindingContext.Element => Element;
+
+    public ClaimsPrincipal GetClaimsPrincipal()
+    {
+        throw new NotImplementedException();
+    }
 
     /// <inheritdoc />
     public T GetParent<T>()

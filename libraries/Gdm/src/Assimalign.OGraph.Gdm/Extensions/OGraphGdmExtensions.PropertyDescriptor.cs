@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Assimalign.OGraph.Gdm;
 
@@ -44,5 +45,16 @@ public static class OGraphGdmPropertyDescriptorExtensions
 
         return descriptor.UseType(new GdmCollectionType<GdmComplexType<T>>(
             GdmComplexType<T>.Create(configure)));
+    }
+
+
+
+    public static IOGraphGdmPropertyDescriptor<T?> UseGetter<T>(
+        this IOGraphGdmPropertyDescriptor<T?> descriptor,
+        Expression<Func<T, object>> expression) where T : class, new()
+    {
+
+
+        return descriptor;
     }
 }

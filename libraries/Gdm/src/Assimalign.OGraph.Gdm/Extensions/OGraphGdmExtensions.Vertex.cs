@@ -100,4 +100,24 @@ public static class OGraphGdmVertexExtensions
         
         return type;
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="vertex"></param>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="OGraphGdmException"></exception>
+    public static bool IsRuntimeTypeMatch(this IOGraphGdmVertex vertex, Type? type)
+    {
+        if (type is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(type));
+        }
+
+        var entityType = vertex.GetGdmEntityType();
+
+        return entityType.RuntimeType!.IsAssignableFrom(type);
+    }
 }

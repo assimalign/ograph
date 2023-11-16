@@ -13,4 +13,6 @@ public interface IOGraphGdmPropertyDescriptor
     IOGraphGdmPropertyDescriptor UseMetadata(Label key, object value);
     IOGraphGdmPropertyDescriptor IsComputed();
     IOGraphGdmPropertyDescriptor IsRequired();
+    IOGraphGdmPropertyDescriptor UseGetter(GdmPropertyGetter getter);
+    IOGraphGdmPropertyDescriptor UseSetter(GdmPropertySetter setter);
 }

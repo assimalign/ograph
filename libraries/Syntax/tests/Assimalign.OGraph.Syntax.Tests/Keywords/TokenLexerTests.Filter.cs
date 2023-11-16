@@ -1,3 +1,7 @@
+using Xunit;
+using System.Linq;
+using System.Collections.Generic;
+
 namespace Assimalign.OGraph.Syntax;
 
 using Assimalign.OGraph.Syntax.Internal;

@@ -1,4 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="../../../../Directory.Build.props" />
-
+	<Import Project="..\..\..\..\Directory.Build.props" />
+	<PropertyGroup>
+		<Description>This library contains the OGrpah query language parser and base analyzers.</Description>
+	</PropertyGroup>
 </Project>

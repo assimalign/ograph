@@ -1,9 +1,6 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
+using Xunit;
 
 namespace Assimalign.OGraph.Syntax;
 
@@ -54,7 +51,7 @@ public partial class TokenLexerTests
 
 
     [Fact (DisplayName = "Comment Test: Skip all comments successfully")]
-    public void SkipCommenTest()
+    public void SkipCommentTest()
     {
         var query = "project({}) # Some comment I am placing";
 

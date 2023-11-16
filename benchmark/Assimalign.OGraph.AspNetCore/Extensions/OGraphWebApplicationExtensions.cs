@@ -1,136 +1,38 @@
 ﻿
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Assimalign.OGraph.AspNetCore.Internal;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace Assimalign.OGraph.AspNetCore;
 
-
 public static class OGraphWebApplicationExtensions
 {
-    private static readonly IOGraphExecutorBuilder builder;
-
-    public static WebApplication MapOGraphGet<TVertex>(this WebApplication app)
+    public static WebApplication MapOGraphBinding<T>(this WebApplication app, Action<IOGraphApplicationOperationDescriptor<T>> descriptor) where T : class, new()
     {
-        //var graph = app.Services.GetRequiredService<IOGraph>();
+        var builder = app.Services.GetRequiredService<IOGraphExecutorBuilder>();
 
-        var graph = builder.Build();
-
-        app.Use(async (context, next) =>
+        builder.ConfigureApplication(configure =>
         {
-
-
-           await next(context);
+            configure.Bind<T>(descriptor);
         });
 
         return app;
     }
 
-
-    public static WebApplication UseOGraph(this WebApplication app)
+    public static void RunOGraph(this WebApplication app)
     {
-        var graph = app.Services.GetService<IOGraphContext>();
-        var options = app.Services.GetService<IOptions<OGraphOptions>>().Value;
-
-        if (graph is null)
+        Func<HttpContext, RequestDelegate, Task> task = (context, next) =>
         {
-            throw new Exception("");
-        }
-        if (!graph.Operations.Any())
-        {
-            throw new Exception("");
-        }
+            var serviceProvider = context.RequestServices;
+            var executor = serviceProvider.GetRequiredService<IOGraphExecutor>();
 
-        app.Use((httpContext, next) =>
-        {
-
-
-
-
-            return next(httpContext);
-        });
-
-        var routes = graph.GetRoutes().ToList();
-
-        foreach (var operation in graph.Operations)
-        {
-            if (app.Environment.IsDevelopment())
-            {
-                var max = graph.Operations.Select(x => x.Label.Value).Max(x => x.Length);
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write(operation.Label.Value.PadRight(max + 1, ' '));
-
-                switch (operation.Method)
-                {
-                    case "GET":
-                        {
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            break;
-                        }
-                    case "DELETE":
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            break;
-                        }
-                    case "PUT":
-                        {
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                            break;
-                        }
-                    case "POST":
-                        {
-                            Console.ForegroundColor = ConsoleColor.DarkYellow;
-                            break;
-                        }
-                }
-
-                Console.Write(operation.Method.Value.PadRight(8, ' '));
-
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.Write(operation.Route);
-                Console.Write(Environment.NewLine);
-            }
-            app.MapMethods(string.Join('/', options.RoutePrefix, operation.Route), new string[] { operation.Method }, async context =>
-            {
-                try
-                {
-                    var graphExecutor = context.RequestServices.GetRequiredService<IOGraphExecutor>();
-
-                    var graphResponse = await graphExecutor.ExecuteAsync(new OGraphRequest(context.Request));
-
-                    context.Response.StatusCode = graphResponse.StatusCode;
-                    context.Response.ContentType = "application/json";
-
-                    if (graphResponse.Body.Length > 0)
-                    {
-                        graphResponse.Body.Position = 0;
-                        await graphResponse.Body.CopyToAsync(context.Response.Body);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    context.Response.StatusCode = 500;
-                    //context.Response.Body.C
-                }
-
-            }).WithDisplayName(operation.Label);
-        }
-
-
-        return app.UseReservedRoutes();
-    }
-
-    // This will register the reserver routes supported by ograph
-    private static WebApplication UseReservedRoutes(this WebApplication app)
-    {
-        app.MapGet("/$graph", async context =>
-        {
-            var graph = app.Services.GetService<IOGraphContext>();
-        });
-
-        return app;
+            return executor.ExecuteAsync(new ExecutorContext(context), default);
+        };
+        app.Use(task);
+        app.Run();
     }
 }

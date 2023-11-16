@@ -1,19 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
-		<Nullable>enable</Nullable>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<Folder Include="Domains\Employees\Edges\" />
-		<Folder Include="Domains\Organizations\Edges\" />
-		<Folder Include="Domains\Organizations\Types\" />
-		<Folder Include="Domains\Organizations\Vertices\" />
-		<Folder Include="Domains\Users\Edges\" />
-		<Folder Include="Domains\Users\Types\" />
-		<Folder Include="Domains\Users\Vertices\" />
-		<Folder Include="Client\" />
-	</ItemGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="..\..\libraries\Core\src\Assimalign.OGraph\Assimalign.OGraph.csproj" />
+  </ItemGroup>
 </Project>

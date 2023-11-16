@@ -1,70 +1,87 @@
+using Assimalign.ErpCore.Entities;
 using Assimalign.OGraph;
+using Assimalign.OGraph.Gdm;
 using Assimalign.OGraph.AspNetCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
-
-
-builder.Services
-    .AddSingleton<IRepository<User>, UserRepository>();
 
 builder.Services
     .AddOGraphOptions(options =>
     {
         options.RoutePrefix = "api";
     })
-    .AddOGraph("users", builder =>
+    .AddOGraph("employees", builder =>
     {
-        // Composite Implementation
-        builder.AddVertex<User>(vertex =>
+        builder.AddVertex<Employee>(vertex =>
         {
-            // Define Type information
-            vertex.HasLabel("user");
-            vertex.HasProperty(p => p.Details, details => // Extending the details type
+            vertex.HasLabel("employee");
+            vertex.HasType(entity =>
             {
-                details.HasProperty("fullName")
-                    .UseMiddleware(async (context, next) =>
-                    {
-                        if (!context!.GetClaimsPrincipal()!.Identity!.IsAuthenticated)
-                        {
-                            return OGraphResult.Unauthorized("The user is not authorized to access this resource.");
-                        }
-                        return await next(context);
-                    })
-                    .UseResolver(context => // Creating a resolver for a computed property
-                    {
-                        var parent = context.GetParent<UserDetails>();
-                        return $"{parent.LastName}, {parent.FirstName} {parent.MiddleName}";
-                    });
+                entity.HasKey(p => p.EmployeeId);
+                entity.HasProperty(p => p.Details);
             });
-
-            // Define Edges
-            vertex.HasEdge("addresses") //There should be a corresponding operation bound to the addresses vertex
-                .WithMany<UserAddressVertex>();
-
-            vertex.HasEdge("primaryAddress")
-                .WithOne<UserAddressVertex>();
-
-            vertex.HasEdge("profile")
-                .WithOne<UserProfileVertex>();
         });
-        builder.AddVertex<UserAddress>(vertex =>
+        builder.AddVertex<EmployeeAddress>(vertex =>
         {
             vertex.HasLabel("address");
-        });
-        builder.AddVertex<UserProfile>(vertex =>
-        {
-            vertex.HasLabel("profile");
-
+            vertex.HasType(entity =>
+            {
+                entity.HasKey(p => p.AddressId);
+                entity.HasProperty(p => p.Address);
+            });
         });
     });
+   
 
 var app = builder.Build();
 
-app.MapGet("", async context =>
+app.MapOGraphBinding<Employee>(descriptor =>
 {
+    descriptor.MapGet("GetEmployees")
+        .UseRoute("employees")
+        .UseResolver(async (context, cancellationToken) =>
+        {
+            return default;
+        });
 
+    descriptor.MapGet("GetEmployeeById")
+       .UseRoute("employees/{employeeId}")
+       .UseResolver(async (context, cancellationToken) =>
+       {
+           return default;
+       });
+
+    descriptor.MapPut("UpdateEmployee")
+        .UseRoute("employees/{employeeId}")
+        .UseResolver(async (context, cancellationToken) =>
+        {
+            return default;
+        });
 });
 
-app.UseOGraph();
-app.Run();
+app.MapOGraphBinding<EmployeeAddress>(descriptor =>
+{
+    descriptor.MapGet("GetEmployeeAddresses")
+       .UseRoute("employees/{employeeId}/addresses")
+       .UseResolver(async (context, cancellationToken) =>
+       {
+           return default;
+       });
+
+    descriptor.MapGet("GetEmployeeAddressById")
+       .UseRoute("employees/{employeeId}/addresses/{addressId}")
+       .UseResolver(async (context, cancellationToken) =>
+       {
+           return default;
+       });
+
+    descriptor.MapPut("UpdateEmployeeAddresses")
+        .UseRoute("employees/{employeeId}/addresses/{addressId}")
+        .UseResolver(async (context, cancellationToken) =>
+        {
+            return default;
+        });
+});
+
+app.RunOGraph();

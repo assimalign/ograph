@@ -8,41 +8,121 @@ using System.Threading.Tasks;
 namespace Assimalign.OGraph.Internal;
 
 using Assimalign.OGraph.Gdm;
+using System.Text.Json;
 
 internal class Executor : IOGraphExecutor
 {
-    IOGraphGdm Model { get; } = default!;
+    private readonly OGraphExecutorOptions options;
+    private readonly IEnumerable<IOGraphGdm> models;
+
+    public Executor(IEnumerable<IOGraphGdm> models, OGraphExecutorOptions options)
+    {
+        this.options = options;
+        this.models = models;
+#if DEBUG
+        Log();
+#endif
+
+    }
 
 
+#if DEBUG
+    private void Log()
+    {
+        foreach (var model in models)
+        {
+            foreach (var vertex in model.GetGdmVertices())
+            {
+                foreach (var binding in vertex.Bindings.OfType<IOGraphOperationBinding>())
+                {
+                    switch (binding.Method)
+                    {
+                        case "GET":
+                            {
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.Write("GET    ");
+                                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                Console.WriteLine(binding.Route.ToString());
 
-    public Task ExecuteAsync(IOGraphExecutorContext context, CancellationToken cancellationToken = default)
+                                break;
+                            }
+                        case "PUT":
+                            {
+                                Console.ForegroundColor = ConsoleColor.Blue;
+                                Console.Write("PUT    ");
+                                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                Console.WriteLine(binding.Route.ToString());
+                                break;
+                            }
+                        case "POST":
+                            {
+                                Console.ForegroundColor = ConsoleColor.Cyan;
+                                Console.Write("POST   ");
+                                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                Console.WriteLine(binding.Route.ToString());
+                                break;
+                            }
+                        case "DELETE":
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write("DELETE ");
+                                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                Console.WriteLine(binding.Route.ToString());
+                                break;
+                            }
+                    }
+                }
+            }
+        }
+    }
+
+
+#endif
+
+    public Task ExecuteAsync(IOGraphExecutorContext context, CancellationToken cancellationToken)
     {
         try
         {
-            using var cancellationTokenSource = new CancellationTokenSource();
+            using var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+            // Check if timeout was set
+            if (options.Timeout > options.Timeout)
+            {
+                cancellationTokenSource.CancelAfter(options.Timeout);
+            }
+
+            // Throw an exception for cancellation
+            cancellationTokenSource.Token.ThrowIfCancellationRequested();
 
             var response = context.Response;
             var request = context.Request;
 
-            foreach (var vertex in Model.GetGdmVertices())
+            foreach (var model in models)
             {
-                foreach (var binding in vertex.Bindings.OfType<IOGraphOperationBinding>())
+                foreach (var vertex in model.GetGdmVertices())
                 {
-                    if (binding.Method.Equals(request.Method) && binding.Route.IsMatch(request.Path))
+                    foreach (var binding in vertex.Bindings.OfType<IOGraphOperationBinding>())
                     {
-                        if (request.Headers.TryGetValue("Content-Type", out var contentType))
+                        if (binding.Method.Equals(request.Method) && binding.Route.IsMatch(request.Path))
                         {
+                            //if (request.Headers.TryGetValue("Content-Type", out var contentType))
+                            //{
 
+                            //}
+                            return binding.ExecuteAsync(new OperationBindingContext()
+                            {
+                                Element = vertex,
+                                Request = request,
+                                Response = response,
+                                Writer = new Utf8JsonWriter(response.Body),
+                                ServiceProvider = options.ServiceProvider!
+
+                            }, cancellationTokenSource.Token);
                         }
-                        return binding.ExecuteAsync(new OperationBindingContext()
-                        {
-                            Element = vertex,
-                            Request = request,
-                            Response = response
-                        });
                     }
                 }
             }
+
 
             return Task.CompletedTask;
         }
@@ -50,23 +130,5 @@ internal class Executor : IOGraphExecutor
         {
             throw;
         }
-    }
-
-
-    private void Temp()
-    {
-        var descriptor = default(IOGraphOperationBindingDescriptor)!;
-
-        descriptor.UseName("QueryUsers")
-            .UseQueryParam("")
-            .UseRoute("https://users/{userId}")
-            .UseMiddleware((context, cancellationToken, next) =>
-            {
-                return next.Invoke(context, cancellationToken);
-            })
-            .UseResolver((context, cancellationToken) =>
-            {
-                return default;
-            });
     }
 }

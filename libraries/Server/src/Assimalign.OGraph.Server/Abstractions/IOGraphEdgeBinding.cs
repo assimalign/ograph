@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-using Assimalign.OGraph.Gdm;
+using Gdm;
 
 public interface IOGraphEdgeBinding : IOGraphGdmBinding
 {
-    Task ExecuteAsync(IOGraphEdgeBindingContext context, CancellationToken cancellationToken = default);
+    Task ExecuteAsync(IOGraphEdgeBindingContext context, CancellationToken cancellationToken);
 }

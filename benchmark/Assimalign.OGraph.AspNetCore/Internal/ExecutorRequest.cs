@@ -12,18 +12,16 @@ internal class ExecutorRequest : IOGraphRequest
 {
     public ExecutorRequest(HttpContext context)
     {
-        Host = context.Request.Host;
+        Host = context.Request.Host.Value;
+        Path = context.Request.Path.Value!;
+        Body = context.Request.Body;
+        Method = context.Request.Method;
     }
 
     public Host Host { get; }
-
-    public Path Path => throw new NotImplementedException();
-
-    public Method Method => throw new NotImplementedException();
-
-    public Stream Body => throw new NotImplementedException();
-
-    public IOGraphQueryCollection Query => throw new NotImplementedException();
-
-    public IOGraphHeaderCollection Headers => throw new NotImplementedException();
+    public Path Path { get; }
+    public Method Method { get; }
+    public Stream Body { get; }
+    public IOGraphQueryCollection Query { get; }
+    public IOGraphHeaderCollection Headers { get; }
 }

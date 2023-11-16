@@ -15,10 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{B591E55A-1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmark", "benchmark", "{BB314F4C-A0B7-4861-BA8A-DA7C9831566E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph.AspNetCore.App", "benchmark\Assimalign.OGraph.AspNetCore.App\Assimalign.OGraph.AspNetCore.App.csproj", "{96C5228B-9A5A-48B7-B384-FF62E10ED237}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph.AspNetCore", "benchmark\Assimalign.OGraph.AspNetCore\Assimalign.OGraph.AspNetCore.csproj", "{A4840505-083C-48C0-A93D-410027661194}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{282449FB-DCA3-46D6-A2C1-A9A812B0A115}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.ErpCore", "sample\Assimalign.ErpCore\Assimalign.ErpCore.csproj", "{734BBBC6-362E-4BDE-AA57-D2ABC644677D}"
@@ -59,17 +55,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph.Syntax", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{92EC304E-EB95-4F91-9B56-8F0353698B62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.OGraph.Gdm.Tests", "libraries\Gdm\tests\Assimalign.OGraph.Gdm.Tests\Assimalign.OGraph.Gdm.Tests.csproj", "{325917BD-457F-4431-841A-B2806599B7FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph.Gdm.Tests", "libraries\Gdm\tests\Assimalign.OGraph.Gdm.Tests\Assimalign.OGraph.Gdm.Tests.csproj", "{325917BD-457F-4431-841A-B2806599B7FF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{87A6AAD8-A1FD-4D88-9F1B-79AEF43DA7D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.OGraph.Syntax.Tests", "libraries\Syntax\tests\Assimalign.OGraph.Syntax.Tests\Assimalign.OGraph.Syntax.Tests.csproj", "{3C234671-73F7-4662-B82E-55ED802EFFCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph.Syntax.Tests", "libraries\Syntax\tests\Assimalign.OGraph.Syntax.Tests\Assimalign.OGraph.Syntax.Tests.csproj", "{3C234671-73F7-4662-B82E-55ED802EFFCF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A2C7E161-7B22-40F5-86D4-713808F5618C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.OGraph.Server.Tests", "libraries\Server\tests\Assimalign.OGraph.Server.Tests\Assimalign.OGraph.Server.Tests.csproj", "{34378708-2E53-412C-A551-9C32960FBAD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph.Server.Tests", "libraries\Server\tests\Assimalign.OGraph.Server.Tests\Assimalign.OGraph.Server.Tests.csproj", "{34378708-2E53-412C-A551-9C32960FBAD6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{F2030B05-3132-4E74-BB50-B2C9D89CA284}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\assimalign.ograph.server.yml = .github\workflows\assimalign.ograph.server.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{903ACF28-4FA9-47B8-9E02-5CC3C4C7D132}"
 	ProjectSection(SolutionItems) = preProject
@@ -77,10 +76,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{307AD2CA-C46A-4BFF-898F-6F8ED3A1842B}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\assimalign.ograph.client.yml = .github\workflows\assimalign.ograph.client.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{18F5B843-D5F3-42D7-85D2-C9DDB881457B}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\assimalign.ograph.core.yml = .github\workflows\assimalign.ograph.core.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{D61FE973-EB03-44D1-BB1E-978352855B83}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\assimalign.ograph.syntax.yml = .github\workflows\assimalign.ograph.syntax.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F29063B7-CF9D-47FD-AB8E-EAECD4F8E707}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph.Client.Tests", "libraries\Client\tests\Assimalign.OGraph.Client.Tests\Assimalign.OGraph.Client.Tests.csproj", "{8D24A356-D4E5-43AA-BB2F-70B7DEAA401A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph.AspNetCore", "benchmark\Assimalign.OGraph.AspNetCore\Assimalign.OGraph.AspNetCore.csproj", "{99A6E099-2343-494B-94CB-3608E385B69D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph.AspNetCore.App", "benchmark\Assimalign.OGraph.AspNetCore.App\Assimalign.OGraph.AspNetCore.App.csproj", "{BD77E6B8-F64A-4D8F-BC92-34D7958DC204}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -88,14 +104,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{96C5228B-9A5A-48B7-B384-FF62E10ED237}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{96C5228B-9A5A-48B7-B384-FF62E10ED237}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{96C5228B-9A5A-48B7-B384-FF62E10ED237}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96C5228B-9A5A-48B7-B384-FF62E10ED237}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A4840505-083C-48C0-A93D-410027661194}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A4840505-083C-48C0-A93D-410027661194}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A4840505-083C-48C0-A93D-410027661194}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A4840505-083C-48C0-A93D-410027661194}.Release|Any CPU.Build.0 = Release|Any CPU
 		{734BBBC6-362E-4BDE-AA57-D2ABC644677D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{734BBBC6-362E-4BDE-AA57-D2ABC644677D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{734BBBC6-362E-4BDE-AA57-D2ABC644677D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -136,13 +144,23 @@ Global
 		{34378708-2E53-412C-A551-9C32960FBAD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34378708-2E53-412C-A551-9C32960FBAD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34378708-2E53-412C-A551-9C32960FBAD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D24A356-D4E5-43AA-BB2F-70B7DEAA401A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D24A356-D4E5-43AA-BB2F-70B7DEAA401A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D24A356-D4E5-43AA-BB2F-70B7DEAA401A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D24A356-D4E5-43AA-BB2F-70B7DEAA401A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99A6E099-2343-494B-94CB-3608E385B69D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99A6E099-2343-494B-94CB-3608E385B69D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99A6E099-2343-494B-94CB-3608E385B69D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99A6E099-2343-494B-94CB-3608E385B69D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD77E6B8-F64A-4D8F-BC92-34D7958DC204}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD77E6B8-F64A-4D8F-BC92-34D7958DC204}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD77E6B8-F64A-4D8F-BC92-34D7958DC204}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD77E6B8-F64A-4D8F-BC92-34D7958DC204}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{96C5228B-9A5A-48B7-B384-FF62E10ED237} = {BB314F4C-A0B7-4861-BA8A-DA7C9831566E}
-		{A4840505-083C-48C0-A93D-410027661194} = {BB314F4C-A0B7-4861-BA8A-DA7C9831566E}
 		{734BBBC6-362E-4BDE-AA57-D2ABC644677D} = {282449FB-DCA3-46D6-A2C1-A9A812B0A115}
 		{CE0B00B5-FB82-4C92-89D6-DC97B0EF6C71} = {12CC0A09-6189-4302-968D-0CDA98F5EE51}
 		{9ABC1EEE-596B-4ED4-B693-9F5BFC81A9C7} = {12CC0A09-6189-4302-968D-0CDA98F5EE51}
@@ -171,6 +189,10 @@ Global
 		{307AD2CA-C46A-4BFF-898F-6F8ED3A1842B} = {5D4FD37C-E267-43EC-84A4-CCFBC8720256}
 		{18F5B843-D5F3-42D7-85D2-C9DDB881457B} = {9ABC1EEE-596B-4ED4-B693-9F5BFC81A9C7}
 		{D61FE973-EB03-44D1-BB1E-978352855B83} = {D5C5EA91-3BCC-42DD-A94A-8D259925E997}
+		{F29063B7-CF9D-47FD-AB8E-EAECD4F8E707} = {5D4FD37C-E267-43EC-84A4-CCFBC8720256}
+		{8D24A356-D4E5-43AA-BB2F-70B7DEAA401A} = {F29063B7-CF9D-47FD-AB8E-EAECD4F8E707}
+		{99A6E099-2343-494B-94CB-3608E385B69D} = {282449FB-DCA3-46D6-A2C1-A9A812B0A115}
+		{BD77E6B8-F64A-4D8F-BC92-34D7958DC204} = {282449FB-DCA3-46D6-A2C1-A9A812B0A115}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {64E79EA5-8DCB-4919-BA27-1A5EB89F839B}
