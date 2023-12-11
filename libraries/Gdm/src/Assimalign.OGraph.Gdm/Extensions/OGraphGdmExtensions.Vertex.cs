@@ -16,7 +16,7 @@ public static class OGraphGdmVertexExtensions
     /// <param name="property"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="OGraphGdmException"></exception>
+    /// <exception cref="GdmException"></exception>
     public static bool TryGetProperty(this IOGraphGdmVertex vertex, Label label, out IOGraphGdmProperty? property)
     {
         property = null;
@@ -46,7 +46,7 @@ public static class OGraphGdmVertexExtensions
     /// <param name="vertex"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="OGraphGdmException"></exception>
+    /// <exception cref="GdmException"></exception>
     public static IEnumerable<IOGraphGdmProperty> GetProperties(this IOGraphGdmVertex vertex)
     {
         if (vertex is null)
@@ -76,7 +76,7 @@ public static class OGraphGdmVertexExtensions
     /// <param name="vertex"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="OGraphGdmException"></exception>
+    /// <exception cref="GdmException"></exception>
     public static IOGraphGdmEntityType GetGdmEntityType(this IOGraphGdmVertex vertex)
     {
         IOGraphGdmEntityType type = null!;
@@ -102,13 +102,13 @@ public static class OGraphGdmVertexExtensions
     }
 
     /// <summary>
-    /// 
+    /// Checks if the vertex entity type is bound to the runtime type.
     /// </summary>
     /// <param name="vertex"></param>
     /// <param name="type"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="OGraphGdmException"></exception>
+    /// <exception cref="GdmException"></exception>
     public static bool IsRuntimeTypeMatch(this IOGraphGdmVertex vertex, Type? type)
     {
         if (type is null)

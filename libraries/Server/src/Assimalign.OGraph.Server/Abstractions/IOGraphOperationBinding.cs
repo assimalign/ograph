@@ -53,8 +53,22 @@ public interface IOGraphOperationBinding : IOGraphGdmBinding
     /// <summary>
     /// 
     /// </summary>
+    OGraphQueryOptions QueryOptions { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    IOGraphQueryProvider QueryProvider { get; }
+    /// <summary>
+    /// Executes the binding.
+    /// </summary>
     /// <param name="context"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task ExecuteAsync(IOGraphOperationBindingContext context, CancellationToken cancellationToken);
+}
+
+
+
+public interface IOGraphQueryOperationBinding
+{
 }

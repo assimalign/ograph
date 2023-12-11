@@ -10,6 +10,8 @@ using Assimalign.OGraph.Syntax;
 /// </summary>
 public interface IOGraphQueryProviderContext
 {
+    object QueryItem { get; }
+
     /// <summary>
     /// The parsed query from the request.
     /// </summary>

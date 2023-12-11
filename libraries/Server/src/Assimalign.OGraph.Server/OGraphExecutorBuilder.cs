@@ -61,6 +61,11 @@ public sealed class OGraphExecutorBuilder : IOGraphExecutorBuilder
         return this;
     }
 
+    public IOGraphExecutorBuilder ConfigureOptions(OGraphExecutorOptions options)
+    {
+        throw new NotImplementedException();
+    }
+
     IOGraphExecutor IOGraphExecutorBuilder.Build()
     {
         foreach (var action in onBuild)

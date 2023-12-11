@@ -19,7 +19,7 @@ internal class GdmComplexTypeKeyDisallowedValidatorRule : GdmValidatorRule
             {
                 context.AddFailure(error =>
                 {
-                    error.Code = OGraphGdmErrorCode.GDM0301;
+                    error.Code = GdmErrorCode.GDM0301;
                     error.Message = Resources.GDM0301;
                     error.Source = $"{complexType.Label}.{property.Label}";
                 });

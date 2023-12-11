@@ -31,10 +31,10 @@ public sealed class ParameterNode : QueryNode
     /// </summary>
     public ParameterType ParameterType => this.parameterValue switch
     {
-        ConstantNode => ParameterType.Constant,
-        FunctionCallNode => ParameterType.Function,
-        PropertyNode => ParameterType.Property,
-        _                 => ParameterType.None
+        ConstantNode        => ParameterType.Constant,
+        FunctionCallNode    => ParameterType.Function,
+        PropertyNode        => ParameterType.Property,
+        _                   => ParameterType.None
     };
 
     /// <inheritdoc />

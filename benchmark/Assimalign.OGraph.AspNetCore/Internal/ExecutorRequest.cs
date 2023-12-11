@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.AspNetCore.Internal;
 
-internal class ExecutorRequest : IOGraphRequest
+internal class ExecutorRequest : IOGraphExecutorRequest
 {
     public ExecutorRequest(HttpContext context)
     {
@@ -16,12 +16,14 @@ internal class ExecutorRequest : IOGraphRequest
         Path = context.Request.Path.Value!;
         Body = context.Request.Body;
         Method = context.Request.Method;
+
+        context.Request.Headers
     }
 
     public Host Host { get; }
     public Path Path { get; }
     public Method Method { get; }
     public Stream Body { get; }
-    public IOGraphQueryCollection Query { get; }
-    public IOGraphHeaderCollection Headers { get; }
+    public IOGraphExecutorQueryCollection Query { get; }
+    public IOGraphExecutorHeaderCollection Headers { get; }
 }

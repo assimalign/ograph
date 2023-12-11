@@ -11,11 +11,11 @@ public interface IOGraphExecutorContext
     /// <summary>
     /// The incoming HTTP request.
     /// </summary>
-    IOGraphRequest Request { get; }
+    IOGraphExecutorRequest Request { get; }
     /// <summary>
     /// The outgoing HTTP response.
     /// </summary>
-    IOGraphResponse Response { get; }
+    IOGraphExecutorResponse Response { get; }
     /// <summary>
     /// The context service provider.
     /// </summary>

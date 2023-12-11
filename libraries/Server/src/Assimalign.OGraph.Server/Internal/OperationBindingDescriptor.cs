@@ -17,8 +17,10 @@ internal class OperationBindingDescriptor : IOGraphOperationBindingDescriptor
     {
         this.binding = binding;
     }
+
     public OGraphExecutorOptions Options { get; init; }
-    public IOGraphOperationBindingDescriptor UseMiddleware<TMiddleware>() 
+
+    public IOGraphOperationBindingDescriptor UseMiddleware<TMiddleware>()
         where TMiddleware : IOGraphOperationBindingMiddleware, new()
     {
         return UseMiddleware(new TMiddleware());
@@ -29,7 +31,7 @@ internal class OperationBindingDescriptor : IOGraphOperationBindingDescriptor
         {
             ThrowHelper.ThrowArgumentNullException(nameof(middleware));
         }
-        return UseMiddleware(new OperationBindingMiddleware(middleware));
+        return UseMiddleware(new OperationBindingMiddlewareWrapper(middleware));
     }
 
     public IOGraphOperationBindingDescriptor UseMiddleware(IOGraphOperationBindingMiddleware middleware)
@@ -47,7 +49,7 @@ internal class OperationBindingDescriptor : IOGraphOperationBindingDescriptor
         throw new NotImplementedException();
     }
 
-    public IOGraphOperationBindingDescriptor UseResolver<TResolver>() 
+    public IOGraphOperationBindingDescriptor UseResolver<TResolver>()
         where TResolver : IOGraphOperationBindingResolver, new()
     {
         return UseResolver(new TResolver());
@@ -59,7 +61,7 @@ internal class OperationBindingDescriptor : IOGraphOperationBindingDescriptor
         {
             ThrowHelper.ThrowArgumentNullException(nameof(resolver));
         }
-        return UseResolver(new OperationBindingResolver(resolver));
+        return UseResolver(new OperationBindingResolverWrapper(resolver));
     }
 
     public IOGraphOperationBindingDescriptor UseResolver(IOGraphOperationBindingResolver resolver)
@@ -74,7 +76,23 @@ internal class OperationBindingDescriptor : IOGraphOperationBindingDescriptor
 
     public IOGraphOperationBindingDescriptor UseRoute(Route route)
     {
-        binding.Route = $"{Options.RoutePrefix}/{route}";
+        // Check if a route prefix was set in the options
+        if (!string.IsNullOrEmpty(Options.RoutePrefix))
+        {
+            // Check if the prefix has already been provided
+            if (route.Segments[0].Value.Equals(Options.RoutePrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                binding.Route = route;
+            }
+            else
+            {
+                binding.Route = Route.Combine(Options.RoutePrefix, route);
+            }
+        }
+        else
+        {
+            binding.Route = route;
+        }
         return this;
     }
 }

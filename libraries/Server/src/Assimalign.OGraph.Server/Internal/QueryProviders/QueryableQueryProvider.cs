@@ -194,7 +194,7 @@ internal class QueryableQueryProvider : IOGraphQueryProvider
 
     private IOGraphGdmCollectionType ApplyProjections(ProjectionNode node, IOGraphGdmVertex vertex)
     {
-        var collectionType = new GdmCollectionType<GdmComplexType>();
+        var collectionType = new GdmListType<GdmComplexType>();
         var complexType = new GdmComplexType();
 
         foreach (var propertyNode in node.Properties)

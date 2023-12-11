@@ -3,27 +3,26 @@ using System.Linq;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
+using System.Web;
 
 namespace Assimalign.OGraph;
 
 [DebuggerDisplay("Path: /{ToString()}")]
 public readonly struct Path : IEquatable<Path>, IEqualityComparer<Path>
 {
-    private const string invalidCharacters = @"<>*%&:\?";
-
     private readonly PathSegment[] segments;
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="path"></param>
+    /// <exception cref="ArgumentNullException"></exception>
     public Path(string path)
     {
         if (string.IsNullOrEmpty(path))
         {
             throw new ArgumentNullException(nameof(path));
         }
-        //if (path.Any(c => invalidCharacters.Contains(c)))
-        //{
-        //	throw new ArgumentException($"The following path: '{path}' contains an invalid character. Disallowed Characters '{invalidCharacters}'.");
-        //}
-        segments = GetSegments(path);
+        segments = GetSegments(HttpUtility.UrlDecode(path));
     }
 
     private PathSegment[] GetSegments(string path)

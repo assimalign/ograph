@@ -13,6 +13,14 @@ internal static class GdmThrowHelper
     public static void ThrowArgumentNullException(string paramName) =>
         throw new ArgumentNullException(paramName);
 
+    [DoesNotReturn]
+    public static void ThrowArgumentException(string message) => 
+        throw new ArgumentException(message);
+
+    //[DoesNotReturn]
+    //public static void ThrowInvalidOperationException(string message) =>
+
+
     #endregion
 
     [DoesNotReturn]
@@ -23,43 +31,42 @@ internal static class GdmThrowHelper
 
     [DoesNotReturn]
     public static void ThrowComplexTypeKeyDisallowed() =>
-        throw new GdmModelException(OGraphGdmErrorCode.GDM0301, Resources.GDM0301);
+        throw new GdmModelException(GdmErrorCode.GDM0301, Resources.GDM0301);
 
     [DoesNotReturn]
     public static void ThrowComplexTypeKeyDisallowed(string source) =>
-        throw new GdmModelException(OGraphGdmErrorCode.GDM0301, source, Resources.GDM0301);
+        throw new GdmModelException(GdmErrorCode.GDM0301, source, Resources.GDM0301);
 
     [DoesNotReturn]
     public static void ThrowVertexInvalidTypeReferenceIsNotEntityType() =>
-        throw new GdmModelException(OGraphGdmErrorCode.GDM1001, Resources.GDM1001);
+        throw new GdmModelException(GdmErrorCode.GDM1001, Resources.GDM1001);
 
     [DoesNotReturn]
     public static void ThrowVertexInvalidTypeReferenceIsNotEntityType(string source) =>
-        throw new GdmModelException(OGraphGdmErrorCode.GDM1001, source, Resources.GDM1001);
+        throw new GdmModelException(GdmErrorCode.GDM1001, source, Resources.GDM1001);
 
     [DoesNotReturn]
     public static void ThrowVertexInvalidTypeReferenceIsNull() =>
-        throw new GdmModelException(OGraphGdmErrorCode.GDM1002, Resources.GDM1002);
+        throw new GdmModelException(GdmErrorCode.GDM1002, Resources.GDM1002);
 
     [DoesNotReturn]
     public static void ThrowVertexInvalidTypeReferenceIsNull(string source) =>
-        throw new GdmModelException(OGraphGdmErrorCode.GDM1002, source, Resources.GDM1002);
+        throw new GdmModelException(GdmErrorCode.GDM1002, source, Resources.GDM1002);
 
     [DoesNotReturn]
     public static void ThrowInvalidLabel(string source) =>
-        throw new GdmModelException(OGraphGdmErrorCode.GDM5001, source, Resources.GDM5001);
+        throw new GdmModelException(GdmErrorCode.GDM5001, source, Resources.GDM5001);
 
     #endregion
-
 
     #region Serialization Exceptions
 
     [DoesNotReturn]
     public static void ThrowInvalidContentException(string source) =>
-        throw new GdmSerializationException(OGraphGdmErrorCode.GDM3001, source, Resources.GDM3001);
+        throw new GdmSerializationException(GdmErrorCode.GDM3001, source, Resources.GDM3001);
 
-
+    [DoesNotReturn]
+    public static void ThrowInvalidTypeSerializationException(Type expected, Type received) =>
+        throw new InvalidOperationException($"Invalid type serialization. Expected type {expected.Name}. Received type {received.Name}");
     #endregion
-
-    
 }

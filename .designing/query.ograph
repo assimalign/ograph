@@ -30,7 +30,7 @@ https://endpoint.com/api/employees?query= # This endpoint represents the startin
             .filter({
                 addressType eq 1
             })
-            .edge('companies/addresses/types')
+            .edge('companies/addresses/types' as addressTypes)
                 .project({
                     typeId
                     typeName

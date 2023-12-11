@@ -5,14 +5,39 @@ namespace Assimalign.OGraph.Gdm;
 
 public interface IOGraphGdmBuilder
 {
-    IOGraphGdmBuilder AddType(IOGraphGdmType type);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TGdmType"></typeparam>
+    /// <returns></returns>
     IOGraphGdmBuilder AddType<TGdmType>() where TGdmType : class, IOGraphGdmType, new();
-    IOGraphGdmBuilder AddType<T>(Action<IOGraphGdmComplexTypeDescriptor<T>> configure) where T : class, new();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    IOGraphGdmBuilder AddType(IOGraphGdmType type);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TGdmVertex"></typeparam>
+    /// <returns></returns>
+    IOGraphGdmBuilder AddVertex<TGdmVertex>() where TGdmVertex : IOGraphGdmVertex, new();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="vertex"></param>
+    /// <returns></returns>
     IOGraphGdmBuilder AddVertex(IOGraphGdmVertex vertex);
-    IOGraphGdmBuilder AddVertex<TVertex>() where TVertex : IOGraphGdmVertex, new();
-    IOGraphGdmBuilder AddVertex<T>(Action<IOGraphGdmEntityTypeDescriptor<T>> configure)  where T : class, new();
-    IOGraphGdmBuilder AddVertex<T>(Label label, Action<IOGraphGdmEntityTypeDescriptor<T>> configure) where T : class, new();
-    IOGraphGdmBuilder AddVertex(Action<IOGraphGdmVertexDescriptor> configure);
-    IOGraphGdmBuilder AddVertex<T>(Action<IOGraphGdmVertexDescriptor<T>> configure) where T : class, new();
+    
+
+    //IOGraphGdmBuilder AddType<T>(Action<IOGraphGdmComplexTypeDescriptor<T>> configure) where T : class, new();
+
+    //IOGraphGdmBuilder AddVertex<T>(Action<IOGraphGdmEntityTypeDescriptor<T>> configure)  where T : class, new();
+    //IOGraphGdmBuilder AddVertex(Action<IOGraphGdmVertexDescriptor> configure);
+    //IOGraphGdmBuilder AddVertex<T>(Action<IOGraphGdmVertexDescriptor<T>> configure) where T : class, new();
     IOGraphGdm Build();
 }

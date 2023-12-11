@@ -4,6 +4,7 @@ using System.Security.Claims;
 namespace Assimalign.OGraph;
 
 using Assimalign.OGraph.Gdm;
+using Assimalign.OGraph.Syntax;
 
 /// <summary>
 /// 
@@ -13,11 +14,11 @@ public interface IOGraphPropertyBindingContext : IOGraphGdmBindingContext
     /// <summary>
     /// 
     /// </summary>
-    IOGraphRequest Request { get; }
+    IOGraphExecutorRequest Request { get; }
     /// <summary>
     /// 
     /// </summary>
-    IOGraphResponse Response { get; }
+    IOGraphExecutorResponse Response { get; }
     /// <summary>
     /// 
     /// </summary>
@@ -36,5 +37,5 @@ public interface IOGraphPropertyBindingContext : IOGraphGdmBindingContext
     /// 
     /// </summary>
     /// <returns></returns>
-    ClaimsPrincipal GetClaimsPrincipal();
+    ClaimsPrincipal? GetClaimsPrincipal();
 }

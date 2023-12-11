@@ -48,17 +48,12 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
     }
     IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex<T>(Action<IOGraphGdmEntityTypeDescriptor<T>> configure)
     {
-        return (this as IOGraphGdmBuilder).AddVertex(typeof(T).Name, configure);
-    }
-    IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex<T>(Label label, Action<IOGraphGdmEntityTypeDescriptor<T>> configure)
-    {
         if (configure is null)
         {
             throw new ArgumentNullException(nameof(configure));
         }
         var vertex = new GdmVertex<GdmEntityType<T>>()
         {
-            label = label,
             type = new GdmTypeReference()
             {
                 Definition = GdmEntityType<T>.Create(configure)
@@ -151,7 +146,7 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
     {
         if (configure is null)
         {
-            throw new ArgumentNullException(nameof(configure));
+            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
 
         IOGraphGdmBuilder builder = new OGraphGdmBuilder(label);

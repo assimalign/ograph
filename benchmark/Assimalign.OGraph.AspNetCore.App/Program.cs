@@ -42,7 +42,7 @@ app.MapOGraphBinding<Employee>(descriptor =>
         .UseRoute("employees")
         .UseResolver(async (context, cancellationToken) =>
         {
-            return default;
+            return OGraphResult.Unauthorized();
         });
 
     descriptor.MapGet("GetEmployeeById")

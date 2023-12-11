@@ -14,9 +14,12 @@ internal class GdmComplexTypeDescriptor : IOGraphGdmComplexTypeDescriptor
     {
         this.complexType = complexType;
     }
-    public IOGraphGdmComplexTypeDescriptor HasName(Label label)
+
+
+    public IOGraphGdmComplexTypeDescriptor HasLabel(Label label)
     {
-        throw new NotImplementedException();
+        complexType.Label = label;
+        return this;
     }
 
     public IOGraphGdmPropertyDescriptor HasProperty(Label name)
@@ -24,12 +27,12 @@ internal class GdmComplexTypeDescriptor : IOGraphGdmComplexTypeDescriptor
         throw new NotImplementedException();
     }
 
-    public IOGraphGdmComplexTypeDescriptor HasUnderlyingType(Type type)
+    public IOGraphGdmComplexTypeDescriptor HasRuntimeType(Type type)
     {
         throw new NotImplementedException();
     }
 
-    public IOGraphGdmComplexTypeDescriptor HasUnderlyingType<T>() where T : class, new()
+    public IOGraphGdmComplexTypeDescriptor HasRuntimeType<T>() where T : class, new()
     {
         throw new NotImplementedException();
     }

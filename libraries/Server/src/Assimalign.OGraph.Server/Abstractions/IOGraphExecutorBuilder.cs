@@ -6,7 +6,8 @@ using Assimalign.OGraph.Gdm;
 
 public interface IOGraphExecutorBuilder
 {
-    IOGraphExecutorBuilder ConfigureOptions(Action<OGraphExecutorOptions> options);
+    IOGraphExecutorBuilder ConfigureOptions(OGraphExecutorOptions options);
+    IOGraphExecutorBuilder ConfigureOptions(Action<OGraphExecutorOptions> configure);
     IOGraphExecutorBuilder ConfigureModel(Label label, Action<IOGraphGdmBuilder> configure);
     IOGraphExecutorBuilder ConfigureApplication(Action<IOGraphApplicationBuilder> configure);
     IOGraphExecutor Build();

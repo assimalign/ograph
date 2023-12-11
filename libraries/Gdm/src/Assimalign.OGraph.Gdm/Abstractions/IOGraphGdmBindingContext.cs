@@ -1,5 +1,6 @@
 ﻿namespace Assimalign.OGraph.Gdm;
 
+
 public interface IOGraphGdmBindingContext
 {
     /// <summary>

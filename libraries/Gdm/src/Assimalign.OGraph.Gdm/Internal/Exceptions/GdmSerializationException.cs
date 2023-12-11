@@ -1,13 +1,13 @@
 ﻿namespace Assimalign.OGraph.Gdm.Internal;
 
-internal class GdmSerializationException : OGraphGdmException
+internal class GdmSerializationException : GdmException
 {
-    public GdmSerializationException(OGraphGdmErrorCode errorCode, string? message) 
+    public GdmSerializationException(GdmErrorCode errorCode, string? message) 
         : base(message)
     {
         ErrorCode = errorCode;
     }
-    public GdmSerializationException(OGraphGdmErrorCode errorCode, string source, string? message) 
+    public GdmSerializationException(GdmErrorCode errorCode, string source, string? message) 
         : base(message)
     {
         ErrorCode = errorCode;
@@ -15,5 +15,5 @@ internal class GdmSerializationException : OGraphGdmException
     }
 
     public override string? Source { get; set; }
-    public override OGraphGdmErrorCode ErrorCode { get; }
+    public override GdmErrorCode ErrorCode { get; }
 }

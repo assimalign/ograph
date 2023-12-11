@@ -41,7 +41,10 @@ internal class VertexParser : Parser<VertexNode>
     {
         var nodes = queryNode.Nodes.ToList();
         var edgeParser = context.GetParser<EdgeParser>();
-        var edgeNode = edgeParser.Parse(ref lexer, context, new EdgeNode());
+        var edgeNode = edgeParser.Parse(ref lexer, context, new EdgeNode()
+        {
+            Source = queryNode
+        });
         
         nodes.Add(edgeNode);
 

@@ -1,11 +1,25 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
-[DebuggerDisplay("Gdm: {Label}")]
+[DebuggerDisplay("Gdm = {Label}")]
 internal class Gdm : IOGraphGdm
 {
-    public Gdm() { }
+    public Gdm()
+    {
+        Elements.Add(this);
+    }
     public Label Label { get; set; }
     public IOGraphGdmElementCollection Elements { get; } = new GdmElementCollection();
+    public IEnumerable<IOGraphGdmBinding> Bindings { get; } = new List<IOGraphGdmBinding>();
+    public GdmElementType ElementType => GdmElementType.Graph;
+    public void Bind(IOGraphGdmBinding binding)
+    {
+        if (binding is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
+        }
+        (Bindings as List<IOGraphGdmBinding>)!.Add(binding);
+    }
 }

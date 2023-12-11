@@ -8,7 +8,8 @@ namespace Assimalign.OGraph.Gdm;
 
 public interface IOGraphGdmPropertyDescriptor
 {
-    IOGraphGdmPropertyDescriptor UseType<TType>() where TType : IOGraphGdmType, new();
+    IOGraphGdmPropertyDescriptor UsePropertyName(Label label);
+    IOGraphGdmPropertyDescriptor UseType<TGdmType>() where TGdmType : IOGraphGdmType, new();
     IOGraphGdmPropertyDescriptor UseType(IOGraphGdmType type);
     IOGraphGdmPropertyDescriptor UseMetadata(Label key, object value);
     IOGraphGdmPropertyDescriptor IsComputed();

@@ -35,6 +35,10 @@ public sealed class QueryParserOptions
     /// 
     /// </summary>
     public string? StartingVertexName { get; set; }
+    /// <summary>
+    /// Specify the timeout for query analysis. Default is 5 seconds.
+    /// </summary>
+    public TimeSpan AnalyzerTimeout { get; set; } = TimeSpan.FromSeconds(5);
 
     internal IEnumerable<QueryAnalyzer> Analyzers => this.analyzers;
 

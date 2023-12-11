@@ -2,44 +2,36 @@
 using System.Xml;
 using System.Text.Json;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.OGraph.Gdm;
 
 using Assimalign.OGraph.Gdm.Internal;
 
 [DebuggerDisplay("Gdm Type ({Kind}): {Label}")]
-public class GdmComplexType<T> : IOGraphGdmComplexType
+public class GdmComplexType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T> : GdmType<T>,
+    IOGraphGdmComplexType
     where T : class, new()
 {
     private readonly Action<IOGraphGdmComplexTypeDescriptor<T>> configure;
 
-    internal Label label = typeof(T).Name;
+    public GdmComplexType() : this(descriptor => { }) { }
 
-    private GdmComplexType(Action<IOGraphGdmComplexTypeDescriptor<T>> configure)
+    GdmComplexType(Action<IOGraphGdmComplexTypeDescriptor<T>> configure)
     {
+        if (configure is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+        }
         this.configure = configure;
-        Initialize();
         Configure(new GdmComplexTypeDescriptor<T>(this));
     }
 
-    public GdmComplexType() 
-        : this(descriptor => { })
-    {
-    }
+    /// <inheritdoc />
+    public override GdmTypeKind Kind => GdmTypeKind.Complex;
 
-    private void Initialize()
-    {
-        foreach (var property in typeof(T).GetGdmComplexTypeProperties())
-        {
-            property.DeclaringType = new GdmTypeReference()
-            {
-                Definition = this
-            };
-            Properties.Add(property);
-        }
-    }
+    /// <inheritdoc />
+    public IOGraphGdmPropertyCollection Properties { get; } = new GdmPropertyCollection();
 
     /// <summary>
     /// 
@@ -50,47 +42,116 @@ public class GdmComplexType<T> : IOGraphGdmComplexType
         configure?.Invoke(descriptor);
     }
 
-    public Label Label => label;
-    public GdmTypeKind Kind => GdmTypeKind.Complex;
-    public IOGraphGdmPropertyCollection Properties { get; } = new GdmPropertyCollection();
-    public Type RuntimeType => typeof(T);
-    public GdmElementType ElementType => GdmElementType.Type;
-
-    public virtual T Read(ref Utf8JsonReader reader)
+    public override T Read(ref Utf8JsonReader reader)
     {
-        throw new NotImplementedException();
-    }
-    public virtual T Read(XmlReader reader)
-    {
-        throw new NotImplementedException();
-    }
-    public virtual void Write(Utf8JsonWriter writer, T value)
-    {
-        throw new NotImplementedException();
-    }
-    public virtual void Write(XmlWriter writer, T value)
-    {
-        throw new NotImplementedException();
-    }
-
-    object IOGraphGdmType.Read(ref Utf8JsonReader reader) => Read(ref reader)!;
-    object IOGraphGdmType.Read(XmlReader reader) => Read(reader)!;
-    void IOGraphGdmType.Write(Utf8JsonWriter writer, object value) => Write(writer, AssertType(value));
-    void IOGraphGdmType.Write(XmlWriter writer, object value) => Write(writer, AssertType(value));
-
-    private T AssertType(object value)
-    {
-        if (value is not T type)
+        if (reader.TokenType != JsonTokenType.StartObject)
         {
-            throw new InvalidOperationException($"Could not write type {value.GetType().Name}. Expected {typeof(T).Name}");
+            // TODO: throw invalid operation
         }
-        return type;
+
+        // capture the depth
+        var startDepth = reader.CurrentDepth;
+
+        var instance = Activator.CreateInstance<T>();
+        
+        while (reader.Read() || reader.TokenType == JsonTokenType.EndObject || startDepth <= reader.CurrentDepth)
+        {
+            if (reader.TokenType != JsonTokenType.PropertyName)
+            {
+                // TODO: throw invalid exception
+            }
+
+            var name = reader.GetString()!;
+            
+            if (!reader.Read())
+            {
+                // TODO: throw invalid exception
+            }
+            if (this.TryGetProperty(name, out var property))
+            {
+                // TODO: throw invalid operation
+            }
+            if (property!.IsComputed)
+            {
+                // TODO: throw invalid operation. Cannot set computed value
+            }
+            if (!property.IsNullable)
+            {
+                // TODO:throw invalid operation. Property is required.
+            }
+
+            var type = property!.Type.Definition;
+            var value = type.Read(ref reader);
+            var setter = property!.Setter;
+
+            setter(instance, value);
+        }
+
+        return instance;
+    }
+    public override T Read(XmlReader reader)
+    {
+
+        if (reader.NodeType != XmlNodeType.Element)
+        {
+            // TODO: Throw invalid operation exception
+        }
+        if (reader.LocalName != Label)
+        {
+            // TODO: Throw invalid operation exception
+        }
+        var instance = Activator.CreateInstance<T>();
+        var startDepth = reader.Depth;
+
+        while (reader.Read() || startDepth <= reader.Depth)
+        {
+            if (reader.NodeType != XmlNodeType.Element)
+            {
+                // TODO: Throw invalid operation exception
+            }
+            var propertyName = reader.LocalName;
+
+            if (this.TryGetProperty(propertyName, out var property))
+            {
+
+            }
+        }
+
+
+
+        return instance;
+    }
+    public override void Write(Utf8JsonWriter writer, T value)
+    {
+        writer.WriteStartObject();
+
+
+        writer.WriteEndObject();
+    }
+    public override void Write(XmlWriter writer, T value)
+    {
+        writer.WriteStartElement(Label);
+
+
+
+        writer.WriteEndElement();
     }
 
+    #region Overloads
+
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return Label;
+    }
+
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return HashCode.Combine(Label, typeof(IOGraphGdmComplexType));
     }
+
+    /// <inheritdoc />
     public override bool Equals(object? instance)
     {
         if (instance is not null)
@@ -100,13 +161,10 @@ public class GdmComplexType<T> : IOGraphGdmComplexType
 
         return false;
     }
+    #endregion
 
-    public static GdmComplexType<T> Create<T>(Action<IOGraphGdmComplexTypeDescriptor<T>> configure) where T: class, new()
+    public static GdmComplexType<T> Create(Action<IOGraphGdmComplexTypeDescriptor<T>> configure)
     {
-        if (configure is null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
         return new GdmComplexType<T>(configure);
     }
 }

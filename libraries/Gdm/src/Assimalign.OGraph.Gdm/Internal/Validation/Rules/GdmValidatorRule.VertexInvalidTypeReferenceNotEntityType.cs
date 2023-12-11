@@ -14,7 +14,7 @@ internal class GdmVertexInvalidTypeReferenceNotEntityTypeValidatorRule : GdmVali
             {
                 context.AddFailure(error =>
                 {
-                    error.Code = OGraphGdmErrorCode.GDM1001;
+                    error.Code = GdmErrorCode.GDM1001;
                     error.Message = Resources.GDM1001;
                     error.Source = vertex.Label;
                 });

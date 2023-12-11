@@ -43,8 +43,9 @@ public static class OGraphGdmPropertyDescriptorExtensions
             throw new ArgumentNullException(nameof(configure));
         }
 
-        return descriptor.UseType(new GdmCollectionType<GdmComplexType<T>>(
-            GdmComplexType<T>.Create(configure)));
+        return descriptor.UseType(
+            new GdmListType<T>(
+                GdmComplexType<T>.Create(configure)));
     }
 
 
@@ -53,6 +54,8 @@ public static class OGraphGdmPropertyDescriptorExtensions
         this IOGraphGdmPropertyDescriptor<T?> descriptor,
         Expression<Func<T, object>> expression) where T : class, new()
     {
+
+
 
 
         return descriptor;

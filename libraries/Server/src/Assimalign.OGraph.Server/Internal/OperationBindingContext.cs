@@ -5,42 +5,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace Assimalign.OGraph.Internal;
 
 using Assimalign.OGraph.Gdm;
 using Assimalign.OGraph.Syntax;
-using System.Security.Claims;
 
 internal class OperationBindingContext : IOGraphOperationBindingContext
 {
-
-    public volatile object Parent;
-    //public Either<XmlReader, Utf8JsonReader> Reader { get; init; }
-    public Either<XmlWriter, Utf8JsonWriter> Writer { get; init; }
     public IOGraphGdmVertex Element { get; init; } = default!;
-    public IOGraphRequest Request { get; init; } = default!;
-    public IOGraphResponse Response { get; init; } = default!;
+    public IOGraphExecutorRequest Request { get; init; } = default!;
+    public IOGraphExecutorResponse Response { get; init; } = default!;
+    public IOGraphGdmType RequestType { get; init; } = default!;
     public IServiceProvider ServiceProvider { get; init; } = default!;
-
+    public QueryParser Parser { get; init; } = default!;
     IOGraphGdmElement IOGraphGdmBindingContext.Element => Element;
+
+
+    public IOGraphOperationBinding Binding { get; init; } = default!;
+
+
+
+    public Either<XmlWriter, Utf8JsonWriter> GetWriter()
+    {
+
+
+
+        throw new Exception();
+    }
 
     public ClaimsPrincipal GetClaimsPrincipal()
     {
         throw new NotImplementedException();
     }
 
-    /// <inheritdoc />
-    public T GetParent<T>()
-    {
-        if (Parent is T parent)
-        {
-            return parent;
-        }
-        throw new InvalidOperationException();
-    }
-
-    public QueryDocument GetQuery()
+    public QueryDocument GetQueryDocument()
     {
         throw new NotImplementedException();
     }
@@ -62,11 +62,51 @@ internal class OperationBindingContext : IOGraphOperationBindingContext
 
     public T GetRequestBody<T>()
     {
+        return Request.Headers.Accept.Value switch
+        {
+            OGraphMediaType.Xml => GetXmlRequestBody<T>(),
+            OGraphMediaType.Json => GetJsonRequestBody<T>()
+        };
+    }
+
+    private T GetXmlRequestBody<T>()
+    {
         throw new NotImplementedException();
+    }
+
+    private T GetJsonRequestBody<T>()
+    {
+        var buffer = new byte[0];
+        var reader = new Utf8JsonReader();
+
+        if (RequestType.Read(ref reader) is T value)
+        {
+            return value;
+        }
+        throw new Exception();
     }
 
     public T GetService<T>()
     {
-        throw new NotImplementedException();
+        if (ServiceProvider.GetService(typeof(T)) is T service)
+        {
+            return service;
+        }
+
+        throw new Exception();
+    }
+
+    public T GetRouteValue<T>(string paramName)
+    {
+        var routeSegments = Binding.Route.Segments;
+        var pathSegments = Request.Path.Segments;
+
+        for (int i = 0; i < pathSegments.Length; i++)
+        {
+            var rs = routeSegments[i];
+            var ps = pathSegments[i];
+
+            if (rs.SegmentType == RouteSegmentType.Parameter && r) 
+        }
     }
 }

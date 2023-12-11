@@ -10,10 +10,11 @@ namespace Assimalign.OGraph.Syntax;
 public sealed class EdgeNode : QueryNode
 {
     internal EdgeNode() { }
-    public EdgeNode(LabelNode labelNode, IEnumerable<VertexNode> vertexNodes)
+    public EdgeNode(LabelNode labelNode, VertexNode source, VertexNode target)
     {
         this.Label = labelNode;
-        this.Vertices = vertexNodes;
+        this.Source = source;
+        this.Target = target;
     }
 
     /// <summary>
@@ -21,14 +22,17 @@ public sealed class EdgeNode : QueryNode
     /// </summary>
     public LabelNode Label { get; init; }
     /// <summary>
-    /// The target vertex
+    /// 
     /// </summary>
-    public IEnumerable<VertexNode> Vertices { get; init; }
+    public VertexNode Source { get; init; }
+    /// <summary>
+    /// 
+    /// </summary>
+    public VertexNode Target { get; init; }
     /// <summary>
     /// A temporary name to be assigned in replacement of the property name.
     /// </summary>
     public string? Alias { get; init; }
-
     /// <summary>
     /// 
     /// </summary>

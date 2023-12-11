@@ -2,12 +2,12 @@
 
 using Properties;
 
-internal class GdmUnknownException : OGraphGdmException
+internal class GdmUnknownException : GdmException
 {
     public GdmUnknownException() : base(Resources.GDM0000)
     {
-        ErrorCode = OGraphGdmErrorCode.GDM0000;
+        ErrorCode = GdmErrorCode.GDM0000;
     }
 
-    public override OGraphGdmErrorCode ErrorCode { get; }
+    public override GdmErrorCode ErrorCode { get; }
 }

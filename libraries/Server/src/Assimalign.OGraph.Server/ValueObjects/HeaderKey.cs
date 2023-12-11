@@ -97,4 +97,9 @@ public readonly struct HeaderKey :
 
     public static implicit operator string(HeaderKey key) => key.Value;
     public static implicit operator HeaderKey(string value) => new HeaderKey(value);
+
+
+    public static HeaderKey ContentType => "Content-Type";
+    public static HeaderKey ContentLength => "Content-Length";
+    public static HeaderKey Accept => "Accept";
 }

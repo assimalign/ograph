@@ -5,6 +5,7 @@ using Assimalign.OGraph.Gdm;
 public interface IOGraphOperationBindingDescriptor
 {
     IOGraphOperationBindingDescriptor UseRoute(Route route);
+    IOGraphOperationBindingDescriptor UseMethod(Method method);
     IOGraphOperationBindingDescriptor UseRequestType<TGdmType>() where TGdmType : IOGraphGdmType;
     IOGraphOperationBindingDescriptor UseMiddleware<TMiddleware>() where TMiddleware : IOGraphOperationBindingMiddleware, new();
     IOGraphOperationBindingDescriptor UseMiddleware(OGraphOperationBindingMiddleware middleware);

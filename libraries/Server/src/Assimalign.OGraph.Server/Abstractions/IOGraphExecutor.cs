@@ -6,6 +6,9 @@ namespace Assimalign.OGraph;
 /// <summary>
 /// 
 /// </summary>
+/// <remarks>
+/// This is a wrapper interface for whatever host the user implements.
+/// </remarks>
 public interface IOGraphExecutor
 {
     /// <summary>

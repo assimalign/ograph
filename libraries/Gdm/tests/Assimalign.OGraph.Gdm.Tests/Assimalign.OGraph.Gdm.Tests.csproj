@@ -1,5 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="..\..\..\..\Directory.Build.props" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<IsPackable>false</IsPackable>
 		<IsTestProject>true</IsTestProject>
@@ -18,5 +17,8 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\Assimalign.OGraph.Gdm\Assimalign.OGraph.Gdm.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="Validation\" />
 	</ItemGroup>
 </Project>

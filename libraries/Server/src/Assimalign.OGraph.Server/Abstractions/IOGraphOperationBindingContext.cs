@@ -4,6 +4,7 @@ using System.Security.Claims;
 namespace Assimalign.OGraph;
 
 using Assimalign.OGraph.Gdm;
+using Assimalign.OGraph.Syntax;
 
 /// <summary>
 /// 
@@ -13,11 +14,11 @@ public interface IOGraphOperationBindingContext : IOGraphGdmBindingContext
     /// <summary>
     /// 
     /// </summary>
-    IOGraphRequest Request { get; }
+    IOGraphExecutorRequest Request { get; }
     /// <summary>
-    /// 
+    /// The HTTP response to send back to the client.
     /// </summary>
-    IOGraphResponse Response { get; }
+    IOGraphExecutorResponse Response { get; }
     /// <summary>
     /// 
     /// </summary>
@@ -35,6 +36,22 @@ public interface IOGraphOperationBindingContext : IOGraphGdmBindingContext
     /// <summary>
     /// 
     /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="paramName"></param>
+    /// <returns></returns>
+    T GetRouteValue<T>(string paramName);
+    /// <summary>
+    /// 
+    /// </summary>
     /// <returns></returns>
     ClaimsPrincipal GetClaimsPrincipal();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    QueryDocument? GetQueryDocument();
+
+
+    OGraphQueryOptions GetQueryOptions();
+    IOGraphQueryProvider GetQueryProvider();
 }

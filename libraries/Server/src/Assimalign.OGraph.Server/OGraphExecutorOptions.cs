@@ -14,7 +14,7 @@ public sealed class OGraphExecutorOptions
     /// </summary>
     public string? RoutePrefix { get; set; }
     /// <summary>
-    /// 
+    /// The default media type to use if not specified
     /// </summary>
     public string DefaultMediaType { get; set; } = OGraphMediaType.Json;
     /// <summary>

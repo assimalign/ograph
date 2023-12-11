@@ -1,10 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="..\..\..\..\Directory.Build.props" />
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\Gdm\src\Assimalign.OGraph.Gdm\Assimalign.OGraph.Gdm.csproj" />
-		<ProjectReference Include="..\..\..\Syntax\src\Assimalign.OGraph.Syntax\Assimalign.OGraph.Syntax.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Linq\" />
+	  <ProjectReference Include="..\..\..\Core\src\Assimalign.OGraph.Core\Assimalign.OGraph.Core.csproj" />
 	</ItemGroup>
 </Project>

@@ -5,9 +5,12 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
+
 namespace Assimalign.OGraph;
 
-[DebuggerDisplay("Route: {Value}")]
+using Assimalign.OGraph.Internal;
+
+[DebuggerDisplay("{Value}")]
 public readonly struct Route :
     IEquatable<Route>,
     IEqualityComparer<Route>,
@@ -22,11 +25,16 @@ public readonly struct Route :
         "$schema"           // GET /users/$schema?operation=CreateUser&format={json/xsd}
     };
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="route"></param>
+    /// <exception cref="ArgumentNullException"></exception>
     public Route(string route)
     {
         if (string.IsNullOrEmpty(route))
         {
-            throw new ArgumentNullException(nameof(route));
+            ThrowHelper.ThrowArgumentNullException(nameof(route));
         }
         this.segments = GetSegments(route);
     }
@@ -85,6 +93,7 @@ public readonly struct Route :
     /// Gets the raw route value.
     /// </summary>
     public string Value => ToString();
+
     /// <summary>
     /// Gets a copy of the route segment.
     /// </summary>
@@ -98,10 +107,14 @@ public readonly struct Route :
             return copy;
         }
     }
+
+    /// <inheritdoc />
     public override string ToString()
     {
         return string.Join('/', Segments.Select(x => x.Value));
     }
+
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         var hashCode = new HashCode();
@@ -111,7 +124,9 @@ public readonly struct Route :
         }
         return hashCode.ToHashCode();
     }
-    public override bool Equals([NotNullWhen(true)] object? instance)
+
+    /// <inheritdoc />
+    public override bool Equals(object? instance)
     {
         if (instance is Route route)
         {
@@ -126,25 +141,8 @@ public readonly struct Route :
     /// <param name="path"></param>
     public bool IsMatch(Path path)
     {
-        return IsMatch(path, null);
-    }
-    /// <summary>
-    /// Matches the Path to the Route
-    /// </summary>
-    /// <param name="path"></param>
-    /// <param name="prefix">The prefix in the route to ignore.</param>
-    /// <returns></returns>
-    public bool IsMatch(Path path, string? prefix = null)
-    {
-        var route = this;
-
-        if (!string.IsNullOrEmpty(prefix))
-        {
-            route = route.Value.Trim('/').Trim('\\').Replace(prefix, "");
-        }
-
         var pSegments = path.Segments;
-        var rSegments = route.Segments;
+        var rSegments = Segments;
 
         // Ensure same segment length
         if (pSegments.Length != rSegments.Length)
@@ -153,63 +151,15 @@ public readonly struct Route :
         }
         for (int i = 0; i < pSegments.Length; i++)
         {
-            if (!rSegments[i].IsMatch(pSegments[i]))
+            var rseg = rSegments[i];
+            var pseg = pSegments[i];
+
+            if (!rseg.IsParameter() && rseg.Ordinal == pseg.Ordinal && !rseg.Equals(pseg.Value))
             {
                 return false;
             }
         }
         return true;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="path"></param>
-    /// <param name="paramName"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public T GetRouteValue<T>(Path path, string paramName)
-    {
-        throw new NotImplementedException();
-        //var segment = 
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="args"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    public Path Format(params object[] args)
-    {
-        var stringBuilder = new StringBuilder();
-        var segments = Segments;
-        var parameterCount = segments.Count(p => p.SegmentType.Equals(RouteSegmentType.Parameter));
-        
-        if (parameterCount.Equals(args.Length))
-        {
-            throw new ArgumentException($"Argument count does not match the number of route parameters. Expected {parameterCount}, received {args.Length}");
-        }
-
-        for (int i = 0; i < segments.Length; i++)
-        {
-            var segment = segments[i];
-
-            switch (segment.SegmentType)
-            {
-                case RouteSegmentType.Literal:
-                    {
-                        stringBuilder.Append(segment.Value);
-                        break;
-                    }
-                case RouteSegmentType.Parameter:
-                    {
-                        // TODO: 
-                        break;
-                    }
-            }
-        }
-
-        return stringBuilder.ToString();
     }
 
     #region Implicit Interfaces
@@ -250,6 +200,32 @@ public readonly struct Route :
     public static bool operator !=(Route left, Route right) => !left.Equals(right);
 
     public static implicit operator Route(string route) => new Route(route);
+
     public static implicit operator string(Route route) => route.ToString();
+    #endregion
+
+    #region Helper Methods
+
+    /// <summary>
+    /// Concats the two routes together.
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <returns></returns>
+    public static Route Combine(Route left, Route right)
+    {
+        return Combine(new[] { left, right });
+    }
+
+    /// <summary>
+    /// Cancats all the routes together.
+    /// </summary>
+    /// <param name="routes"></param>
+    /// <returns></returns>
+    public static Route Combine(params Route[] routes)
+    {
+        return string.Join('/', routes.Select(p => p.ToString()));
+    }
+
     #endregion
 }

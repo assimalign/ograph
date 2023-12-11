@@ -11,7 +11,20 @@ public interface IOGraphGdmEdgeDescriptor<TSource, TTarget>
     where TSource : class, new()
     where TTarget : class, new()
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="label"></param>
+    /// <returns></returns>
     IOGraphGdmEdgeDescriptor<TSource, TTarget> HasLabel(Label label);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     IOGraphGdmEdgeDescriptor<TSource, TTarget> WithOne();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     IOGraphGdmEdgeDescriptor<TSource, TTarget> WithMany();
 }

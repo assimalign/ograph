@@ -11,7 +11,7 @@ namespace Assimalign.OGraph.Internal;
 using Assimalign.OGraph.Gdm;
 using Assimalign.OGraph.Syntax;
 
-internal class OperationBinding : IOGraphOperationBinding
+internal partial class OperationBinding : IOGraphOperationBinding
 {
     public OperationBinding()
     {
@@ -34,24 +34,77 @@ internal class OperationBinding : IOGraphOperationBinding
     {
         if (context is not OperationBindingContext ctx)
         {
-            throw new ArgumentException();
+            ThrowHelper.ThrowArgumentException("");
         }
         else
         {
             try
             {
-                var vertex = context.Element;
-                var handler = GetChain();
-                var result = await handler(ctx, cancellationToken);
+                var request = ctx.Request;
+                var response = ctx.Response;
 
-                var task = result switch
+                // 2. 415 Check - Let's check Content Length & Type header
+                if (request.Headers.TryGetValue(HeaderKey.ContentLength, out var contentLength))
                 {
-                    IOGraphErrorResult error => Task.CompletedTask,
-                    IOGraphQueryResult query => Task.CompletedTask,
-                    IOGraphObjectResult value => Task.CompletedTask
-                };
+                    var length = long.Parse(contentLength!);
 
-                await task;
+                    if (length > 0 && request.Headers.TryGetValue(HeaderKey.ContentType, out var contentType))
+                    {
+                        var collection = (contentType as ICollection<string>);
+
+                        if (!collection.Contains(OGraphMediaType.Json) && collection.Contains(OGraphMediaType.Xml))
+                        {
+
+                        }
+                    }
+                    // Unsupported Media Type
+                    else
+                    {
+
+                    }
+                }
+
+                // 3. 406 Check - Check for accept header
+                if (request.Headers.TryGetValue(HeaderKey.Accept, out var accept))
+                {
+                    var collection = accept as ICollection<string>;
+
+                    // Accepts either any content-type or both OGraph content-type.
+                    if (collection.Contains("*/*") || (collection.Contains(OGraphMediaType.Xml) && collection.Contains(OGraphMediaType.Json)))
+                    {
+
+                    }
+                    else if (collection.Contains(OGraphMediaType.Xml))
+                    {
+
+                    }
+                    else if (collection.Contains(OGraphMediaType.Json))
+                    {
+
+                    }
+                    // The user requested an Unsupported media type. - 406 (Not Acceptable)
+                    else
+                    {
+                        return ProcessErrorResultAsJsonAsync(new OGraph)
+                    }
+                }
+                else
+                {
+
+
+                    var vertex = context.Element;
+                    var handler = GetChain();
+                    var result = await handler(ctx, cancellationToken);
+
+                    var task = result switch
+                    {
+                        IOGraphErrorResult error => ProcessErrorResultAsync(error, ctx),
+                        IOGraphQueryResult query => Task.CompletedTask,
+                        IOGraphObjectResult value => Task.CompletedTask
+                    };
+
+                    return task;
+                }
             }
             catch (Exception exception)
             {
@@ -70,7 +123,6 @@ internal class OperationBinding : IOGraphOperationBinding
 
     private async Task ProcessQueryResultAsync(OperationBindingContext context, IOGraphQueryResult result, CancellationToken cancellationToken = default)
     {
-
         var writer = new Either<XmlWriter, Utf8JsonWriter>(new Utf8JsonWriter(context.Response.Body));
 
         var element = context.Element;

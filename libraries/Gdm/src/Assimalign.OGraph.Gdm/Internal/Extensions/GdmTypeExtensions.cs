@@ -1,99 +1,92 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
 internal static class GdmTypeExtensions
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    public static IOGraphGdmType GetGdmType(this Type type)
+    public static IOGraphGdmType GetGdmType([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] this Type runtimeType)
     {
-        if (type.TryGetGdmType(out var gdmType))
+        if (!runtimeType.TryGetGdmType(out var gdmType))
         {
-            return gdmType!;
+            GdmThrowHelper.ThrowArgumentException("Runtime type could not be mapped to GDM Type.");
         }
-
-        throw new Exception();
+        return gdmType!;
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="type"></param>
-    /// <param name="gdmType"></param>
-    /// <returns></returns>
-    public static bool TryGetGdmType(this Type type, out IOGraphGdmType? gdmType)
+    public static bool TryGetGdmType([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] this Type runtimeType, out IOGraphGdmType? gdmType)
     {
         gdmType = null;
 
-        if (type.TryGetGdmPrimitiveType(out var gdmPrimitiveType))
+        if (runtimeType.TryGetGdmPrimitiveType(out gdmType))
         {
             gdmType = gdmPrimitiveType;
             return true;
         }
-        if (type.TryGetGdmEnumType(out var gdmEnumType))
+        if (runtimeType.TryGetGdmEnumType(out var gdmEnumType))
         {
             gdmType = gdmEnumType;
             return true;
         }
-        if (type.TryGetGdmCollectionType(out var gdmCollectionType))
+        if (runtimeType.TryGetGdmCollectionType(out var gdmCollectionType))
         {
             gdmType = gdmCollectionType;
             return true;
         }
-        if (type.TryGetGdmComplexType(out var gdmComplexType))
+        if (runtimeType.TryGetGdmComplexType(out var gdmComplexType))
         {
             gdmType = gdmComplexType;
             return true;
         }
 
-
         return false;
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    public static IOGraphGdmEnumType GetGdmEnumType(this Type type)
+    public static IOGraphGdmEnumType GetGdmEnumType(this Type runtimeType)
     {
-        if (type.TryGetGdmEnumType(out var gdmEnumType))
+        if (runtimeType.TryGetGdmEnumType(out var gdmType))
         {
-            return gdmEnumType!;
+            GdmThrowHelper.ThrowArgumentException("Runtime type could not be mapped to GDM Type.");
         }
-        throw new Exception();
+        return gdmType!;
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="type"></param>
-    /// <param name="gdmCollectionType"></param>
-    /// <returns></returns>
-    public static bool TryGetGdmEnumType(this Type type, out IOGraphGdmEnumType? gdmEnumType)
+    public static bool TryGetGdmEnumType(this Type runtimeType, out IOGraphGdmEnumType? gdmType)
     {
-        gdmEnumType = null;
+        gdmType = null;
 
-        if (type.IsEnum)
+        if (runtimeType.Name == "Nullable`1" && runtimeType.GenericTypeArguments[0].IsEnum)
         {
-            var enumType = typeof(GdmEnumType<>).MakeGenericType(type);
-            gdmEnumType = (Activator.CreateInstance(enumType) as IOGraphGdmEnumType)!;
-            return true;
+            gdmType = new GdmEnumType(runtimeType.GenericTypeArguments[0]);
         }
-        var typeArgs = type.GetGenericArguments();
-        if (typeArgs.Length == 1 &&
-            typeArgs[0].IsEnum &&
-            typeof(Nullable<>).MakeGenericType(typeArgs[0]).IsAssignableTo(type))
+        if (runtimeType.IsEnum)
         {
-            var enumType = typeof(GdmNullEnumType<>).MakeGenericType(typeArgs[0]);
-            gdmEnumType = (Activator.CreateInstance(enumType) as IOGraphGdmEnumType)!;
-            return true;
+
         }
+
+
+        if (runtimeType.IsValueType && 
+            !runtimeType.IsEnum && 
+            runtimeType.GenericTypeArguments.Length == 1 && runtimeType.Ge)
+        runtimeType.GenericTypeArguments
+
+
+        //if (type.IsEnum)
+        //{
+        //    var enumType = typeof(GdmEnumType<>).MakeGenericType(type);
+        //    gdmEnumType = (Activator.CreateInstance(enumType) as IOGraphGdmEnumType)!;
+        //    return true;
+        //}
+        //var typeArgs = type.GetGenericArguments();
+        //if (typeArgs.Length == 1 &&
+        //    typeArgs[0].IsEnum &&
+        //    typeof(Nullable<>).MakeGenericType(typeArgs[0]).IsAssignableTo(type))
+        //{
+        //    var enumType = typeof(GdmNullEnumType<>).MakeGenericType(typeArgs[0]);
+        //    gdmEnumType = (Activator.CreateInstance(enumType) as IOGraphGdmEnumType)!;
+        //    return true;
+        //}
 
         return false;
     }
@@ -110,35 +103,30 @@ internal static class GdmTypeExtensions
         }
         throw new Exception();
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="type"></param>
-    /// <param name="gdmCollectionType"></param>
-    /// <returns></returns>
-    public static bool TryGetGdmCollectionType(this Type type, out IOGraphGdmCollectionType? gdmCollectionType)
+    public static bool TryGetGdmCollectionType(this Type runtimeType, out IOGraphGdmCollectionType? gdmType)
     {
-        gdmCollectionType = null;
+        gdmType = null;
 
-        if (type.IsEnumerableType(out var enumerableType))
+        if (runtimeType.IsGenericType)
         {
+
+        }
+
+        if (runtimeType.IsEnumerableType(out var enumerableType))
+        {
+            
             if (enumerableType.TryGetGdmType(out var gdmType))
             {
-                var collectionType = typeof(GdmCollectionType<>).MakeGenericType(gdmType!.GetType());
-                gdmCollectionType = (Activator.CreateInstance(collectionType) as IOGraphGdmCollectionType)!;
+                var collectionType = typeof(GdmListType<>).MakeGenericType(gdmType!.GetType());
+                gdmType = (Activator.CreateInstance(collectionType) as IOGraphGdmCollectionType)!;
                 return true;
             }
         }
 
         return false;
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
-    public static IOGraphGdmComplexType GetGdmComplexType(this Type type)
+
+    public static IOGraphGdmComplexType GetGdmComplexType([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] this Type type)
     {
         if (type.TryGetGdmComplexType(out var gdmComplexType))
         {
@@ -146,58 +134,52 @@ internal static class GdmTypeExtensions
         }
         throw new Exception("");
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="type"></param>
-    /// <param name="gdmComplexType"></param>
-    /// <returns></returns>
-    public static bool TryGetGdmComplexType(this Type type, out IOGraphGdmComplexType? gdmComplexType)
+    public static bool TryGetGdmComplexType([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] this Type runtimeType, out IOGraphGdmComplexType? gdmType)
     {
-        gdmComplexType = null;
+        gdmType = null;
         // 1. Check that Type is not null
-        if (type is null)
+        if (runtimeType is null)
         {
             return false;
         }
         // 2. Check that the type is a reference type
-        if (!type.IsClass)
+        if (!runtimeType.IsClass)
         {
             return false;
         }
         // 3. Ensure class is NOT abstract
-        if (type.IsAbstract)
+        if (runtimeType.IsAbstract)
         {
             return false;
         }
         // 4. Since a delegate are actually compiled into a class. Let's check that 
-        if (type.IsSubclassOf(typeof(Delegate)))
+        if (runtimeType.IsSubclassOf(typeof(Delegate)))
         {
             return false;
         }
         // 5. Check if type has default constructor
-        if (type.GetConstructor(Type.EmptyTypes) is null)
+        if (runtimeType.GetConstructor(Type.EmptyTypes) is null)
         {
             return false;
         }
-        if (type.IsAssignableTo(typeof(string)))
+        // 6. Ensure 
+        if (runtimeType.IsAssignableTo(typeof(string)))
         {
             return false;
         }
 
-        var complexType = typeof(GdmComplexType<>).MakeGenericType(type);
 
-        gdmComplexType = (Activator.CreateInstance(complexType) as IOGraphGdmComplexType)!;
+        gdmType = GdmComplexType.Create(descriptor =>
+        {
+            descriptor.HasRuntimeType(runtimeType);
+        });
+        //var complexType = typeof(GdmComplexType<>).MakeGenericType(type);
+
+        //gdmComplexType = (Activator.CreateInstance(complexType) as IOGraphGdmComplexType)!;
 
         return true;
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="ArgumentException"></exception>
+
     public static IEnumerable<GdmProperty> GetGdmComplexTypeProperties(this Type type)
     {
         // 1. Check that Type is not null
@@ -249,235 +231,231 @@ internal static class GdmTypeExtensions
             {
                 property.Type = new GdmTypeReference()
                 {
-                    Definition = gdmType
+                    Definition = gdmType!
                 };
             }
 
             yield return property;
         }
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
+
     public static IOGraphGdmPrimitiveType GetGdmPrimitiveType(this Type type)
     {
         if (type.TryGetGdmPrimitiveType(out var gdmPrimitiveType))
         {
-            return gdmPrimitiveType;
+            return gdmPrimitiveType!;
         }
         throw new Exception("Couldn't identify type");
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="type"></param>
-    /// <param name="gdmPrimitiveType"></param>
-    /// <returns></returns>
-    public static bool TryGetGdmPrimitiveType(this Type type, out IOGraphGdmPrimitiveType gdmPrimitiveType)
+    public static bool TryGetGdmPrimitiveType(this Type runtimeType, out IOGraphGdmPrimitiveType? gdmType)
     {
-        gdmPrimitiveType = null;
-        if (type == typeof(Uri))
+        gdmType = null;
+
+        static Dictionary<Type, IOGraphGdmType> types = new();
+        if (runtimeType == typeof(Uri))
         {
-            gdmPrimitiveType = new GdmUriType();
+            gdmType = new GdmUriType();
             return true;
         }
-        if (type == typeof(Byte))
+        if (runtimeType == typeof(Byte))
         {
-            gdmPrimitiveType = new GdmByteType();
+            gdmType = new GdmByteType();
             return true;
         }
-        if (type == typeof(Char))
+        if (runtimeType == typeof(Char))
         {
-            gdmPrimitiveType = new GdmCharType();
+            gdmType = new GdmCharType();
             return true;
         }
-        if (type == typeof(Char?))
+        if (runtimeType == typeof(Char?))
         {
-            gdmPrimitiveType = new GdmNullCharType();
+            gdmType = new GdmNullCharType();
             return true;
         }
-        if (type == typeof(DateTimeOffset))
+        if (runtimeType == typeof(DateTimeOffset))
         {
-            gdmPrimitiveType = new GdmDateTimeOffsetType();
+            gdmType = new GdmDateTimeOffsetType();
             return true;
         }
-        if (type == typeof(DateTimeOffset?))
+        if (runtimeType == typeof(DateTimeOffset?))
         {
-            gdmPrimitiveType = new GdmNullDateTimeOffsetType();
+            gdmType = new GdmNullDateTimeOffsetType();
             return true;
         }
-        if (type == typeof(DateTime))
+        if (runtimeType == typeof(DateTime))
         {
-            gdmPrimitiveType = new GdmDateTimeType();
+            gdmType = new GdmDateTimeType();
             return true;
         }
-        if (type == typeof(DateTime?))
+        if (runtimeType == typeof(DateTime?))
         {
-            gdmPrimitiveType = new GdmNullDateTimeType();
+            gdmType = new GdmNullDateTimeType();
             return true;
         }
-        if (type == typeof(DateOnly))
+        if (runtimeType == typeof(DateOnly))
         {
-            gdmPrimitiveType = new GdmDateType();
+            gdmType = new GdmDateType();
             return true;
         }
-        if (type == typeof(DateOnly?))
+        if (runtimeType == typeof(DateOnly?))
         {
-            gdmPrimitiveType = new GdmNullDateType();
+            gdmType = new GdmNullDateType();
             return true;
         }
-        if (type == typeof(Decimal))
+        if (runtimeType == typeof(Decimal))
         {
-            gdmPrimitiveType = new GdmDecimalType();
+            gdmType = new GdmDecimalType();
             return true;
         }
-        if (type == typeof(Decimal?))
+        if (runtimeType == typeof(Decimal?))
         {
-            gdmPrimitiveType = new GdmNullDecimalType();
+            gdmType = new GdmNullDecimalType();
             return true;
         }
-        if (type == typeof(Double))
+        if (runtimeType == typeof(Double))
         {
-            gdmPrimitiveType = new GdmDoubleType();
+            gdmType = new GdmDoubleType();
             return true;
         }
-        if (type == typeof(Double?))
+        if (runtimeType == typeof(Double?))
         {
-            gdmPrimitiveType = new GdmNullDoubleType();
+            gdmType = new GdmNullDoubleType();
             return true;
         }
-        if (type == typeof(float))
+        if (runtimeType == typeof(float))
         {
-            gdmPrimitiveType = new GdmFloatType();
+            gdmType = new GdmFloatType();
             return true;
         }
-        if (type == typeof(float?))
+        if (runtimeType == typeof(float?))
         {
-            gdmPrimitiveType = new GdmNullFloatType();
+            gdmType = new GdmNullFloatType();
             return true;
         }
-        if (type == typeof(Guid))
+        if (runtimeType == typeof(Guid))
         {
-            gdmPrimitiveType = new GdmGuidType();
+            gdmType = new GdmGuidType();
             return true;
         }
-        if (type == typeof(Guid?))
+        if (runtimeType == typeof(Guid?))
         {
-            gdmPrimitiveType = new GdmNullGuidType();
+            gdmType = new GdmNullGuidType();
             return true;
         }
-        if (type == typeof(Half))
+        if (runtimeType == typeof(Half))
         {
-            gdmPrimitiveType = new GdmHalfType();
+            gdmType = new GdmHalfType();
             return true;
         }
-        if (type == typeof(Half?))
+        if (runtimeType == typeof(Half?))
         {
-            gdmPrimitiveType = new GdmNullHalfType();
+            gdmType = new GdmNullHalfType();
             return true;
         }
 #if NET7_0_OR_GREATER
-        if (type == typeof(Int128))
+        if (runtimeType == typeof(Int128))
         {
-            gdmPrimitiveType = new GdmInt128Type();
+            gdmType = new GdmInt128Type();
             return true;
         }
-        if (type == typeof(Int128?))
+        if (runtimeType == typeof(Int128?))
         {
-            gdmPrimitiveType = new GdmNullInt128Type();
+            gdmType = new GdmNullInt128Type();
             return true;
 
         }
 #endif
-        if (type == typeof(Int16))
+        if (runtimeType == typeof(Int16))
         {
-            gdmPrimitiveType = new GdmInt16Type();
+            gdmType = new GdmInt16Type();
             return true;
         }
-        if (type == typeof(Int16?))
+        if (runtimeType == typeof(Int16?))
         {
-            gdmPrimitiveType = new GdmNullInt16Type();
+            gdmType = new GdmNullInt16Type();
             return true;
         }
-        if (type == typeof(Int32))
+        if (runtimeType == typeof(Int32))
         {
-            gdmPrimitiveType = new GdmInt32Type();
+            gdmType = new GdmInt32Type();
             return true;
         }
-        if (type == typeof(Int32?))
+        if (runtimeType == typeof(Int32?))
         {
-            gdmPrimitiveType = new GdmNullInt32Type();
+            gdmType = new GdmNullInt32Type();
             return true;
         }
-        if (type == typeof(Int64))
+        if (runtimeType == typeof(Int64))
         {
-            gdmPrimitiveType = new GdmInt64Type();
+            gdmType = new GdmInt64Type();
             return true;
         }
-        if (type == typeof(Int64?))
+        if (runtimeType == typeof(Int64?))
         {
-            gdmPrimitiveType = new GdmNullInt64Type();
+            gdmType = new GdmNullInt64Type();
             return true;
         }
-        if (type == typeof(string))
+        if (runtimeType == typeof(string))
         {
-            gdmPrimitiveType = new GdmStringType();
+            gdmType = new GdmStringType();
             return true;
         }
-        if (type == typeof(TimeSpan))
+        if (runtimeType == typeof(TimeSpan))
         {
-            gdmPrimitiveType = new GdmTimeSpanType();
+            gdmType = new GdmTimeSpanType();
             return true;
         }
-        if (type == typeof(TimeSpan?))
+        if (runtimeType == typeof(TimeSpan?))
         {
-            gdmPrimitiveType = new GdmNullTimeSpanType();
+            gdmType = new GdmNullTimeSpanType();
             return true;
         }
-        if (type == typeof(TimeOnly))
+        if (runtimeType == typeof(TimeOnly))
         {
-            gdmPrimitiveType = new GdmTimeType();
+            gdmType = new GdmTimeType();
             return true;
         }
-        if (type == typeof(TimeOnly?))
+        if (runtimeType == typeof(TimeOnly?))
         {
-            gdmPrimitiveType = new GdmNullTimeType();
+            gdmType = new GdmNullTimeType();
             return true;
         }
-        if (type == typeof(UInt16))
+        if (runtimeType == typeof(UInt16))
         {
-            gdmPrimitiveType = new GdmUInt16Type();
+            gdmType = new GdmUInt16Type();
             return true;
         }
-        if (type == typeof(UInt16?))
+        if (runtimeType == typeof(UInt16?))
         {
-            gdmPrimitiveType = new GdmNullUInt16Type();
+            gdmType = new GdmNullUInt16Type();
             return true;
         }
-        if (type == typeof(UInt32))
+        if (runtimeType == typeof(UInt32))
         {
-            gdmPrimitiveType = new GdmUInt32Type();
+            gdmType = new GdmUInt32Type();
             return true;
         }
-        if (type == typeof(UInt32?))
+        if (runtimeType == typeof(UInt32?))
         {
-            gdmPrimitiveType = new GdmNullUInt32Type();
+            gdmType = new GdmNullUInt32Type();
             return true;
         }
-        if (type == typeof(UInt64))
+        if (runtimeType == typeof(UInt64))
         {
-            gdmPrimitiveType = new GdmUInt64Type();
+            gdmType = new GdmUInt64Type();
             return true;
         }
-        if (type == typeof(UInt64?))
+        if (runtimeType == typeof(UInt64?))
         {
-            gdmPrimitiveType = new GdmNullUInt64Type();
+            gdmType = new GdmNullUInt64Type();
             return true;
         }
 
         return false;
     }
+
+
+
+
+
 }

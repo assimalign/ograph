@@ -53,32 +53,25 @@ internal class GdmPropertyDescriptor<T> : IOGraphGdmPropertyDescriptor<T>
         property.Metadata.Add(key, value);
         return this;
     }
-
     public IOGraphGdmPropertyDescriptor<T> UsePropertyName(Label label)
     {
         property.Label = label;
         return this;
     }
-
-    
-
-    public IOGraphGdmPropertyDescriptor<T> UseType<TType>() where TType : IOGraphGdmType, new()
+    public IOGraphGdmPropertyDescriptor<T> UseType<TGdmType>() where TGdmType : IOGraphGdmType, new()
     {
-        return UseType(new TType());
+        return UseType(new TGdmType());
     }
-
     public IOGraphGdmPropertyDescriptor<T> UseType(IOGraphGdmType type)
     {
         if (type is null)
         {
             throw new ArgumentNullException(nameof(type));
         }
-
         property.Type = new GdmTypeReference()
         {
             Definition = type
         };
-
         return this;
     }
 }

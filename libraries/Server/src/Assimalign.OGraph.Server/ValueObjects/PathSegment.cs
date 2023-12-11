@@ -24,7 +24,7 @@ public readonly struct PathSegment :
     /// </summary>
     public string Value { get; }
     /// <summary>
-    /// 
+    /// The ordinal position of the segment.
     /// </summary>
     public int Ordinal { get; }
 

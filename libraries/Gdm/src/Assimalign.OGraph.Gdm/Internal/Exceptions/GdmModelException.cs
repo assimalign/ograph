@@ -1,6 +1,6 @@
 ﻿namespace Assimalign.OGraph.Gdm.Internal;
 
-internal class GdmModelException : OGraphGdmException
+internal class GdmModelException : GdmException
 {
     public GdmModelException(GdmValidatorError error) : base(error.Message)
     {
@@ -8,17 +8,17 @@ internal class GdmModelException : OGraphGdmException
         Source = error.Source;
     }
 
-    public GdmModelException(OGraphGdmErrorCode errorCode, string? message) 
+    public GdmModelException(GdmErrorCode errorCode, string? message) 
         : base(message)
     {
         ErrorCode = errorCode;
     }
-    public GdmModelException(OGraphGdmErrorCode errorCode, string source, string? message) 
+    public GdmModelException(GdmErrorCode errorCode, string source, string? message) 
         : base(message)
     {
         ErrorCode = errorCode;
         Source = source;
     }
     public override string? Source { get; set; }
-    public override OGraphGdmErrorCode ErrorCode { get;  }
+    public override GdmErrorCode ErrorCode { get;  }
 }

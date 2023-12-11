@@ -2,17 +2,16 @@
 using System.Xml;
 using System.Text.Json;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.OGraph.Gdm;
 
-using Internal;
+using Assimalign.OGraph.Gdm.Internal;
 
 [DebuggerDisplay("Gdm Type ({Kind}): {Label}")]
 public class GdmComplexType : IOGraphGdmComplexType
 {
     private readonly Action<IOGraphGdmComplexTypeDescriptor> configure;
-
-    internal Label label;
 
     public GdmComplexType() : this(descriptor => { }) { }
     public GdmComplexType(Type type) : this(type, descriptor => { }) { }
@@ -26,6 +25,7 @@ public class GdmComplexType : IOGraphGdmComplexType
         this.configure = configure;
         this.Configure(new GdmComplexTypeDescriptor(this));
     }
+
     GdmComplexType(Type type, Action<IOGraphGdmComplexTypeDescriptor> configure)
     {
         if (configure is null)
@@ -38,20 +38,7 @@ public class GdmComplexType : IOGraphGdmComplexType
         }
         this.configure = configure;
         this.RuntimeType = type;
-        this.Initialize();
         this.Configure(new GdmComplexTypeDescriptor(this));
-    }
-
-    private void Initialize()
-    {
-        foreach (var property in RuntimeType.GetGdmComplexTypeProperties())
-        {
-            property.DeclaringType = new GdmTypeReference()
-            {
-                Definition = this
-            };
-            Properties.Add(property);
-        }
     }
 
     protected virtual void Configure(IOGraphGdmComplexTypeDescriptor descriptor)
@@ -59,15 +46,20 @@ public class GdmComplexType : IOGraphGdmComplexType
         configure.Invoke(descriptor);
     }
 
-    public Label Label
-    {
-        get => label;
-        init => label = value;
-    }
-    public GdmTypeKind Kind => GdmTypeKind.Complex;
-    public IOGraphGdmPropertyCollection Properties { get; } = new GdmPropertyCollection();
-    public Type RuntimeType { get; } = default!;
-    public GdmElementType ElementType => GdmElementType.Type;
+    #region Explicit Implementations
+    Label IOGraphGdmElement.Label => Label;
+    Type IOGraphGdmType.RuntimeType => RuntimeType;
+    GdmTypeKind IOGraphGdmType.Kind => GdmTypeKind.Complex;
+    GdmElementType IOGraphGdmElement.ElementType => GdmElementType.Type;
+    IOGraphGdmPropertyCollection IOGraphGdmComplexType.Properties { get; } = new GdmPropertyCollection();
+    #endregion
+
+    internal Label Label { get; set; }
+
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
+    internal Type RuntimeType { get; set; } = default!;
+    
+    
     public virtual object Read(ref Utf8JsonReader reader)
     {
         if (!reader.IsStartOfObjectToken())
@@ -76,14 +68,16 @@ public class GdmComplexType : IOGraphGdmComplexType
         }
         string propertyName;
 
-        var instance = Activator.CreateInstance(RuntimeType!);
+        var instance = Activator.CreateInstance(RuntimeType);
 
         if (instance is null)
         {
             throw new Exception();
         }
 
-        while ((reader.Read() && reader.TokenType != JsonTokenType.EndObject))
+        var startDepth = reader.CurrentDepth;
+
+        while (reader.Read() || reader.TokenType != JsonTokenType.EndObject)
         {
             if (reader.TokenType == JsonTokenType.PropertyName)
             {
@@ -92,7 +86,7 @@ public class GdmComplexType : IOGraphGdmComplexType
 
             propertyName = reader.GetString()!;
 
-            var property = Properties[propertyName];
+            var property = (this as IOGraphGdmComplexType).Properties[propertyName];
             var propertyType = property.Type.Definition;
 
             reader.Read();
@@ -100,6 +94,8 @@ public class GdmComplexType : IOGraphGdmComplexType
             var propertyValue = propertyType.Read(ref reader);
 
             property.Setter.Invoke(instance, propertyValue);
+
+            if (reader.CurrentDepth >= startDepth) break;
         }
 
         return instance;
@@ -125,7 +121,7 @@ public class GdmComplexType : IOGraphGdmComplexType
 
             writer.WriteStartObject();
 
-            foreach (var property in Properties)
+            foreach (var property in (this as IOGraphGdmComplexType).Properties)
             {
                 var propertyName = property.Label;
                 var propertyType = property.Type.Definition;
@@ -150,6 +146,8 @@ public class GdmComplexType : IOGraphGdmComplexType
 
         throw new NotImplementedException();
     }
+
+    #region Overloads
     public override string ToString()
     {
         return Label;
@@ -164,9 +162,11 @@ public class GdmComplexType : IOGraphGdmComplexType
         {
             return GetHashCode() == instance.GetHashCode();
         }
-
         return false;
     }
+    #endregion
+
+    #region Static Members
 
     /// <summary>
     /// 
@@ -189,4 +189,6 @@ public class GdmComplexType : IOGraphGdmComplexType
     {
         return new GdmComplexType(type, configure);
     }
+
+    #endregion
 }

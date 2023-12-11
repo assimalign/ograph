@@ -11,31 +11,23 @@ namespace Assimalign.OGraph.Gdm;
 
 public sealed class GdmUriType : GdmPrimitiveType<Uri>
 {
-    public override Uri? Read(ref Utf8JsonReader reader)
+    public override Uri Read(ref Utf8JsonReader reader)
     {
-        if (reader.IsStringToken())
-        {
-            return new Uri(reader.GetString()!);
-        }
-        if (reader.IsNullToken())
-        {
-            return null;
-        }
-        return base.Read(ref reader);
+        return new Uri(reader.GetString()!);
     }
 
-    public override Uri? Read(XmlReader reader)
+    public override Uri Read(XmlReader reader)
     {
-        return base.Read(reader);
+        throw new NotImplementedException();
     }
 
-    public override void Write(Utf8JsonWriter writer, Uri? value)
+    public override void Write(Utf8JsonWriter writer, Uri value)
     {
-        base.Write(writer, value);
+        throw new NotImplementedException();
     }
 
-    public override void Write(XmlWriter writer, Uri? value)
+    public override void Write(XmlWriter writer, Uri value)
     {
-        base.Write(writer, value);
+        throw new NotImplementedException();
     }
 }

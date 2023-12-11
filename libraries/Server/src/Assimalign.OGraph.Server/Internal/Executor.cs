@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace Assimalign.OGraph.Internal;
 
 using Assimalign.OGraph.Gdm;
+using Assimalign.OGraph.Syntax;
 using System.Text.Json;
 
 internal class Executor : IOGraphExecutor
@@ -19,65 +20,7 @@ internal class Executor : IOGraphExecutor
     {
         this.options = options;
         this.models = models;
-#if DEBUG
-        Log();
-#endif
-
     }
-
-
-#if DEBUG
-    private void Log()
-    {
-        foreach (var model in models)
-        {
-            foreach (var vertex in model.GetGdmVertices())
-            {
-                foreach (var binding in vertex.Bindings.OfType<IOGraphOperationBinding>())
-                {
-                    switch (binding.Method)
-                    {
-                        case "GET":
-                            {
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.Write("GET    ");
-                                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                                Console.WriteLine(binding.Route.ToString());
-
-                                break;
-                            }
-                        case "PUT":
-                            {
-                                Console.ForegroundColor = ConsoleColor.Blue;
-                                Console.Write("PUT    ");
-                                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                                Console.WriteLine(binding.Route.ToString());
-                                break;
-                            }
-                        case "POST":
-                            {
-                                Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.Write("POST   ");
-                                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                                Console.WriteLine(binding.Route.ToString());
-                                break;
-                            }
-                        case "DELETE":
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.Write("DELETE ");
-                                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                                Console.WriteLine(binding.Route.ToString());
-                                break;
-                            }
-                    }
-                }
-            }
-        }
-    }
-
-
-#endif
 
     public Task ExecuteAsync(IOGraphExecutorContext context, CancellationToken cancellationToken)
     {
@@ -103,18 +46,60 @@ internal class Executor : IOGraphExecutor
                 {
                     foreach (var binding in vertex.Bindings.OfType<IOGraphOperationBinding>())
                     {
+                        // 1. Match method and route
                         if (binding.Method.Equals(request.Method) && binding.Route.IsMatch(request.Path))
                         {
-                            //if (request.Headers.TryGetValue("Content-Type", out var contentType))
-                            //{
+                            
 
-                            //}
+                            // 2. 415 Check - Let's check Content Length & Type header
+                            if (request.Headers.TryGetValue(HeaderKey.ContentLength, out var contentLength))
+                            {
+                                var length = long.Parse(contentLength!);
+                                if (length > 0 && request.Headers.TryGetValue(HeaderKey.ContentType, out var contentType))
+                                {
+                                    var collection = (contentType as ICollection<string>);
+
+                                    if (!collection.Contains(OGraphMediaType.Json) && collection.Contains(OGraphMediaType.Xml))
+                                    {
+
+                                    }
+                                }
+                                // Unsupported Media Type
+                                else
+                                {
+
+                                }
+                            }
+
+                            // 3. 406 Check - Check for accept header
+                            if (request.Headers.TryGetValue(HeaderKey.Accept, out var accept))
+                            {
+                                var collection = accept as ICollection<string>;
+
+                                // Accepts either any content-type or both OGraph content-type.
+                                if (collection.Contains("*/*") || (collection.Contains(OGraphMediaType.Xml) && collection.Contains(OGraphMediaType.Json)))
+                                {
+
+                                }
+                                else if (collection.Contains(OGraphMediaType.Xml))
+                                {
+
+                                }
+                                else if (collection.Contains(OGraphMediaType.Json))
+                                {
+
+                                }
+                                // The user requested an Unsupported media type. - 406 (Not Acceptable)
+                                else
+                                {
+                                   // return ProcessErrorResultAsJsonAsync(new OGraph)
+                                }
+                            }
                             return binding.ExecuteAsync(new OperationBindingContext()
                             {
                                 Element = vertex,
                                 Request = request,
                                 Response = response,
-                                Writer = new Utf8JsonWriter(response.Body),
                                 ServiceProvider = options.ServiceProvider!
 
                             }, cancellationTokenSource.Token);
@@ -122,7 +107,6 @@ internal class Executor : IOGraphExecutor
                     }
                 }
             }
-
 
             return Task.CompletedTask;
         }

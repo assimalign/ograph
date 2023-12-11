@@ -12,7 +12,8 @@ public partial class QueryParserTests
     public void ProjectionSuccessTest()
     {
         var query = """
-            project({ 
+            vertex('test')
+            .project({ 
                 firstName 
                 lastName 
                 addresses as locations { 

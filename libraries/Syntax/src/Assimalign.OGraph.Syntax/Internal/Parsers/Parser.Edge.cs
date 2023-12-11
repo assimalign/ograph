@@ -28,6 +28,21 @@ internal class EdgeParser : Parser<EdgeNode>
             return queryNode;
         }
 
+        if (token.TokenType == TokenType.String)
+        {
+            var source = queryNode.Source;
+            var text = token.Text.Split('/');
+
+            for (int i = 0; i < text.Length - 1;i++)
+            {
+                source = source!.GetEdgeNodes().FirstOrDefault(p => p.Label.Name == text[i])?.Target;
+            }
+
+            
+
+            
+        }
+
         while (lexer.HasNext)
         {
             //var token = lexer.Next();

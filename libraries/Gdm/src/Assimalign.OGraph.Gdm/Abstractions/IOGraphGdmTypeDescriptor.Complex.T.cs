@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Assimalign.OGraph.Gdm;
@@ -11,7 +12,7 @@ public interface IOGraphGdmComplexTypeDescriptor<T>
     /// </summary>
     /// <param name="label"></param>
     /// <returns></returns>
-    IOGraphGdmComplexTypeDescriptor<T> HasName(Label label);
+    IOGraphGdmComplexTypeDescriptor<T> HasLabel(Label label);
     /// <summary>
     /// 
     /// </summary>
@@ -24,7 +25,7 @@ public interface IOGraphGdmComplexTypeDescriptor<T>
     /// <typeparam name="TProperty"></typeparam>
     /// <param name="expression"></param>
     /// <returns></returns>
-    IOGraphGdmComplexTypeDescriptor<T> Ignore<TProperty>(Expression<Func<T?, TProperty?>> expression);
+    IOGraphGdmComplexTypeDescriptor<T> Ignore<TProperty>(Expression<Func<T, TProperty?>> expression);
     /// <summary>
     /// 
     /// </summary>

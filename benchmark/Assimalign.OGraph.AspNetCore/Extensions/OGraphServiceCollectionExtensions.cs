@@ -14,10 +14,15 @@ public static class OGraphServiceCollectionExtensions
     public static IServiceCollection AddOGraph(this IServiceCollection services, Label name, Action<IOGraphGdmBuilder> configure)
     {
         builder.ConfigureModel(name, configure);
-        services.TryAddSingleton<IOGraphExecutorBuilder>(builder);
+        services.TryAddSingleton<IOGraphExecutorBuilder>(serviceProvider =>
+        {
+            var options = serviceProvider.GetRequiredService<IOptions<OGraphExecutorOptions>>();
+
+            return builder.ConfigureOptions(options.Value);
+        });
         services.TryAddSingleton<IOGraphExecutor>(serviceProvider =>
         {
-            var options = serviceProvider.GetRequiredService<IOptions<OGraphExecutorOptions>>().Value;
+            
 
             return builder.Build();
         });
@@ -26,7 +31,8 @@ public static class OGraphServiceCollectionExtensions
 
     public static IServiceCollection AddOGraphOptions(this IServiceCollection services, Action<OGraphExecutorOptions> configure)
     {
-        builder.ConfigureOptions(configure);
+        services.AddOptions<OGraphExecutorOptions>()
+            .Configure(configure);
 
         return services;
     }

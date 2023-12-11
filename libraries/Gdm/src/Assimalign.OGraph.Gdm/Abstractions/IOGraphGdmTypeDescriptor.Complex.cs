@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.OGraph.Gdm;
 
@@ -7,25 +8,24 @@ namespace Assimalign.OGraph.Gdm;
 /// </summary>
 public interface IOGraphGdmComplexTypeDescriptor
 {
-
     /// <summary>
     /// Adds a ty
     /// </summary>
     /// <param name="label"></param>
     /// <returns></returns>
-    IOGraphGdmComplexTypeDescriptor HasName(Label label);
+    IOGraphGdmComplexTypeDescriptor HasLabel(Label label);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    IOGraphGdmComplexTypeDescriptor HasUnderlyingType(Type type);
+    IOGraphGdmComplexTypeDescriptor HasRuntimeType(Type type);
     /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    IOGraphGdmComplexTypeDescriptor HasUnderlyingType<T>() where T : class, new();
+    IOGraphGdmComplexTypeDescriptor HasRuntimeType<T>() where T : class, new();
     /// <summary>
     /// 
     /// </summary>

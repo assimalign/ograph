@@ -6,10 +6,11 @@ using System.Reflection.Emit;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
-internal class GdmComplexTypeDescriptor<T> : IOGraphGdmComplexTypeDescriptor<T> 
+internal class GdmComplexTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T> : IOGraphGdmComplexTypeDescriptor<T> 
     where T : class, new()
 {
     private readonly GdmComplexType<T> complexType;
@@ -19,9 +20,9 @@ internal class GdmComplexTypeDescriptor<T> : IOGraphGdmComplexTypeDescriptor<T>
         this.complexType = complexType;
     }
 
-    public IOGraphGdmComplexTypeDescriptor<T> HasName(Label label)
+    public IOGraphGdmComplexTypeDescriptor<T> HasLabel(Label label)
     {
-        complexType.label = label;
+        complexType.Label = label;
         return this;
     }
 
@@ -43,7 +44,7 @@ internal class GdmComplexTypeDescriptor<T> : IOGraphGdmComplexTypeDescriptor<T>
         });
         if (property is not null && property is GdmProperty internalProp)
         {
-            return new GdmPropertyDescriptor<TMember?>(internalProp);
+            return new GdmPropertyDescriptor<TMember>(internalProp);
         }
 
         throw new NotImplementedException();
@@ -51,7 +52,7 @@ internal class GdmComplexTypeDescriptor<T> : IOGraphGdmComplexTypeDescriptor<T>
 
     public IOGraphGdmComplexTypeDescriptor<T> Ignore(Label label)
     {
-        var propertyInfo = typeof(T).GetProperty(label, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+        var propertyInfo = typeof(T).GetProperty(label);
         if (propertyInfo is null)
         {
             throw new InvalidOperationException($"The property '{label}' does not exist on type {typeof(T).Name}");
@@ -113,6 +114,7 @@ internal class GdmComplexTypeDescriptor<T> : IOGraphGdmComplexTypeDescriptor<T>
     }
     private PropertyInfo AssertExpression<TMember>(Expression<Func<T, TMember>> expression)
     {
+        // 1. Null reference check
         if (expression is null)
         {
             throw new ArgumentNullException(nameof(expression));

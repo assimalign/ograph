@@ -7,6 +7,6 @@ namespace Assimalign.OGraph;
 /// </summary>
 public interface IOGraphApplicationBuilder
 {
-    IOGraphApplicationBuilder Bind<T>(Action<IOGraphApplicationOperationDescriptor<T>> configure) 
+    IOGraphApplicationBuilder Bind<T>(Action<IOGraphApplicationOperationDescriptor> configure) 
         where T : class, new();
 }

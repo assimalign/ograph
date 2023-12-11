@@ -4,21 +4,16 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Gdm;
 
-using Internal;
+using Assimalign.OGraph.Gdm.Internal;
 
-[DebuggerDisplay("Gdm Vertex: {Label}")]
+[DebuggerDisplay("Gdm = {Label} Vertex")]
 public partial class GdmVertex<T> : IOGraphGdmVertex
     where T : class, new()
 {
     private readonly Action<IOGraphGdmVertexDescriptor<T>> configure;
     private readonly IList<IOGraphGdmBinding> bindings = new List<IOGraphGdmBinding>();
 
-    internal Label label;
-    internal GdmTypeReference? type;
-
-    public GdmVertex() : this(descriptor => { })
-    {
-    }
+    public GdmVertex() : this(descriptor => { }) { }
     GdmVertex(Action<IOGraphGdmVertexDescriptor<T>> configure)
     {
         if (configure is null)
@@ -38,11 +33,15 @@ public partial class GdmVertex<T> : IOGraphGdmVertex
         configure?.Invoke(descriptor);
     }
 
-    public Label Label => label;
-    public IOGraphGdmTypeReference Type => type!;
+    internal Label Label { get; set; }
+    internal IOGraphGdmTypeReference Type { get; set; } = default!;
     public IOGraphGdmEdgeReferenceCollection Edges { get; } = new GdmEdgeReferenceCollection();
     public IOGraphGdmMetadata Metadata { get; } = new GdmMetadata();
     public GdmElementType ElementType => GdmElementType.Vertex;
+
+    #region Explicit Implementations
+    Label IOGraphGdmElement.Label => Label;
+    IOGraphGdmTypeReference IOGraphGdmVertex.Type => Type;
     IEnumerable<IOGraphGdmBinding> IOGraphGdmBindingElement.Bindings => bindings;
     void IOGraphGdmBindingElement.Bind(IOGraphGdmBinding binding)
     {
@@ -52,6 +51,7 @@ public partial class GdmVertex<T> : IOGraphGdmVertex
         }
         bindings.Add(binding);
     }
+    #endregion
 
     /// <summary>
     /// 
@@ -60,10 +60,17 @@ public partial class GdmVertex<T> : IOGraphGdmVertex
     /// <param name="configure"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static GdmVertex<T> Create<T>(Action<IOGraphGdmVertexDescriptor<T>> configure) 
-        where T : class, new()
+    public static GdmVertex<T> Create(Action<IOGraphGdmVertexDescriptor<T>> configure) 
     {
         return new GdmVertex<T>(configure);
+    }
+
+    #region Overload Members
+
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return Label;
     }
 
     /// <inheritdoc />
@@ -81,4 +88,6 @@ public partial class GdmVertex<T> : IOGraphGdmVertex
         }
         return false;
     }
+
+    #endregion
 }

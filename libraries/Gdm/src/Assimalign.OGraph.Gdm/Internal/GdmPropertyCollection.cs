@@ -69,7 +69,7 @@ internal class GdmPropertyCollection : IOGraphGdmPropertyCollection
     {
         public bool Equals(IOGraphGdmProperty? left, IOGraphGdmProperty? right)
         {
-            return left.Label == right.Label;
+            return left!.Label == right!.Label;
         }
         public int GetHashCode(IOGraphGdmProperty obj)
         {

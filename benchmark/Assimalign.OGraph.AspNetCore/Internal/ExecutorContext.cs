@@ -14,8 +14,8 @@ internal class ExecutorContext : IOGraphExecutorContext
         Request = new ExecutorRequest(context);
         Response = new ExecutorResponse(context);
     }
-    public IOGraphRequest Request { get; }
-    public IOGraphResponse Response { get; }
+    public IOGraphExecutorRequest Request { get; }
+    public IOGraphExecutorResponse Response { get; }
     public IServiceProvider ServiceProvider { get; }
     public ClaimsPrincipal ClaimsPrincipal { get; }
 }

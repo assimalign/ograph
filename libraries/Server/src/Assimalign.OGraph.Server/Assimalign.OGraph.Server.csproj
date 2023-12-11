@@ -1,15 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="..\..\..\..\Directory.Build.props" />
+	<PropertyGroup>
+		<RootNamespace>Assimalign.OGraph</RootNamespace>
+	</PropertyGroup>
 	<ItemGroup>
-	  <Compile Remove="Internal\Results\**" />
-	  <EmbeddedResource Remove="Internal\Results\**" />
-	  <None Remove="Internal\Results\**" />
+	  <Folder Include="Internal\Validation\" />
+	  <Folder Include="Results\Success\" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\Gdm\src\Assimalign.OGraph.Gdm\Assimalign.OGraph.Gdm.csproj" />
-		<ProjectReference Include="..\..\..\Syntax\src\Assimalign.OGraph.Syntax\Assimalign.OGraph.Syntax.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Results\" />
+	  <ProjectReference Include="..\..\..\Core\src\Assimalign.OGraph.Core\Assimalign.OGraph.Core.csproj" />
 	</ItemGroup>
 </Project>

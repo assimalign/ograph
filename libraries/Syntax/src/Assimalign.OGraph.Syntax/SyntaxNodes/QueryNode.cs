@@ -42,15 +42,4 @@ public abstract class QueryNode
     {
         return Array.Empty<TNode>();
     }
-
-
-    public bool IsConstant() => NodeType == QueryNodeType.Constant;
-    public bool IsProjection() => NodeType == QueryNodeType.Projection;
-    public bool IsFunctionCall() => NodeType == QueryNodeType.FunctionCall;
-    public bool IsBinary() => NodeType == QueryNodeType.Binary;
-    public bool IsFilter() => NodeType == QueryNodeType.Filter;
-    public bool IsSort() => NodeType == QueryNodeType.Sort;
-    public bool IsPage() => NodeType == QueryNodeType.Page;
-    public bool IsProperty() => NodeType == QueryNodeType.Property;
-    public bool IsParameter() => NodeType == QueryNodeType.Parameter;
 }

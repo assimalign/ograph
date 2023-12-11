@@ -7,7 +7,7 @@ namespace Assimalign.OGraph;
 using Assimalign.OGraph.Internal;
 
 /// <summary>
-/// 
+/// Represents the key of an HTTP query parameter. 
 /// </summary>
 [DebuggerDisplay("{Value}")]
 public readonly struct QueryKey :
@@ -61,18 +61,14 @@ public readonly struct QueryKey :
     {
         var left = Value ?? string.Empty;
         var right = other.Value ?? string.Empty;
-        var length = Math.Min(left.Length, right.Length); // Only need to compare up to the min length of either value
 
-        for (int i = 0; i < length; i++)
+        for (int i = 0; i < Math.Min(left.Length, right.Length); i++) // Only need to compare up to the min length of either value
         {
             var a = char.ToLower(left[i]);
             var b = char.ToLower(right[i]);
             var c = a - b;
 
-            if (c != 0)
-            {
-                return c;
-            }
+            if (c != 0) return c;
         }
         return 0;
     }
@@ -92,4 +88,10 @@ public readonly struct QueryKey :
 
     public static implicit operator string(QueryKey key) => key.Value;
     public static implicit operator QueryKey(string value) => new QueryKey(value);
+
+
+    /// <summary>
+    /// The reserved key used to receive the OGraph query.
+    /// </summary>
+    public static QueryKey Query => "query";
 }

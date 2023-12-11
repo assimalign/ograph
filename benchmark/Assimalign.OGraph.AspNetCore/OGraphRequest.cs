@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Assimalign.OGraph.AspNetCore;
 
-public sealed class OGraphRequest : IOGraphRequest
+public sealed class OGraphRequest : IOGraphExecutorRequest
 {
 
     public OGraphRequest() { }
@@ -33,9 +33,9 @@ public sealed class OGraphRequest : IOGraphRequest
 
     public Method Method { get; init; }
 
-    public IOGraphQueryCollection? Query { get; init; }
+    public IOGraphExecutorQueryCollection? Query { get; init; }
 
-    public IOGraphHeaderCollection? Headers { get; init; }
+    public IOGraphExecutorHeaderCollection? Headers { get; init; }
 
     public Stream? Body { get; init; }
 

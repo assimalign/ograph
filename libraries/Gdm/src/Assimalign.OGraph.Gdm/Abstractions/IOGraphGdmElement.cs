@@ -3,7 +3,7 @@
 public interface IOGraphGdmElement
 {
     /// <summary>
-    /// The property name.
+    /// The element label.
     /// </summary>
     Label Label { get; }
     /// <summary>

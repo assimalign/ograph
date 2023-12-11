@@ -4,4 +4,11 @@
 		<LangVersion>Latest</LangVersion>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
+	<PropertyGroup Condition="$(TargetFramework) == 'net7.0'">
+		<StripSymbols>false</StripSymbols>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(TargetFramework) == 'net8.0'">
+		<IsAotCompatible>true</IsAotCompatible>
+		<StripSymbols>false</StripSymbols>
+	</PropertyGroup>
 </Project>

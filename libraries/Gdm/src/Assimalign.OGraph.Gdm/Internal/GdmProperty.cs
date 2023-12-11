@@ -5,11 +5,9 @@ using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
-[DebuggerDisplay("Gdm Property: {Label}")]
+[DebuggerDisplay("Gdm = {Label} Property")]
 internal class GdmProperty : IOGraphGdmProperty
 {
-    private readonly IList<IOGraphGdmBinding> bindings = new List<IOGraphGdmBinding>();
-    
     public GdmProperty()
     {
         Metadata = new GdmMetadata();
@@ -26,14 +24,14 @@ internal class GdmProperty : IOGraphGdmProperty
     public GdmPropertyGetter Getter { get; set; } = default!;
     public GdmPropertySetter Setter { get; set; } = default!;
     public GdmElementType ElementType => GdmElementType.Property;
-    IEnumerable<IOGraphGdmBinding> IOGraphGdmBindingElement.Bindings => bindings;
-    void IOGraphGdmBindingElement.Bind(IOGraphGdmBinding binding)
+    public IEnumerable<IOGraphGdmBinding> Bindings { get; } = new List<IOGraphGdmBinding>();
+    public void Bind(IOGraphGdmBinding binding)
     {
         if (binding is null)
         {
             GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
         }
-        bindings.Add(binding);
+        (Bindings as List<IOGraphGdmBinding>)!.Add(binding);
     }
     public override string ToString()
     {

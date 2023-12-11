@@ -2,7 +2,9 @@
 
 public enum QueryNodeType
 {
+    Root,
     Vertex,
+    Edge,
     Projection,
     Filter,
     Sort,
@@ -14,7 +16,5 @@ public enum QueryNodeType
     Parameter,
     Constant,
     Binary,
-    Edge,
-    Root
 }
 

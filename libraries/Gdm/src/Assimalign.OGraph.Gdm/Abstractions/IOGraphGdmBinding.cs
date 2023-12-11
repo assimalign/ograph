@@ -9,6 +9,10 @@ namespace Assimalign.OGraph.Gdm;
 public interface IOGraphGdmBinding
 {
     /// <summary>
+    /// The binding label.
+    /// </summary>
+    Label Label { get; }
+    /// <summary>
     /// 
     /// </summary>
     /// <param name="context"></param>

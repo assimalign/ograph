@@ -18,7 +18,7 @@ internal class GdmEntityTypeMissingKeyValidatorRule : GdmValidatorRule
             {
                 context.AddFailure(error =>
                 {
-                    error.Code = OGraphGdmErrorCode.GDM0401;
+                    error.Code = GdmErrorCode.GDM0401;
                     error.Message = Resources.GDM0401;
                     error.Source = $"{entityType.Label}";
                 });

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm;
 
@@ -18,7 +14,8 @@ public static class OGraphGdmBindingElementExtensions
     /// <param name="binding"></param>
     /// <exception cref="ArgumentNullException"></exception>
     /// <returns></returns>
-    public static bool HasBinding<T>(this IOGraphGdmBindingElement element, out T? binding) where T : IOGraphGdmBinding
+    public static bool HasBinding<T>(this IOGraphGdmBindingElement element, out T? binding) 
+        where T : IOGraphGdmBinding
     {
         binding = default;
 
@@ -26,12 +23,15 @@ public static class OGraphGdmBindingElementExtensions
         {
             GdmThrowHelper.ThrowArgumentNullException(nameof(element));
         }
-        foreach (var b in element.Bindings)
+        if (element.Bindings is not null)
         {
-            if (b is T match)
+            foreach (var b in element.Bindings)
             {
-                binding = match;
-                return true;
+                if (b is T match)
+                {
+                    binding = match;
+                    return true;
+                }
             }
         }
         return false;

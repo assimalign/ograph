@@ -40,8 +40,7 @@ public sealed partial class QueryParser
             {
                 Root = new VertexNode()
                 {
-                    Label = new LabelNode(options.StartingVertexName!),
-                    IsRoot = true,
+                    Label = new LabelNode(options.StartingVertexName!)
                 },
                 Encoding = options.Encoding,
                 ThrowExceptionOnDiagnosticError = options.ThrowExceptionOnDiagnosticError
@@ -49,15 +48,19 @@ public sealed partial class QueryParser
             // NOTE: The Parser is responsible for only syntax diagnostics
             //       Analyzers will be responsible for semantic diagnostics.
             var parser      = Parser.Create();
-            var node        = parser.Parse(ref lexer, context, context.Root);
+            var node        = parser.Parse(ref lexer, context, context.Root) as RootNode;
             var document    = new QueryDocument(
                 query,
-                node,
+                node!,
                 context.Diagnostics);
 
-            Analyze(document);
+            Analyze(document, options.AnalyzerTimeout);
 
             return document;
+        }
+        catch (OperationCanceledException exception)
+        {
+
         }
         catch (TokenLexerException exception)
         {
@@ -65,10 +68,9 @@ public sealed partial class QueryParser
         }
     }
 
-
-    private void Analyze(QueryDocument document)
+    private void Analyze(QueryDocument document, TimeSpan timeout)
     {
-        using var cancellationTokenSource = new CancellationTokenSource(10000); // Max 10 seconds for analysis
+        using var cancellationTokenSource = new CancellationTokenSource(timeout); // Max 10 seconds for analysis
 #if !DEBUG
         cancellationTokenSource.Token.ThrowIfCancellationRequested();
 #endif

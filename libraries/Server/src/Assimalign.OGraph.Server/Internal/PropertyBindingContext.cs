@@ -17,8 +17,8 @@ internal class PropertyBindingContext : IOGraphPropertyBindingContext
 
     public IList<IOGraphError> Errors { get; init; } = new List<IOGraphError>();
     public IOGraphGdmProperty Element { get; init; }
-    public IOGraphRequest Request { get; init; }
-    public IOGraphResponse Response { get; init; }
+    public IOGraphExecutorRequest Request { get; init; }
+    public IOGraphExecutorResponse Response { get; init; }
     public IServiceProvider ServiceProvider { get; init; }
     public PropertyNode Node { get; init; }
 

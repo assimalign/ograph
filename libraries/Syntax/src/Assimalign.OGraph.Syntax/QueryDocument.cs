@@ -14,7 +14,7 @@ public sealed class QueryDocument
 
 	internal QueryDocument(
 		string text,
-		QueryNode root, 
+		RootNode root, 
 		IEnumerable<Diagnostic> diagnostics)
 	{
 		this.Text = text;
@@ -32,7 +32,7 @@ public sealed class QueryDocument
 	/// <summary>
 	/// Represents the root of the OGraph query.
 	/// </summary>
-	public QueryNode Root { get; }
+	public RootNode Root { get; }
 	/// <summary>
 	/// A collection of diagnostic information for the parsed OGraph query.
 	/// </summary>
@@ -54,5 +54,4 @@ public sealed class QueryDocument
 		}
 		diagnostics.Add(diagnostic);
 	}
-
 }

@@ -89,8 +89,18 @@ public partial class BuilderTests
         {
             app.Bind<Employee>(descriptor =>
             {
-                descriptor.MapGet("GetUsers")
-                    .
+                descriptor.MapQuery("GetEmployees")
+                    .UseMiddleware((context, cancellationToken, next) =>
+                    {
+                        if (!context.GetClaimsPrincipal().Identity!.IsAuthenticated)
+                        {
+                            return new R
+                        }
+                    })
+                    .UseResolver((context, cancellationToken) =>
+                    {
+                        return Task.FromResult(default(IOGraphResult));
+                    });
             });
 
             app.Bind<EmployeeAddress>(descriptor =>

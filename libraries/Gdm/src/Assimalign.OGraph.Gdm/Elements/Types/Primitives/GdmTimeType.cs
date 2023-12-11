@@ -10,6 +10,28 @@ namespace Assimalign.OGraph.Gdm;
 
 public sealed class GdmTimeType : GdmPrimitiveType<TimeOnly>
 {
-    public override Label Label => "Time";
+    public GdmTimeType() : base("Time")
+    {
+        
+    }
 
+    public override TimeOnly Read(ref Utf8JsonReader reader)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override TimeOnly Read(XmlReader reader)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void Write(Utf8JsonWriter writer, TimeOnly value)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void Write(XmlWriter writer, TimeOnly value)
+    {
+        throw new NotImplementedException();
+    }
 }

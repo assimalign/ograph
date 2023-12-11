@@ -6,15 +6,15 @@ namespace Assimalign.OGraph.Gdm;
 
 public sealed class GdmDateTimeType : GdmPrimitiveType<DateTime>
 {
-    public override string[]? Formats => new[]
-    {
-        "yyyy-MM-dd",
-        "yyyyMMdd",
-        "yyyy-MM-ddTHH:mm:ss",
-        "yyyy-MM-ddTHH:mm:ss.fffffffK",
-        "yyyy-MM-ddTHH:mm:ss.fffffffZ",
-        "yyyy-MM-ddTHH:mm:ss.fffffffzzz"
-    };
+    //public override string[]? Formats => new[]
+    //{
+    //    "yyyy-MM-dd",
+    //    "yyyyMMdd",
+    //    "yyyy-MM-ddTHH:mm:ss",
+    //    "yyyy-MM-ddTHH:mm:ss.fffffffK",
+    //    "yyyy-MM-ddTHH:mm:ss.fffffffZ",
+    //    "yyyy-MM-ddTHH:mm:ss.fffffffzzz"
+    //};
 
     public override DateTime Read(ref Utf8JsonReader reader)
     {

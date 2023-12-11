@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.AspNetCore.Internal;
 
-internal class ExecutorResponse : IOGraphResponse
+internal class ExecutorResponse : IOGraphExecutorResponse
 {
     public ExecutorResponse(HttpContext context)
     {
         Body = context.Response.Body;
     }
     public StatusCode StatusCode { get; set; }
-    public IOGraphHeaderCollection Headers { get; }
+    public IOGraphExecutorHeaderCollection Headers { get; }
     public Stream Body { get; }
 }

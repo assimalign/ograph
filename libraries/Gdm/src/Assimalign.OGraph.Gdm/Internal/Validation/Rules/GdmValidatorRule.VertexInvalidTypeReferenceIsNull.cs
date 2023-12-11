@@ -14,7 +14,7 @@ internal class GdmVertexInvalidTypeReferenceIsNullValidatorRule : GdmValidatorRu
             {
                 context.AddFailure(error =>
                 {
-                    error.Code = OGraphGdmErrorCode.GDM1002;
+                    error.Code = GdmErrorCode.GDM1002;
                     error.Message = Resources.GDM1002;
                     error.Source = vertex.Label;
                 });

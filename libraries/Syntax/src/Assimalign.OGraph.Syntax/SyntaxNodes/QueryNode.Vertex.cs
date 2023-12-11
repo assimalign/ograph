@@ -59,6 +59,19 @@ public sealed class VertexNode : QueryNode
         }
     }
 
+
+
+    public IEnumerable<EdgeNode> GetEdgeNodes()
+    {
+        foreach (var node in Nodes)
+        {
+            if (node is EdgeNode edge)
+            {
+                yield return edge;
+            }
+        }
+    }
+
     private bool TryGetNode<TNode>(out TNode? node)
     {
         node = default;

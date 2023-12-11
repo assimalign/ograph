@@ -51,11 +51,11 @@ public readonly struct StatusCode :
         {
             throw new ArgumentOutOfRangeException(nameof(code), "The status code is not valid.");
         }
-        this.Code = code;
+        Code = code;
     }
 
     /// <summary>
-    /// 
+    /// The raw status code.
     /// </summary>
     public int Code { get; }
 
