@@ -1,194 +1,87 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
-internal class GdmEntityTypeDescriptor<T> : IOGraphGdmEntityTypeDescriptor<T> 
+internal class GdmEntityTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T> : IOGraphGdmEntityTypeDescriptor<T>
     where T : class, new()
 {
     private readonly GdmEntityType<T> entityType;
-    
+
     public GdmEntityTypeDescriptor(GdmEntityType<T> entityType)
     {
         this.entityType = entityType;
     }
 
+    public IOGraphGdmEntityTypeDescriptor<T> HasLabel(Label label)
+    {
+        entityType.label = label;
+        return this;
+    }
     public IOGraphGdmEntityTypeDescriptor<T> HasKey(Label label)
     {
-        var propertyInfo = typeof(T).GetProperty(label, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-        
+        var propertyInfo = typeof(T).GetProperty(label);
         if (propertyInfo is null)
         {
             throw new InvalidOperationException($"The property '{label}' does not exist on type {typeof(T).Name}");
         }
-        
-        var propertyName = propertyInfo.Name;
-        var property = entityType.Properties.First(p =>
-        {
-            if (p is GdmProperty ip) // ip = internal property
-            {
-                return ip.PropertyInfo.Name == propertyInfo.Name;
-            }
-            return p.Label == label;
-        });
-        if (property is not GdmProperty ip)
-        {
-            ip = WrapProperty(property, propertyInfo);
-        }
-
-        entityType.keyResolver = instance =>
-        {
-            return propertyInfo.GetValue(instance)!;
-        };
-
-        ip.IsKey = true;
-
+        var property = entityType.GetProperty(propertyInfo);
+        property.IsKey = true;
+        property.Getter ??= propertyInfo.GetValue;
+        property.Setter ??= propertyInfo.SetValue;
         return this;
     }
     public IOGraphGdmEntityTypeDescriptor<T> HasKey<TMember>(Expression<Func<T, TMember>> expression) where TMember : struct
     {
         var propertyInfo = AssertExpression(expression);
-        var properties = entityType.Properties;
-        var property = entityType.Properties.First(p =>
-        {
-            if (p is GdmProperty ip) // ip = internal property
-            {
-                return ip.PropertyInfo.Name == propertyInfo.Name;
-            }
-            return p.Label == propertyInfo.Name;
-        });
-        //TODO: revisit logic
-        if (property is not GdmProperty ip)
-        {
-            ip = WrapProperty(property, propertyInfo);
-        }
+        var property = entityType.GetProperty(propertyInfo);
         var method = expression.Compile();
-        entityType.keyResolver = value =>
-        {
-            if (value is not T t)
-            {
-                throw new InvalidOperationException("");
-            }
-            return method.Invoke(t);
-        };
-        ip.IsKey = true;
+
+        property.IsKey = true;
+        property.Getter ??= (instance) => method.Invoke((T)instance);
+        property.Setter ??= propertyInfo.SetValue;
 
         return this;
     }
     public IOGraphGdmEntityTypeDescriptor<T> HasKey<TMember>(Expression<Func<T, TMember?>> expression) where TMember : struct
     {
         var propertyInfo = AssertExpression(expression);
-        var propertyName = propertyInfo.Name;
-        var property = entityType.Properties.First(p =>
-        {
-            if (p is GdmProperty ip) // ip = internal property
-            {
-                return ip.PropertyInfo.Name == propertyInfo.Name;
-            }
-            return p.Label == propertyName;
-        });
-        //TODO: revisit logic
-        if (property is not GdmProperty ip)
-        {
-            ip = WrapProperty(property, propertyInfo);
-        }
+        var property = entityType.GetProperty(propertyInfo);
         var method = expression.Compile();
-        entityType.keyResolver = value =>
-        {
-            if (value is not T t)
-            {
-                throw new InvalidOperationException("");
-            }
-            return method.Invoke(t);
-        };
-        ip.IsKey = true;
+
+        property.IsKey = true;
+        property.Getter ??= (instance) => method.Invoke((T)instance);
+        property.Setter ??= propertyInfo.SetValue;
 
         return this;
     }
-    public IOGraphGdmEntityTypeDescriptor<T> Ignore(Label label)
+    public IOGraphGdmPropertyDescriptor HasProperty(Label label)
     {
-        var propertyInfo = typeof(T).GetProperty(label, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+        var propertyInfo = typeof(T).GetProperty(label);
         if (propertyInfo is null)
         {
-            throw new InvalidOperationException($"The property '{label}' does not exist on type {typeof(T).Name}");
+            throw new Exception();
         }
-        
-        var propertyName = propertyInfo.Name;
-        var properties = entityType.Properties;
-        var property = properties.FirstOrDefault(p => p.Label == propertyName);
-
-        if (property is not null)
-        {
-            properties.Remove(property);
-        }
-
-        return this;
-    }
-    public IOGraphGdmEntityTypeDescriptor<T> Ignore<TMember>(Expression<Func<T, TMember>> expression)
-    {
-        var propertyInfo = AssertExpression(expression);
-        var propertyName = propertyInfo.Name;
-        var properties = entityType.Properties;
-        var property = properties.First(p =>
-        {
-            if (p is GdmProperty ip) // ip = internal property
-            {
-                return ip.PropertyInfo.Name == propertyInfo.Name;
-            }
-            return p.Label == propertyInfo.Name;
-        });
-
-        if (property is not null)
-        {
-            properties.Remove(property);
-        }
-
-        return this;
+        var property = entityType.GetProperty(propertyInfo);
+        property.Getter ??= propertyInfo.GetValue;
+        property.Setter ??= propertyInfo.SetValue;
+        return new GdmPropertyDescriptor(property);
     }
     public IOGraphGdmPropertyDescriptor<TMember?> HasProperty<TMember>(Expression<Func<T, TMember?>> expression)
     {
-        var propertyInfo = AssertExpression(expression);
-        var property = entityType.Properties.First(p =>
-        {
-            if (p is GdmProperty ip) // ip = internal property
-            {
-                return ip.PropertyInfo.Name == propertyInfo.Name;
-            }
-            return p.Label == propertyInfo.Name;
-        });
-        if (property is not null && property is GdmProperty internalProp)
-        {
-            return new GdmPropertyDescriptor<TMember?>(internalProp);
-        }
+        var propertyInfo = AssertExpression(expression)!;
+        var property = entityType.GetProperty(propertyInfo);
+        var method = expression.Compile();
 
-        throw new NotImplementedException();
+        property.Getter ??= (instance) => method.Invoke((T)instance);
+        property.Setter ??= propertyInfo.SetValue;
+
+        return new GdmPropertyDescriptor<TMember?>(property);
     }
-
-
-    // This might be overkill., but a user may pass their own implementation of IOGraphGdmProperty and add it manually. 
-    // If they we need to wrap it and pull it out of the current collection in the entity
-    private GdmProperty WrapProperty(IOGraphGdmProperty property, PropertyInfo propertyInfo)
-    {
-        entityType.Properties.Remove(property);
-
-        var wrapped = new GdmProperty()
-        {
-            IsComputed = property.IsComputed,
-            Getter = property.Getter,
-            Setter = property.Setter,
-            PropertyInfo = propertyInfo,
-            IsNullable = property.IsNullable,
-            Metadata = property.Metadata,
-            Label = property.Label,
-            Type = property.Type
-        };
-
-        entityType.Properties.Add(wrapped);
-
-        return wrapped;
-    }
+    
     private PropertyInfo AssertExpression<TMember>(Expression<Func<T, TMember>> expression)
     {
         if (expression is null)
@@ -207,6 +100,7 @@ internal class GdmEntityTypeDescriptor<T> : IOGraphGdmEntityTypeDescriptor<T>
         {
             throw new Exception();
         }
+
         return propertyInfo;
     }
 }

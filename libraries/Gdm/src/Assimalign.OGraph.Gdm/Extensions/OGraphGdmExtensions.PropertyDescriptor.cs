@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq.Expressions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.OGraph.Gdm;
+
+using Assimalign.OGraph.Gdm.Internal;
 
 public static class OGraphGdmPropertyDescriptorExtensions
 {
@@ -15,17 +16,23 @@ public static class OGraphGdmPropertyDescriptorExtensions
     /// <param name="configure"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static IOGraphGdmPropertyDescriptor<T?> UseType<T>(
+    public static IOGraphGdmPropertyDescriptor<T?> UseType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(
         this IOGraphGdmPropertyDescriptor<T?> descriptor,
         Action<IOGraphGdmComplexTypeDescriptor<T>> configure) where T : class, new()
     {
+        if (descriptor is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(descriptor));
+        }
         if (configure is null)
         {
-            throw new ArgumentNullException(nameof(configure));
+            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
-
-        return descriptor.UseType(GdmComplexType<T>.Create(configure));
+        return descriptor.UseType(
+            GdmComplexType<T>.Create(
+                configure));
     }
+    
     /// <summary>
     ///  A fluent method for binding a complex type within a collection property being described.
     /// </summary>
@@ -34,30 +41,78 @@ public static class OGraphGdmPropertyDescriptorExtensions
     /// <param name="configure"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static IOGraphGdmPropertyDescriptor<IEnumerable<T>?> UseType<T>(
+    public static IOGraphGdmPropertyDescriptor<IEnumerable<T>?> UseType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(
         this IOGraphGdmPropertyDescriptor<IEnumerable<T>?> descriptor,
         Action<IOGraphGdmComplexTypeDescriptor<T>> configure) where T : class, new()
     {
+        if (descriptor is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(descriptor));
+        }
         if (configure is null)
         {
-            throw new ArgumentNullException(nameof(configure));
+            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
-
         return descriptor.UseType(
             new GdmListType<T>(
-                GdmComplexType<T>.Create(configure)));
+                GdmComplexType<T>.Create(
+                    configure)));
     }
 
-
-
-    public static IOGraphGdmPropertyDescriptor<T?> UseGetter<T>(
-        this IOGraphGdmPropertyDescriptor<T?> descriptor,
-        Expression<Func<T, object>> expression) where T : class, new()
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="descriptor"></param>
+    /// <param name="label"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IOGraphGdmPropertyDescriptor<IEnumerable<T>?> UseType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(
+        this IOGraphGdmPropertyDescriptor<IEnumerable<T>?> descriptor,
+        Label label,
+        Action<IOGraphGdmComplexTypeDescriptor<T>> configure) where T : class, new()
     {
+        if (descriptor is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(descriptor));
+        }
+        if (configure is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+        }
+        return descriptor.UseType(
+            new GdmListType<T>(
+                GdmComplexType<T>.Create(configure))
+                {
+                    label = label
+                });
+    }
 
-
-
-
-        return descriptor;
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="descriptor"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IOGraphGdmPropertyDescriptor<T[]?> UseType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(
+        this IOGraphGdmPropertyDescriptor<T[]?> descriptor,
+        Action<IOGraphGdmComplexTypeDescriptor<T>> configure) 
+        where T : class, new()
+    {
+        if (descriptor is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(descriptor));
+        }
+        if (configure is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+        }
+        return descriptor.UseType(
+            new GdmArrayType<T>(
+                GdmComplexType<T>.Create(
+                    configure)));
     }
 }

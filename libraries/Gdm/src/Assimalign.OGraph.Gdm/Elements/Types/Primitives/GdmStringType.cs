@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Text.Json;
 using System.Xml;
+using System.Text.Json;
 
 namespace Assimalign.OGraph.Gdm;
 
@@ -8,21 +8,18 @@ public sealed class GdmStringType : GdmPrimitiveType<string>
 {
     public override string Read(ref Utf8JsonReader reader)
     {
-        throw new NotImplementedException();
+        return reader.GetString()!;
     }
-
     public override string Read(XmlReader reader)
     {
-        throw new NotImplementedException();
+        return reader.ReadContentAsString();
     }
-
     public override void Write(Utf8JsonWriter writer, string value)
     {
-        throw new NotImplementedException();
+        writer.WriteStringValue(value);
     }
-
     public override void Write(XmlWriter writer, string value)
     {
-        throw new NotImplementedException();
+        writer.WriteValue(value);
     }
 }

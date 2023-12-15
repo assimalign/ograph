@@ -8,21 +8,18 @@ public sealed class GdmDoubleType : GdmPrimitiveType<Double>
 {
     public override double Read(ref Utf8JsonReader reader)
     {
-        throw new NotImplementedException();
+        return reader.GetDouble();
     }
-
     public override double Read(XmlReader reader)
     {
-        throw new NotImplementedException();
+        return reader.ReadContentAsDouble();
     }
-
     public override void Write(Utf8JsonWriter writer, double value)
     {
-        throw new NotImplementedException();
+        writer.WriteNumberValue(value);
     }
-
     public override void Write(XmlWriter writer, double value)
     {
-        throw new NotImplementedException();
+        writer.WriteValue(value);
     }
 }

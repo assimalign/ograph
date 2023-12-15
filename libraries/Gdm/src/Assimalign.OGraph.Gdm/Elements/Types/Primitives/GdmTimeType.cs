@@ -1,37 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 using System.Xml;
+using System.Text.Json;
 
 namespace Assimalign.OGraph.Gdm;
 
 public sealed class GdmTimeType : GdmPrimitiveType<TimeOnly>
 {
-    public GdmTimeType() : base("Time")
-    {
-        
-    }
-
+    public GdmTimeType() { }
+    public override Label Label => "Time";
     public override TimeOnly Read(ref Utf8JsonReader reader)
     {
-        throw new NotImplementedException();
+        return TimeOnly.Parse(reader.GetString()!);
     }
-
     public override TimeOnly Read(XmlReader reader)
     {
-        throw new NotImplementedException();
+        return TimeOnly.Parse(reader.ReadContentAsString());
     }
-
     public override void Write(Utf8JsonWriter writer, TimeOnly value)
     {
-        throw new NotImplementedException();
+        writer.WriteStringValue(value.ToString());
     }
-
     public override void Write(XmlWriter writer, TimeOnly value)
     {
-        throw new NotImplementedException();
+        writer.WriteValue(value.ToString());
     }
 }

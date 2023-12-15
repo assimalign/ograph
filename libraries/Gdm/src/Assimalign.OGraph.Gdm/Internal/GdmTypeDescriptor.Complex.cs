@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
@@ -15,30 +11,21 @@ internal class GdmComplexTypeDescriptor : IOGraphGdmComplexTypeDescriptor
         this.complexType = complexType;
     }
 
-
     public IOGraphGdmComplexTypeDescriptor HasLabel(Label label)
     {
-        complexType.Label = label;
+        complexType.label = label;
         return this;
     }
-
-    public IOGraphGdmPropertyDescriptor HasProperty(Label name)
+    public IOGraphGdmPropertyDescriptor HasProperty(Label label)
     {
-        throw new NotImplementedException();
-    }
-
-    public IOGraphGdmComplexTypeDescriptor HasRuntimeType(Type type)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IOGraphGdmComplexTypeDescriptor HasRuntimeType<T>() where T : class, new()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IOGraphGdmComplexTypeDescriptor Ignore(Label name)
-    {
-        throw new NotImplementedException();
+        var propertyInfo = complexType.runtimeType!.GetProperty(label);
+        if (propertyInfo is null)
+        {
+            throw new InvalidOperationException($"The property '{label}' does not exist on type {complexType.runtimeType!.Name}");
+        }
+        var property = complexType.GetProperty(propertyInfo);
+        property.Getter ??= propertyInfo.GetValue;
+        property.Setter ??= propertyInfo.SetValue;
+        return new GdmPropertyDescriptor(property);
     }
 }

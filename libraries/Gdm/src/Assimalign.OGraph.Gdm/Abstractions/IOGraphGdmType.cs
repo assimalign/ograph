@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml;
 using System.Text.Json;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.OGraph.Gdm;
 
@@ -23,7 +24,7 @@ public interface IOGraphGdmType : IOGraphGdmElement
     /// <remarks>
     /// All types must have a RuntimeType, even if it is a custom type.
     /// </remarks>
-    Type? RuntimeType { get; }
+    Type RuntimeType { get; }
     /// <summary>
     /// Writes the provided <paramref name="value"/> to JSON.
     /// </summary>

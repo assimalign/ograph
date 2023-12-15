@@ -1,11 +1,6 @@
-﻿using Assimalign.OGraph.Gdm.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System;
 using System.Xml;
+using System.Text.Json;
 
 namespace Assimalign.OGraph.Gdm;
 
@@ -15,19 +10,16 @@ public sealed class GdmUriType : GdmPrimitiveType<Uri>
     {
         return new Uri(reader.GetString()!);
     }
-
     public override Uri Read(XmlReader reader)
     {
-        throw new NotImplementedException();
+        return new Uri(reader.ReadContentAsString());
     }
-
     public override void Write(Utf8JsonWriter writer, Uri value)
     {
-        throw new NotImplementedException();
+        writer.WriteStringValue(value.ToString());
     }
-
     public override void Write(XmlWriter writer, Uri value)
     {
-        throw new NotImplementedException();
+        writer.WriteValue(value.ToString());
     }
 }

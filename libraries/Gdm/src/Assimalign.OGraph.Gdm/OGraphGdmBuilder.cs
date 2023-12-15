@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Gdm;
 
-using Internal;
+using Assimalign.OGraph.Gdm.Internal;
 
 /// <summary>
 /// 
@@ -13,22 +13,43 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
 {
     private readonly Gdm model;
     private readonly GdmValidator validator;
-    private readonly IList<Action<Gdm>> onTypeAdd;
-    private readonly IList<Action<Gdm>> onVertexAdd;
+
+    private readonly IList<Action<Gdm>> onBeforeBuild;
+    private readonly IList<Action<Gdm>> onAfterBuild;
 
     private OGraphGdmBuilder(Label label)
     {
-        this.onTypeAdd = new List<Action<Gdm>>();
-        this.onVertexAdd = new List<Action<Gdm>>();
+        this.onBeforeBuild = new List<Action<Gdm>>();
+        this.onAfterBuild = new List<Action<Gdm>>();
         this.validator = new();
         this.model = new()
         {
             Label = label
         };
+
+        onAfterBuild.Add(TryResolveTypeReferences);
     }
-    IOGraphGdmBuilder IOGraphGdmBuilder.AddType<T>(Action<IOGraphGdmComplexTypeDescriptor<T>> configure)
+    IOGraphGdmBuilder IOGraphGdmBuilder.BeforeBuild(Action<IOGraphGdm> configure)
     {
-        return (this as IOGraphGdmBuilder).AddType(GdmComplexType<T>.Create(configure));
+        if (configure is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+        }
+
+        onBeforeBuild.Add(configure);
+
+        return this;
+    }
+    IOGraphGdmBuilder IOGraphGdmBuilder.AfterBuild(Action<IOGraphGdm> configure)
+    {
+        if (configure is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+        }
+
+        onAfterBuild.Add(configure);
+
+        return this;
     }
     IOGraphGdmBuilder IOGraphGdmBuilder.AddType<TGdmType>()
     {
@@ -40,34 +61,10 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
         {
             GdmThrowHelper.ThrowArgumentNullException(nameof(type));
         }
-        onTypeAdd.Add(gdm =>
-        {
-            gdm.Elements.Add(type);
-        });
+
+        model.Elements.Add(type);
+
         return this;
-    }
-    IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex<T>(Action<IOGraphGdmEntityTypeDescriptor<T>> configure)
-    {
-        if (configure is null)
-        {
-            throw new ArgumentNullException(nameof(configure));
-        }
-        var vertex = new GdmVertex<GdmEntityType<T>>()
-        {
-            type = new GdmTypeReference()
-            {
-                Definition = GdmEntityType<T>.Create(configure)
-            }
-        };
-        return (this as IOGraphGdmBuilder).AddVertex(vertex);
-    }
-    IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex(Action<IOGraphGdmVertexDescriptor> configure)
-    {
-        return (this as IOGraphGdmBuilder).AddVertex(GdmVertex.Create(configure));
-    }
-    IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex<T>(Action<IOGraphGdmVertexDescriptor<T>> configure)
-    {
-        return (this as IOGraphGdmBuilder).AddVertex(GdmVertex<T>.Create(configure));
     }
     IOGraphGdmBuilder IOGraphGdmBuilder.AddVertex<TVertex>()
     {
@@ -79,39 +76,15 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
         {
             GdmThrowHelper.ThrowArgumentNullException(nameof(vertex));
         }
-        onVertexAdd.Add(gdm =>
-        {
-            // Check for types already added and replace in properties
-            foreach (var property in vertex.GetProperties())
-            {
-                if (property is GdmProperty ip)
-                {
-                    var type = gdm.GetGdmTypes().FirstOrDefault(p =>
-                    {
-                        if (p.RuntimeType is null)
-                        {
-                            return false;
-                        }
-                        return p.RuntimeType.IsAssignableTo(ip.PropertyInfo.PropertyType);
-                    });
-                    if (type is not null)
-                    {
-                        ip.Type = new GdmTypeReference()
-                        {
-                            Definition = type
-                        };
-                    }
-                }
-            }
 
-            gdm.Elements.Add(vertex);
-        });
+        model.Elements.Add(vertex);
+
         return this;
     }
     IOGraphGdm IOGraphGdmBuilder.Build()
     {
-        OnBuild(onTypeAdd);
-        OnBuild(onVertexAdd);
+        OnBuild(onBeforeBuild);
+        OnBuild(onAfterBuild);
 
         var result = validator.Validate(model);
 
@@ -134,7 +107,6 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
     }
 
     #region Static Memebers
-
     /// <summary>
     /// Creates a graph data model.
     /// </summary>
@@ -164,6 +136,32 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
     {
         return new OGraphGdmBuilder(label);
     }
-
     #endregion
+
+
+    private static void TryResolveTypeReferences(Gdm model)
+    {
+        foreach (var property in model.GetGdmProperties().Where(p => p is GdmProperty).Cast<GdmProperty>())
+        {
+            // 1. Check if type has been set
+            if (property.Type is null)
+            {
+                // 2. Find the first assignable to runtime property, if any.
+                var gdmType = model.GetGdmTypes().FirstOrDefault(p => 
+                    p.RuntimeType!.IsAssignableTo(property.PropertyInfo.PropertyType));
+
+                if (gdmType is not null)
+                {
+                    property.Type = new GdmTypeReference()
+                    {
+                        Definition = gdmType
+                    };
+                }
+                else
+                {
+
+                }
+            }
+        }
+    }
 }

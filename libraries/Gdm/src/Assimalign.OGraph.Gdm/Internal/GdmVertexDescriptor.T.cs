@@ -22,16 +22,6 @@ internal class GdmVertexDescriptor<T> : IOGraphGdmVertexDescriptor<T>
         vertex.label = label;
         return this;
     }
-
-    public IOGraphGdmVertexDescriptor<T> HasType(Action<IOGraphGdmEntityTypeDescriptor<T>> configure)
-    {
-        vertex.type = new GdmTypeReference()
-        {
-            Definition = GdmEntityType<T>.Create(configure)
-        };
-        return this;
-    }
-
     public IOGraphGdmVertexDescriptor<T> HasType(IOGraphGdmEntityType type)
     {
         if (type is null)

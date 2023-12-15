@@ -5,13 +5,20 @@ using Xunit;
 
 namespace Assimalign.OGraph.Gdm.Tests;
 
-public class EmployeeEntityType : GdmEntityType<Employee>
-{
-    protected override void Configure(IOGraphGdmEntityTypeDescriptor<Employee> descriptor)
-    {
-        descriptor.HasProperty(p => p.Details)
-            .UsePropertyName("details");
 
+public class GdmEmployeeRole : GdmComplexType<EmployeeRole>
+{
+    protected override void Configure(IOGraphGdmComplexTypeDescriptor<EmployeeRole> descriptor)
+    {
+        base.Configure(descriptor);
+    }
+}
+
+public class GdmEmployeeRoleCollection : GdmListType<EmployeeRole>
+{
+    public GdmEmployeeRoleCollection() : base(new GdmEmployeeRole())
+    {
+        
     }
 }
 
@@ -65,15 +72,15 @@ public partial class OGraphBuilderTests
     [Fact]
     public void Test1()
     {
-        var gdm = OGraphGdmBuilder.Create("employees");
+        var builder = OGraphGdmBuilder.Create("employees");
 
-        gdm.AddVertex<EmployeeVertex>();
-        gdm.AddType<AuditField>(type =>
+        builder.AddType<AuditField>(type =>
         {
+            type.HasLabel("AuditField");
             type.HasProperty(p => p!.UserId).UsePropertyName("userId");
             type.HasProperty(p => p!.Timestamp).UsePropertyName("timestamp");
         });
-        gdm.AddVertex<Employee>(vertex =>
+        builder.AddVertex<Employee>(vertex =>
         {
             vertex.HasLabel("employee")
                 .HasType(entity =>
@@ -83,16 +90,32 @@ public partial class OGraphBuilderTests
                     entity.HasProperty(p => p.EmployeeId)
                         .UsePropertyName("employeeId")
                         .UseType<GdmStringType>()
-                        .UseMetadata("description", "The unique identifier of the employee");
+                        .UseMetadata("description", "The unique identifier of the employee")
+                        .UseSetter<Employee, EmployeeId?>((obj, id) => obj.EmployeeId = id);
+
+
+                    entity.HasProperty(p => p.Temp)
+                        .UseType<GdmInt32Type>();
 
                     entity.HasProperty(p => p.Details)
                         .UsePropertyName("details")
                         .UseType(details =>
                         {
-                            details.HasProperty(p => p!.FirstName).UsePropertyName("firstName");
-                            details.HasProperty(p => p!.LastName).UsePropertyName("lastName");
-                            details.HasProperty(p => p!.MiddleName).UsePropertyName("middleName");
-                            details.HasProperty(p => p!.Birthdate).UsePropertyName("birthdate");
+                            details.HasProperty(p => p!.FirstName)
+                                .UsePropertyName("firstName")
+                                .UseType<GdmStringType>();
+
+                            details.HasProperty(p => p!.LastName)
+                                .UsePropertyName("lastName")
+                                .UseType<GdmStringType>();
+
+                            details.HasProperty(p => p!.MiddleName)
+                                .UsePropertyName("middleName")
+                                .UseType<GdmStringType>();
+
+                            details.HasProperty(p => p!.Birthdate)
+                                .UsePropertyName("birthdate")
+                                .UseType<GdmDateType>();
                         });
 
                     entity.HasProperty(p => p.CreatedBy)
@@ -122,11 +145,9 @@ public partial class OGraphBuilderTests
                         });
                 });
         });
-        gdm.AddVertex<EmployeeAddress>(vertex =>
+        builder.AddVertex<EmployeeAddress>(vertex =>
         {
             vertex.HasKey(p => p.AddressId);
-            //vertex.HasLabel("address");
-            //vertex.HasKey(p => p.AddressId);
 
             vertex.HasProperty(p => p.Address);
 
@@ -134,19 +155,19 @@ public partial class OGraphBuilderTests
             //    .WithOne()
             //    .HasReferenceKey(p => p.EmployeeId);
         });
-        gdm.AddVertex<EmployeeAddressType>(vertex =>
+        builder.AddVertex<EmployeeAddressType>(vertex =>
         {
             vertex.HasKey(p => p.TypeId);
             //vertex.HasLabel("addressType");
 
         });
-        gdm.AddVertex<EmployeeTaxInfo>(vertex =>
+        builder.AddVertex<EmployeeTaxInfo>(vertex =>
         {
             vertex.HasKey(p => p.TaxInfoId);
         });
 
 
-        var model = gdm.Build();
+        var model = builder.Build();
 
         var vertices = model.GetGdmVertices();
         var types = model.GetGdmTypes();

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 using System.Xml;
+using System.Text.Json;
 
 namespace Assimalign.OGraph.Gdm;
 
@@ -12,21 +8,18 @@ public sealed class GdmFloatType : GdmPrimitiveType<Single>
 {
     public override float Read(ref Utf8JsonReader reader)
     {
-        throw new NotImplementedException();
+        return reader.GetSingle();
     }
-
     public override float Read(XmlReader reader)
     {
-        throw new NotImplementedException();
+        return reader.ReadContentAsFloat();
     }
-
     public override void Write(Utf8JsonWriter writer, float value)
     {
-        throw new NotImplementedException();
+        writer.WriteNumberValue(value);
     }
-
     public override void Write(XmlWriter writer, float value)
     {
-        throw new NotImplementedException();
+        writer.WriteValue(value);
     }
 }

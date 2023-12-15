@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Tests;
 
-public static class OGraphGdmTypeDescriptorExtensions
+public partial class TypeTests
 {
-
-
 }

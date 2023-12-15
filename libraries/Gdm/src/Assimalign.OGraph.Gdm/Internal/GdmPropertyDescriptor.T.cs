@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assimalign.OGraph.Gdm.Internal;
+﻿namespace Assimalign.OGraph.Gdm.Internal;
 
 internal class GdmPropertyDescriptor<T> : IOGraphGdmPropertyDescriptor<T>
 {
@@ -47,7 +39,6 @@ internal class GdmPropertyDescriptor<T> : IOGraphGdmPropertyDescriptor<T>
         property.Setter = setter;
         return this;
     }
-
     public IOGraphGdmPropertyDescriptor<T> UseMetadata(Label key, object value)
     {
         property.Metadata.Add(key, value);
@@ -66,7 +57,7 @@ internal class GdmPropertyDescriptor<T> : IOGraphGdmPropertyDescriptor<T>
     {
         if (type is null)
         {
-            throw new ArgumentNullException(nameof(type));
+            GdmThrowHelper.ThrowArgumentNullException(nameof(type));
         }
         property.Type = new GdmTypeReference()
         {

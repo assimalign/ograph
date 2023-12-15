@@ -25,30 +25,17 @@ public interface IOGraphGdmEntityTypeDescriptor<T>
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TMember"></typeparam>
+    /// <typeparam name="TKey"></typeparam>
     /// <param name="expression"></param>
     /// <returns></returns>
-    IOGraphGdmEntityTypeDescriptor<T> HasKey<TMember>(Expression<Func<T, TMember>> expression) where TMember : struct;
+    IOGraphGdmEntityTypeDescriptor<T> HasKey<TKey>(Expression<Func<T, TKey>> expression) where TKey : struct;
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TMember"></typeparam>
+    /// <typeparam name="TKey"></typeparam>
     /// <param name="expression"></param>
     /// <returns></returns>
-    IOGraphGdmEntityTypeDescriptor<T> HasKey<TMember>(Expression<Func<T, TMember?>> expression) where TMember : struct;
-    /// <summary>
-    /// Ignores the property on <typeparamref name="T"/>.
-    /// </summary>
-    /// <param name="label">The name of the property on <typeparamref name="T"/>.</param>
-    /// <returns></returns>
-    IOGraphGdmEntityTypeDescriptor<T> Ignore(Label label);
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TMember"></typeparam>
-    /// <param name="expression"></param>
-    /// <returns></returns>
-    IOGraphGdmEntityTypeDescriptor<T> Ignore<TMember>(Expression<Func<T, TMember>> expression);
+    IOGraphGdmEntityTypeDescriptor<T> HasKey<TKey>(Expression<Func<T, TKey?>> expression) where TKey : struct;
     /// <summary>
     /// 
     /// </summary>
@@ -58,8 +45,8 @@ public interface IOGraphGdmEntityTypeDescriptor<T>
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="TMember"></typeparam>
+    /// <typeparam name="TProperty"></typeparam>
     /// <param name="expression"></param>
     /// <returns></returns>
-    IOGraphGdmPropertyDescriptor<TMember?> HasProperty<TMember>(Expression<Func<T, TMember?>> expression);
+    IOGraphGdmPropertyDescriptor<TProperty?> HasProperty<TProperty>(Expression<Func<T, TProperty?>> expression);
 }

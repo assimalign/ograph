@@ -11,11 +11,10 @@ namespace Assimalign.OGraph.Gdm;
 /// <typeparam name="T"></typeparam>
 public abstract class GdmCollectionType<TCollection, T> : GdmType<TCollection>, 
     IOGraphGdmCollectionType
-    where TCollection : IEnumerable<T>, new()
+    where TCollection : IEnumerable<T>
     where T : new()
 {
     
-    IOGraphGdmType IOGraphGdmCollectionType.ItemType => ItemType;
-    public abstract GdmType<T> ItemType { get; }
+    public abstract IOGraphGdmType ItemType { get; }
     public override GdmTypeKind Kind => GdmTypeKind.Collection;
 }

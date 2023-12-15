@@ -13,6 +13,9 @@ public class GdmVertex : IOGraphGdmVertex
     private readonly Action<IOGraphGdmVertexDescriptor> configure;
     private readonly IList<IOGraphGdmBinding> bindings = new List<IOGraphGdmBinding>();
 
+    internal Label label;
+    internal IOGraphGdmTypeReference? type;
+
     public GdmVertex() : this(descriptor => { }) { }
     GdmVertex(Action<IOGraphGdmVertexDescriptor> configure)
     {
@@ -33,15 +36,13 @@ public class GdmVertex : IOGraphGdmVertex
         configure.Invoke(descriptor);
     }
 
-    internal Label Label { get; set; }
-    internal IOGraphGdmTypeReference Type { get; set; } = default!;
+    public Label Label => label;
+    public IOGraphGdmTypeReference Type => type!;
     public IOGraphGdmEdgeReferenceCollection Edges { get; } = new GdmEdgeReferenceCollection();
     public IOGraphGdmMetadata Metadata { get; } = new GdmMetadata();
     public GdmElementType ElementType => GdmElementType.Vertex;
 
     #region Explicit Implementations
-    Label IOGraphGdmElement.Label => Label;
-    IOGraphGdmTypeReference IOGraphGdmVertex.Type => Type;
     IEnumerable<IOGraphGdmBinding> IOGraphGdmBindingElement.Bindings => bindings;
     void IOGraphGdmBindingElement.Bind(IOGraphGdmBinding binding)
     {

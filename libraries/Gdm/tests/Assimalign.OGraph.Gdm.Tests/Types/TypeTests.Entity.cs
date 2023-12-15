@@ -44,18 +44,32 @@ public partial class TypeTests
 
 
 
-    internal partial class TypeTestEntity : GdmEntityType<Employee>
+    public partial class TestEntityType
     {
-        private readonly Action<IOGraphGdmEntityTypeDescriptor<Employee>> configure;
-
-        public TypeTestEntity(Action<IOGraphGdmEntityTypeDescriptor<Employee>> configure)
+        public partial class NonGeneric : GdmEntityType
         {
-            this.configure = configure;
+            protected override void Configure(IOGraphGdmEntityTypeDescriptor descriptor)
+            {
+                descriptor.HasLabel("Employee")
+                    .HasRuntimeType(typeof(Employee));
+            }
         }
 
-        protected override void Configure(IOGraphGdmEntityTypeDescriptor<Employee> descriptor)
+        public partial class Generic : GdmEntityType<Employee>
         {
-            configure.Invoke(descriptor);
+            protected override void Configure(IOGraphGdmEntityTypeDescriptor<Employee> descriptor)
+            {
+                descriptor.HasLabel("employeeEntity");
+
+                descriptor.HasKey(p => p.EmployeeId);
+
+
+                descriptor.HasProperty("");
+
+                descriptor.HasProperty(p => p.CreatedBy)
+                    .UsePropertyName("createdBy")
+                    .UseTypeReference("");
+            }
         }
     }
 }

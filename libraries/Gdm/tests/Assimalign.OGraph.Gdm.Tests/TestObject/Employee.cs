@@ -8,4 +8,5 @@ public record class Employee : EmployeeBase<Employee>
     public EmployeeKind? Kind { get; set; }
     public EmployeeDetails? Details { get; set; }
     public IEnumerable<EmployeeRole>? Roles { get; set; }
+    public IEnumerable<int> Temp { get; set; }
 }

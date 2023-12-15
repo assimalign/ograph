@@ -16,7 +16,12 @@ public abstract class GdmType<T> : IOGraphGdmType
 
     public GdmType()
     {
-        label = typeof(T).Name;
+        var typeName = RuntimeType.Name;
+        // Let's only override the label if it has valid characters
+        if (Label.IsValid(typeName))
+        {
+            label = typeName;
+        }
     }
 
     public Type RuntimeType => typeof(T);

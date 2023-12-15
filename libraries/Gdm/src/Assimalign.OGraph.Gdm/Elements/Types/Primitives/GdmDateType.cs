@@ -6,7 +6,9 @@ namespace Assimalign.OGraph.Gdm;
 
 public sealed class GdmDateType : GdmPrimitiveType<DateOnly>
 {
-    public GdmDateType() : base("Date") { }
+    public GdmDateType() { }
+
+    public override Label Label => "Date";
 
     public override DateOnly Read(ref Utf8JsonReader reader)
     {

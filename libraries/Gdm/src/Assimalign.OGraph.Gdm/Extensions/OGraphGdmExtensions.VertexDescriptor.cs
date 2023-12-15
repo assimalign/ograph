@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.OGraph.Gdm;
 
-using Internal;
+using Assimalign.OGraph.Gdm.Internal;
 
 public static class OGraphGdmVertexDescriptorExtensions
 {
@@ -14,7 +15,7 @@ public static class OGraphGdmVertexDescriptorExtensions
     /// <param name="configure"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static IOGraphGdmVertexDescriptor<T> HasType<T>(
+    public static IOGraphGdmVertexDescriptor<T> HasType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor | DynamicallyAccessedMemberTypes.PublicProperties)] T>(
         this IOGraphGdmVertexDescriptor<T> descriptor,
         Action<IOGraphGdmEntityTypeDescriptor<T>> configure)
         where T : class, new()
@@ -27,7 +28,9 @@ public static class OGraphGdmVertexDescriptorExtensions
         {
             GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
-        return descriptor.HasType(GdmEntityType<T>.Create(configure));
+        return descriptor.HasType(
+            GdmEntityType<T>.Create(
+                configure));
     }
     /// <summary>
     /// 
@@ -36,7 +39,7 @@ public static class OGraphGdmVertexDescriptorExtensions
     /// <param name="descriptor"></param>
     /// <param name="configure"></param>
     /// <returns></returns>
-    public static IOGraphGdmVertexDescriptor HasType<T>(
+    public static IOGraphGdmVertexDescriptor HasType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor | DynamicallyAccessedMemberTypes.PublicProperties)] T>(
         this IOGraphGdmVertexDescriptor descriptor, 
         Action<IOGraphGdmEntityTypeDescriptor<T>> configure) where T : class, new()
     {
@@ -48,6 +51,8 @@ public static class OGraphGdmVertexDescriptorExtensions
         {
             GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
-        return descriptor.HasType(GdmEntityType<T>.Create(configure));
+        return descriptor.HasType(
+            GdmEntityType<T>.Create(
+                configure));
     }
 }

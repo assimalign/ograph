@@ -6,6 +6,8 @@ using System.Diagnostics;
 namespace Assimalign.OGraph.Gdm;
 
 using Assimalign.OGraph.Gdm.Internal;
+using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
 [DebuggerDisplay("Gdm Type ({Kind}): {Label}")]
 public class GdmEnumType<TEnum> : GdmType<TEnum>
@@ -53,14 +55,85 @@ public class GdmEnumType<TEnum> : GdmType<TEnum>
 
 
     public GdmEnumValue[] Values { get; }
-
-    public override Label Label => $"{typeof(TEnum).Name}Enum";
     public override GdmTypeKind Kind => GdmTypeKind.Enum;
 
-
-    public override TEnum Read(ref Utf8JsonReader reader)
+    public override unsafe TEnum Read(ref Utf8JsonReader reader)
     {
-        throw new NotImplementedException();
+        if (reader.TokenType == JsonTokenType.String)
+        {
+            return Enum.Parse<TEnum>(reader.GetString()!);
+        }
+        if (reader.TokenType == JsonTokenType.Number)
+        {
+            switch (Type.GetTypeCode(RuntimeType))
+            {
+                case TypeCode.Int32:
+                    {
+                        if (reader.TryGetInt32(out var value8))
+                        {
+                            return Unsafe.As<int, TEnum>(ref value8);
+                        }
+                        break;
+                    }
+                case TypeCode.UInt32:
+                    {
+                        if (reader.TryGetUInt32(out var value4))
+                        {
+                            return Unsafe.As<uint, TEnum>(ref value4);
+                        }
+                        break;
+                    }
+                case TypeCode.UInt64:
+                    {
+                        if (reader.TryGetUInt64(out var value6))
+                        {
+                            return Unsafe.As<ulong, TEnum>(ref value6);
+                        }
+                        break;
+                    }
+                case TypeCode.Int64:
+                    {
+                        if (reader.TryGetInt64(out var value2))
+                        {
+                            return Unsafe.As<long, TEnum>(ref value2);
+                        }
+                        break;
+                    }
+                case TypeCode.SByte:
+                    {
+                        if (reader.TryGetSByte(out var value7))
+                        {
+                            return Unsafe.As<sbyte, TEnum>(ref value7);
+                        }
+                        break;
+                    }
+                case TypeCode.Byte:
+                    {
+                        if (reader.TryGetByte(out var value5))
+                        {
+                            return Unsafe.As<byte, TEnum>(ref value5);
+                        }
+                        break;
+                    }
+                case TypeCode.Int16:
+                    {
+                        if (reader.TryGetInt16(out var value3))
+                        {
+                            return Unsafe.As<short, TEnum>(ref value3);
+                        }
+                        break;
+                    }
+                case TypeCode.UInt16:
+                    {
+                        if (reader.TryGetUInt16(out var value))
+                        {
+                            return Unsafe.As<ushort, TEnum>(ref value);
+                        }
+                        break;
+                    }
+            }
+        }
+        throw new Exception();
     }
     public override TEnum Read(XmlReader reader)
     {

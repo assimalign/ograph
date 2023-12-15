@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Xml;
 using System.Text.Json;
+using System.Globalization;
 
 namespace Assimalign.OGraph.Gdm;
-
-using Internal;
 
 public sealed class GdmInt16Type : GdmPrimitiveType<Int16>
 {
@@ -12,27 +11,13 @@ public sealed class GdmInt16Type : GdmPrimitiveType<Int16>
     {
         return reader.GetInt16();
     }
-
     public override short Read(XmlReader reader)
     {
-        var nodeType = reader.NodeType;
-
-        // Check for content. Should have read the element.
-        if (nodeType != XmlNodeType.Text)
-        {
-            GdmThrowHelper.ThrowInvalidContentException("");
-        }
-
-        var content = reader.ReadContentAsString();
-
-        if (!short.TryParse(content, out var value))
-        {
-
-        }
-
-        return value;
+        return short.Parse(
+            reader.ReadContentAsString(),
+            NumberStyles.AllowLeadingSign | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite,
+            NumberFormatInfo.InvariantInfo);
     }
-
     public override void Write(Utf8JsonWriter writer, short value)
     {
         writer.WriteNumberValue(value);

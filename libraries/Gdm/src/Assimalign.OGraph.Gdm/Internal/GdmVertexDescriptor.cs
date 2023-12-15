@@ -17,28 +17,25 @@ internal class GdmVertexDescriptor : IOGraphGdmVertexDescriptor
 
     public IOGraphGdmVertexDescriptor HasLabel(Label label)
     {
-        throw new NotImplementedException();
-    }
-
-    public IOGraphGdmVertexDescriptor HasType(Type type)
-    {
-        throw new NotImplementedException();
-    }
-
-
-
-    public IOGraphGdmVertexDescriptor HasType<T>(Action<IOGraphGdmEntityTypeDescriptor<T>> configure) where T : class, new()
-    {
-        throw new NotImplementedException();
+        vertex.label = label;
+        return this;
     }
 
     public IOGraphGdmVertexDescriptor HasType(IOGraphGdmEntityType type)
     {
-        throw new NotImplementedException();
+        if (type is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(type));
+        }
+        vertex.type = new GdmTypeReference()
+        {
+            Definition = type
+        };
+        return this;
     }
 
     public IOGraphGdmVertexDescriptor HasType<TGdmType>() where TGdmType : IOGraphGdmEntityType, new()
     {
-        throw new NotImplementedException();
+        return HasType(new TGdmType());
     }
 }

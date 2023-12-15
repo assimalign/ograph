@@ -15,7 +15,6 @@ internal class GdmFactory : IOGraphGdmFactory
         this.models = models;
     }
 
-
     public IOGraphGdm Create(Label label)
     {
         var model = models.FirstOrDefault(p => p.Label == label);

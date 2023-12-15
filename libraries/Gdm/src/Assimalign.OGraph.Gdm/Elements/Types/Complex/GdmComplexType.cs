@@ -13,20 +13,19 @@ public class GdmComplexType : IOGraphGdmComplexType
 {
     private readonly Action<IOGraphGdmComplexTypeDescriptor> configure;
 
-    public GdmComplexType() : this(descriptor => { }) { }
-    public GdmComplexType(Type type) : this(type, descriptor => { }) { }
+    [DynamicallyAccessedMembers(
+        DynamicallyAccessedMemberTypes.PublicParameterlessConstructor |
+        DynamicallyAccessedMemberTypes.PublicProperties)]
+    internal Type runtimeType;
+    internal Label label;
 
-    GdmComplexType(Action<IOGraphGdmComplexTypeDescriptor> configure)
-    {
-        if (configure is null)
-        {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
-        }
-        this.configure = configure;
-        this.Configure(new GdmComplexTypeDescriptor(this));
-    }
+    public GdmComplexType([DynamicallyAccessedMembers(
+        DynamicallyAccessedMemberTypes.PublicParameterlessConstructor |
+        DynamicallyAccessedMemberTypes.PublicProperties)] Type type) : this(type, descriptor => { }) { }
 
-    GdmComplexType(Type type, Action<IOGraphGdmComplexTypeDescriptor> configure)
+    GdmComplexType([DynamicallyAccessedMembers(
+        DynamicallyAccessedMemberTypes.PublicParameterlessConstructor |
+        DynamicallyAccessedMemberTypes.PublicProperties)] Type type, Action<IOGraphGdmComplexTypeDescriptor> configure)
     {
         if (configure is null)
         {
@@ -37,72 +36,116 @@ public class GdmComplexType : IOGraphGdmComplexType
             GdmThrowHelper.ThrowArgumentNullException(nameof(type));
         }
         this.configure = configure;
-        this.RuntimeType = type;
+        this.runtimeType = type;
         this.Configure(new GdmComplexTypeDescriptor(this));
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="descriptor"></param>
     protected virtual void Configure(IOGraphGdmComplexTypeDescriptor descriptor)
     {
         configure.Invoke(descriptor);
     }
 
-    #region Explicit Implementations
-    Label IOGraphGdmElement.Label => Label;
-    Type IOGraphGdmType.RuntimeType => RuntimeType;
-    GdmTypeKind IOGraphGdmType.Kind => GdmTypeKind.Complex;
-    GdmElementType IOGraphGdmElement.ElementType => GdmElementType.Type;
-    IOGraphGdmPropertyCollection IOGraphGdmComplexType.Properties { get; } = new GdmPropertyCollection();
-    #endregion
+    public Label Label => label;
+    public Type RuntimeType => runtimeType;
+    public GdmTypeKind Kind => GdmTypeKind.Complex;
+    public GdmElementType ElementType => GdmElementType.Type;
+    public IOGraphGdmPropertyCollection Properties { get; } = new GdmPropertyCollection();
 
-    internal Label Label { get; set; }
-
-    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
-    internal Type RuntimeType { get; set; } = default!;
-    
-    
     public virtual object Read(ref Utf8JsonReader reader)
     {
-        if (!reader.IsStartOfObjectToken())
+        if (reader.TokenType != JsonTokenType.StartObject)
         {
-            //ThrowE
-        }
-        string propertyName;
-
-        var instance = Activator.CreateInstance(RuntimeType);
-
-        if (instance is null)
-        {
-            throw new Exception();
+            // TODO: throw invalid operation
         }
 
+        // capture the depth
         var startDepth = reader.CurrentDepth;
+        var instance = Activator.CreateInstance(runtimeType)!;
 
-        while (reader.Read() || reader.TokenType != JsonTokenType.EndObject)
+        while (reader.Read() || reader.TokenType == JsonTokenType.EndObject || startDepth <= reader.CurrentDepth)
         {
-            if (reader.TokenType == JsonTokenType.PropertyName)
+            if (reader.TokenType != JsonTokenType.PropertyName)
             {
-                throw new JsonException();
+                // TODO: throw invalid exception
             }
 
-            propertyName = reader.GetString()!;
+            var name = reader.GetString()!;
 
-            var property = (this as IOGraphGdmComplexType).Properties[propertyName];
-            var propertyType = property.Type.Definition;
+            if (!reader.Read())
+            {
+                // TODO: throw invalid operation exception
+            }
+            if (this.TryGetProperty(name, out var property))
+            {
+                // TODO: throw invalid operation exception
+            }
+            if (property!.IsComputed)
+            {
+                // TODO: throw invalid operation. Cannot set computed value
+            }
+            if (!property.IsNullable && reader.TokenType == JsonTokenType.Null)
+            {
+                // TODO:throw invalid operation. Property is required.
+            }
 
-            reader.Read();
+            var type = property!.Type.Definition;
+            var value = type.Read(ref reader);
+            var setter = property!.Setter;
 
-            var propertyValue = propertyType.Read(ref reader);
-
-            property.Setter.Invoke(instance, propertyValue);
-
-            if (reader.CurrentDepth >= startDepth) break;
+            setter.Invoke(instance, value);
         }
 
         return instance;
     }
     public virtual object Read(XmlReader reader)
     {
-        throw new NotImplementedException();
+        if (reader.NodeType != XmlNodeType.Element)
+        {
+            // TODO: Throw invalid operation exception
+        }
+        if (reader.LocalName != Label)
+        {
+            // TODO: Throw invalid operation exception
+        }
+        var instance = Activator.CreateInstance(runtimeType)!;
+        var startDepth = reader.Depth;
+
+        while (reader.Read() || startDepth <= reader.Depth)
+        {
+            if (reader.NodeType != XmlNodeType.Element)
+            {
+                // TODO: Throw invalid operation exception
+            }
+            var propertyName = reader.LocalName;
+
+            if (!reader.Read())
+            {
+                // TODO: throw invalid operation exception
+            }
+            if (!this.TryGetProperty(propertyName, out var property))
+            {
+                // TODO: throw invalid operation exception
+            }
+            if (property!.IsComputed)
+            {
+                // TODO: throw invalid operation. Cannot set computed value
+            }
+            if (!property.IsNullable && reader.NodeType == XmlNodeType.Text)
+            {
+                // TODO:throw invalid operation. Property is required.
+            }
+
+            var type = property!.Type.Definition;
+            var value = type.Read(reader);
+            var setter = property!.Setter;
+
+            setter.Invoke(instance, value);
+        }
+
+        return instance;
     }
     public virtual void Write(Utf8JsonWriter writer, object value)
     {
@@ -171,21 +214,13 @@ public class GdmComplexType : IOGraphGdmComplexType
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="configure"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    public static GdmComplexType Create(Action<IOGraphGdmComplexTypeDescriptor> configure)
-    {
-        return new GdmComplexType(configure);
-    }
-    /// <summary>
-    /// 
-    /// </summary>
     /// <param name="type"></param>
     /// <param name="configure"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static GdmComplexType Create(Type type, Action<IOGraphGdmComplexTypeDescriptor> configure)
+    public static GdmComplexType Create([DynamicallyAccessedMembers(
+        DynamicallyAccessedMemberTypes.PublicParameterlessConstructor |
+        DynamicallyAccessedMemberTypes.PublicProperties)]Type type, Action<IOGraphGdmComplexTypeDescriptor> configure)
     {
         return new GdmComplexType(type, configure);
     }

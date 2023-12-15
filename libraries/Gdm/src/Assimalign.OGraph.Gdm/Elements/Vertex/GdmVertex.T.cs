@@ -7,11 +7,14 @@ namespace Assimalign.OGraph.Gdm;
 using Assimalign.OGraph.Gdm.Internal;
 
 [DebuggerDisplay("Gdm = {Label} Vertex")]
-public partial class GdmVertex<T> : IOGraphGdmVertex
+public class GdmVertex<T> : IOGraphGdmVertex
     where T : class, new()
 {
     private readonly Action<IOGraphGdmVertexDescriptor<T>> configure;
     private readonly IList<IOGraphGdmBinding> bindings = new List<IOGraphGdmBinding>();
+
+    internal Label label;
+    internal IOGraphGdmTypeReference? type;
 
     public GdmVertex() : this(descriptor => { }) { }
     GdmVertex(Action<IOGraphGdmVertexDescriptor<T>> configure)
@@ -33,15 +36,13 @@ public partial class GdmVertex<T> : IOGraphGdmVertex
         configure?.Invoke(descriptor);
     }
 
-    internal Label Label { get; set; }
-    internal IOGraphGdmTypeReference Type { get; set; } = default!;
+    public Label Label => label;
+    public IOGraphGdmTypeReference Type => type!;
     public IOGraphGdmEdgeReferenceCollection Edges { get; } = new GdmEdgeReferenceCollection();
     public IOGraphGdmMetadata Metadata { get; } = new GdmMetadata();
     public GdmElementType ElementType => GdmElementType.Vertex;
 
     #region Explicit Implementations
-    Label IOGraphGdmElement.Label => Label;
-    IOGraphGdmTypeReference IOGraphGdmVertex.Type => Type;
     IEnumerable<IOGraphGdmBinding> IOGraphGdmBindingElement.Bindings => bindings;
     void IOGraphGdmBindingElement.Bind(IOGraphGdmBinding binding)
     {
