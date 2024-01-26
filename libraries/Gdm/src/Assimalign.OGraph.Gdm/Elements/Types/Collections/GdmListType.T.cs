@@ -28,7 +28,7 @@ public class GdmListType<T> : GdmCollectionType<List<T>, T>
         {
             GdmThrowHelper.ThrowArgumentNullException(nameof(itemType));
         }
-        if (!ItemType!.RuntimeType!.IsAssignableTo(typeof(T)))
+        if (!itemType!.RuntimeType!.IsAssignableTo(typeof(T)))
         {
             GdmThrowHelper.ThrowArgumentException("");
         }

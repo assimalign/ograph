@@ -36,8 +36,10 @@ builder.Services
 
 var app = builder.Build();
 
+
 app.MapOGraphBinding<Employee>(descriptor =>
 {
+    descript
     descriptor.MapGet("GetEmployees")
         .UseRoute("employees")
         .UseResolver(async (context, cancellationToken) =>

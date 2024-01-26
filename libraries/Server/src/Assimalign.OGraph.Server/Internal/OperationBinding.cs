@@ -128,10 +128,10 @@ internal partial class OperationBinding : IOGraphOperationBinding
         var element = context.Element;
         var elementEntity = element.GetGdmEntityType();
 
-        var query = context.GetQuery();
+        var query = context.GetQueryDocument();
         var queryOptions = context.GetQueryOptions();
 
-        var vertexNode = (query.Root as VertexNode)!;
+        var vertexNode = (VertexNode)query.Root;
         var projectionNode = vertexNode.Nodes.OfType<ProjectionNode>().FirstOrDefault();
         var edgeNodes = vertexNode.Nodes.OfType<EdgeNode>();
 

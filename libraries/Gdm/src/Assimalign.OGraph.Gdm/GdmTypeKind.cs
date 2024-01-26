@@ -1,10 +1,11 @@
 ﻿namespace Assimalign.OGraph.Gdm;
 
 /// <summary>
-/// Types are categorization.
+/// Type categorization.
 /// </summary>
 public enum GdmTypeKind
 {
+
     None,
     /// <summary>
     /// 

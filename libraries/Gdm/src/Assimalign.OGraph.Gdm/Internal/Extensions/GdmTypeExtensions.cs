@@ -11,13 +11,17 @@ internal static class GdmTypeExtensions
 {
     public static GdmProperty GetProperty(this IOGraphGdmComplexType complexType, PropertyInfo propertyInfo)
     {
-        return complexType.Properties
+        var property = complexType.Properties
             .Select(p => p is GdmProperty property ? property : complexType.WrapProperty(p, propertyInfo))
             .FirstOrDefault(p => p.PropertyInfo.Name == propertyInfo.Name) ?? new GdmProperty()
             {
                 PropertyInfo = propertyInfo,
                 Label = propertyInfo.Name,
             };
+
+        complexType.Properties.Add(property);
+
+        return property;
     }
     public static GdmProperty WrapProperty(this IOGraphGdmComplexType complexType, IOGraphGdmProperty property, PropertyInfo propertyInfo)
     {
@@ -34,8 +38,6 @@ internal static class GdmTypeExtensions
             Label = property.Label,
             Type = property.Type
         };
-
-        complexType.Properties.Add(wrapped);
 
         return wrapped;
     }

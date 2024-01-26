@@ -58,19 +58,17 @@ public static class TestUtility
                     entity.HasProperty(p => p.CreatedBy).UsePropertyName("createdBy");
                     entity.HasProperty(p => p.UpdatedBy).UsePropertyName("updatedBy");
                 });
-                // Option 02: Build vertex from vertex descriptor
-                modelBuilder.AddVertex<EmployeeAddress>(vertex =>
-                {
-                    vertex.HasLabel("EmployeeAddress");
-                    vertex.HasType(entity =>
-                    {
-                        entity.HasKey(p => p.EmployeeId);
-                    });
-                });
-            })
-            .Configure("CompositeModel", modelBuilder =>
-            {
+                //// Option 02: Build vertex from vertex descriptor
+                //modelBuilder.AddVertex<EmployeeAddress>(vertex =>
+                //{
+                //    vertex.HasLabel("EmployeeAddress");
+                //    vertex.HasType(entity =>
+                //    {
+                //        entity.HasKey(p => p.EmployeeId);
+                //    });
 
+                //    vertex.HasEdge<>
+                //});
             })
             .Build();
     }

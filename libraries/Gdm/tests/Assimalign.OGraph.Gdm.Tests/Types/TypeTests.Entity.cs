@@ -40,36 +40,4 @@ public partial class TypeTests
 
         Assert.NotNull(property);
     }
-
-
-
-
-    public partial class TestEntityType
-    {
-        public partial class NonGeneric : GdmEntityType
-        {
-            protected override void Configure(IOGraphGdmEntityTypeDescriptor descriptor)
-            {
-                descriptor.HasLabel("Employee")
-                    .HasRuntimeType(typeof(Employee));
-            }
-        }
-
-        public partial class Generic : GdmEntityType<Employee>
-        {
-            protected override void Configure(IOGraphGdmEntityTypeDescriptor<Employee> descriptor)
-            {
-                descriptor.HasLabel("employeeEntity");
-
-                descriptor.HasKey(p => p.EmployeeId);
-
-
-                descriptor.HasProperty("");
-
-                descriptor.HasProperty(p => p.CreatedBy)
-                    .UsePropertyName("createdBy")
-                    .UseTypeReference("");
-            }
-        }
-    }
 }
