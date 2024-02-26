@@ -11,8 +11,12 @@ using Assimalign.OGraph.Syntax.Internal;
 public sealed partial class QueryParser
 {
     private readonly QueryParserOptions options;
-    
-    public QueryParser() : this(new QueryParserOptions()) { }
+
+    public QueryParser()
+    {
+        options = QueryParserOptions.Default;
+    }
+
     public QueryParser(QueryParserOptions options)
     {
         if (options is null)
@@ -26,30 +30,26 @@ public sealed partial class QueryParser
     {
         try
         {
-            var buffer  = options.Encoding.GetBytes(query);
-            var lexer   = new TokenLexer(buffer, new()
+            var buffer = options.Encoding.GetBytes(query);
+            var lexer = new TokenLexer(buffer, new()
             {
-                SkipCarriageReturn  = true,
-                SkipLineFeed        = true,
-                SkipTabs            = true,
-                SkipWhiteSpace      = true,
-                SkipComments        = true,
-                Encoding            = options.Encoding
+                SkipCarriageReturn = true,
+                SkipLineFeed = true,
+                SkipTabs = true,
+                SkipWhiteSpace = true,
+                SkipComments = true,
+                Encoding = options.Encoding
             });
             var context = new ParserContext()
             {
-                Root = new VertexNode()
-                {
-                    Label = new LabelNode(options.StartingVertexName!)
-                },
+                //Root = options.VertexFactory is null ? RootNode.Create(): new(options.VertexFactory.Invoke()),
                 Encoding = options.Encoding,
                 ThrowExceptionOnDiagnosticError = options.ThrowExceptionOnDiagnosticError
             };
             // NOTE: The Parser is responsible for only syntax diagnostics
             //       Analyzers will be responsible for semantic diagnostics.
-            var parser      = Parser.Create();
-            var node        = parser.Parse(ref lexer, context, context.Root) as RootNode;
-            var document    = new QueryDocument(
+            var node = ParseRoot(ref lexer, context);
+            var document = new QueryDocument(
                 query,
                 node!,
                 context.Diagnostics);
@@ -60,7 +60,7 @@ public sealed partial class QueryParser
         }
         catch (OperationCanceledException exception)
         {
-
+            throw;
         }
         catch (TokenLexerException exception)
         {
@@ -83,11 +83,119 @@ public sealed partial class QueryParser
         while (analyzers.Any())
         {
             var task = Task.WhenAny(analyzers);
-            if (!task.IsCompleted) // NOTE: Not sure if this is needed
+
+            while (!task.IsCompleted)
             {
-                task.Wait();
+                if (cancellationTokenSource.IsCancellationRequested)
+                {
+                    throw new OperationCanceledException(cancellationTokenSource.Token);
+                }
             }
+
             analyzers.Remove(task.Result);
         }
     }
+
+
+
+
+    private void AddInvalidTokenDiagnostic(ref TokenLexer lexer, ParserContext context)
+    {
+        context.AddDiagnostic(new Diagnostic()
+        {
+            Code = DiagnosticCode.G0006.ToString(),
+            Message = "Invalid Token.",
+            Start = lexer.Current.Start,
+            End = lexer.Current.End,
+            Line = lexer.Current.Line,
+            Location = DiagnosticLocation.Relative,
+            Severity = DiagnosticSeverity.Error,
+        });
+    }
+
+    private void AddEofDiagnostic(ref TokenLexer lexer, ParserContext context)
+    {
+        context.AddDiagnostic(new Diagnostic()
+        {
+            Code = DiagnosticCode.G0000.ToString(),
+            Message = "Unexpected EOF (End-Of-File).",
+            Start = lexer.Current.Start,
+            End = lexer.Current.End,
+            Line = lexer.Current.Line,
+            Location = DiagnosticLocation.Relative,
+            Severity = DiagnosticSeverity.Error,
+        });
+    }
+    private void AddExpectedOpenParenDiagnostic(ref TokenLexer lexer, ParserContext context)
+    {
+        context.AddDiagnostic(new Diagnostic()
+        {
+            Code = DiagnosticCode.G0001.ToString(),
+            Message = "Expected: '('",
+            Start = lexer.Current.Start,
+            End = lexer.Current.End,
+            Line = lexer.Current.Line,
+            Location = DiagnosticLocation.Absolute,
+            Severity = DiagnosticSeverity.Error,
+        });
+    }
+    private void AddExpectedOpenBracketDiagnostic(ref TokenLexer lexer, ParserContext context)
+    {
+        context.AddDiagnostic(new Diagnostic()
+        {
+            Code = DiagnosticCode.G0003.ToString(),
+            Message = "Expected: '{'",
+            Start = lexer.Current.Start,
+            End = lexer.Current.End,
+            Line = lexer.Current.Line,
+            Location = DiagnosticLocation.Absolute,
+            Severity = DiagnosticSeverity.Error,
+        });
+    }
+    private void AddExpectedDotSeparatorDiagnostic(ref TokenLexer lexer, ParserContext context)
+    {
+        context.AddDiagnostic(new Diagnostic()
+        {
+            Code = DiagnosticCode.G0005.ToString(),
+            Message = "Expected: '.'.",
+            Start = lexer.Current.Start,
+            End = lexer.Current.End,
+            Line = lexer.Current.Line,
+            Location = DiagnosticLocation.Relative,
+            Severity = DiagnosticSeverity.Error,
+        });
+    }
+    private void AddExpectedClosingParenDiagnostic(ref TokenLexer lexer, ParserContext context)
+    {
+        context.AddDiagnostic(new Diagnostic()
+        {
+            Code = DiagnosticCode.G0002.ToString(),
+            Message = "Expected: ')'.",
+            Start = lexer.Current.Start,
+            End = lexer.Current.End,
+            Line = lexer.Current.Line,
+            Location = DiagnosticLocation.Absolute,
+            Severity = DiagnosticSeverity.Error,
+        });
+    }
+
+    private void AddExpectedIntegerDiagnostic(ref TokenLexer lexer, ParserContext context)
+    {
+        context.AddDiagnostic(new Diagnostic()
+        {
+            Code = DiagnosticCode.G0008.ToString(),
+            Message = "Expected Integer.",
+            Start = lexer.Current.Start,
+            End = lexer.Current.End,
+            Line = lexer.Current.Line,
+            Location = DiagnosticLocation.Absolute,
+            Severity = DiagnosticSeverity.Error,
+        });
+    }
+
+
+    //protected void AddDuplicateKeywordDiagnostic(ref TokenLexer lexer, ParserContext context)
+    //{
+
+    //}
 }

@@ -1,19 +1,26 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace Assimalign.OGraph.Syntax;
 
+/// <summary>
+/// 
+/// </summary>
+[DebuggerDisplay("{Name}")]
 public sealed class PropertyNode : IdentifierNode
 {
-    internal PropertyNode() { }
+
     /// <summary>
     /// A default constructor for <see cref="PropertyNode"/>.
     /// </summary>
     /// <param name="name">The name of the property.</param>
     public PropertyNode(string name)
+        : base(name)
     {
-        base.Name = name;
+        Children = [];
     }
 
     /// <summary>
@@ -24,7 +31,13 @@ public sealed class PropertyNode : IdentifierNode
     public PropertyNode(string name, string alias) 
         : this(name)
     {
-        this.Alias = alias;
+        Alias = alias;
+    }
+
+    public PropertyNode(string name, IEnumerable<PropertyNode> children)
+        : this(name)
+    {
+        Children = children.ToImmutableList();
     }
 
     /// <summary>
@@ -36,29 +49,30 @@ public sealed class PropertyNode : IdentifierNode
     public PropertyNode(string name, string alias, IEnumerable<PropertyNode> children) 
         : this(name, alias)
     {
-        this.Children = children;
+        Children = children.ToImmutableList();
     }
 
     /// <summary>
     /// A temporary name to be assigned in replacement of the property name.
     /// </summary>
-    public string? Alias { get; init; }
+    public string? Alias { get; }
 
     /// <summary>
     /// Represents nested Identifiers
     /// </summary>
-    public IEnumerable<PropertyNode> Children { get; init; } = new PropertyNode[0];
+    public IEnumerable<PropertyNode> Children { get; }
 
     /// <summary>
     /// Specifies whether the Attribute has nested Identifiers.
     /// </summary>
-    public bool HasChildren => Children is not null && Children.Any();
+    public bool HasChildren => Children.Any();
 
     /// <summary>
     /// Specifies whether there is an alias.
     /// </summary>
     public bool HasAlias => !string.IsNullOrEmpty(Alias);
 
+    #region Overloads
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Property;
 
@@ -89,4 +103,6 @@ public sealed class PropertyNode : IdentifierNode
             }
         }
     }
+    #endregion
+
 }

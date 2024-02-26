@@ -19,7 +19,7 @@ public partial class OGraphBuilderTests
         var entities = model.GetGdmEntityTypes();
         var collection = model.GetGdmCollectionTypes();
 
-        var writer = new Utf8JsonWrite
+   
 
     }
 }

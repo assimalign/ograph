@@ -3,63 +3,62 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
-internal class ProjectionParser : Parser<ProjectionNode>
+internal class ProjectParser : Parser<ProjectNode>
 {
-    internal override ProjectionNode Parse(ref TokenLexer lexer, ParserContext context, ProjectionNode queryNode)
+    internal override ProjectNode Parse(ref TokenLexer lexer, ParserContext context, ProjectNode queryNode)
     {
+        Token token;
+
+        // Ensure not EOF (End of File)
         if (!lexer.HasNext)
         {
-            context.AddDiagnostic(Diagnostic.UnexpectedEOF(
-                lexer.Current.End));
-
+            AddEofDiagnostic(ref lexer, context);
             return queryNode;
         }
 
-        var token = lexer.Next();
+        token = lexer.Next();
 
+        // Ensure next token is an Open Parenthesis Block
         if (token.TokenType != TokenType.OpenParenthesis)
         {
-            context.AddDiagnostic(Diagnostic.ExpectedOpeningParenthesis(
-                token.Start,
-                token.End));
-
+            AddExpectedOpenParenDiagnostic(ref lexer, context);
             return queryNode;
         }
 
         return ParseParenthesisBlock(ref lexer, context, queryNode);
     }
-    private ProjectionNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, ProjectionNode queryNode)
+    private ProjectNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, ProjectNode queryNode)
     {
         Token token;
 
-        if (!lexer.TryPeek(out token))
+        // Ensure not EOF (End of File)
+        if (!lexer.HasNext)
         {
-            context.AddDiagnostic(Diagnostic.UnexpectedEOF(
-                lexer.Current.End));
-
+            AddEofDiagnostic(ref lexer, context);
             return queryNode;
         }
-        if (token.TokenType != TokenType.OpenBracket)
-        {
-            context.AddDiagnostic(Diagnostic.ExpectedOpeningBracket(
-                token.Start,
-                token.End));
 
+        token = lexer.Next();
+
+        // Ensure next token is bracket block
+        if (token.TokenType == TokenType.OpenBracket)
+        {
+            AddExpectedOpenBracketDiagnostic(ref lexer, context);
             return queryNode;
         }
+
         // Parse Parenthesis Block
         while (lexer.HasNext)
         {
             token = lexer.Next();
-            
+
             if (token.TokenType == TokenType.CloseParenthesis)
             {
                 // If there is more token after the closing parenthesis and no dot separator, then error
                 if (lexer.TryPeek(out var peek) && peek.TokenType != TokenType.Dot)
                 {
-                    context.AddDiagnostic(Diagnostic.ExpectedDotSeparator(
-                        peek.Start,
-                        peek.End));
+                    lexer.Next();
+                    AddExpectedDotSeparatorDiagnostic(ref lexer, context);
                 }
 
                 return queryNode;
@@ -68,13 +67,11 @@ internal class ProjectionParser : Parser<ProjectionNode>
             queryNode = ParseBracketBlock(ref lexer, context, queryNode);
         }
 
-        context.AddDiagnostic(Diagnostic.ExpectedClosingParenthesis(
-            lexer.Current.Start,
-            lexer.Current.End));
+        AddExpectedClosingParenDiagnostic(ref lexer, context);
 
         return queryNode;
     }
-    private ProjectionNode ParseBracketBlock(ref TokenLexer lexer, ParserContext context, ProjectionNode queryNode)
+    private ProjectNode ParseBracketBlock(ref TokenLexer lexer, ParserContext context, ProjectNode queryNode)
     {
         var properties = new List<PropertyNode>();
 
@@ -84,7 +81,7 @@ internal class ProjectionParser : Parser<ProjectionNode>
 
             if (token.TokenType == TokenType.CloseBracket)
             {
-                return new ProjectionNode()
+                return new ProjectNode()
                 {
                     Properties = properties
                 };

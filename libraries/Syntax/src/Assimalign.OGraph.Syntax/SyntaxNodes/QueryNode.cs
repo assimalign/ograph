@@ -16,6 +16,11 @@ public abstract class QueryNode
     /// <summary>
     /// 
     /// </summary>
+    public virtual string? Path { get; }
+
+    /// <summary>
+    /// Accepts a visitor.
+    /// </summary>
     /// <param name="visitor"></param>
     public virtual void Accept(IQueryNodeVisitor visitor)
     {

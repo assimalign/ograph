@@ -13,6 +13,7 @@ namespace Assimalign.OGraph.Syntax.Internal;
 /// </remarks>
 internal enum TokenType
 {
+    None = 0,
     #region Other
     Comment,
     /// <summary>

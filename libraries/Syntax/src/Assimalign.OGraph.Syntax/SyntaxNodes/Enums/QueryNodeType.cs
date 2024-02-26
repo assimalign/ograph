@@ -5,7 +5,7 @@ public enum QueryNodeType
     Root,
     Vertex,
     Edge,
-    Projection,
+    Project,
     Filter,
     Sort,
     Page,

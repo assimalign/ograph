@@ -1,4 +1,4 @@
-name: assimalign.ograph.syntax.ci
+name: ograph.gdm.ci
 
 on:
   push:
@@ -7,8 +7,8 @@ on:
     - development
     paths: 
     - 'Directory.Build.props'                                     # When the Global Props File Changes
-    - 'libraries/Syntax/src/**'
-    - '.github/workflows/assimalign.ograph.syntax.yml'        # When Pipeline File Changes
+    - 'libraries/Server/src/**'
+    - '.github/workflows/assimalign.ograph.server.yml'        # When Pipeline File Changes
 
 jobs:
   build:
@@ -35,21 +35,21 @@ jobs:
     
     - name: Restore Project
       run: dotnet restore 
-      working-directory: './libraries/Syntax/src/Assimalign.OGraph.Syntax'
+      working-directory: './libraries/Server/src/Assimalign.OGraph.Server'
     
     - name: Build Project
       run: dotnet build --configuration Release --no-restore
-      working-directory: './libraries/Syntax/src/Assimalign.OGraph.Syntax'
+      working-directory: './libraries/Server/src/Assimalign.OGraph.Server'
 
     - name: Restore Unit Tests Project
       run: dotnet restore 
-      working-directory: './libraries/Syntax/tests/Assimalign.OGraph.Syntax.Tests'
+      working-directory: './libraries/Server/tests/Assimalign.OGraph.Server.Tests'
 
     - name: Run Unit Tests
       run: dotnet test --no-restore --verbosity normal
-      working-directory: './libraries/Syntax/tests/Assimalign.OGraph.Syntax.Tests'
+      working-directory: './libraries/Server/tests/Assimalign.OGraph.Server.Tests'
     
     - name: Publish Nuget Package
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
       run: dotnet nuget push "*.nupkg" -k ${{ secrets.NUGET_PUBLISHING_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
-      working-directory: './libraries/Syntax/src/Assimalign.OGraph.Syntax/bin/Release/'
+      working-directory: './libraries/Server/src/Assimalign.OGraph.Server/bin/Release/'

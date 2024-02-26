@@ -2,6 +2,8 @@
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
@@ -9,7 +11,7 @@ namespace Assimalign.OGraph.Syntax.Internal;
 /// 
 /// </summary>
 [DebuggerDisplay("{TokenType}: {Text} ")]
-internal readonly struct Token
+internal readonly struct Token : IEquatable<Token>
 {
     /// <summary>
     /// Specifies the start position for the given token within a sequence.
@@ -20,11 +22,15 @@ internal readonly struct Token
     /// </summary>
     internal int End { get; init; }
     /// <summary>
+    /// The line number the token is on.
+    /// </summary>
+    internal int Line { get; init; }
+    /// <summary>
     /// The raw value as bytes.
     /// </summary>
     internal ReadOnlyMemory<byte> Value { get; init; }
     /// <summary>
-    /// The Value in bytes parsed as raw text with UTF8 encoding.
+    /// The raw text in the set encoding.
     /// </summary>
     internal string Text { get; init; }
     /// <summary>
@@ -114,5 +120,27 @@ internal readonly struct Token
     public override string ToString()
     {
         return $"{TokenType} - {Text}";
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(typeof(Token), Value);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is Token token)
+        {
+            return Equals(token);
+        }
+        return false;
+    }
+
+    public bool Equals(Token other)
+    {
+        var left = Value.Span;
+        var right = other.Value.Span;
+
+        return left.SequenceEqual(right);
     }
 }

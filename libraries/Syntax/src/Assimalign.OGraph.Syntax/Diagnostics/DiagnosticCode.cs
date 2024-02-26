@@ -34,4 +34,8 @@ internal enum DiagnosticCode
     /// G0007 - Invalid Token
     /// </summary>
     G0007,
+    /// <summary>
+    /// G0008 - Expected Integer
+    /// </summary>
+    G0008,
 }

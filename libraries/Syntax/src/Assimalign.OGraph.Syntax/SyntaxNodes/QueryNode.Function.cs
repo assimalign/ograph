@@ -5,10 +5,8 @@ namespace Assimalign.OGraph.Syntax;
 
 public sealed class FunctionCallNode : IdentifierNode
 {
-    internal FunctionCallNode() { }
-    public FunctionCallNode(string name, IEnumerable<ParameterNode> parameters)
+    public FunctionCallNode(string name, IEnumerable<ParameterNode> parameters) : base(name)
     {
-        this.Name = name;
         this.Parameters = parameters;
     }
 
@@ -19,7 +17,7 @@ public sealed class FunctionCallNode : IdentifierNode
     /// <summary>
     /// The function parameters
     /// </summary>
-    public IEnumerable<ParameterNode> Parameters { get; init; } = new ParameterNode[0];
+    public IEnumerable<ParameterNode> Parameters { get; init; } = [];
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.FunctionCall;

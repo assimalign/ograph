@@ -7,35 +7,66 @@
 #    - /api/vertex('employees')
 https://endpoint.com/api/employees?query= # This endpoint represents the starting vertex or vertices
     .project({
-        employeeId 
-        firstName 
-        lastName 
-        middleName
+        id
+        employeeId
+        employeeType
+        employeeInfo as info {
+            firstName
+            lastName
+            middleName
+        }
     })
     .filter({
-        startsWith(firstName, 'c')
+        employeeType eq FTE and (
+            starts_with(employeeInfo.firstName, 'c') or 
+            ends_with(employeeInfo.lastName, 'e')
+        ) and
+        createBy.timestamp > 2022-02-012
     })
     .page({
         skip 0
         take 25
     })
-    .edge(companies as employeeCompany)                         <-- Returns a single vertex
+    .edge(companies as employeeCompany)                       <-- Returns a single vertex
         .project({                                              <-- A projection is required when returning a single vertex
-            companyName
+            id
+            companyId
+            companyInfo as info {
+                companyName
+            }
         })
-        .edge(companies/address) # The Edge keyword takes in the edge path
+        .edge(companies/addresses) # The Edge keyword takes in the edge path
             .project({
-                streetOne
+                id
+                addressId
+                addressType
+                addressInfo {
+                    streetOne
+                    streetTwo
+                    streetThree
+                    streetFour
+                    city
+                    state
+                    zipCode
+                }
+                created {
+                    timestamp
+                    userId
+                }
+                updated {
+                    timestamp
+                    userId
+                }
             })
             .filter({
                 addressType eq 1
             })
-            .edge('companies/addresses/types' as addressTypes)
+            .edge(companies/addresses/types as addressTypes)
                 .project({
                     typeId
                     typeName
                 })
-    .edge(primaryAddress)
+    .edge(addresses, primaryAddress)
         .project({
             streetOne
         })
@@ -70,7 +101,7 @@ vertex('employees')
             }
         })
         .filter({
-            startsWith(companyName, 'c')
+            startsWith('companyName', 'c')
         })
         .page({
             skip 0
@@ -86,7 +117,7 @@ vertex('employees')
             .filter({
                 addressType eq 1
             })
-            #.edge('companies/../addresses/../addressType')
+            #.edge('companies/addresses/../addressType')
             .edge('companies/{companyId}/addresses/{addressId}/addressType')
                 .project({
                     typeId

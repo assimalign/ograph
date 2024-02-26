@@ -23,7 +23,7 @@ public abstract class QueryVisitor<T> : IQueryNodeVisitor<T>
         throw new NotImplementedException();
     }
 
-    public virtual T Visit(ProjectionNode node)
+    public virtual T Visit(ProjectNode node)
     {
         throw new NotImplementedException();
     }

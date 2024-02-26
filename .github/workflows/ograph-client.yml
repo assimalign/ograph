@@ -1,4 +1,4 @@
-name: assimalign.ograph.client.ci
+name: ograph.client.ci
 
 on:
   push:
@@ -9,6 +9,8 @@ on:
     - 'Directory.Build.props'                                     # When the Global Props File Changes
     - 'libraries/Client/src/**'
     - '.github/workflows/assimalign.ograph.client.yml'        # When Pipeline File Changes
+
+
 
 jobs:
   build:

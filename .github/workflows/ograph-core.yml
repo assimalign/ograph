@@ -1,4 +1,4 @@
-name: assimalign.ograph.client.ci
+name: ograph.client.ci
 
 on:
   push:

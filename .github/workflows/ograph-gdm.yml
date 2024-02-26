@@ -1,4 +1,4 @@
-name: assimalign.ograph.gdm.ci
+name: ograph.gdm.ci
 
 on:
   push:

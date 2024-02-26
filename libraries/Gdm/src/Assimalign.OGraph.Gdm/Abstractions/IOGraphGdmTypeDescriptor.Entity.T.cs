@@ -11,7 +11,7 @@ public interface IOGraphGdmEntityTypeDescriptor<T>
     where T : class, new()
 {
     /// <summary>
-    /// 
+    /// The type label for the entity.
     /// </summary>
     /// <param name="label"></param>
     /// <returns></returns>

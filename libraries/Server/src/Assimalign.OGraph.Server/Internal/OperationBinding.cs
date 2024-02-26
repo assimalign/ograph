@@ -132,7 +132,7 @@ internal partial class OperationBinding : IOGraphOperationBinding
         var queryOptions = context.GetQueryOptions();
 
         var vertexNode = (VertexNode)query.Root;
-        var projectionNode = vertexNode.Nodes.OfType<ProjectionNode>().FirstOrDefault();
+        var projectionNode = vertexNode.Nodes.OfType<ProjectNode>().FirstOrDefault();
         var edgeNodes = vertexNode.Nodes.OfType<EdgeNode>();
 
         writer.Switch(xml => xml.WriteStartElement(""), json => json.WriteStartObject());

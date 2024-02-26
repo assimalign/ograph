@@ -15,6 +15,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{12CC0A09-6189-4302-968D-0CDA98F5EE51}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{9ABC1EEE-596B-4ED4-B693-9F5BFC81A9C7}"
@@ -59,31 +60,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A2C7E161
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph.Server.Tests", "libraries\Server\tests\Assimalign.OGraph.Server.Tests\Assimalign.OGraph.Server.Tests.csproj", "{34378708-2E53-412C-A551-9C32960FBAD6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{F2030B05-3132-4E74-BB50-B2C9D89CA284}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\assimalign.ograph.server.yml = .github\workflows\assimalign.ograph.server.yml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{903ACF28-4FA9-47B8-9E02-5CC3C4C7D132}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\assimalign.ograph.gdm.yml = .github\workflows\assimalign.ograph.gdm.yml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{307AD2CA-C46A-4BFF-898F-6F8ED3A1842B}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\assimalign.ograph.client.yml = .github\workflows\assimalign.ograph.client.yml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{18F5B843-D5F3-42D7-85D2-C9DDB881457B}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\assimalign.ograph.core.yml = .github\workflows\assimalign.ograph.core.yml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{D61FE973-EB03-44D1-BB1E-978352855B83}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\assimalign.ograph.syntax.yml = .github\workflows\assimalign.ograph.syntax.yml
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F29063B7-CF9D-47FD-AB8E-EAECD4F8E707}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph.Client.Tests", "libraries\Client\tests\Assimalign.OGraph.Client.Tests\Assimalign.OGraph.Client.Tests.csproj", "{8D24A356-D4E5-43AA-BB2F-70B7DEAA401A}"
@@ -108,9 +84,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{F0C90EB6-2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DEF0B671-F785-4E5D-BCF6-519C2CCD3011}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assimalign.OGraph.Codegen", "libraries\Codegen\src\Assimalign.OGraph.Codegen\Assimalign.OGraph.Codegen.csproj", "{31C8CF09-8AEC-468F-BFC0-74127F901421}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assimalign.OGraph.Codegen", "libraries\Codegen\src\Assimalign.OGraph.Codegen\Assimalign.OGraph.Codegen.csproj", "{31C8CF09-8AEC-468F-BFC0-74127F901421}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D0A36470-AEEC-43B7-A22C-2B7C7D4CEC1F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Github", ".Github", "{5AB44139-4255-4983-9AFB-E267781CC73D}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\ograph-client.yml = .github\workflows\ograph-client.yml
+		.github\workflows\ograph-core.yml = .github\workflows\ograph-core.yml
+		.github\workflows\ograph-gdm.yml = .github\workflows\ograph-gdm.yml
+		.github\workflows\ograph-server.yml = .github\workflows\ograph-server.yml
+		.github\workflows\ograph-syntax.yml = .github\workflows\ograph-syntax.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -201,11 +186,6 @@ Global
 		{3C234671-73F7-4662-B82E-55ED802EFFCF} = {87A6AAD8-A1FD-4D88-9F1B-79AEF43DA7D4}
 		{A2C7E161-7B22-40F5-86D4-713808F5618C} = {0F0E4D56-C261-4B3E-A02C-C302CB68E34B}
 		{34378708-2E53-412C-A551-9C32960FBAD6} = {A2C7E161-7B22-40F5-86D4-713808F5618C}
-		{F2030B05-3132-4E74-BB50-B2C9D89CA284} = {0F0E4D56-C261-4B3E-A02C-C302CB68E34B}
-		{903ACF28-4FA9-47B8-9E02-5CC3C4C7D132} = {686F38BE-47A6-4EEA-AF73-EA04666C16D5}
-		{307AD2CA-C46A-4BFF-898F-6F8ED3A1842B} = {5D4FD37C-E267-43EC-84A4-CCFBC8720256}
-		{18F5B843-D5F3-42D7-85D2-C9DDB881457B} = {9ABC1EEE-596B-4ED4-B693-9F5BFC81A9C7}
-		{D61FE973-EB03-44D1-BB1E-978352855B83} = {D5C5EA91-3BCC-42DD-A94A-8D259925E997}
 		{F29063B7-CF9D-47FD-AB8E-EAECD4F8E707} = {5D4FD37C-E267-43EC-84A4-CCFBC8720256}
 		{8D24A356-D4E5-43AA-BB2F-70B7DEAA401A} = {F29063B7-CF9D-47FD-AB8E-EAECD4F8E707}
 		{99A6E099-2343-494B-94CB-3608E385B69D} = {282449FB-DCA3-46D6-A2C1-A9A812B0A115}

@@ -1,234 +1,160 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
-internal class VertexParser : Parser<VertexNode>
+internal class VertexParser : Parser
 {
-    internal override VertexNode Parse(ref TokenLexer lexer, ParserContext context, VertexNode queryNode)
+    internal override VertexNode? Parse(ref TokenLexer lexer, ParserContext context)
     {
-        while (lexer.HasNext)
-        {
-            var token = lexer.Next();
+        Token token;
 
-            switch (token.TokenType)
+        // Vertex Args
+        LabelNode? label;
+        VertexNode vertex;
+        ConstantNode? argument = null;
+
+        // Vertex Children
+        var nodes = new List<QueryNode>();
+
+        // Ensure next token is an Open Parenthesis Block
+        if ((lexer.TryNext(out token) && token.TokenType != TokenType.OpenParenthesis) || lexer.Previous.TokenType != TokenType.Vertex)
+        {
+            AddExpectedOpenParenDiagnostic(ref lexer, context);
+            return null;
+        }
+
+        // Get Vertex Identifier
+        if (lexer.TryNext(out token) && token.TokenType != TokenType.Identifier)
+        {
+            // TODO: Add Diagnostics
+            return null;
+        }
+
+        label = new LabelNode(token.Text);
+
+        var hasNext = lexer.TryNext(out token);
+
+        if (!hasNext && token.TokenType != TokenType.CloseParenthesis && token.TokenType != TokenType.Comma)
+        {
+            AddExpectedClosingParenDiagnostic(ref lexer, context);
+            return null;
+        }
+
+        // Check for Argument
+        if (token.TokenType == TokenType.Comma)
+        {
+            if (lexer.TryNext(out token) && (
+                token.TokenType == TokenType.String ||
+                token.TokenType == TokenType.FloatingPoint ||
+                token.TokenType == TokenType.Integer))
             {
-                case TokenType.Page:
-                    queryNode = ParsePage(ref lexer, context, queryNode);
-                    break;
-                //case TokenType.Filter:
-                //    queryNode = ParseFilter(ref lexer, context, queryNode);
-                //    break;
-                case TokenType.Project:
-                    queryNode = ParseProjections(ref lexer, context, queryNode);
-                    break;
-                //case TokenType.Sort:
-                //    queryNode = ParseSort(ref lexer, context, queryNode);
-                //    break;
-                case TokenType.Edge:
-                    queryNode = ParseEdge(ref lexer, context, queryNode);
-                    break;
-                case TokenType.Dot:
-                    continue;
-                default:
-                    context.AddUnexptedTokenError(ref lexer); // Add Diagnostic information. Unexpected lexerToken
-                    break;
+                argument = (ConstantNode)context.GetParser<ConstantParser>()
+                    .Parse(ref lexer, context);
+
+                lexer.TryNext(out token);
             }
         }
-        return queryNode;
-    }
-    private VertexNode ParseEdge(ref TokenLexer lexer, ParserContext context, VertexNode queryNode)
-    {
-        var nodes = queryNode.Nodes.ToList();
-        var edgeParser = context.GetParser<EdgeParser>();
-        var edgeNode = edgeParser.Parse(ref lexer, context, new EdgeNode()
+        if (token.TokenType != TokenType.CloseParenthesis)
         {
-            Source = queryNode
-        });
-        
-        nodes.Add(edgeNode);
-
-        return new VertexNode()
-        {
-            Label = queryNode.Label,
-            Nodes = nodes
-        };
-    }
-
-    private VertexNode ParsePage(ref TokenLexer lexer, ParserContext context, VertexNode queryNode)
-    {
-        var nodes = queryNode.Nodes.ToList();
-        // Check for duplicate nodes
-        if (nodes.Any(p => p is PageNode))
-        {
-            // TODO: Add diagnostics
-            return queryNode;
+            AddExpectedClosingParenDiagnostic(ref lexer, context);
+            return null;
         }
 
-        var pageParser = context.GetParser<PageParser>();
-        var pageNode = pageParser.Parse(ref lexer, context, new PageNode());
+        vertex = argument is null
+            ? new VertexNode(label, nodes)
+            : new VertexNode(label, argument, nodes);
 
-        nodes.Add(pageNode);
-
-        return new VertexNode()
+        if (lexer.TryNext(out token) && token.TokenType != TokenType.Dot)
         {
-            Label = queryNode.Label,
-            Nodes = nodes
-        };
+            AddExpectedDotSeparatorDiagnostic(ref lexer, context);
+            return null;
+        }
+
+        while (lexer.TryNext(out token))
+        {
+            context.Parent = vertex;
+
+            var node = token.TokenType switch
+            {
+                //TokenType.Sort
+                TokenType.Page => context.GetParser<PageParser>()
+                    .Parse(ref lexer, context),
+
+                TokenType.Sort => null,
+                TokenType.Project => null,
+
+
+
+                TokenType.Edge => context.GetParser<EdgeParser>()
+                    .Parse(ref lexer, context),
+                _ => null
+            };
+
+            if (node is null)
+            {
+                // TODO: Add Diagnostics
+                return null;
+            }
+
+            nodes.Add(node);
+        }
+
+        return vertex;
     }
-    //private VertexNode ParseSort(ref TokenLexer lexer, ParserContext context, VertexNode queryNode)
-    //{
-    //    var nodes = queryNode.Nodes.ToList();
-    //    var sortNode = (SortNode)context.GetParser<SortParser>()
-    //        .Parse(ref lexer, context, new SortNode());
 
-    //    if (queryNode.TryGetSort(out var sortRoot))
-    //    {
-    //        // Let's remove from root collection to be reformatted
-    //        nodes.Remove(sortRoot);
-
-    //        if (sortNode.Identifier is null)
-    //        {
-    //            // TODO: 
-    //        }
-    //        else
-    //        {
-    //            sortNode = FormatEdgeTree(sortRoot, sortNode);
-    //        }
-    //    }
-    //    if (sortNode.Identifier is not null)
-    //    {
-    //        // TODO: Duplicate or missing Root Projection
-    //    }
-
-    //    nodes.Add(sortNode);
-
-    //    return new VertexNode()
-    //    {
-    //        Nodes = nodes
-    //    };
-
-    //    SortNode FormatEdgeTree(SortNode root, SortNode node, int index = 0)
-    //    {
-    //        var edgeNode = (EdgeNode)node.Identifier;
-    //        var segments = edgeNode.GetSegments();
-
-    //        // Check if we've reached the of the tree
-    //        if (segments.Length == (index + 1))
-    //        {
-    //            root = new SortNode()
-    //            {
-    //                Identifier = root.Identifier,
-    //                Direction = root.Direction,
-    //                ThenBy = root.ThenBy,
-    //                Edges = root.Edges.Concat(new[] { node })
-    //            };
-    //        }
-    //        else
-    //        {
-    //            var next = root.Edges.FirstOrDefault(x =>
-    //                x.Identifier.Name.Equals(segments[index], StringComparison.InvariantCultureIgnoreCase));
-
-    //            index = index + 1;
-    //            root = new SortNode()
-    //            {
-    //                Identifier = root.Identifier,
-    //                Direction = root.Direction,
-    //                ThenBy = root.ThenBy,
-    //                Edges = root.Edges
-    //                    .Where(x => !x.Identifier.Name.Equals(next.Identifier.Name))
-    //                    .Concat(new[]
-    //                    {
-    //                        FormatEdgeTree(next, node, index)
-    //                    })
-    //            };
-    //        }
-
-    //        return root;
-    //    }
-    //}
-    private VertexNode ParseProjections(ref TokenLexer lexer, ParserContext context, VertexNode queryNode)
+    private EdgeNode ParseEdge(ref TokenLexer lexer, ParserContext context)
     {
-        var nodes = queryNode.Nodes.ToList();
-        var projectionsParser = context.GetParser<ProjectionParser>();
-        var projectionsNode = projectionsParser.Parse(ref lexer, context, new ProjectionNode());
+        Token token;
 
-        nodes.Add(projectionsNode);
+        string? previous = null;
+        string? current = null;
 
-        return new VertexNode()
+        while (lexer.TryNext(out token))
         {
-            Label = queryNode.Label,
-            Nodes = nodes
-        };
+            if (token.TokenType != TokenType.Identifier)
+            {
+                // TODO: Add Diagnostics
+                return null;
+            }
+            else
+            {
+                previous = current;
+                current = token.Text;
+            }
+            if (previous is not null)
+            {
+                var parent = source.Nodes.FirstOrDefault(p => p is EdgeNode edge && edge?.Label?.Name == previous) as EdgeNode;
+
+                if (parent is null)
+                {
+                    // Invalid Path
+                    return null;
+                }
+
+                source = parent.Target;
+            }
+            if (!lexer.TryNext(out token))
+            {
+                // TODO: Expected slash or comma
+                return null;
+            }
+            if (token.TokenType == TokenType.Slash)
+            {
+                if (lexer.Previous.TokenType != TokenType.Identifier)
+                {
+                    //TODO: Add Diagnostic - There can't be any other token between the slash and identifier
+                    return null;
+                }
+                continue;
+            }
+            else
+            {
+                break;
+            }
+        }
     }
-    //private VertexNode ParseFilter(ref TokenLexer lexer, ParserContext context, VertexNode queryNode)
-    //{
-    //    var nodes = queryNode.Nodes.ToList();
-    //    var filterNode = (FilterNode)context.GetParser<FilterParser>()
-    //        .Parse(ref lexer, context, new FilterNode());
 
-    //    // Get Root Projection
-    //    if (queryNode.TryGetFilter(out var filterRoot))
-    //    {
-    //        // Let's remove from root collection to be reformatted
-    //        nodes.Remove(filterRoot);
 
-    //        if (filterNode.Identifier is null)
-    //        {
-    //            // TODO: 
-    //        }
-    //        else
-    //        {
-    //            filterNode = FormatEdgeTree(filterRoot, filterNode);
-    //        }
-    //    }
-    //    if (filterNode.Identifier is not null)
-    //    {
-    //        // TODO: Duplicate or missing Root Projection
-    //    }
-
-    //    nodes.Add(filterNode);
-
-    //    return new VertexNode()
-    //    {
-    //        Nodes = nodes
-    //    };
-
-    //    FilterNode FormatEdgeTree(FilterNode root, FilterNode node, int index = 0)
-    //    {
-    //        var edgeNode = (EdgeNode)node.Identifier;
-    //        var segments = edgeNode.GetSegments();
-
-    //        // Check if we've reached the of the tree
-    //        if (segments.Length == (index + 1))
-    //        {
-    //            root = new FilterNode()
-    //            {
-    //                Identifier = root.Identifier,
-    //                Predicate = root.Predicate,
-    //                Edges = root.Edges.Concat(new[] { node })
-    //            };
-    //        }
-    //        else
-    //        {
-    //            var next = root.Edges.FirstOrDefault(x =>
-    //                x.Identifier.Name.Equals(segments[index], StringComparison.InvariantCultureIgnoreCase));
-
-    //            index = index + 1;
-    //            root = new FilterNode()
-    //            {
-    //                Identifier = root.Identifier,
-    //                Predicate = root.Predicate,
-    //                Edges = root.Edges
-    //                    .Where(x => !x.Identifier.Name.Equals(next.Identifier.Name))
-    //                    .Concat(new[]
-    //                    {
-    //                        FormatEdgeTree(next, node, index)
-    //                    })
-    //            };
-    //        }
-
-    //        return root;
-    //    }        
-    //}
 }

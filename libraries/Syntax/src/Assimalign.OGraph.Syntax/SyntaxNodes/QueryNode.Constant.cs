@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 
 namespace Assimalign.OGraph.Syntax;
 
@@ -10,30 +9,20 @@ namespace Assimalign.OGraph.Syntax;
 [DebuggerDisplay("{Text}")]
 public sealed class ConstantNode : QueryNode
 {
-    private byte[] value = new byte[0];
-
-    internal ConstantNode() { }
     public ConstantNode(byte[] value)
     {
-        this.Value = value;
+        Value = value;
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public byte[] Value
-    {
-        get => this.value;
-        init
-        {
-            this.value = value;
-        }
-    }
+    public byte[] Value { get; }
 
     /// <summary>
     /// Get's the raw text value of the constant. Uses UTF8 encoding.
     /// </summary>
-    public string Text => Encoding.UTF8.GetString(this.value);
+    public string Text => Encoding.UTF8.GetString(Value);
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Constant;
@@ -62,22 +51,21 @@ public sealed class ConstantNode : QueryNode
     #region Parse
     public string GetString() => Encoding.UTF8.GetString(Value);
     public DateOnly GetDate() => DateOnly.Parse(GetString());
-    public bool TryGetDate(out DateOnly date) => DateOnly.TryParse(GetString(), out date);
     public DateTime GetDateTime() => DateTime.Parse(GetString());
-    public bool TryGetDateTime(out DateTime dateTime) => DateTime.TryParse(GetString(), out dateTime);
     public TimeOnly GetTime() => TimeOnly.Parse(GetString());
-    public bool TryGetTime(out TimeOnly time) => TimeOnly.TryParse(GetString(), out time);
     public short GetInt16() => short.Parse(GetString());
-    public bool TryGetInt16(out short int16) => short.TryParse(GetString(), out int16);
     public int GetInt32() => int.Parse(GetString());
-    public bool TryGetInt32(out int int32) => int.TryParse(GetString(), out int32);
     public long GetInt64() => long.Parse(GetString());
-    public bool TryGetInt64(out long int64) => long.TryParse(GetString(), out int64);
-    public decimal GetDecimal() => decimal.Parse(GetString());
-    public bool TryGetDecimal(out decimal deci) => decimal.TryParse(GetString(), out deci);
     public float GetSingle() => float.Parse(GetString());
+    public decimal GetDecimal() => decimal.Parse(GetString());
+
+    public bool TryGetInt16(out short int16) => short.TryParse(GetString(), out int16);
+    public bool TryGetInt64(out long int64) => long.TryParse(GetString(), out int64);
+    public bool TryGetDateTime(out DateTime dateTime) => DateTime.TryParse(GetString(), out dateTime);
+    public bool TryGetTime(out TimeOnly time) => TimeOnly.TryParse(GetString(), out time);
+    public bool TryGetDate(out DateOnly date) => DateOnly.TryParse(GetString(), out date);
+    public bool TryGetDecimal(out decimal deci) => decimal.TryParse(GetString(), out deci);
+    public bool TryGetInt32(out int int32) => int.TryParse(GetString(), out int32);
     public bool TryGetSingle(out float single) => float.TryParse(GetString(), out single);
     #endregion
-
-    
 }

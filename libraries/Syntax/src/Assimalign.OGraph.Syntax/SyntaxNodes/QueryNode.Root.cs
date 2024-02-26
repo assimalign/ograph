@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assimalign.OGraph.Syntax.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,22 +10,32 @@ namespace Assimalign.OGraph.Syntax;
 /// </summary>
 public sealed class RootNode : QueryNode
 {
-    public RootNode(IEnumerable<VertexNode> vertices)
-    {
-        if (vertices is null || !vertices.Any())
-        {
-
-        }
-    }
-
     /// <summary>
     /// 
     /// </summary>
-    public IEnumerable<VertexNode> Vertices { get; init; }
+    /// <param name="vertex"></param>
+    public RootNode(VertexNode vertex)
+    {
+        if (vertex is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(vertex));
+        }
+
+        Vertex = vertex;
+    }
+
+    /// <summary>
+    /// The starting vertex of query.
+    /// </summary>
+    public VertexNode Vertex { get; }
+
+    /// <inheritdoc />
+    public override string Path => "/";
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Root;
 
+    #region Overloads
     /// <inheritdoc />
     public override void Accept(IQueryNodeVisitor visitor)
     {
@@ -37,8 +48,20 @@ public sealed class RootNode : QueryNode
         return visitor.Visit(this);
     }
 
+    /// <inheritdoc />
     public override IEnumerable<TNode> GetNodesOfType<TNode>()
     {
-        return base.GetNodesOfType<TNode>();
+        if (this is TNode root)
+        {
+            yield return root;
+        }
+        else if (Vertex is not null) // There should ever be one Root Node in the Tree. 
+        {
+            foreach (var node in Vertex.GetNodesOfType<TNode>())
+            {
+                yield return node;
+            }
+        }
     }
+    #endregion
 }

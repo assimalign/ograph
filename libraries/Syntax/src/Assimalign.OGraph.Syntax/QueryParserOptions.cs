@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax;
 
-using Assimalign.OGraph.Syntax.Analyzer;
 using Assimalign.OGraph.Syntax.Internal;
 
 public sealed class QueryParserOptions
@@ -24,7 +23,7 @@ public sealed class QueryParserOptions
     /// </summary>
     public bool ThrowExceptionOnDiagnosticError { get; set; }
     /// <summary>
-    /// 
+    /// Gets or sets the encoding for the query parser. The default is UTF8.
     /// </summary>
     public Encoding Encoding { get; set; } = Encoding.UTF8;
     /// <summary>
@@ -66,4 +65,8 @@ public sealed class QueryParserOptions
     {
         AddAnalyzer(new TAnalyzer());
     }
+
+
+
+    public static QueryParserOptions Default => new QueryParserOptions();
 }

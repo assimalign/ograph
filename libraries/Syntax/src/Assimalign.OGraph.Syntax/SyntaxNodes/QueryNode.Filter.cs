@@ -3,18 +3,32 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax;
 
+using Assimalign.OGraph.Syntax.Internal;
+
 public sealed class FilterNode : QueryNode
 {
-    internal FilterNode() { }
+    internal BinaryNode? predicate;
+
+    FilterNode() { }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="predicate"></param>
+    /// <exception cref="ArgumentNullException"/>
     public FilterNode(BinaryNode predicate)
     {
-        Predicate = predicate;
+        if (predicate is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(predicate));
+        }
+        this.predicate = predicate;
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public BinaryNode? Predicate { get; init; }
+    public BinaryNode? Predicate => predicate;
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Filter;
@@ -46,4 +60,7 @@ public sealed class FilterNode : QueryNode
             }
         }
     }
+
+
+    internal static FilterNode Create() => new FilterNode();
 }

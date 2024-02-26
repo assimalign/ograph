@@ -14,7 +14,9 @@ internal ref partial struct TokenLexer
 
     private ReadOnlySequence<byte> remaining;
     private Token current = default;
+    private Token previous = default;
     private long position = default;
+    private int line = 1;
 
     public TokenLexer(string query)
     {
@@ -70,9 +72,17 @@ internal ref partial struct TokenLexer
         }
     }
     /// <summary>
+    /// The current line number the lexer is on.
+    /// </summary>
+    public int Line => line;
+    /// <summary>
     /// Is the current token that has been parsed.
     /// </summary>
     public Token Current => current;
+    /// <summary>
+    /// Get's the previous token.
+    /// </summary>
+    public Token Previous => previous;
     /// <summary>
     /// Peeks at the next token in the sequence.
     /// </summary>
@@ -124,8 +134,15 @@ internal ref partial struct TokenLexer
             {
                 remaining = sequenceReader.UnreadSequence;
                 position += sequenceReader.Consumed;
+                previous = current;
                 current = token;
 
+                // Capture Line Number
+                if (current.TokenType == TokenType.LineFeed && 
+                    previous.TokenType == TokenType.CarriageReturn)
+                {
+                    line++;
+                }
                 switch (token.TokenType)
                 {
                     case TokenType.Tab when options.SkipTabs:
@@ -221,6 +238,7 @@ internal ref partial struct TokenLexer
                 Value = value,
                 Text = options.Encoding.GetString(value),
                 TokenType = tokenType,
+                Line = line,
                 Start = (int)position, // explicit casting from long to int. If query is bigger than the max value of an int then developer needs to re-think his life decisions.
                 End = (int)(position + sequenceReader.Consumed) - 1
             };

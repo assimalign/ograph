@@ -51,6 +51,10 @@ public sealed partial class Diagnostic
     /// </summary>
     public int? End { get; init; }
     /// <summary>
+    /// The line number of the diagnostics. Default is 1.
+    /// </summary>
+    public int Line { get; init; } = 1;
+    /// <summary>
     /// 
     /// </summary>
     public DiagnosticSeverity? Severity { get; init; }

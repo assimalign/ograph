@@ -61,4 +61,5 @@ internal static class TokenLexerExtensions
 
         return buffer.AsSpan();
     }
+
 }

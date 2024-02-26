@@ -5,7 +5,7 @@ public interface IQueryNodeVisitor<T>
     T Visit(QueryNode queryNode);
     T Visit(VertexNode queryNode);
     T Visit(FilterNode queryNode);
-    T Visit(ProjectionNode queryNode);
+    T Visit(ProjectNode queryNode);
     T Visit(PageNode queryNode);
     T Visit(SortNode queryNode);
     T Visit(BinaryNode queryNode);

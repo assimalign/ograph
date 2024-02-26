@@ -36,7 +36,7 @@ public partial class QueryParserTests
 
         var root = Assert.IsType<VertexNode>(document.Root);
         var node = Assert.Single(root.Nodes);
-        var projection = Assert.IsType<ProjectionNode>(node);
+        var projection = Assert.IsType<ProjectNode>(node);
 
         Assert.Equal(4, projection.Properties.Count());
 
@@ -184,7 +184,7 @@ public partial class QueryParserTests
 
         var root = Assert.IsType<VertexNode>(document.Root);
         var node = Assert.Single(root.Nodes);
-        var projection = Assert.IsType<ProjectionNode>(node);
+        var projection = Assert.IsType<ProjectNode>(node);
 
         Assert.Equal(4, projection.Properties.Count());
 

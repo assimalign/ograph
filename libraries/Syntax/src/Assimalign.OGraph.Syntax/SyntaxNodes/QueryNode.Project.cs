@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace Assimalign.OGraph.Syntax;
+
+using Assimalign.OGraph.Syntax.Internal;
 
 /// <summary>
 /// 
@@ -10,30 +13,30 @@ namespace Assimalign.OGraph.Syntax;
 /// <remarks>
 /// Unlike select statements, projections are not limited to a single entity.
 /// </remarks>
-public sealed class ProjectionNode : QueryNode
+public sealed class ProjectNode : QueryNode
 {
-    internal ProjectionNode() { }
     /// <summary>
-    /// A default constructor for <see cref="ProjectionNode"/>.
+    /// A default constructor for <see cref="ProjectNode"/>.
     /// </summary>
     /// <param name="properties"></param>
-    public ProjectionNode(IEnumerable<PropertyNode> properties)
+    public ProjectNode(IEnumerable<PropertyNode> properties)
     {
-        if (properties is null || !properties.Any())
+        if (properties is null)
         {
-            throw new ArgumentNullException(nameof(properties), $"{nameof(properties)} cannot be empty.");
+            ThrowHelper.ThrowArgumentNullException(nameof(properties));
         }
-        Properties = properties;
+        Properties = properties.ToImmutableList();
     }
-      
 
     /// <summary>
     /// A collection of properties to project in the query results.
     /// </summary>
-    public IEnumerable<PropertyNode> Properties { get; init; } = new PropertyNode[0];
+    public IEnumerable<PropertyNode> Properties { get; }
+
+    #region Overloads
 
     /// <inheritdoc />
-    public override QueryNodeType NodeType => QueryNodeType.Projection;
+    public override QueryNodeType NodeType => QueryNodeType.Project;
 
     /// <inheritdoc />
     public override void Accept(IQueryNodeVisitor visitor)
@@ -50,13 +53,18 @@ public sealed class ProjectionNode : QueryNode
     /// <inheritdoc />
     public override IEnumerable<TNode> GetNodesOfType<TNode>()
     {
-        if (this is TNode node)
+        if (this is TNode project)
         {
-            yield return node;
+            yield return project;
         }
-        foreach (var node2 in Properties.SelectMany(x => x.GetNodesOfType<TNode>()))
+        foreach (var property in Properties)
         {
-            yield return node2;
+            foreach (var node in property.GetNodesOfType<TNode>())
+            {
+                yield return node;
+            }
         }
     }
+    #endregion
+
 }

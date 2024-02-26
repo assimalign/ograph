@@ -2,7 +2,7 @@
 
 internal class ConstantParser : Parser
 {
-    internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode node)
+    internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context)
     {
         var token = lexer.Current;
 

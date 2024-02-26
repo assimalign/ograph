@@ -4,50 +4,42 @@ using System.Reflection.Metadata;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
-internal sealed class PageParser : Parser<PageNode>
+internal sealed class PageParser : Parser
 {
-    internal override PageNode Parse(ref TokenLexer lexer, ParserContext context, PageNode queryNode)
+    internal override QueryNode? Parse(ref TokenLexer lexer, ParserContext context)
     {
-        if (!lexer.HasNext)
-        {
-            context.AddDiagnostic(Diagnostic.UnexpectedEOF(
-                lexer.Current.End));
+        Token token;
 
-            return queryNode;
+        // Ensure next token is an Open Parenthesis Block
+        if (lexer.TryNext(out token) && token.TokenType != TokenType.OpenParenthesis)
+        {
+            AddExpectedOpenParenDiagnostic(ref lexer, context);
+            return null;
         }
 
-        var token = lexer.Next();
-
-        if (token.TokenType != TokenType.OpenParenthesis)
-        {
-            context.AddDiagnostic(Diagnostic.ExpectedOpeningParenthesis(
-                token.Start,
-                token.End));
-
-            return queryNode;
-        }
-
-        return ParseParenthesisBlock(ref lexer, context, queryNode);
+        return ParseParenthesisBlock(ref lexer, context, default);
     }
+  
     private PageNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, PageNode queryNode)
     {
-        var token = default(Token);
+        Token token;
 
-        if (!lexer.TryPeek(out token))
+        // Ensure not EOF (End of File)
+        if (!lexer.HasNext)
         {
-            context.AddDiagnostic(Diagnostic.UnexpectedEOF(
-                lexer.Current.End));
-
+            AddEofDiagnostic(ref lexer, context);
             return queryNode;
         }
+
+        token = lexer.Next();
+
+        // Ensure next token is bracket block
         if (token.TokenType != TokenType.OpenBracket)
         {
-            context.AddDiagnostic(Diagnostic.ExpectedOpeningBracket(
-                token.Start,
-                token.End));
-
+            AddExpectedOpenBracketDiagnostic(ref lexer, context);
             return queryNode;
         }
+
         // Parse Parenthesis Block
         while (lexer.HasNext)
         {
@@ -58,9 +50,8 @@ internal sealed class PageParser : Parser<PageNode>
                 // If there is more token after the closing parenthesis and no dot separator, then error
                 if (lexer.TryPeek(out var peek) && peek.TokenType != TokenType.Dot)
                 {
-                    context.AddDiagnostic(Diagnostic.ExpectedDotSeparator(
-                        peek.Start,
-                        peek.End));
+                    lexer.Next();
+                    AddExpectedDotSeparatorDiagnostic(ref lexer, context);
                 }
 
                 return queryNode;
@@ -69,38 +60,27 @@ internal sealed class PageParser : Parser<PageNode>
             queryNode = ParseBracketBlock(ref lexer, context, queryNode);
         }
 
-        context.AddDiagnostic(Diagnostic.ExpectedClosingParenthesis(
-            lexer.Current.Start,
-            lexer.Current.End));
+        AddExpectedClosingParenDiagnostic(ref lexer, context);
 
         return queryNode;
     }
     private PageNode ParseBracketBlock(ref TokenLexer lexer, ParserContext context, PageNode queryNode)
     {
+        Token token = lexer.Current;
+
         while (lexer.HasNext)
         {
-            var token = lexer.Next();
+            queryNode = token.TokenType switch
+            {
+                TokenType.Take => ParseTake(ref lexer, context, queryNode),
+                TokenType.Skip => ParseSkip(ref lexer, context, queryNode)
+            };
+
+            token = lexer.Next();
 
             if (token.TokenType == TokenType.CloseBracket)
             {
                 break;
-            }
-            switch (token.TokenType)
-            {
-                case TokenType.Skip:
-                    queryNode = ParseSkip(ref lexer, context, queryNode);
-                    break;
-                case TokenType.Take:
-                    queryNode = ParseTake(ref lexer, context, queryNode);
-                    break;
-                case TokenType.Token:
-                    queryNode = ParseToken(ref lexer, context, queryNode);
-                    break;
-                default:
-                    {
-                        // TODO: Add Diagnostic information. Unexpected token
-                        break;
-                    }
             }
         }
 
@@ -108,80 +88,53 @@ internal sealed class PageParser : Parser<PageNode>
     }
     private PageNode ParseSkip(ref TokenLexer lexer, ParserContext context, PageNode queryNode)
     {
-        if (queryNode is not PageNode pageNode)
+        Token token;
+
+        // Ensure not EOF (End of File)
+        if (!lexer.HasNext)
         {
-            // TODO: 
+            AddEofDiagnostic(ref lexer, context);
             return queryNode;
         }
 
-        var token = lexer.Next();
-        var parser = context.GetParser<ConstantParser>();
+        token = lexer.Next();
 
-        if (parser.Parse(ref lexer, context, pageNode) is ConstantNode constant)
+        if (token.TokenType != TokenType.Integer)
         {
-            return new PageNode()
-            {
-                Skip = constant,
-                Take = pageNode.Take,
-            };
+            AddExpectedIntegerDiagnostic(ref lexer, context);
+            return queryNode;
         }
-        else
-        {
-            // TODO: Add diagnostic information
-        }
+
+        var constant = (ConstantNode)context.GetParser<ConstantParser>()
+            .Parse(ref lexer, context);
+
+        queryNode.SetSkip(constant);
 
         return queryNode;
     }
     private PageNode ParseTake(ref TokenLexer lexer, ParserContext context, PageNode queryNode)
     {
-        if (queryNode is not PageNode pageNode)
+        Token token;
+
+        // Ensure not EOF (End of File)
+        if (!lexer.HasNext)
         {
-            // TODO: 
+            AddEofDiagnostic(ref lexer, context);
             return queryNode;
         }
 
-        var token = lexer.Next();
-        var parser = context.GetParser<ConstantParser>();
+        token = lexer.Next();
 
-        if (parser.Parse(ref lexer, context, pageNode) is ConstantNode constant)
+        if (token.TokenType != TokenType.Integer)
         {
-            return new PageNode()
-            {
-                Take = constant,
-                Skip = pageNode.Skip,
-            };
-        }
-        else
-        {
-            // TODO: Add diagnostic information
-        }
-
-        return queryNode;
-    }
-    private PageNode ParseToken(ref TokenLexer lexer, ParserContext context, PageNode queryNode)
-    {
-        if (queryNode is not PageNode pageNode)
-        {
-            // TODO: 
+            AddExpectedIntegerDiagnostic(ref lexer, context);
             return queryNode;
         }
 
-        var token = lexer.Next();
-        var parser = context.GetParser<ConstantParser>();
+        var constant = (ConstantNode)context.GetParser<ConstantParser>()
+            .Parse(ref lexer, context);
 
-        if (parser.Parse(ref lexer, context, pageNode) is ConstantNode constant)
-        {
-            return new PageNode()
-            {
-                Skip = pageNode.Skip,
-                Take = pageNode.Take,
-                //Token = constant
-            };
-        }
-        else
-        {
-            // TODO: Add diagnostic information
-        }
+        queryNode.SetTake(constant);
 
         return queryNode;
     }

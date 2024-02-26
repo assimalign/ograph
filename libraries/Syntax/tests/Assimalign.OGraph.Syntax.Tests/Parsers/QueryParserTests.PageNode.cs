@@ -11,14 +11,28 @@ public partial class QueryParserTests
     [Fact]
     public void TestSkipTakeParsedSuccess()
     {
-        var query = ".page({ take 25 skip 50}).page(employees, { take 25 skip 25 })";
+        var query = """
+            
+    
+    .page(
+    
+    { 
+    
+    take 25 
+    
+    skip 50
+    
+    }
+    )
+    
+    """;
         var parser = new QueryParser();
         var document = parser.Parse(query);
-        var rootNode = Assert.IsType<VertexNode>(document.Root);
+        var rootNode = Assert.IsType<RootNode>(document.Root);
 
-        Assert.Single(rootNode.Nodes);
+        var single = Assert.Single(rootNode.Vertex.Nodes);
 
-        var pageNode = Assert.IsType<PageNode>(rootNode.Nodes.First());
+        var pageNode = Assert.IsType<PageNode>(single);
 
         Assert.NotNull(pageNode.Take);
         Assert.NotNull(pageNode.Skip);

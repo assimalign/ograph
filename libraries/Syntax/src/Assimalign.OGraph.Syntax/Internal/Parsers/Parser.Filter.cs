@@ -6,54 +6,62 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
-internal class FilterParser : Parser
+internal class FilterParser : Parser<FilterNode>
 {
-    internal override QueryNode Parse(ref TokenLexer lexer, ParserContext context, QueryNode queryNode)
+    internal override FilterNode Parse(ref TokenLexer lexer, ParserContext context, FilterNode queryNode)
     {
-        if (queryNode is not FilterNode filterNode)
-        {
-            // This is internal error. Some dumbass messed with the code.
-            return queryNode;
-        }
+        Token token;
+
+        // Ensure not EOF (End of File)
         if (!lexer.HasNext)
         {
-            context.AddUnexpectedEOFError(ref lexer);
+            AddEofDiagnostic(ref lexer, context);
             return queryNode;
         }
 
-        var token = lexer.Next();
+        token = lexer.Next();
 
+        // Ensure next token is an Open Parenthesis Block
         if (token.TokenType != TokenType.OpenParenthesis)
         {
-            // TODO: Add diagnostic error. Expected starting parenthesis block
+            AddExpectedOpenParenDiagnostic(ref lexer, context);
             return queryNode;
         }
 
-        return ParseParenthesisBlock(ref lexer, context, filterNode);
+        return ParseParenthesisBlock(ref lexer, context, queryNode);
     }
     private FilterNode ParseParenthesisBlock(ref TokenLexer lexer, ParserContext context, FilterNode queryNode)
     {
-        var next = default(Token);
+        Token token;
 
-        if (!lexer.TryPeek(out next))
+        // Ensure not EOF (End of File)
+        if (!lexer.HasNext)
         {
-            // TODO: Add Diagnostic error. Unexpected EOF
+            AddEofDiagnostic(ref lexer, context);
             return queryNode;
         }
-        if (next.TokenType != TokenType.OpenBracket)
+
+        token = lexer.Next();
+
+        // Ensure next token is bracket block
+        if (token.TokenType == TokenType.OpenBracket)
         {
-            // TODO: Add diagnostic error. Expected starting bracket block
+            AddExpectedOpenBracketDiagnostic(ref lexer, context);
             return queryNode;
         }
+
+        // Parse Parenthesis Block
         while (lexer.HasNext)
         {
-            var token = lexer.Next();
+            token = lexer.Next();
 
             if (token.TokenType == TokenType.CloseParenthesis)
-            {
+            { 
+                // If there is more token after the closing parenthesis and no dot separator, then error
                 if (lexer.TryPeek(out var peek) && peek.TokenType != TokenType.Dot)
                 {
-                    // TODO: Diagnostics error dot notation is required
+                    lexer.Next();
+                    AddExpectedDotSeparatorDiagnostic(ref lexer, context);
                 }
 
                 return queryNode;
@@ -62,8 +70,7 @@ internal class FilterParser : Parser
             queryNode = ParseBracketBlock(ref lexer, context, queryNode);
         }
 
-        // TODO: Add diagnostics error. Missing Closing Parentheisis
-
+        AddExpectedClosingParenDiagnostic(ref lexer, context);
 
         return queryNode;
     }

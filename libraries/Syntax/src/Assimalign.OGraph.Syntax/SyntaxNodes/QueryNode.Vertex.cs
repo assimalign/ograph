@@ -1,36 +1,82 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace Assimalign.OGraph.Syntax;
+
+using Assimalign.OGraph.Syntax.Internal;
 
 /// <summary>
 /// The vertex node represents the root or starting vertices in the ograph query.
 /// </summary>
 public sealed class VertexNode : QueryNode
 {
-    public VertexNode() { }
+    private readonly List<QueryNode> nodes;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public VertexNode()
+    {
+        nodes = new List<QueryNode>();
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="nodes"></param>
+    /// <exception cref="ArgumentNullException" />
     public VertexNode(IEnumerable<QueryNode> nodes)
     {
-        this.Nodes = nodes;
+        if (nodes is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(nodes));
+        }
+        this.nodes = new List<QueryNode>(nodes);
     }
 
     /// <summary>
-    /// Specifies whether this vertex node is the root node.
+    /// 
     /// </summary>
-    public bool IsRoot { get; init; }
+    /// <param name="argument">Represents a key of a single vertex. Example: vertex('{vertex label}', {argument})</param>
+    /// <param name="nodes"></param>
+    /// <exception cref="ArgumentNullException" />
+    public VertexNode(ConstantNode argument, IEnumerable<QueryNode> nodes) 
+        : this(nodes)
+    {
+        if (argument is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(argument));
+        }
+        Argument = argument;
+    }
+
     /// <summary>
-    /// The vertex identifier
+    /// Represents a key of a single vertex. Example: vertex('{vertex label}', {argument})
     /// </summary>
-    public LabelNode Label { get; init; }
+    public ConstantNode? Argument { get; }
+
     /// <summary>
     /// Represents the root edges of the queryable tree.
     /// </summary>
-    public IEnumerable<QueryNode> Nodes { get; init; } = new QueryNode[0];
+    public IEnumerable<QueryNode> Nodes => nodes.ToImmutableList();
+
+    /// <summary>
+    /// Checks whether the vertex has a parameter. 
+    /// </summary>
+    public bool HasArgument => Argument is not null;
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Vertex;
 
+
+    public void AddNode(QueryNode queryNode)
+    {
+        this.nodes.Add(queryNode);
+    }
+
+    #region Overloads
     /// <inheritdoc />
     public override void Accept(IQueryNodeVisitor visitor)
     {
@@ -46,45 +92,17 @@ public sealed class VertexNode : QueryNode
     /// <inheritdoc />
     public override IEnumerable<TNode> GetNodesOfType<TNode>()
     {
-        if (this is TNode node1)
+        if (this is TNode vertex)
         {
-            yield return node1;
+            yield return vertex;
         }
         foreach (var node in Nodes)
         {
-            foreach (var node2 in node.GetNodesOfType<TNode>())
+            foreach (var child in node.GetNodesOfType<TNode>())
             {
-                yield return node2;
+                yield return child;
             }
         }
     }
-
-
-
-    public IEnumerable<EdgeNode> GetEdgeNodes()
-    {
-        foreach (var node in Nodes)
-        {
-            if (node is EdgeNode edge)
-            {
-                yield return edge;
-            }
-        }
-    }
-
-    private bool TryGetNode<TNode>(out TNode? node)
-    {
-        node = default;
-
-        foreach (var n in Nodes)
-        {
-            if (n is TNode tn)
-            {
-                node = tn;
-                return true;
-            }
-        }
-
-        return false;
-    }
+    #endregion
 }

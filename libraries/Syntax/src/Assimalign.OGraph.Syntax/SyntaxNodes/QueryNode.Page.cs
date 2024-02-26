@@ -4,32 +4,35 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax;
 
+/// <summary>
+/// 
+/// </summary>
 public sealed class PageNode : QueryNode
 {
-    internal PageNode() { }
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="take"></param>
     /// <param name="skip"></param>
-    public PageNode(long take, long skip)
+    /// <param name="take"></param>
+    public PageNode(ConstantNode skip, ConstantNode take)
     {
-        this.Skip = new ConstantNode(BitConverter.GetBytes(skip));
-        this.Take = new ConstantNode(BitConverter.GetBytes(take));
+        Skip = skip;
+        Take = take;
     }
- 
+
     /// <summary>
     /// 
     /// </summary>
-    public ConstantNode? Take { get; init; }
+    public ConstantNode? Take { get; }
     /// <summary>
     ///
     /// </summary>
-    public ConstantNode? Skip { get; init; }
+    public ConstantNode? Skip { get; }
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Page;
 
+    #region Overloads
     /// <inheritdoc />
     public override void Accept(IQueryNodeVisitor visitor)
     {
@@ -64,4 +67,6 @@ public sealed class PageNode : QueryNode
             }
         }
     }
+    #endregion
+
 }

@@ -11,7 +11,8 @@ internal class ParserContext
 
     internal ParserContext() { }
 
-    internal VertexNode Root { get; init; }
+    internal string Path { get; set; } = "";
+    internal QueryNode? Parent { get; set; }
     internal bool ThrowExceptionOnDiagnosticError { get; init; }
     internal Encoding Encoding { get; init; } = Encoding.UTF8;
     internal IEnumerable<Diagnostic> Diagnostics => this.diagnostics;

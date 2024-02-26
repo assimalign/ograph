@@ -62,6 +62,32 @@ public static class OGraphGdmBuilderExtensions
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="builder"></param>
+    /// <param name="label">The label of the vertex</param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    public static IOGraphGdmBuilder AddVertex<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor | DynamicallyAccessedMemberTypes.PublicProperties)] T>(this IOGraphGdmBuilder builder, Label label, Action<IOGraphGdmEntityTypeDescriptor<T>> configure)
+        where T : class, new()
+    {
+        if (builder is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(builder));
+        }
+        if (configure is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+        }
+        Action<IOGraphGdmVertexDescriptor<T>> action = vertex =>
+        {
+            vertex.HasLabel(label);
+            vertex.HasType(GdmEntityType<T>.Create(configure));
+        };
+        return builder.AddVertex<T>(action);
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="builder"></param>
     /// <param name="configure"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>

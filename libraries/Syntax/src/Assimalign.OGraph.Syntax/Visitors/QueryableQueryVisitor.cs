@@ -36,7 +36,7 @@ public sealed class QueryableQueryVisitor<T> : IQueryNodeVisitor<IQueryable<T>>
         return queryable;
     }
 
-    public IQueryable<T> Visit(ProjectionNode queryNode)
+    public IQueryable<T> Visit(ProjectNode queryNode)
     {
         return queryable;
     }

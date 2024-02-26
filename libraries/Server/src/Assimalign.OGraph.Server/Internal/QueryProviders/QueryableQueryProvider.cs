@@ -111,7 +111,7 @@ internal class QueryableQueryProvider : IOGraphQueryProvider
 
     private IEnumerable<IOGraphGdmProperty> GetProperties(IOGraphGdmVertex vertex, VertexNode node)
     {
-        foreach (var propertyNode in node.Nodes.OfType<ProjectionNode>().First().Properties)
+        foreach (var propertyNode in node.Nodes.OfType<ProjectNode>().First().Properties)
         {
             var propertyName = propertyNode.Name!;
 
@@ -192,7 +192,7 @@ internal class QueryableQueryProvider : IOGraphQueryProvider
 
 
 
-    private IOGraphGdmCollectionType ApplyProjections(ProjectionNode node, IOGraphGdmVertex vertex)
+    private IOGraphGdmCollectionType ApplyProjections(ProjectNode node, IOGraphGdmVertex vertex)
     {
         var collectionType = new GdmListType<GdmComplexType>();
         var complexType = new GdmComplexType();

@@ -13,18 +13,18 @@ public static class TestUtility
     static TestUtility()
     {
         factory = new OGraphGdmFactoryBuilder()
-            .Configure("FluentOnlyModel", modelBuilder =>
+            .Configure("FluentOnlyModel", builder =>
             {
-                modelBuilder.AddType<AuditField>(audit =>
+                builder.AddType<AuditField>(audit =>
                 {
                     audit.HasLabel("EmployeeAuditField");
                     audit.HasProperty(p => p.UserId).UsePropertyName("userId");
                     audit.HasProperty(p => p.Timestamp).UsePropertyName("timestamp");
                 });
                 // Option 01: Build Vertex from Entity descriptor
-                modelBuilder.AddVertex<Employee>(entity =>
+                builder.AddVertex<Employee>("employee", entity =>
                 {
-                    entity.HasLabel("Employee");
+                    entity.HasLabel("employee");
                     entity.HasKey(p => p.EmployeeId);
 
                     entity.HasProperty(p => p.EmployeeId)

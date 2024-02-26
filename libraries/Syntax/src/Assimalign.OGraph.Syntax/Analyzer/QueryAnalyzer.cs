@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Syntax.Analyzer;
+namespace Assimalign.OGraph.Syntax;
 
 /// <summary>
 /// An abstract analyzer for implementing custom analysis on parsed queries.

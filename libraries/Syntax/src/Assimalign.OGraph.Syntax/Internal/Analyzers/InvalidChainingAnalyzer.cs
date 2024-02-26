@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax.Internal;
 
-using Assimalign.OGraph.Syntax.Analyzer;
 
 //internal class InvalidChainingAnalyzer : QueryAnalyzer
 //{

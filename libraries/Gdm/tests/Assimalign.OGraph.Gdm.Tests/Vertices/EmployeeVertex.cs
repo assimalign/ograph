@@ -10,10 +10,20 @@ internal class EmployeeVertex : GdmVertex<Employee>
 {
     protected override void Configure(IOGraphGdmVertexDescriptor<Employee> descriptor)
     {
-        descriptor.HasLabel("Employee");
-        descriptor.HasType(descriptor =>
-        {
-            descriptor.HasKey(p => p.EmployeeId);
-        });
+        descriptor.HasLabel("employee");
+            //.HasEdge<EmployeeAddress>("addresses")
+            //.HasEdge<EmployeeAddress>("primaryAddress")
+            //.HasType(employee =>
+            //{
+            //    employee.HasKey(p => p.EmployeeId);
+            //    employee.HasLabel
+            //    employee.HasProperty(p => p.EmployeeId).UsePropertyName("employeeId");
+            //    employee.HasProperty(p => p.Roles).UsePropertyName("roles")
+            //        .UseType(role =>
+            //        {
+            //            role.HasLabel("EmployeeRole");
+            //            role.HasProperty(p => p.Id).UsePropertyName("id");
+            //        });
+            //});
     }
 }

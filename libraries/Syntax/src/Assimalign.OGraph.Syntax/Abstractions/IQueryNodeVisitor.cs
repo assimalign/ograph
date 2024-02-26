@@ -21,7 +21,7 @@ public interface IQueryNodeVisitor
     /// 
     /// </summary>
     /// <param name="queryNode"></param>
-    void Visit(ProjectionNode queryNode);
+    void Visit(ProjectNode queryNode);
     /// <summary>
     /// 
     /// </summary>

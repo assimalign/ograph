@@ -10,6 +10,17 @@ namespace Assimalign.OGraph.Syntax;
 public partial class QueryParserTests
 {
     [Fact]
+    public void TestRootNode()
+    {
+        var query = "vertex('employees')";
+        var parser = new QueryParser();
+        var document = parser.Parse(query);
+
+        
+        Assert.Empty(document.Errors);
+    }
+
+    [Fact]
     public void TestUnexpectedTokenErrorFromRoot()
     {
         var query = "some identifier not expected";
