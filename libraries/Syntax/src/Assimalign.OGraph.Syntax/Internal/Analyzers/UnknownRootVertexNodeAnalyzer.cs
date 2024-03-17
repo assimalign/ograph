@@ -15,7 +15,7 @@ internal class UnknownRootVertexNodeAnalyzer : QueryAnalyzer
     {
         return Task.Run(() =>
         {
-            var vertex = document.Root?.Vertex;
+            //var vertex = document.Root?.Vertex;
 
             //if (vertex is { Label: not null, Label.Name: not null, Label.Name.Length: > 0 })
             //{

@@ -8,70 +8,101 @@ using Assimalign.OGraph.Syntax.Internal;
 
 public sealed class SortNode : QueryNode
 {
-    internal SortDirection direction = SortDirection.Ascending;
-    internal IdentifierNode? identifier;
-    internal SortNode? thenBy;
-
-    SortNode() { }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="property"></param>
+    /// <exception cref="ArgumentNullException"/>
+    public SortNode(PropertyNode property)
+    {
+        if (property is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(property));
+        }
+        Identifier = property;
+    }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="identifier"></param>
-    /// <exception cref="ArgumentNullException"/>
-    public SortNode(IdentifierNode identifier)
+    /// <param name="property"></param>
+    /// <param name="direction"></param>
+    public SortNode(PropertyNode property, SortDirection direction) : this(property)
     {
-        if (identifier is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(identifier));
-        }
-        this.identifier = identifier;
+        Direction = direction;
     }
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="identifier"></param>
+    /// <param name="property"></param>
+    /// <param name="direction"></param>
+    /// <param name="thenBy"></param>
+    public SortNode(PropertyNode property, SortDirection direction, SortNode thenBy) : this(property, direction)
+    {
+        Direction = direction;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="function"></param>
+    public SortNode(FunctionCallNode function)
+    {
+        if (function is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(function));
+        }
+        Identifier = function;
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="functionCall"></param>
     /// <param name="direction"></param>
     /// <exception cref="ArgumentNullException"/>
-    public SortNode(IdentifierNode identifier, SortDirection direction) : this(identifier)
+    public SortNode(FunctionCallNode functionCall, SortDirection direction) 
+        : this(functionCall)
     {
-        this.direction = direction;
+        Direction = direction;
     }
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="identifier"></param>
+    /// <param name="functionCall"></param>
     /// <param name="direction"></param>
     /// <param name="thenBy"></param>
     /// <exception cref="ArgumentNullException"/>
-    public SortNode(IdentifierNode identifier, SortDirection direction, SortNode thenBy) : this(identifier, direction)
+    public SortNode(FunctionCallNode functionCall, SortDirection direction, SortNode thenBy)
+        : this(functionCall, direction)
     {
         if (thenBy is null)
         {
             ThrowHelper.ThrowArgumentNullException(nameof(thenBy));
         }
-        this.thenBy = thenBy;
+        ThenBy = thenBy;
     }
 
     /// <summary>
     /// Represents the property or function output to sort by.
     /// </summary>
-    public IdentifierNode? Identifier => this.identifier;
+    public IdentifierNode? Identifier { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    public SortDirection Direction => direction;
+    public SortDirection Direction { get; }
     
     /// <summary>
     /// 
     /// </summary>
-    public SortNode? ThenBy => thenBy;
+    public SortNode? ThenBy { get; }
 
     /// <summary>
     /// 
     /// </summary>
-    public bool HasThenBy => ThenBy is not null;   
+    public bool HasThenBy => ThenBy is not null;
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Sort;
@@ -110,7 +141,4 @@ public sealed class SortNode : QueryNode
             }
         }
     }
-
-
-    internal static SortNode Create() => new SortNode();
 }

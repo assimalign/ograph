@@ -94,7 +94,7 @@ public partial class BuilderTests
                     {
                         if (!context.GetClaimsPrincipal().Identity!.IsAuthenticated)
                         {
-                            return new R
+                            //return new R
                         }
                     })
                     .UseResolver((context, cancellationToken) =>
@@ -102,17 +102,16 @@ public partial class BuilderTests
                         return Task.FromResult(default(IOGraphResult));
                     });
             });
-
             app.Bind<EmployeeAddress>(descriptor =>
             {
+                descriptor.MapQuery("")
+                .
 
             });
-
             app.Bind<EmployeeAddressType>(descriptor =>
             {
 
             });
-
             app.Bind<EmployeeTaxInfo>(descriptor =>
             {
 
@@ -120,6 +119,5 @@ public partial class BuilderTests
         });
 
         var executor = builder.Build();
-
     }
 }

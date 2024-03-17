@@ -19,7 +19,8 @@ public sealed class ProjectNode : QueryNode
     /// A default constructor for <see cref="ProjectNode"/>.
     /// </summary>
     /// <param name="properties"></param>
-    public ProjectNode(IEnumerable<PropertyNode> properties)
+    public ProjectNode(IEnumerable<PropertyNode> properties, string text, Location location) 
+        : base(text, location)
     {
         if (properties is null)
         {
@@ -66,5 +67,4 @@ public sealed class ProjectNode : QueryNode
         }
     }
     #endregion
-
 }

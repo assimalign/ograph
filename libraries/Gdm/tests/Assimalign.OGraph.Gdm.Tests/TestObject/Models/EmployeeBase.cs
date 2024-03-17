@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Tests;
 
-public abstract record class EmployeeBase<T> 
+public abstract class EmployeeBase<T> 
 {
     public AuditField? CreatedBy { get; set; }
     public AuditField? UpdatedBy { get; set; }

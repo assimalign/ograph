@@ -1,17 +1,22 @@
-﻿using Assimalign.OGraph.Syntax.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
+
+using Assimalign.OGraph.Syntax.Internal;
 
 public sealed partial class QueryParser
 {
     private RootNode? ParseRoot(ref TokenLexer lexer, ParserContext context)
     {
         Token token;
+        Int32 start = lexer.Current.Start;
+        Int32 startLine = lexer.Current.Line;
+        Int32 end;
+        Int32 endLine;
+        Location location;
+
+        String text;
 
         if (lexer.TryPeek(out token) && token.TokenType == TokenType.Vertex)
         {
@@ -24,10 +29,17 @@ public sealed partial class QueryParser
                 return null;
             }
 
-            return new RootNode(vertex);
+            end = lexer.Position;
+            endLine = lexer.Line;
+            text = lexer.GetText(start, end);
+            location = Location.Create(startLine, endLine, start, end);
+
+            return new RootNode(
+                vertex,
+                text,
+                location);
         }
 
-        var label = new LabelNode(string.Empty);
         var nodes = new List<QueryNode>();
 
         while (lexer.TryNext(out token))
@@ -51,6 +63,15 @@ public sealed partial class QueryParser
             }
         }
 
-        return new RootNode(new VertexNode(nodes));
+        // Capture ending position and line
+        end = lexer.Position;
+        endLine = lexer.Line;
+        text = lexer.GetText(start, end);
+        location = Location.Create(start, endLine, start, end);
+
+        return new RootNode(
+            new VertexNode(nodes),
+            text,
+            location);
     }
 }

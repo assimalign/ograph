@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 
 namespace Assimalign.OGraph.Syntax;
 
@@ -12,42 +12,23 @@ namespace Assimalign.OGraph.Syntax;
 [DebuggerDisplay("{Name}")]
 public sealed class PropertyNode : IdentifierNode
 {
-
-    /// <summary>
-    /// A default constructor for <see cref="PropertyNode"/>.
-    /// </summary>
-    /// <param name="name">The name of the property.</param>
-    public PropertyNode(string name)
-        : base(name)
+    internal PropertyNode(string name, string text, Location location)
+        : base(name, text, location)
     {
         Children = [];
     }
-
-    /// <summary>
-    /// A default constructor for <see cref="PropertyNode"/>.
-    /// </summary>
-    /// <param name="name">The name of the property.</param>
-    /// <param name="alias">The alias to use in place of the property name.</param>
-    public PropertyNode(string name, string alias) 
-        : this(name)
+    internal PropertyNode(string name, string alias, string text, Location location) 
+        : this(name, text, location)
     {
         Alias = alias;
     }
-
-    public PropertyNode(string name, IEnumerable<PropertyNode> children)
-        : this(name)
+    internal PropertyNode(string name, IEnumerable<PropertyNode> children, string text, Location location)
+        : this(name, text, location)
     {
         Children = children.ToImmutableList();
     }
-
-    /// <summary>
-    /// A default constructor for <see cref="PropertyNode"/>.
-    /// </summary>
-    /// <param name="name">The name of the property.</param>
-    /// <param name="alias">The alias to use in place of the property name.</param>
-    /// <param name="children">A collection of nested properties.</param>
-    public PropertyNode(string name, string alias, IEnumerable<PropertyNode> children) 
-        : this(name, alias)
+    internal PropertyNode(string name, string alias, IEnumerable<PropertyNode> children, string text, Location location) 
+        : this(name, alias, text, location)
     {
         Children = children.ToImmutableList();
     }

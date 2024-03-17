@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax;
@@ -14,7 +13,8 @@ public sealed class PageNode : QueryNode
     /// </summary>
     /// <param name="skip"></param>
     /// <param name="take"></param>
-    public PageNode(ConstantNode skip, ConstantNode take)
+    internal PageNode(ConstantNode skip, ConstantNode take, string text, Location location) 
+        : base(text, location)
     {
         Skip = skip;
         Take = take;
@@ -68,5 +68,4 @@ public sealed class PageNode : QueryNode
         }
     }
     #endregion
-
 }

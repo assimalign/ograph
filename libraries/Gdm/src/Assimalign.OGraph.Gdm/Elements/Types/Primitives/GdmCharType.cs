@@ -15,7 +15,7 @@ public sealed class GdmCharType : GdmPrimitiveType<char>
     {
         var value = reader.GetString();
 
-        if (value.Length > 1)
+        if (value is null || value.Length == 0 || value.Length > 1)
         {
             throw new JsonException("");
         }

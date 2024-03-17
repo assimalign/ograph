@@ -8,7 +8,6 @@ namespace Assimalign.OGraph.Gdm;
 
 using Assimalign.OGraph.Gdm.Internal;
 
-[DebuggerDisplay("Gdm = {Label} ({Kind})")]
 public class GdmComplexType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T> : GdmType<T>,
     IOGraphGdmComplexType
     where T : class, new()

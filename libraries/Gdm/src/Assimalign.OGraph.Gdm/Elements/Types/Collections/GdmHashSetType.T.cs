@@ -9,7 +9,6 @@ using System.Xml;
 namespace Assimalign.OGraph.Gdm;
 
 public class GdmHashSetType<T> : GdmCollectionType<HashSet<T>, T> 
-    where T : new()
 {
     public override IOGraphGdmType ItemType => throw new NotImplementedException();
 

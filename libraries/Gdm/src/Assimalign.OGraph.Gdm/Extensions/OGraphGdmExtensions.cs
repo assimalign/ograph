@@ -135,4 +135,37 @@ public static class OGraphGdmExtensions
         }
         return model.Elements.OfType<IOGraphGdmProperty>();
     }
+
+
+    private static IEnumerable<string> GetPaths(this IOGraphGdm model)
+    {
+        var root = model.Label;
+
+        yield return root;
+
+        foreach (var vertex in model.GetGdmVertices())
+        {
+            foreach (var path in Paths(root, vertex))
+            {
+                yield return path;
+            }
+        }
+
+        IEnumerable<string> Paths(string root, IOGraphGdmVertex vertex)
+        {
+            foreach (var edge in vertex.Edges)
+            {
+                var key = vertex.GetProperties().First(p => p.IsKey).Label;
+                var label = string.Join('/', root, $"{key}", edge.Definition.Label);
+
+                yield return string.Join('/', root, $"{key}", label);
+                
+                foreach (var child in Paths(label, edge.Definition.Target.Definition))
+                {
+                    yield return child;
+                } 
+
+            }
+        }
+    }
 }

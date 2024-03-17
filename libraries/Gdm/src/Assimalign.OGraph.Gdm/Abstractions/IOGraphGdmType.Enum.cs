@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Assimalign.OGraph.Gdm;
 
-namespace Assimalign.OGraph.Gdm;
-
+/// <summary>
+/// 
+/// </summary>
 public interface IOGraphGdmEnumType : IOGraphGdmType
 {
     /// <summary>
-    /// 
+    /// The accepted enum values.
     /// </summary>
     public GdmEnumValue[] Values { get; }
 }

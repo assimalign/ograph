@@ -32,5 +32,8 @@ internal struct TokenLexerOptions
     /// <summary>
     /// 
     /// </summary>
-    internal Encoding Encoding { get; set; } 
+    internal Encoding Encoding { get; set; }
+
+
+    public static TokenLexerOptions Default => new();
 }

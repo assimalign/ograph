@@ -54,7 +54,7 @@ public class GdmEntityType : IOGraphGdmEntityType
     public GdmTypeKind Kind => GdmTypeKind.Complex;
 
     /// <inheritdoc />
-    public GdmElementType ElementType => GdmElementType.Type;
+    public GdmElementKind ElementKind => GdmElementKind.Type;
 
     /// <inheritdoc />
     public IOGraphGdmPropertyCollection Properties { get; } = new GdmPropertyCollection();

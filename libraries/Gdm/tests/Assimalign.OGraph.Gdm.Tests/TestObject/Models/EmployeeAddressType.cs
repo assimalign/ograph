@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Tests;
 
-public record class EmployeeAddressType : EmployeeBase<EmployeeAddressType>
+public class EmployeeAddressType : EmployeeBase<EmployeeAddressType>
 {
     public int? TypeId { get; set; }
     public string? Type { get; set; }

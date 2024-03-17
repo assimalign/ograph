@@ -11,7 +11,10 @@ public partial class TokenLexerTests
     public void TestSortKeywordIdentifiedSuccess()
     {
         var query = "sort({firstName})";
-        var lexer = new TokenLexer(query);
+        var lexer = TokenLexer.Create(query, new TokenLexerOptions()
+        {
+
+        });
         var tokens = new List<Token>();
 
         while (lexer.HasNext)

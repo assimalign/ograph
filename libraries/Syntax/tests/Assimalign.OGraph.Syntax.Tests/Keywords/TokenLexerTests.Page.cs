@@ -12,7 +12,10 @@ public partial class TokenLexerTests
     public void TestPageKeywordIdentifiedSuccess()
     {
         var query = "page({take 25 skip 32})";
-        var lexer = new TokenLexer(query);
+        var lexer = TokenLexer.Create(query, new TokenLexerOptions()
+        {
+
+        });
         var tokens = new List<Token>();
 
         while (lexer.HasNext)

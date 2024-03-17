@@ -12,7 +12,10 @@ public partial class TokenLexerTests
     public void TestEdgeKeywordIdentifiedSuccess()
     {
         var query = "edge(companies/addresses)";
-        var lexer = new TokenLexer(query);
+        var lexer = TokenLexer.Create(query, new TokenLexerOptions()
+        {
+
+        });
         var tokens = new List<Token>();
 
         while (lexer.HasNext)

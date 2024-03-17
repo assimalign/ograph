@@ -9,7 +9,8 @@ namespace Assimalign.OGraph.Syntax;
 [DebuggerDisplay("{Text}")]
 public sealed class ConstantNode : QueryNode
 {
-    public ConstantNode(byte[] value)
+    internal ConstantNode(byte[] value, string text, Location location) 
+        : base(text, location)
     {
         Value = value;
     }
@@ -18,11 +19,6 @@ public sealed class ConstantNode : QueryNode
     /// 
     /// </summary>
     public byte[] Value { get; }
-
-    /// <summary>
-    /// Get's the raw text value of the constant. Uses UTF8 encoding.
-    /// </summary>
-    public string Text => Encoding.UTF8.GetString(Value);
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Constant;
@@ -50,8 +46,8 @@ public sealed class ConstantNode : QueryNode
 
     #region Parse
     public string GetString() => Encoding.UTF8.GetString(Value);
-    public DateOnly GetDate() => DateOnly.Parse(GetString());
     public DateTime GetDateTime() => DateTime.Parse(GetString());
+    public DateOnly GetDate() => DateOnly.Parse(GetString());
     public TimeOnly GetTime() => TimeOnly.Parse(GetString());
     public short GetInt16() => short.Parse(GetString());
     public int GetInt32() => int.Parse(GetString());

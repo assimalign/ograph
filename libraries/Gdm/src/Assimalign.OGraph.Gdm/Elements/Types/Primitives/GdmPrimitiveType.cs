@@ -3,9 +3,6 @@ using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm;
 
-using Assimalign.OGraph.Gdm.Internal;
-
-[DebuggerDisplay("Gdm Type Element = {Label} Primitive")]
 public abstract class GdmPrimitiveType<T> : GdmType<T>,
     IOGraphGdmPrimitiveType
 {

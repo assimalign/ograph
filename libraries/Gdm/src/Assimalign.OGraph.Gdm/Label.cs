@@ -173,6 +173,7 @@ public readonly struct Label :
     }
 
     public static implicit operator Label(string value) => new Label(value);
+
     public static implicit operator string(Label name) => name.Value;
     public static bool operator ==(Label left, Label right) => left.Equals(right);
     public static bool operator !=(Label left, Label right) => !left.Equals(right);

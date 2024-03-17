@@ -12,7 +12,6 @@ namespace Assimalign.OGraph.Gdm;
 public abstract class GdmCollectionType<TCollection, T> : GdmType<TCollection>, 
     IOGraphGdmCollectionType
     where TCollection : IEnumerable<T>
-    where T : new()
 {
     
     public abstract IOGraphGdmType ItemType { get; }

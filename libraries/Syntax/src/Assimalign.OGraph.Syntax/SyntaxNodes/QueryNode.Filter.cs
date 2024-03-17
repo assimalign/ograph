@@ -7,9 +7,6 @@ using Assimalign.OGraph.Syntax.Internal;
 
 public sealed class FilterNode : QueryNode
 {
-    internal BinaryNode? predicate;
-
-    FilterNode() { }
 
     /// <summary>
     /// 
@@ -22,13 +19,13 @@ public sealed class FilterNode : QueryNode
         {
             ThrowHelper.ThrowArgumentNullException(nameof(predicate));
         }
-        this.predicate = predicate;
+        Predicate = predicate;
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public BinaryNode? Predicate => predicate;
+    public BinaryNode? Predicate { get; }
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Filter;
@@ -60,7 +57,4 @@ public sealed class FilterNode : QueryNode
             }
         }
     }
-
-
-    internal static FilterNode Create() => new FilterNode();
 }

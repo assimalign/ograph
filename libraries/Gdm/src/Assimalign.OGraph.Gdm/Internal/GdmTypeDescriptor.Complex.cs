@@ -26,6 +26,10 @@ internal class GdmComplexTypeDescriptor : IOGraphGdmComplexTypeDescriptor
         var property = complexType.GetProperty(propertyInfo);
         property.Getter ??= propertyInfo.GetValue;
         property.Setter ??= propertyInfo.SetValue;
+        property.DeclaringType = new GdmTypeReference()
+        {
+            Definition = complexType
+        };
         return new GdmPropertyDescriptor(property);
     }
 }

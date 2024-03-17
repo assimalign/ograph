@@ -18,7 +18,7 @@ public sealed class EdgeNode : QueryNode
     /// <param name="target"></param>
     /// <param name="alias"></param>
     /// <exception cref="ArgumentNullException" />
-    public EdgeNode(LabelNode label, VertexNode source, VertexNode target, LabelNode? alias = null, string? path = null) 
+    internal EdgeNode(LabelNode label, VertexNode source, VertexNode target, string text, Location location, LabelNode? alias = null, string? path = null): base(text, location) 
     {
         if (label is null) ThrowHelper.ThrowArgumentNullException(nameof(label));
         if (source is null) ThrowHelper.ThrowArgumentNullException(nameof(source));
@@ -48,9 +48,9 @@ public sealed class EdgeNode : QueryNode
     /// </summary>
     public LabelNode? Alias { get; }
     /// <summary>
-    /// 
+    /// The edge path.
     /// </summary>
-    public override string? Path { get; }
+    public string? Path { get; }
     /// <summary>
     /// 
     /// </summary>

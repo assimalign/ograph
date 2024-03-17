@@ -2,14 +2,10 @@
 using System.Xml;
 using System.Text.Json;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Assimalign.OGraph.Gdm;
 
-using Assimalign.OGraph.Gdm.Internal;
-using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
-
-[DebuggerDisplay("Gdm Type ({Kind}): {Label}")]
 public class GdmEnumType<TEnum> : GdmType<TEnum>
     where TEnum : struct, Enum
 {

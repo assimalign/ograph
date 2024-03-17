@@ -8,7 +8,7 @@ namespace Assimalign.OGraph.Gdm;
 public interface IOGraphGdmPropertyCollection : ICollection<IOGraphGdmProperty>
 {
     /// <summary>
-    /// 
+    /// An index 
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>

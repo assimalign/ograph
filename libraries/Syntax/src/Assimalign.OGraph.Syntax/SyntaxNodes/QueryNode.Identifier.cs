@@ -14,6 +14,12 @@ public abstract class IdentifierNode : QueryNode
         Name = name;
     }
 
+    internal IdentifierNode(string name, string text, Location location) 
+        : base(text, location)
+    {
+        Name = name;
+    }
+
     /// <summary>
     /// The identifier name.
     /// </summary>

@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Xml;
 using System.Text.Json;
+using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm;
 
 using Assimalign.OGraph.Gdm.Internal;
 
 /// <summary>
-/// 
+/// An abstract base type.
 /// </summary>
 /// <typeparam name="T"></typeparam>
+[DebuggerDisplay("Type = {Label}")]
 public abstract class GdmType<T> : IOGraphGdmType
 {
     internal Label label;
@@ -25,7 +27,7 @@ public abstract class GdmType<T> : IOGraphGdmType
     }
 
     public Type RuntimeType => typeof(T);
-    public GdmElementType ElementType => GdmElementType.Type;
+    public GdmElementKind ElementKind => GdmElementKind.Type;
 
     public virtual Label Label => label;
     public abstract GdmTypeKind Kind { get; }

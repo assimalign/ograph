@@ -12,7 +12,18 @@ public sealed partial class QueryParser
 {
     private FilterNode? ParseFilter(ref TokenLexer lexer, ParserContext context)
     {
-        Token token;
+        Token token = lexer.Current;
+
+        // Capture the dot notation if the previous node was chained.
+        if (lexer.Previous.TokenType == TokenType.Dot)
+        {
+            token = lexer.Previous;
+        }
+
+        Int32 start = token.Start;
+        Int32 startLine = token.Line;
+        Int32 end;
+        Int32 endLine;
 
         // Ensure next token is an Open Parenthesis Block
         if (!lexer.TryNext(out token))

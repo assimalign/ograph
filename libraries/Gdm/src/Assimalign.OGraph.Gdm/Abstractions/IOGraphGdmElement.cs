@@ -1,5 +1,8 @@
 ﻿namespace Assimalign.OGraph.Gdm;
 
+/// <summary>
+/// Represents the base element for all graph data model elements.
+/// </summary>
 public interface IOGraphGdmElement
 {
     /// <summary>
@@ -9,5 +12,5 @@ public interface IOGraphGdmElement
     /// <summary>
     /// Gets the GDM element type.
     /// </summary>
-    GdmElementType ElementType { get; }
+    GdmElementKind ElementKind { get; }
 }

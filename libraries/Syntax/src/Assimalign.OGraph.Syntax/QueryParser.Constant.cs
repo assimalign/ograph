@@ -8,6 +8,13 @@ public sealed partial class QueryParser
     {
         var token = lexer.Current;
 
-        return new ConstantNode(token.Value.ToArray());
+        return new ConstantNode(
+            token.Value.ToArray(),
+            token.Text,
+            Location.Create(
+                token.Line, 
+                token.Line, 
+                token.Start, 
+                token.End));
     }
 }

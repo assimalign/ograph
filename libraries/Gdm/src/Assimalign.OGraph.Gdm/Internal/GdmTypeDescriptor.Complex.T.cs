@@ -30,6 +30,10 @@ internal class GdmComplexTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyA
         var property = complexType.GetProperty(propertyInfo);
         property.Getter ??= propertyInfo.GetValue;
         property.Setter ??= propertyInfo.SetValue;
+        property.DeclaringType = new GdmTypeReference()
+        {
+            Definition = complexType
+        };
         return new GdmPropertyDescriptor(property);
     }
     public IOGraphGdmPropertyDescriptor<TMember> HasProperty<TMember>(Expression<Func<T, TMember>> expression)
@@ -39,6 +43,10 @@ internal class GdmComplexTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyA
         var method = expression.Compile();
         property.Getter ??= (instance) => method.Invoke((T)instance);
         property.Setter ??= propertyInfo.SetValue;
+        property.DeclaringType = new GdmTypeReference()
+        {
+            Definition = complexType
+        };
         return new GdmPropertyDescriptor<TMember>(property);
     }
     private PropertyInfo AssertExpression<TMember>(Expression<Func<T, TMember>> expression)

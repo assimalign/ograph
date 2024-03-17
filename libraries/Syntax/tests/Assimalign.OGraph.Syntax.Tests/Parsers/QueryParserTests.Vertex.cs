@@ -27,49 +27,88 @@ public partial class QueryParserTests
         vertex(employees, 1234532)
             .project({
                 id as myId
-                companyId
-                companyInfo as info {
-                    companyName
+                employeeId
+                employeeInfo as info {
+                    firstName
+                    lastName
+                    middleName
+                }
+                created {
+                    timestamp
+                    userId
+                }
+                updates {
+                    timestamp
+                    userId
                 }
             })
+
             .page({ 
                 skip 0
                 take 20
              })
-            .edge(department as employeeDepartments)
+            .edge(department as employeeDepartment)
+                .project({
+                    id
+                    departmentId
+                    info {
+                        name
+                    }
+                })
                 .page({ 
                     skip 0 
                     take 20
                 })
             .edge(addresses)
                 .project({
-                    
+                    id
+                    addressId
+                    info {
+                        streetOne
+                        streetTwo
+                        streetThree
+                        city
+                        state
+                        zipCode
+                    }
                 })
-                .page({ 
+                # .sort({
+                #     info.streetOne
+                # })
+                .page({
                     skip 0 
                     take 20
                 })
-                .edge(addresses/types)
-                    .page({ 
-                        skip 0 
-                        take 20
-                    })
             .edge(primaryAddress)
                 .page({ 
                     skip 0 
                     take 20
                 })
             .edge(jobs)
+                .project({
+                    id
+                    name
+                })
                 .page({ 
                     skip 0 
                     take 20
                 })
                 .edge(jobs/tasks)
+                    .project({
+                        id
+                        displayName
+                    })
                     .page({ 
                         skip 0 
                         take 20
                     })
                     .edge(jobs/tasks/workItems)
+                        .project({
+                            id
+                            info as workItemInfo{
+                                name
+                            }
+                        })
                         .page({ 
                             skip 0 
                             take 20

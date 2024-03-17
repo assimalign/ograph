@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Tests;
 
-public record class EmployeeAddress : EmployeeBase<EmployeeAddress>
+public class EmployeeAddress : EmployeeBase<EmployeeAddress>
 {
     public EmployeeId? EmployeeId { get; set; }
     public Guid? AddressId { get; set; }

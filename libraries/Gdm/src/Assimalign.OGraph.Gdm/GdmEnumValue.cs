@@ -5,7 +5,7 @@
 /// </summary>
 public readonly struct GdmEnumValue
 {
-    private GdmEnumValue(string name, object value)
+    GdmEnumValue(string name, object value)
     {
         Name = name;
         Value = value;

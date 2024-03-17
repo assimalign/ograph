@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Buffers;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 
 namespace Assimalign.OGraph.Syntax.Internal;
-
 
 /// <summary>
 /// The Token Lexer (also known as a Tokenizer and)
@@ -11,23 +13,26 @@ namespace Assimalign.OGraph.Syntax.Internal;
 internal ref partial struct TokenLexer
 {
     private readonly TokenLexerOptions options;
+    private readonly ReadOnlySpan<byte> data;
 
     private ReadOnlySequence<byte> remaining;
     private Token current = default;
     private Token previous = default;
-    private long position = default;
+
+    private int position = default;
+
+    // Tracks the line position, if any, as the query is parsed.
     private int line = 1;
 
-    public TokenLexer(string query)
+    public TokenLexer(byte[] query)
     {
-        this.options = new TokenLexerOptions();
-        this.remaining = new ReadOnlySequence<byte>(options.Encoding.GetBytes(query));
+        this.options = TokenLexerOptions.Default;
+        this.data = query;
+        this.remaining = new ReadOnlySequence<byte>(query);
     }
-    public TokenLexer(byte[] query) : this(query, new()) { }
-    public TokenLexer(byte[] query, TokenLexerOptions options)
+    public TokenLexer(byte[] query, TokenLexerOptions options) : this(query)
     {
         this.options = options;
-        this.remaining = new ReadOnlySequence<byte>(query);
     }
 
     #region Public Methods
@@ -74,22 +79,30 @@ internal ref partial struct TokenLexer
     /// <summary>
     /// The current line number the lexer is on.
     /// </summary>
-    public int Line => line;
+    public readonly int Line => line;
     /// <summary>
     /// Is the current token that has been parsed.
     /// </summary>
-    public Token Current => current;
+    public readonly Token Current => current;
     /// <summary>
     /// Get's the previous token.
     /// </summary>
-    public Token Previous => previous;
+    public readonly Token Previous => previous;
+    /// <summary>
+    /// Gets the current byte position of the reader.
+    /// </summary>
+    public readonly int Position => position;
+    /// <summary>
+    /// The original raw data.
+    /// </summary>
+    public ReadOnlySpan<byte> ValueSpan => data;
     /// <summary>
     /// Peeks at the next token in the sequence.
     /// </summary>
     /// <returns></returns>
     public Token Peek()
     {
-        var sequence = remaining; // Need to copy sequence into variable since we do not want to advance to the next sequence
+        var sequence = remaining; // Need to copy sequence into variable since we do not want to advance
         var sequenceReader = new SequenceReader<byte>(sequence);
 
         while (!sequenceReader.End)
@@ -124,25 +137,25 @@ internal ref partial struct TokenLexer
     /// <exception cref="TokenLexerException"></exception>
     public Token Next()
     {
-        var sequenceReader = new SequenceReader<byte>(remaining);
+        var reader = new SequenceReader<byte>(remaining);
 
-        while (!sequenceReader.End)
+        while (!reader.End)
         {
-            sequenceReader.Advance(1);
+            reader.Advance(1);
 
-            if (TryParse(ref sequenceReader, out var token))
+            if (TryParse(ref reader, out var token))
             {
-                remaining = sequenceReader.UnreadSequence;
-                position += sequenceReader.Consumed;
+                remaining = reader.UnreadSequence;
+                position += (int)reader.Consumed;
                 previous = current;
                 current = token;
 
                 // Capture Line Number
-                if (current.TokenType == TokenType.LineFeed && 
-                    previous.TokenType == TokenType.CarriageReturn)
+                if (current.TokenType == TokenType.LineFeed && previous.TokenType == TokenType.CarriageReturn)
                 {
                     line++;
                 }
+
                 switch (token.TokenType)
                 {
                     case TokenType.Tab when options.SkipTabs:
@@ -150,7 +163,7 @@ internal ref partial struct TokenLexer
                     case TokenType.WhiteSpace when options.SkipWhiteSpace:
                     case TokenType.CarriageReturn when options.SkipCarriageReturn:
                     case TokenType.Comment when options.SkipComments:
-                        sequenceReader = new(remaining); // Reset sequence
+                        reader = new(remaining); // Reset sequence
                         break;
                     default:
                         return current;
@@ -209,6 +222,20 @@ internal ref partial struct TokenLexer
         }
         return false;
     }
+    /// <summary>
+    /// Gets the raw text within a givven start and end position.
+    /// </summary>
+    /// <param name="start">The starting position of the data.</param>
+    /// <param name="end"></param>
+    /// <returns></returns>
+    public string GetText(int start, int end)
+    {
+        var encoding = options.Encoding;
+        var span = ValueSpan.Slice(start, end - start);
+
+        return encoding.GetString(span);
+    }
+
     #endregion
 
     #region Private Methods
@@ -223,7 +250,7 @@ internal ref partial struct TokenLexer
             IsLiteral(ref sequenceReader, out tokenType) ||
             IsComment(ref sequenceReader, out tokenType) ||
             IsOperator(ref sequenceReader, out tokenType) ||
-            IsIdentifer(ref sequenceReader, out tokenType)) // Identifier needs be checked last
+            IsIdentifier(ref sequenceReader, out tokenType)) // Identifier needs be checked last
         {
             var value = sequenceReader.Slice().ToArray();
 
@@ -239,7 +266,7 @@ internal ref partial struct TokenLexer
                 Text = options.Encoding.GetString(value),
                 TokenType = tokenType,
                 Line = line,
-                Start = (int)position, // explicit casting from long to int. If query is bigger than the max value of an int then developer needs to re-think his life decisions.
+                Start = position, // explicit casting from long to int. If query is bigger than the max value of an int then developer needs to re-think his life decisions.
                 End = (int)(position + sequenceReader.Consumed) - 1
             };
 
@@ -424,7 +451,7 @@ internal ref partial struct TokenLexer
 
         return false;
     }
-    private bool IsIdentifer(ref SequenceReader<byte> sequenceReader, out TokenType tokenType)
+    private bool IsIdentifier(ref SequenceReader<byte> sequenceReader, out TokenType tokenType)
     {
         tokenType = default;
 
@@ -444,6 +471,21 @@ internal ref partial struct TokenLexer
 
         return false;
     }
+    #endregion
 
+    #region Static Methods
+    public static TokenLexer Create(string query, TokenLexerOptions options)
+    {
+        if (string.IsNullOrEmpty(query))
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(query));
+        }
+
+        var bytes = options.Encoding.GetBytes(query);
+
+        return new TokenLexer(
+            bytes,
+            options);
+    }
     #endregion
 }

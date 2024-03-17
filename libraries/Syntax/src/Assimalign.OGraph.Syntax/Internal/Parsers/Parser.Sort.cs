@@ -8,7 +8,7 @@ namespace Assimalign.OGraph.Syntax.Internal;
 
 internal class SortParser : Parser<SortNode>
 {
-    internal override SortNode Parse(ref TokenLexer lexer, ParserContext context, SortNode queryNode)
+    internal override SortNode ParseSort(ref TokenLexer lexer, ParserContext context, SortNode queryNode)
     {
         Token token;
 
@@ -106,56 +106,56 @@ internal class SortParser : Parser<SortNode>
     {
         var token = lexer.Current;
 
-        switch (token.TokenType)
-        {
-            case TokenType.Identifier when token.Value.IsFunction():
-                {
-                    queryNode.identifier = (FunctionCallNode)context.GetParser<FunctionParser>()
-                        .Parse(ref lexer, context, new FunctionCallNode());
-                    break;
-                }
-            case TokenType.Identifier:
-                {
-                    queryNode.identifier = (PropertyNode)context.GetParser<PropertyParser>()
-                            .Parse(ref lexer, context, new PropertyNode());
-                    break;
-                }
-            default:
-                {
-                    context.AddDiagnostic(Diagnostic.InvalidToken(ref token));
-                    return queryNode;
-                }
-        }
-        if (lexer.TryPeek(out token))
-        {
-            if (token.TokenType == TokenType.Ascending || token.TokenType == TokenType.Descending)
-            {
-                token = lexer.Next();
+        //switch (token.TokenType)
+        //{
+        //    case TokenType.Identifier when token.Value.IsFunction():
+        //        {
+        //            queryNode.identifier = (FunctionCallNode)context.GetParser<FunctionParser>()
+        //                .Parse(ref lexer, context, new FunctionCallNode());
+        //            break;
+        //        }
+        //    case TokenType.Identifier:
+        //        {
+        //            queryNode.identifier = (PropertyNode)context.GetParser<PropertyParser>()
+        //                    .Parse(ref lexer, context, new PropertyNode());
+        //            break;
+        //        }
+        //    default:
+        //        {
+        //            context.AddDiagnostic(Diagnostic.InvalidToken(ref token));
+        //            return queryNode;
+        //        }
+        //}
+        //if (lexer.TryPeek(out token))
+        //{
+        //    if (token.TokenType == TokenType.Ascending || token.TokenType == TokenType.Descending)
+        //    {
+        //        token = lexer.Next();
 
-                queryNode.direction = (SortDirection)token.TokenType;
+        //        queryNode.direction = (SortDirection)token.TokenType;
 
-                if (!lexer.TryPeek(out token))
-                {
-                    context.AddDiagnostic(Diagnostic.UnexpectedEOF(
-                        lexer.Current.End));
-                }
-            }
-            if (token.TokenType == TokenType.Identifier)
-            {
-                token = lexer.Next();
+        //        if (!lexer.TryPeek(out token))
+        //        {
+        //            context.AddDiagnostic(Diagnostic.UnexpectedEOF(
+        //                lexer.Current.End));
+        //        }
+        //    }
+        //    if (token.TokenType == TokenType.Identifier)
+        //    {
+        //        token = lexer.Next();
 
-                queryNode.thenBy = ParseSortIdentifier(ref lexer, context, SortNode.Create());
-            }
-            //else
-            //{
-            //    queryNode = new SortNode()
-            //    {
-            //        ThenBy = queryNode.ThenBy,
-            //        Direction = queryNode.Direction,
-            //        Identifier = queryNode.Identifier
-            //    };
-            //}
-        }
+        //        queryNode.thenBy = ParseSortIdentifier(ref lexer, context, SortNode.Create());
+        //    }
+        //    //else
+        //    //{
+        //    //    queryNode = new SortNode()
+        //    //    {
+        //    //        ThenBy = queryNode.ThenBy,
+        //    //        Direction = queryNode.Direction,
+        //    //        Identifier = queryNode.Identifier
+        //    //    };
+        //    //}
+        //}
 
         return queryNode;
     }

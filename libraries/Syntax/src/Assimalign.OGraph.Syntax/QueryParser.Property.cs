@@ -1,36 +1,48 @@
-﻿using Assimalign.OGraph.Syntax.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
+
+using Assimalign.OGraph.Syntax.Internal;
 
 public sealed partial class QueryParser
 {
     private PropertyNode? ParseProperty(ref TokenLexer lexer, ParserContext context)
     {
-        Token token;
+        Token token = lexer.Current;
+        Int32 start = lexer.Current.Start;
+        Int32 startLine = lexer.Current.Line;
+        Int32 end;
+        Int32 endLine;
+        String text;
+        Location location;
 
-        string? name = null;
-        string? alias = null;
+        string? name = lexer.Current.Text;
+        string? alias;
 
-        if (lexer.Current.TokenType != TokenType.Identifier)
+        // Ensure current token is Identifier
+        if (token.TokenType != TokenType.Identifier)
         {
+            // TODO: Expected Identifier Diagnostic
             return null;
         }
-        else
-        {
-            name = lexer.Current.Text;
-        }
+
+        // Check for an alias or nested property
         if (lexer.TryPeek(out token) && token.TokenType == TokenType.Alias || token.TokenType == TokenType.OpenBracket)
         {
             token = lexer.Next();
         }
         else
         {
-            return new PropertyNode(name);
+            end = lexer.Position;
+            endLine = lexer.Line;
+            text = lexer.GetText(start, end);
+            location = Location.Create(startLine, endLine, start, end);
+
+            return new PropertyNode(
+                name,
+                text,
+                location);
         }
         if (token.TokenType == TokenType.Alias)
         {
@@ -39,41 +51,121 @@ public sealed partial class QueryParser
                 // TODO: Expected Identifier
                 return null;
             }
-            else
-            {
-                token = lexer.Next();
-                alias = token.Text;
-            }
+
+            token = lexer.Next();
+            alias = token.Text;
+
+            // Check for nested properties following alias
             if (lexer.TryPeek(out token) && token.TokenType == TokenType.OpenBracket)
             {
-                token = lexer.Next();
+                lexer.Skip();
+
+                var properties = new List<PropertyNode>();
+
+                while (lexer.TryNext(out token))
+                {
+                    if (token.TokenType == TokenType.CloseBracket)
+                    {
+                        end = lexer.Position;
+                        endLine = lexer.Line;
+                        text = lexer.GetText(start, end);
+                        location = Location.Create(startLine, endLine, start, end);
+
+                        return new PropertyNode(
+                            name,
+                            alias,
+                            properties,
+                            text,
+                            location);
+                    }
+                    if (token.TokenType == TokenType.Identifier)
+                    {
+                        var property = ParseProperty(ref lexer, context);
+
+                        if (property is null)
+                        {
+                            continue;
+                        }
+
+                        properties.Add(property);
+                    }
+                    else
+                    {
+                        SkipToClosingBracket(ref lexer);
+
+                        // TODO: Add Diagnostics
+
+                        end = lexer.Position;
+                        endLine = lexer.Line;
+                        text = lexer.GetText(start, end);
+                        location = Location.Create(startLine, endLine, start, end);
+
+                        return new PropertyNode(
+                            name,
+                            alias,
+                            properties,
+                            text,
+                            location);
+                    }
+                }
             }
-            else
-            {
-                return new PropertyNode(name, alias);
-            }
+
+            end = lexer.Position;
+            endLine = lexer.Line;
+            text = lexer.GetText(start, end);
+            location = Location.Create(startLine, endLine, start, end);
+
+            return new PropertyNode(
+                name,
+                alias,
+                text,
+                location);
         }
         if (token.TokenType == TokenType.OpenBracket)
         {
-            var children = new List<PropertyNode>();
+            var properties = new List<PropertyNode>();
 
             while (lexer.TryNext(out token))
             {
-                if (token.TokenType == TokenType.Identifier)
-                {
-                    var child = ParseProperty(ref lexer, context);
-
-                    children.Add(child!);
-                }
                 if (token.TokenType == TokenType.CloseBracket)
                 {
-                    if (string.IsNullOrEmpty(alias))
+                    end = lexer.Position;
+                    endLine = lexer.Line;
+                    text = lexer.GetText(start, end);
+                    location = Location.Create(startLine, endLine, start, end);
+
+                    return new PropertyNode(
+                        name,
+                        properties,
+                        text,
+                        location);
+                }
+                if (token.TokenType == TokenType.Identifier)
+                {
+                    var property = ParseProperty(ref lexer, context);
+
+                    if (property is null)
                     {
-                        return new PropertyNode(
-                            name,
-                            children);
+                        continue;
                     }
-                    return new PropertyNode(name, alias, children);
+
+                    properties.Add(property!);
+                }
+                else
+                {
+                    SkipToClosingBracket(ref lexer);
+                    // TODO: Add Diagnostics
+
+                    end = lexer.Position;
+                    endLine = lexer.Line;
+                    text = lexer.GetText(start, end);
+                    location = Location.Create(startLine, endLine, start, end);
+
+                    return new PropertyNode(
+                        name,
+                        properties,
+                        text,
+                        location);
                 }
             }
         }

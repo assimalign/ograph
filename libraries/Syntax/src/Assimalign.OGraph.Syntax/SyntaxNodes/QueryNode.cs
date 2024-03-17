@@ -4,19 +4,31 @@ using System.Collections.Generic;
 namespace Assimalign.OGraph.Syntax; 
 
 /// <summary>
-/// 
+/// The base class for a syntax node.
 /// </summary>
 public abstract class QueryNode
 {
+    internal QueryNode() { }
+    internal QueryNode(string? text, Location location)
+    {
+        Text = text;
+        Location = location;
+    }
+
     /// <summary>
     /// An identifier for the node type.
     /// </summary>
     public abstract QueryNodeType NodeType { get; }
 
     /// <summary>
-    /// 
+    /// The raw text of the node.
     /// </summary>
-    public virtual string? Path { get; }
+    public virtual string? Text { get; }
+
+    /// <summary>
+    /// The location of a query node.
+    /// </summary>
+    public virtual Location Location { get; }
 
     /// <summary>
     /// Accepts a visitor.

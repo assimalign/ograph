@@ -46,6 +46,14 @@ public interface IOGraphGdmBuilder
     /// <summary>
     /// 
     /// </summary>
+    /// <typeparam name="TSource"></typeparam>
+    /// <typeparam name="TTarget"></typeparam>
+    /// <param name="label"></param>
+    /// <returns></returns>
+    IOGraphGdmBuilder AddEdge<TSource, TTarget>(Label label);
+    /// <summary>
+    /// 
+    /// </summary>
     /// <returns></returns>
     IOGraphGdm Build();
 }

@@ -17,7 +17,8 @@ internal class GdmEntityTypeDescriptor : IOGraphGdmEntityTypeDescriptor
     }
     public IOGraphGdmEntityTypeDescriptor HasKey(Label label)
     {
-        var propertyInfo = entityType.runtimeType!.GetProperty(label);
+        var runtimeType = entityType.runtimeType;
+        var propertyInfo = runtimeType!.GetProperty(label);
         if (propertyInfo is null)
         {
             throw new InvalidOperationException($"The property '{label}' does not exist on type {entityType.runtimeType!.Name}");
@@ -28,7 +29,6 @@ internal class GdmEntityTypeDescriptor : IOGraphGdmEntityTypeDescriptor
         property.Setter ??= propertyInfo.SetValue;
         return this;
     }
-
     public IOGraphGdmPropertyDescriptor HasProperty(Label label)
     {
         var propertyInfo = entityType.runtimeType!.GetProperty(label);
@@ -39,6 +39,10 @@ internal class GdmEntityTypeDescriptor : IOGraphGdmEntityTypeDescriptor
         var property = entityType.GetProperty(propertyInfo);
         property.Getter ??= propertyInfo.GetValue;
         property.Setter ??= propertyInfo.SetValue;
+        property.DeclaringType = new GdmTypeReference()
+        {
+            Definition = entityType,
+        };
         return new GdmPropertyDescriptor(property);
     }
 }

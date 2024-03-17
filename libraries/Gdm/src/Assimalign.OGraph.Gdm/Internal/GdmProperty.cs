@@ -23,7 +23,7 @@ internal class GdmProperty : IOGraphGdmProperty
     public bool IsNullable { get; set; } = true;
     public GdmPropertyGetter Getter { get; set; } = default!;
     public GdmPropertySetter Setter { get; set; } = default!;
-    public GdmElementType ElementType => GdmElementType.Property;
+    public GdmElementKind ElementKind => GdmElementKind.Property;
     public IEnumerable<IOGraphGdmBinding> Bindings { get; } = new List<IOGraphGdmBinding>();
     public void Bind(IOGraphGdmBinding binding)
     {
@@ -48,5 +48,24 @@ internal class GdmProperty : IOGraphGdmProperty
             return PropertyInfo.Equals(property.PropertyInfo);
         }
         return false;
+    }
+
+    public static GdmProperty Wrap(IOGraphGdmProperty property)
+    {
+        if (property is GdmProperty prop)
+        {
+            return prop;
+        }
+
+        return new GdmProperty()
+        {
+            IsComputed = property.IsComputed,
+            Getter = property.Getter,
+            Setter = property.Setter,
+            IsNullable = property.IsNullable,
+            Metadata = property.Metadata,
+            Label = property.Label,
+            Type = property.Type
+        };
     }
 }

@@ -8,10 +8,7 @@ namespace Assimalign.OGraph.Gdm;
 
 using Assimalign.OGraph.Gdm.Internal;
 
-
-[DebuggerDisplay("Gdm Type ({Kind}): {Label}")]
 public class GdmListType<T> : GdmCollectionType<List<T>, T>
-    where T : new()
 {
     public static GdmListType<T> Create<TGdmType>() where TGdmType : GdmPrimitiveType<T>, new()
     {

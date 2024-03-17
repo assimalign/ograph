@@ -11,22 +11,41 @@ using Assimalign.OGraph.Gdm.Internal;
 
 public static class OGraphGdmBuilderExtensions
 {
+
+    public static IOGraphGdmBuilder ConfigureOptions(this IOGraphGdmBuilder builder , Action<OGraphGdmBuilderOptions> configure)
+    {
+        var options = new OGraphGdmBuilderOptions();
+
+        configure.Invoke(options);
+
+
+        return default;
+    }
     /// <summary>
-    /// Will convert all properties in the GDM to camal case.
+    /// 
     /// </summary>
     /// <param name="builder"></param>
     /// <returns></returns>
-    public static IOGraphGdmBuilder SetPropertyNamesToCamalCase(this IOGraphGdmBuilder builder)
+    public static IOGraphGdmBuilder SetAllPropertiesToCamalCase(this IOGraphGdmBuilder builder)
     {
-        if (builder is null)
-        {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(builder));
-        }
         return builder.AfterBuild(model =>
         {
-            foreach (var property in model.GetGdmProperties().Where(p=> p is GdmProperty).Cast<GdmProperty>())
+            foreach (var complexType in model.GetGdmComplexTypes())
             {
-                property.Label = property.Label.ToCamalCase();
+                // Copy the current properties to a new collection
+                var properties = new List<IOGraphGdmProperty>(complexType.Properties);
+
+                // Clear out the existing properties
+                complexType.Properties.Clear();
+
+                foreach (var property in complexType.Properties)
+                {
+                    var prop = GdmProperty.Wrap(property);
+
+                    prop.Label = prop.Label.ToCamalCase();
+
+                    complexType.Properties.Add(prop);
+                }
             }
         });
     }

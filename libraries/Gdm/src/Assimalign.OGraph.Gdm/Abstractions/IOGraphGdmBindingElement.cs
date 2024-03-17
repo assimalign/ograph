@@ -21,4 +21,9 @@ public interface IOGraphGdmBindingElement : IOGraphGdmElement
     /// </summary>
     /// <param name="binding"></param>
     void Bind(IOGraphGdmBinding binding);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="binding"></param>
+    //void Unbind(IOGraphGdmBinding binding);
 }

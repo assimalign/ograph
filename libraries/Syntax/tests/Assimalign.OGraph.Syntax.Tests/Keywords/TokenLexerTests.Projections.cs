@@ -12,7 +12,10 @@ public partial class TokenLexerTests
     public void TestProjectionKeywordIdentifiedSuccess()
     {
         var query = "project({firstName})";
-        var lexer = new TokenLexer(query);
+        var lexer = TokenLexer.Create(query, new TokenLexerOptions()
+        {
+
+        });
         var tokens = new List<Token>();
 
         while (lexer.HasNext)

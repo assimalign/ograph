@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
-internal class GdmEntityTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T> : IOGraphGdmEntityTypeDescriptor<T>
+internal class GdmEntityTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T> : IOGraphGdmEntityTypeDescriptor<T>
     where T : class, new()
 {
     private readonly GdmEntityType<T> entityType;
@@ -68,6 +68,10 @@ internal class GdmEntityTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAc
         var property = entityType.GetProperty(propertyInfo);
         property.Getter ??= propertyInfo.GetValue;
         property.Setter ??= propertyInfo.SetValue;
+        property.DeclaringType = new GdmTypeReference()
+        {
+            Definition = entityType
+        };
         return new GdmPropertyDescriptor(property);
     }
     public IOGraphGdmPropertyDescriptor<TMember?> HasProperty<TMember>(Expression<Func<T, TMember?>> expression)
@@ -78,10 +82,14 @@ internal class GdmEntityTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAc
 
         property.Getter ??= (instance) => method.Invoke((T)instance);
         property.Setter ??= propertyInfo.SetValue;
+        property.DeclaringType = new GdmTypeReference()
+        {
+            Definition = entityType
+        };
 
         return new GdmPropertyDescriptor<TMember?>(property);
     }
-    
+
     private PropertyInfo AssertExpression<TMember>(Expression<Func<T, TMember>> expression)
     {
         if (expression is null)

@@ -49,4 +49,9 @@ internal class GdmVertexDescriptor<T> : IOGraphGdmVertexDescriptor<T>
     {
         return HasType(new TGdmType());
     }
+
+    IOGraphGdmVertexDescriptor<T> IOGraphGdmVertexDescriptor<T>.HasEdge<TTarget>(Label label)
+    {
+        return this;
+    }
 }

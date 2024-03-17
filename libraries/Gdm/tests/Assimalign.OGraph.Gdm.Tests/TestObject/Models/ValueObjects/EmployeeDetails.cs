@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Tests;
 
 public class EmployeeDetails
 {

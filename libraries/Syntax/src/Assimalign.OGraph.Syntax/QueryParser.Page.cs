@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Syntax;
 
@@ -12,7 +8,18 @@ public sealed partial class QueryParser
 {
     private PageNode? ParsePage(ref TokenLexer lexer, ParserContext context)
     {
-        Token token;
+        Token token = lexer.Current;
+        
+        // Capture the dot notation if the previous node was chained.
+        if (lexer.Previous.TokenType == TokenType.Dot)
+        {
+            token = lexer.Previous;
+        }
+
+        Int32 start = token.Start;
+        Int32 startLine = token.Line;
+        Int32 end;
+        Int32 endLine;
 
         ConstantNode? skip = null;
         ConstantNode? take = null;
@@ -41,16 +48,32 @@ public sealed partial class QueryParser
         {
             if (token.TokenType == TokenType.CloseParenthesis)
             {
+                // Capture ending position and line
+                end = token.End;
+                endLine = token.Line;
+
                 // If there is more token after the closing parenthesis and no dot separator, then error
                 if (lexer.TryNext(out token) && token.TokenType != TokenType.Dot)
                 {
                     AddExpectedDotSeparatorDiagnostic(ref lexer, context);
                 }
-                return new PageNode(skip!, take!);
+
+                var text = lexer.GetText(start, end);
+                var location = Location.Create(startLine, endLine, start, end);
+
+                return new PageNode(
+                    skip!, 
+                    take!,
+                    text,
+                    location);
             }
 
             while (lexer.TryNext(out token))
             {
+                if (token.TokenType == TokenType.CloseBracket)
+                {
+                    break;
+                }
                 if (token.TokenType == TokenType.Skip)
                 {
                     if (lexer.TryNext(out token) && token.TokenType != TokenType.Integer)
@@ -59,9 +82,8 @@ public sealed partial class QueryParser
                         return null;
                     }
                     skip = ParseConstant(ref lexer, context);
-                    continue;
                 }
-                if (token.TokenType == TokenType.Take)
+                else if (token.TokenType == TokenType.Take)
                 {
                     if (lexer.TryNext(out token) && token.TokenType != TokenType.Integer)
                     {
@@ -69,12 +91,13 @@ public sealed partial class QueryParser
                         return null;
                     }
                     take = ParseConstant(ref lexer, context);
-                    continue;
                 }
-                if (token.TokenType == TokenType.CloseBracket)
+                else
                 {
+                    SkipToClosingBracket(ref lexer);
                     break;
                 }
+                
             }
         }
 

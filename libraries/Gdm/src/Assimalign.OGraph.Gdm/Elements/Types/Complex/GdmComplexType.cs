@@ -8,7 +8,6 @@ namespace Assimalign.OGraph.Gdm;
 
 using Assimalign.OGraph.Gdm.Internal;
 
-[DebuggerDisplay("Gdm Type ({Kind}): {Label}")]
 public class GdmComplexType : IOGraphGdmComplexType
 {
     private readonly Action<IOGraphGdmComplexTypeDescriptor> configure;
@@ -51,7 +50,7 @@ public class GdmComplexType : IOGraphGdmComplexType
     public Label Label => label;
     public Type RuntimeType => runtimeType;
     public GdmTypeKind Kind => GdmTypeKind.Complex;
-    public GdmElementType ElementType => GdmElementType.Type;
+    public GdmElementKind ElementKind => GdmElementKind.Type;
     public IOGraphGdmPropertyCollection Properties { get; } = new GdmPropertyCollection();
 
     public virtual object Read(ref Utf8JsonReader reader)

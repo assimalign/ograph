@@ -97,7 +97,32 @@ public sealed partial class QueryParser
     }
 
 
+    #region Helper Methods
+    private void SkipToClosingBracket(ref TokenLexer lexer)
+    {
+        Token token;
 
+        while (lexer.TryNext(out token))
+        {
+            if (token.TokenType == TokenType.OpenBracket)
+            {
+                break;
+            }
+        }
+    }
+    private void SkipToClosingParenthesis(ref TokenLexer lexer)
+    {
+        Token token;
+
+        while (lexer.TryNext(out token))
+        {
+            if (token.TokenType == TokenType.OpenBracket)
+            {
+                break;
+            }
+        }
+    }
+    #endregion
 
     private void AddInvalidTokenDiagnostic(ref TokenLexer lexer, ParserContext context)
     {

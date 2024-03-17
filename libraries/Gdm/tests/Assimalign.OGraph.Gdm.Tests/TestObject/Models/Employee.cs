@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Tests;
 
-public record class Employee : EmployeeBase<Employee>
+public class Employee : EmployeeBase<Employee>
 {
     public EmployeeId? EmployeeId { get; set; }
     public EmployeeKind? Kind { get; set; }
     public EmployeeDetails? Details { get; set; }
     public IEnumerable<EmployeeRole>? Roles { get; set; }
-    public IEnumerable<int> Temp { get; set; }
 }

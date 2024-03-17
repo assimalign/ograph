@@ -29,13 +29,13 @@ public interface IOGraphGdmProperty : IOGraphGdmBindingElement
     /// <summary>
     /// 
     /// </summary>
-    bool IsNullable { get; } 
+    bool IsNullable { get; }
     /// <summary>
-    /// 
+    /// The getter of the property value.
     /// </summary>
     GdmPropertyGetter Getter { get; }
     /// <summary>
-    /// 
+    /// The setter of the property value.
     /// </summary>
     GdmPropertySetter Setter { get; }
 }

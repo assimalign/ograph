@@ -1,42 +1,74 @@
-
-
-
-// Endpoint query: represents a vertex
+# Endpoint query: represents a vertex
 # This endpoint can be represented as 
 #    - /api/employees
 #    - /api/vertex('employees')
-https://endpoint.com/api/employees?query= # This endpoint represents the starting vertex or vertices
-    .project({
-        id
-        employeeId
-        employeeType
-        employeeInfo as info {
-            firstName
-            lastName
-            middleName
-        }
-    })
-    .filter({
-        employeeType eq FTE and (
-            starts_with(employeeInfo.firstName, 'c') or 
-            ends_with(employeeInfo.lastName, 'e')
-        ) and
-        createBy.timestamp > 2022-02-012
-    })
-    .page({
-        skip 0
-        take 25
-    })
-    .edge(companies as employeeCompany)                       <-- Returns a single vertex
-        .project({                                              <-- A projection is required when returning a single vertex
+# This endpoint represents the starting vertex or vertices
+https://endpoint.com/api/employees?query= 
+    v(employee)
+        .project(
             id
-            companyId
-            companyInfo as info {
-                companyName
+            employeeId
+            employeeType
+            # Object
+            employeeInfo: info {
+                firstName
+                lastName
+                middleName
             }
-        })
-        .edge(companies/addresses) # The Edge keyword takes in the edge path
-            .project({
+            # Array of Objects
+            roles {
+                name
+                type
+            }
+            # Array of Strings
+            statuses
+            updated {
+                timestamp
+                userId
+            }
+            created {
+                timestamp
+                userId
+            }
+        )
+        .filter(
+            # Array Functions
+            any(roles, (
+                startswith(name, 'c')
+            )) eq false and
+            all(roles, {
+                type eq 1
+            }) and 
+            contains(statuses, '') and (
+                length(roles) gt 5 or 
+                length(roles) < 5
+            ) and 
+
+            # String Functions
+            length(emplyeeInfo.firstName) > 5 and
+            startswith(employeeInfo.firstName, 'c') and (
+                endswith(employeeInfo.lastName, 'e') or
+                endswith(employeeInfo.lastName, 'd')
+            ) and employeeType eq 1
+        )
+        .sort(
+            employeeInfo.firstName
+            employeeInfo.lastName desc
+        )
+        .page(
+            skip 20
+            take 20
+        )
+        .edge(employee-[/departments]->department)
+            .project(
+                id
+                departmentId
+                info: departmentInfo {
+                    name
+                }
+            )
+        .edge(employee-[/addresses]->address)
+            .project(
                 id
                 addressId
                 addressType
@@ -57,87 +89,30 @@ https://endpoint.com/api/employees?query= # This endpoint represents the startin
                     timestamp
                     userId
                 }
-            })
-            .filter({
-                addressType eq 1
-            })
-            .edge(companies/addresses/types as addressTypes)
-                .project({
-                    typeId
-                    typeName
-                })
-    .edge(addresses, primaryAddress)
-        .project({
-            streetOne
-        })
-    .edge(addresses)
-        .project({
-            streetTwo
-        })
-
-
-// Batch Query: The idea is to basically send a query that starts at different vertexes
-https://endpoint.com/api/$batch?query=
-vertices('')        # A queryable 
-vertex('employees')
-    .project({
-        employeeId 
-        firstName 
-        lastName 
-        middleName
-    })
-    .filter({
-        startsWith(firstName, 'c')
-    })
-    .page({
-        skip 0
-        take 25
-    })
-    .edge('companies')
-        .project({
-            name
-            companyType {
-                typeId
-            }
-        })
-        .filter({
-            startsWith('companyName', 'c')
-        })
-        .page({
-            skip 0
-            take 25
-        })
-        .sort({
-            companyName asc
-        })
-        .edge('companies/{companyId}/address') # The Edge keyword takes in the edge path
-            .project({
-                streetOne
-            })
-            .filter({
-                addressType eq 1
-            })
-            #.edge('companies/addresses/../addressType')
-            .edge('companies/{companyId}/addresses/{addressId}/addressType')
-                .project({
-                    typeId
-                    typeName
-                })
-    .edge('addresses')
-        .project({
-            streetOne
-            streetTwo
-        })
-vertex('users')
-    .project({
-        userId
-    })
-
-# Vertex Keyword Rules
-#
-#   1. Requires vertex id argument 
-vertex('{vertex label}', '{vertex id}') 
-
-
-vertices('users')
-    
+            )
+            .edge(address-[/types]->addressType)
+        .edge(employee-[/primaryAddress]->address)
+        .edge(employee-[/addresses]->address: secondaryAddress, '01e2641c-81ce-4df5-81b3-d19ef18d30f5')
+        .edge(employee-[/jobs]->employeeJob)
+            .project(
+                id
+                jobId
+                name
+            )
+            .page(
+                skip 0
+                take 20
+            )
+            .edge(employeeJob-[/tasks]->employeeTask)
+                .project(
+                    taskId
+                )
+                .edge(employeeTask-[/workItems]->employeeTaskWorkItem)
+                    .project(
+                        id
+                        workItemId
+                        info {
+                            displayName
+                            description
+                        }
+                    )

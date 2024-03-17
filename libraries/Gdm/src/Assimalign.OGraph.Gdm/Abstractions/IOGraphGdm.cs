@@ -1,4 +1,7 @@
-﻿namespace Assimalign.OGraph.Gdm;
+﻿using System.Xml;
+using System.Xml.Serialization;
+
+namespace Assimalign.OGraph.Gdm;
 
 /// <summary>
 /// Represents a single graph Model.
@@ -9,4 +12,7 @@ public interface IOGraphGdm : IOGraphGdmBindingElement
     /// Get the collection of elements in the model.
     /// </summary>
     IOGraphGdmElementCollection Elements { get; }
+
+    //void SerializeXml(XmlWriter writer);
+    //voider SerializeJson
 }

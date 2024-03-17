@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
+[DebuggerDisplay("Count = {Count}")]
 internal class GdmPropertyCollection : IOGraphGdmPropertyCollection
 {
     private readonly HashSet<IOGraphGdmProperty> properties;
@@ -21,7 +23,7 @@ internal class GdmPropertyCollection : IOGraphGdmPropertyCollection
     {
         AssertReadOnly();
         AssertNotNull(item);
-        properties.Add(item);
+        properties.Add(GdmProperty.Wrap(item));
     }
     public void Clear()
     {

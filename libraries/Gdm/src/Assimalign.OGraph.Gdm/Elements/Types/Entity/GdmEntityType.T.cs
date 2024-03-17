@@ -9,7 +9,6 @@ namespace Assimalign.OGraph.Gdm;
 
 using Assimalign.OGraph.Gdm.Internal;
 
-[DebuggerDisplay("Gdm Type ({Kind}): {Label}")]
 public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor | DynamicallyAccessedMemberTypes.PublicProperties)] T> : GdmType<T>, IOGraphGdmEntityType
     where T : class, new()
 {
@@ -235,7 +234,6 @@ public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMember
         writer.WriteEndElement();
     }
     #endregion
-
 
     #region Static Members/Methods
     /// <summary>

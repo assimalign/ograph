@@ -1,8 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
+using System.Collections.ObjectModel;
 
 namespace Assimalign.OGraph.Syntax;
 
@@ -60,7 +59,12 @@ public sealed class VertexNode : QueryNode
     /// <summary>
     /// Represents the root edges of the queryable tree.
     /// </summary>
-    public IEnumerable<QueryNode> Nodes => nodes.ToImmutableList();
+    public IEnumerable<QueryNode> Nodes =>
+#if NET7_0_OR_GREATER
+        nodes.AsReadOnly();
+#else
+        new ReadOnlyCollection<QueryNode>(nodes);
+#endif
 
     /// <summary>
     /// Checks whether the vertex has a parameter. 
@@ -69,12 +73,6 @@ public sealed class VertexNode : QueryNode
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Vertex;
-
-
-    public void AddNode(QueryNode queryNode)
-    {
-        this.nodes.Add(queryNode);
-    }
 
     #region Overloads
     /// <inheritdoc />
@@ -105,4 +103,9 @@ public sealed class VertexNode : QueryNode
         }
     }
     #endregion
+
+    internal void AddNode(QueryNode queryNode)
+    {
+        this.nodes.Add(queryNode);
+    }
 }

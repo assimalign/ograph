@@ -10,10 +10,10 @@ internal class Gdm : IOGraphGdm
     {
         Elements.Add(this);
     }
-    public Label Label { get; set; }
+    public Label Label { get; internal set; }
     public IOGraphGdmElementCollection Elements { get; } = new GdmElementCollection();
     public IEnumerable<IOGraphGdmBinding> Bindings { get; } = new List<IOGraphGdmBinding>();
-    public GdmElementType ElementType => GdmElementType.Graph;
+    public GdmElementKind ElementKind => GdmElementKind.Graph;
     public void Bind(IOGraphGdmBinding binding)
     {
         if (binding is null)

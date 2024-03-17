@@ -6,7 +6,7 @@ namespace Assimalign.OGraph.Gdm;
 
 using Assimalign.OGraph.Gdm.Internal;
 
-[DebuggerDisplay("Gdm = {Label} Vertex")]
+[DebuggerDisplay("Vertex = {Label}")]
 public class GdmVertex<T> : IOGraphGdmVertex
     where T : class, new()
 {
@@ -40,7 +40,7 @@ public class GdmVertex<T> : IOGraphGdmVertex
     public IOGraphGdmTypeReference Type => type!;
     public IOGraphGdmEdgeReferenceCollection Edges { get; } = new GdmEdgeReferenceCollection();
     public IOGraphGdmMetadata Metadata { get; } = new GdmMetadata();
-    public GdmElementType ElementType => GdmElementType.Vertex;
+    public GdmElementKind ElementKind => GdmElementKind.Vertex;
 
     #region Explicit Implementations
     IEnumerable<IOGraphGdmBinding> IOGraphGdmBindingElement.Bindings => bindings;

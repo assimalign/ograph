@@ -17,14 +17,20 @@ public partial class TokenLexerTests
         var exception1 = Assert.Throws<TokenLexerException>(() =>
         {
             var value = "'This is a bad formatted string"; // missing closing single quote
-            var lexer = new TokenLexer(value);
+            var lexer = TokenLexer.Create(value, new TokenLexerOptions()
+            {
+
+            });
             lexer.Next();
         });
 
         var exception2 = Assert.Throws<TokenLexerException>(() =>
         {
             var value = "\"This is a bad formatted string"; // missing closing double quote
-            var lexer = new TokenLexer(value);
+            var lexer = TokenLexer.Create(value, new TokenLexerOptions()
+            {
+
+            });
             lexer.Next();
         });
     }
@@ -33,7 +39,10 @@ public partial class TokenLexerTests
     public void TestDoubleQuotedStringParsedSuccess()
     {
         var value = "\"This is a string\"";
-        var lexer = new TokenLexer(value);
+        var lexer = TokenLexer.Create(value, new TokenLexerOptions()
+        {
+
+        });
         var token = lexer.Next();
 
         Assert.Equal(TokenType.String, token.TokenType);
@@ -44,7 +53,10 @@ public partial class TokenLexerTests
     public void TestSingleQuotedStringParsedSuccess()
     {
         var value = "'This is a string'";
-        var lexer = new TokenLexer(value);
+        var lexer = TokenLexer.Create(value, new TokenLexerOptions()
+        {
+
+        });
         var token = lexer.Next();
 
         Assert.Equal(TokenType.String, token.TokenType);

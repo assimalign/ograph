@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Xml;
 using System.Text.Json;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.OGraph.Gdm;
 

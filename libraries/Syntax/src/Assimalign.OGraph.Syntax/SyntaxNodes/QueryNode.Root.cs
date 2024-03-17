@@ -14,13 +14,13 @@ public sealed class RootNode : QueryNode
     /// 
     /// </summary>
     /// <param name="vertex"></param>
-    public RootNode(VertexNode vertex)
+    internal RootNode(VertexNode vertex, string text, Location location) 
+        : base(text, location)
     {
         if (vertex is null)
         {
             ThrowHelper.ThrowArgumentNullException(nameof(vertex));
         }
-
         Vertex = vertex;
     }
 
@@ -28,9 +28,6 @@ public sealed class RootNode : QueryNode
     /// The starting vertex of query.
     /// </summary>
     public VertexNode Vertex { get; }
-
-    /// <inheritdoc />
-    public override string Path => "/";
 
     /// <inheritdoc />
     public override QueryNodeType NodeType => QueryNodeType.Root;

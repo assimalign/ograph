@@ -7,6 +7,7 @@ namespace Assimalign.OGraph.Syntax.Internal;
 
 internal static class TokenLexerExtensions
 {
+
     // Checks if the current consumed byte equals the given value
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool ByteEquals(this ref SequenceReader<byte> sequenceReader, byte value)

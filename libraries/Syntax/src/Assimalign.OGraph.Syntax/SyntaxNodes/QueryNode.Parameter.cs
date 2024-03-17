@@ -3,23 +3,24 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Syntax;
 
+using Assimalign.OGraph.Syntax.Internal;
+
 public sealed class ParameterNode : QueryNode
 {
-    private QueryNode? parameterValue;
-
-    internal ParameterNode() { }
-    public ParameterNode(PropertyNode parameterValue)
+    ParameterNode(QueryNode parameter)
     {
-        this.parameterValue = parameterValue;
+        if (parameter is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(parameter));
+        }
+        ParameterValue = parameter;
     }
-    public ParameterNode(ConstantNode parameterValue)
-    {
-        this.parameterValue = parameterValue;
-    }
-    public ParameterNode(FunctionCallNode parameterValue)
-    {
-        this.parameterValue = parameterValue;
-    }
+    public ParameterNode(PropertyNode parameter) 
+        : this(parameter as QueryNode) { }
+    public ParameterNode(ConstantNode parameter)
+        : this(parameter as QueryNode) { }
+    public ParameterNode(FunctionCallNode parameter)
+        : this(parameter as QueryNode) { }
 
     /// <summary>
     /// 
@@ -29,7 +30,7 @@ public sealed class ParameterNode : QueryNode
     /// <summary>
     /// 
     /// </summary>
-    public ParameterType ParameterType => this.parameterValue switch
+    public ParameterType ParameterType => ParameterValue switch
     {
         ConstantNode        => ParameterType.Constant,
         FunctionCallNode    => ParameterType.Function,
