@@ -17,15 +17,17 @@ internal static class GdmThrowHelper
     public static void ThrowArgumentException(string message) => 
         throw new ArgumentException(message);
 
-    //[DoesNotReturn]
-    //public static void ThrowInvalidOperationException(string message) =>
-
+    [DoesNotReturn]
+    public static void ThrowInvalidOperationException(string message) =>
+        throw new InvalidOperationException(message);
 
     #endregion
 
     [DoesNotReturn]
     public static void ThrowUnknownError() =>
         throw new GdmUnknownException();
+
+    
 
     #region Validation/Model Exceptions
 

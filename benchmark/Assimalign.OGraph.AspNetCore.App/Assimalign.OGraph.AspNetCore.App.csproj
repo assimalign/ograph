@@ -15,7 +15,6 @@
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.4" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\sample\Assimalign.ErpCore\Assimalign.ErpCore.csproj" />
-	  <ProjectReference Include="..\Assimalign.OGraph.AspNetCore\Assimalign.OGraph.AspNetCore.csproj" />
+	  <ProjectReference Include="..\..\sample\Assimalign.ErpCore\Erp.csproj" />
 	</ItemGroup>
 </Project>

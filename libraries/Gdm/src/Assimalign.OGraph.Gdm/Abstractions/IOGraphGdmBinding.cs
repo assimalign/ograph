@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Assimalign.OGraph.Gdm;
 
 /// <summary>
-/// 
+/// Extends functionality of GDM elements.
 /// </summary>
 public interface IOGraphGdmBinding
 {

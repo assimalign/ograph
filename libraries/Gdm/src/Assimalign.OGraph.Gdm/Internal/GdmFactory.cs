@@ -24,6 +24,6 @@ internal class GdmFactory : IOGraphGdmFactory
             GdmThrowHelper.ThrowArgumentException("");
         }
 
-        return model!;        
+        return model!;
     }
 }

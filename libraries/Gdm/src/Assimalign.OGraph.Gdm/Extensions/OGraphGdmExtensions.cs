@@ -1,14 +1,55 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Xml.Schema;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Gdm;
+
+using Assimalign.OGraph.Gdm.Internal;
+
 
 /// <summary>
 /// Extensions for <see cref="IOGraphGdm"/>.
 /// </summary>
 public static class OGraphGdmExtensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TGdmBinding"></typeparam>
+    /// <param name="element"></param>
+    /// <param name="label"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static TGdmBinding? GetBinding<TGdmBinding>(this IOGraphGdmBindingElement element, Label label)
+        where TGdmBinding : IOGraphGdmBinding
+    {
+        if (element is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(element));
+        }
+
+        return element.Bindings
+            .OfType<TGdmBinding>()
+            .FirstOrDefault(p => p.Label.Equals(label));
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="element"></param>
+    /// <param name="label"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static bool HasBinding(this IOGraphGdmBindingElement element, Label label)
+    {
+        if (element is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(element));
+        }
+        return element.Bindings.Any(p=>p.Label.Equals(label));
+    }
     /// <summary>
     /// Returns all the <see cref="IOGraphGdmVertex"/> instances in the graph model.
     /// </summary>
@@ -159,11 +200,11 @@ public static class OGraphGdmExtensions
                 var label = string.Join('/', root, $"{key}", edge.Definition.Label);
 
                 yield return string.Join('/', root, $"{key}", label);
-                
+
                 foreach (var child in Paths(label, edge.Definition.Target.Definition))
                 {
                     yield return child;
-                } 
+                }
 
             }
         }

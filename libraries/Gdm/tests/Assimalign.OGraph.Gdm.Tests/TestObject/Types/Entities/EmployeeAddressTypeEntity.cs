@@ -13,7 +13,7 @@ public class EmployeeAddressTypeEntity : GdmEntityType<EmployeeAddressType>
         descriptor.HasLabel("employeeAddressType");
         descriptor.HasKey(p => p.TypeId);
 
-        descriptor.HasProperty(p => p.CreatedBy).UsePropertyName("createdBy").UseType<AuditFieldType>();
-        descriptor.HasProperty(p => p.UpdatedBy).UsePropertyName("updatedBy").UseType<AuditFieldType>();
+        descriptor.HasProperty(p => p.CreatedBy).UsePropertyName("createdBy").UseType<GdmAuditField>();
+        descriptor.HasProperty(p => p.UpdatedBy).UsePropertyName("updatedBy").UseType<GdmAuditField>();
     }
 }

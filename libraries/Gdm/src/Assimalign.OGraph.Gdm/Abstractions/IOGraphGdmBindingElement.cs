@@ -15,6 +15,7 @@ public interface IOGraphGdmBindingElement : IOGraphGdmElement
     /// <summary>
     /// Gets the collection of bindings.
     /// </summary>
+    /// <remarks>Bindings should be unique based on label.</remarks>
     IEnumerable<IOGraphGdmBinding> Bindings { get; }
     /// <summary>
     /// Binds an object to the element.

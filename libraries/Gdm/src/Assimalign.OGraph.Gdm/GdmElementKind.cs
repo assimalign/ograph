@@ -5,6 +5,7 @@
 /// </summary>
 public enum GdmElementKind
 {
+    Model,
     Graph,
     Vertex,
     Edge,

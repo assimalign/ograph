@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\libraries\Directory.Build.props" />
+	<Import Project="..\..\libraries\Directory.Build.targets" />
+	<ItemGroup>
+	  <Folder Include="Entities\Contacts\" />
+	  <Folder Include="Entities\Companies\" />
+	</ItemGroup>
+</Project>

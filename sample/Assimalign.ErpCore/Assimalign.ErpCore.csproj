@@ -1,5 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <ProjectReference Include="..\..\libraries\Core\src\Assimalign.OGraph\Assimalign.OGraph.csproj" />
-  </ItemGroup>
-</Project>

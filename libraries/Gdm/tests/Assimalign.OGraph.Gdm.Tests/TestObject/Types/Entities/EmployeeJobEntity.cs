@@ -14,8 +14,8 @@ public class EmployeeJobEntity : GdmEntityType<EmployeeJob>
         descriptor.HasKey(p => p.JobId);
 
 
-        descriptor.HasProperty(p => p.CreatedBy).UsePropertyName("createdBy").UseType<AuditFieldType>();
-        descriptor.HasProperty(p => p.UpdatedBy).UsePropertyName("updatedBy").UseType<AuditFieldType>();
+        descriptor.HasProperty(p => p.CreatedBy).UsePropertyName("createdBy").UseType<GdmAuditField>();
+        descriptor.HasProperty(p => p.UpdatedBy).UsePropertyName("updatedBy").UseType<GdmAuditField>();
     }
 
 }

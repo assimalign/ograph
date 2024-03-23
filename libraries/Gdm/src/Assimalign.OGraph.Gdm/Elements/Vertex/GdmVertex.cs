@@ -50,6 +50,10 @@ public class GdmVertex : IOGraphGdmVertex
         {
             GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
         }
+        if (this.HasBinding(binding.Label))
+        {
+            GdmThrowHelper.ThrowInvalidOperationException($"The element already contains a binding with the label: {binding.Label}");
+        }
         bindings.Add(binding);
     }
     #endregion

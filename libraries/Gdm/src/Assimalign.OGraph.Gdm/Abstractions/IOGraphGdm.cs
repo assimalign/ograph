@@ -1,10 +1,7 @@
-﻿using System.Xml;
-using System.Xml.Serialization;
-
-namespace Assimalign.OGraph.Gdm;
+﻿namespace Assimalign.OGraph.Gdm;
 
 /// <summary>
-/// Represents a single graph Model.
+/// Represents an entire graph model.
 /// </summary>
 public interface IOGraphGdm : IOGraphGdmBindingElement
 {

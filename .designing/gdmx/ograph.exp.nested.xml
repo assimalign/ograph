@@ -1,0 +1,42 @@
+<?xml version="1.1" encoding="utf-8"?>
+<gdmx>
+    <!-- 
+        A nested graph is useful when all child graphs are in a hierarhcy
+
+        This particularaly usefull when data is partitioned by a single entity.
+     -->
+    <graph label="organizations">
+        <primitiveType label="OrganizationId">
+            <format></format>
+        </primitiveType>
+        <complexType label="OrganizationInfo">
+            <property label="name" typeRef="String">
+                <meta>
+                    <key></key>
+                    <value></value>
+                </meta>
+            </property>
+        </complexType>
+        <entityType label="Organization">
+            <property label="id" typeRef="OrganizationId"/>
+            <property label="info" typeRef="OrganizationInfo" />
+        </entityType>
+
+        <vertex label="organization" typeRef="Organization">
+            <meta>
+                <key></key>
+                <value></value>
+            </meta>
+            <meta>
+                <key></key>
+                <value></value>
+            </meta>
+            <graph label="employees">
+
+            </graph>
+            <graph label="contacts">
+
+            </graph>
+        </vertex>
+    </graph>
+</gdmx>

@@ -10,15 +10,6 @@ using Assimalign.OGraph.Gdm.Internal;
 
 public class GdmListType<T> : GdmCollectionType<List<T>, T>
 {
-    public static GdmListType<T> Create<TGdmType>() where TGdmType : GdmPrimitiveType<T>, new()
-    {
-        return new GdmListType<T>(new TGdmType());
-    }
-    public static GdmListType<T> Create(IOGraphGdmType type)
-    {
-        return new(type);
-    }
-
     public GdmListType(IOGraphGdmType itemType)
     {
         if (itemType is null)
@@ -38,6 +29,7 @@ public class GdmListType<T> : GdmCollectionType<List<T>, T>
         }
     }
 
+    #region Overloads
     public override IOGraphGdmType ItemType { get; }
     public override List<T> Read(ref Utf8JsonReader reader)
     {
@@ -55,7 +47,6 @@ public class GdmListType<T> : GdmCollectionType<List<T>, T>
 
         return list;
     }
-
     public override List<T> Read(XmlReader reader)
     {
         if (reader.NodeType != XmlNodeType.Element)
@@ -86,7 +77,6 @@ public class GdmListType<T> : GdmCollectionType<List<T>, T>
 
         return list;
     }
-
     public override void Write(Utf8JsonWriter writer, List<T> value)
     {
         writer.WriteStartArray();
@@ -98,7 +88,6 @@ public class GdmListType<T> : GdmCollectionType<List<T>, T>
 
         writer.WriteEndArray();
     }
-
     public override void Write(XmlWriter writer, List<T> value)
     {
         writer.WriteStartElement(Label);
@@ -110,4 +99,16 @@ public class GdmListType<T> : GdmCollectionType<List<T>, T>
 
         writer.WriteEndElement();
     }
+    #endregion
+
+    #region Static Members
+    public static GdmListType<T> Create<TGdmType>() where TGdmType : GdmPrimitiveType<T>, new()
+    {
+        return new GdmListType<T>(new TGdmType());
+    }
+    public static GdmListType<T> Create(IOGraphGdmType type)
+    {
+        return new(type);
+    }
+    #endregion
 }

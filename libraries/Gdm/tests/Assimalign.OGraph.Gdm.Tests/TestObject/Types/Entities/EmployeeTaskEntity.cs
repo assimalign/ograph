@@ -13,7 +13,7 @@ public class EmployeeTaskEntity : GdmEntityType<EmployeeTask>
         descriptor.HasLabel("employeeJobTask");
         descriptor.HasKey(p => p.TaskId);
 
-        descriptor.HasProperty(p => p.CreatedBy).UsePropertyName("createdBy").UseType<AuditFieldType>();
-        descriptor.HasProperty(p => p.UpdatedBy).UsePropertyName("updatedBy").UseType<AuditFieldType>();
+        descriptor.HasProperty(p => p.CreatedBy).UsePropertyName("createdBy").UseType<GdmAuditField>();
+        descriptor.HasProperty(p => p.UpdatedBy).UsePropertyName("updatedBy").UseType<GdmAuditField>();
     }
 }

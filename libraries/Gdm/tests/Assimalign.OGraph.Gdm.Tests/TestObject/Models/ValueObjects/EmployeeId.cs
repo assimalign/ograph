@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm.Tests;
 
@@ -14,8 +10,6 @@ public readonly struct EmployeeId
     }
 
     public Guid Value { get; }
-
-
 
     public static implicit operator Guid(EmployeeId employeeId) => employeeId.Value;
     public static implicit operator EmployeeId(Guid value )=> new EmployeeId(value);

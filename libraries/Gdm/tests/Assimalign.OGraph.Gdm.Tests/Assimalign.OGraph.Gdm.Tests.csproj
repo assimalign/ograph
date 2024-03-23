@@ -19,7 +19,6 @@
 		<ProjectReference Include="..\..\src\Assimalign.OGraph.Gdm\Assimalign.OGraph.Gdm.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<Folder Include="TestObject\Types\Primitives\" />
 		<Folder Include="Validation\" />
 	</ItemGroup>
 </Project>

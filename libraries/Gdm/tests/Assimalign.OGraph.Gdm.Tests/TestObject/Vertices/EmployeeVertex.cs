@@ -11,9 +11,10 @@ public class EmployeeVertex : GdmVertex<Employee>
     protected override void Configure(IOGraphGdmVertexDescriptor<Employee> descriptor)
     {
         descriptor.HasLabel("employee")
-            .HasType<EmployeeEntity>();
+            .HasType<GdmEmployeeEntity>();
 
         descriptor.HasEdge<EmployeeAddressVertex>("addresses");
+        descriptor.HasEdge<EmployeeAddressVertex>("primaryAddress");
         descriptor.HasEdge<EmployeeJobVertex>("jobs");
     }
 }

@@ -31,6 +31,10 @@ internal class GdmProperty : IOGraphGdmProperty
         {
             GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
         }
+        if (this.HasBinding(binding.Label))
+        {
+            GdmThrowHelper.ThrowInvalidOperationException($"The element already contains a binding with the label: {binding.Label}");
+        }
         (Bindings as List<IOGraphGdmBinding>)!.Add(binding);
     }
     public override string ToString()

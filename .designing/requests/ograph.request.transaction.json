@@ -1,9 +1,24 @@
 {
+    "batch": [
+        {
+            "action": "Update",
+            ""
+        }
+    ],
+    "action": "Update",
+    "route": "/employees/2b675a3f-286b-4f10-9c8d-66c245bed275",
     "data": {
+        "info": {
+            "firstName": "Chase",
+            "lastName": "Crawford",
+            "middleName": "Ryan"
+        },
         "@ograph.edges": {
             "addresses": [
                 {
-                    "action": "create"
+
+                    "method": "POST",
+                    "route": "/addresses"
                 }
             ]
         }

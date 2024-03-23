@@ -4,8 +4,10 @@ using System.Text.Json;
 
 namespace Assimalign.OGraph.Gdm;
 
-public sealed class GdmGuidType : GdmPrimitiveType<Guid>
+public class GdmGuidType : GdmPrimitiveType<Guid>
 {
+    public override string[]? Formats => Regex;
+
     public override Guid Read(ref Utf8JsonReader reader)
     {
         return reader.GetGuid();
@@ -22,4 +24,6 @@ public sealed class GdmGuidType : GdmPrimitiveType<Guid>
     {
         writer.WriteValue(value.ToString());
     }
+
+    public static string[] Regex => ["^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"];
 }

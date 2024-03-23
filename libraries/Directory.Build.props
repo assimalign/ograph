@@ -3,6 +3,7 @@
 		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
 		<LangVersion>Latest</LangVersion>
 		<Nullable>enable</Nullable>
+		<Company>Assimalign</Company>
 	</PropertyGroup>
 	<PropertyGroup Condition="$(TargetFramework) == 'net7.0'">
 		<StripSymbols>false</StripSymbols>

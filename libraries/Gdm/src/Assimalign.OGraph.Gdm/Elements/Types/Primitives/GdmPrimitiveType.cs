@@ -6,8 +6,7 @@ namespace Assimalign.OGraph.Gdm;
 public abstract class GdmPrimitiveType<T> : GdmType<T>,
     IOGraphGdmPrimitiveType
 {
-    public string[]? Formats => throw new NotImplementedException();
-
+    public virtual string[]? Formats => [];
 
     #region Overloads
 
@@ -37,4 +36,9 @@ public abstract class GdmPrimitiveType<T> : GdmType<T>,
     }
 
     #endregion
+
+
+
+
+
 }

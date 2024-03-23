@@ -1,0 +1,329 @@
+<?xml version="1.1" encoding="utf-8"?>
+<gdmx version="1.0" xmlns="{some url}">
+    <!-- Reference: https://cs.brown.edu/people/rtamassi/gdhandbook/chapters/Graphml.pdf -->
+    <primitiveType Label="String" />
+    <primitiveType Label="Date" />
+    <primitiveType Label="DateTime" />
+    <primitiveType Label="Time" />
+    <primitiveType Label="Int16" />
+    <primitiveType Label="Int32">
+        <format>
+            ^-?(?:[1-9]\d{0,8}|1\d{9}|20\d{8}|21[0-3]\d{7}|214[0-6]\d{6}|2147[0-3]\d{5}|21474[0-7]\d{4}|214748[0-2]\d{3}|2147483[0-5]\d{2}|21474836[0-3]\d|214748364[0-7])$</format>
+    </primitiveType>
+    <primitiveType Label="Int64" />
+    <primitiveType Label="UInt16" />
+    <primitiveType Label="UInt32" />
+    <primitiveType Label="UInt64" />
+    <primitiveType Label="Char" />
+    <primitiveType Label="Boolean" />
+
+    <!-- User Types -->
+
+
+    <!-- Employee Types -->
+
+
+    <Graph Label="users" Uri="https://endpoint.com/api/users/$graph">
+        <!-- Use the collection of models to stich together a single cohesive 
+        Things to Consider:
+            - Method & Route Combination Conflicts
+
+         There should be two types of models
+         - Graph Relationship Model
+         - Service Model: 
+
+        Exmaple Routes: (User Domain)
+        Users Node: Label - users 
+            - GET       /api/users
+            - GET       /api/users/{userId}
+            - POST      /api/users
+            - PUT       /api/users/{userId}
+            - DELETE    /api/users/{userId}
+
+        Users Profile Node: Label - profile [OneToOne]
+            - GET       /api/users/profiles
+            - GET       /api/users/{userId}/profile
+            - POST      /api/users/{userId}/profile
+            - PUT       /api/users/{userId}/profile
+            - DELETE    /api/users/{userId}/profile
+
+        Users Addresses: Label - addresses [OneToMany]
+            - GET       /api/users/addresses
+            - GET       /api/users/{userId}/addresses
+            - GET       /api/users/{userId}/primaryAddress [Edge]
+            - GET       /api/users/{userId}/addresses/{addressId}
+            - POST      /api/users/{userId}/addresses
+            - PUT       /api/users/{userId}/addresses/{addressId}
+            - DELETE    /api/users/{userId}/addresses/{addressId}
+
+        Users Address Types Node: Label - addresseTypes [OneToOne]
+            - GET       /api/users/addressTypes
+            - GET       /api/users/addresses/{addressId}/addressType
+            - GET       /api/users/{userId}/addresses/{addressId}/addressType
+            - POST      /api/users/addressTypes
+            - PUT       /api/users/addressTypes/{addressTypeId}
+            - DELETE    /api/users/addressTypes/{addressTypeId}
+    -->
+        <Vertex Label="user" Type="User" />
+        <Vertex Label="address" Type="UserAddress" />
+        <Vertex Label="profile" Type="UserProdile" />
+        <Edge Label="addresses" source="user" target="address" />
+        <Edge Label="profile" source="user" target="profile" />
+        <Edge Label="primaryAddress" source="user" target="addresses">
+            <meta>
+                <key>description</key>
+                <value>Resolves the user's primary address.</value>
+            </meta>
+        </Edge>
+        <primitiveType Label="UserId">
+            <format>
+                ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$</format>
+        </primitiveType>
+        <EntityType Label="User">
+            <Property Label="userId" Type="Guid" isKey="true" />
+            <Property Label="details" Type="UserDetails" />
+        </EntityType>
+        <ComplexType Label="UserDetails">
+            <Property Label="firstName" Type="String">
+                <meta>
+                    <key>description</key>
+                    <value>The first name of the user.</value>
+                </meta>
+                <meta>
+                    <key></key>
+                    <value></value>
+                </meta>
+            </Property>
+            <Property Label="lastName" Type="String" />
+            <Property Label="middleName" Type="String" />
+            <Property Label="fullName" Type="String" />
+            <Property Label="birthDate" Type="DateTime" />
+        </ComplexType>
+        <ComplexType Label="UserUpdateOrCreate">
+            <Property Label="firstName" Type="String" />
+            <Property Label="lastName" Type="String" />
+            <Property Label="middleName" Type="String" />
+            <Property Label="fullName" Type="String" />
+            <Property Label="birthDate" Type="DateTime" />
+        </ComplexType>
+        <collectionType Label="UserCollection">
+            <item Type="User" />
+        </collectionType>
+        <ComplexType Label="UserTag">
+            <Property Label="key" Type="String" />
+            <Property Label="value" Type="String" />
+        </ComplexType>
+        <collectionType Label="UserTagCollection">
+            <collection Type="UserTag" />
+        </collectionType>
+        <EntityType Label="UserAddress">
+            <Property Label="streetOne" Type="String" />
+            <Property Label="streetTwo" Type="String" />
+            <Property Label="streetThree" Type="String" />
+            <Property Label="city" Type="String" />
+            <Property Label="state" Type="String" />
+            <Property Label="zipCode" Type="String" />
+            <Property Label="postalCode" Type="String" />
+        </EntityType>
+        <collectionType Label="UserAddressCollection">
+            <collection Type="UserAddress" />
+        </collectionType>
+        <EntityType Label="UserProfile">
+            <Property Label="emailAddress" Type="String" />
+        </EntityType>
+    </Graph>
+    <Graph Label="employees" Uri="https://endpoint.com/api/employees/$graph">
+        <!-- Binding Kinds: Query, Command, Event, Custom 
+            Rules:
+                Query Bindings:
+                    - No Inputs are allowed 
+                    - Output must have an ouput
+
+                Command Bindings:
+                    - 
+        -->
+        <!--
+            Routes: 
+            - GET       /api/employees
+            - GET       /api/employees/{employeeId}
+            - POST      /api/employees
+            - PUT       /api/employees/{employeeId}
+            - DELETE    /api/employees/{employeeId}
+
+            - GET       /api/employeeAddresses
+            - GET       /api/employees/{employeeId}/addresses
+            - GET       /api/employees/{employeeId}/addresses/{addressId}
+            - POST      /api/employees/{employeeId}/addresses
+            - PUT       /api/employees/{employeeId}/addresses/{addressId}
+            - DELETE    /api/employees/{employeeId}/addresses/{addressId}
+         -->
+        <Vertex Label="employee" Type="Employee">
+            <Binding Kind="Query" Label="GetEmployeeById">
+                <Argument Type="employeeId"/>
+                <Output Type="Employee"/>
+            </Binding>
+            <Binding Kind="Query" Label="GetEmployees">
+                <Output Kind="EmployeeList"/>
+            </Binding>
+            <Binding Kind="Command" Label="CreateEmployee">
+                <Action Kind="Create"/>
+                <Input Type="EmployeeUpdateOrCreate"/>
+                <Output Type="Employee"/>
+            </Binding>
+            <Binding Kind="Command" Label="UpdateEmployee">
+                <Action Kind="Update"/>
+                <Input Type="EmployeeUpdateOrCreate"/>
+                <Output Type="Employee"/>
+            </Binding>
+            <Binding Kind="Command" Label="DeleteEmployee">
+                <Action Kind="Delete"/>
+            </Binding>
+            <Binding Kind="Command" Label="PatchEmployee">
+                <Action Kind="Patch"/>
+                <Input Type="EmployeeUpdateOrCreate"/>
+                <Output Type="Employee"/>
+            </Binding>
+            <Binding Kind="Event" Label="OnEmployeeCreate">
+                <After Binding="CreateEmployee" />
+                <On Binding="CreateEmployee" />
+                <Before Binding="CreateEmployee" />
+
+                <Link Binding="" />
+            </Binding>
+            <Meta>
+                <Key>description</Key>
+                <Value></Value>
+            </Meta>
+        </Vertex>
+        <Vertex Label="address" Type="EmployeeAddress">
+            <Binding Kind="Query" Label="GetAllEmployeeAddresses">
+                <Output Type="EmployeeAddressList" />
+                <Segment Value="employeeAddresses"/>
+            </Binding>
+        </Vertex>
+        <Vertex Label="addressType" Type="EmployeeAddressType">
+            <Binding Kind="Command" Label="CreateEmployeeAddressType">
+                <Segment Value="employeeAddressTypes" />
+                <Action Kind="Create"/>
+            </Binding>
+        </Vertex>
+        <Vertex Label="job" Type="EmployeeJob">
+
+        </Vertex>
+        <Vertex Label="task" Type="EmployeeTask" />
+        <Vertex Label="workItem" Type="EmployeeWorkItem">
+            <Binding Kind="Query" Label="GetEmployeeWorkItemsById">
+                <Argument Label="employeeId" Type="EmployeeId" />
+                <Argument Label="jobId" Type="JobId" />
+                <Argument Label="taskId" Type="TaskId" />
+                <Argument Label="workItemId" Type="WorkItemId" />
+            </Binding>
+        </Vertex>
+        <Vertex Label="taxInfo" Type="EmployeeTaxInfo" />
+        
+        <Edge Label="addresses" Source="employee" Target="address">
+            <Binding Kind="Query" Label="GetEmployeeAddresses">
+                <Output Type="EmployeeAddressList" />
+            </Binding>
+        </Edge>
+        <Edge Label="primaryAddress" Source="employee" Target="address">
+
+        </Edge>
+        <Edge Label="types" Source="address" Target="addressType" />
+        <Edge Label="taxInfo" Source="employee" Target="taxInfp" />
+        <Edge Label="jobs" Source="employee" Target="job" />
+        <Edge Label="tasks" Source="job" Target="task" />
+        <Edge Label="workItems" Source="task" Target="workItem" />
+
+
+        <PrimitiveType Label="EmployeeId">
+
+        </PrimitiveType>
+        <PrimitiveType Label="JobId">
+
+        </PrimitiveType>
+        <PrimitiveType Label="TaskId">
+
+        </PrimitiveType>
+        <PrimitiveType Label="WorkItemId">
+
+        </PrimitiveType>
+        <PrimitiveType Label="AddressId">
+
+        </PrimitiveType>
+        <EnumType Label="EmployeeKind" BaseType="">
+            <Value Label="FTE" />
+        </EnumType>
+        <ComplexType Label="Address">
+            <Property Label="streetOne" Type="String" />
+            <Property Label="streetTwo" Type="String" />
+            <Property Label="streetThree" Type="String" />
+            <Property Label="streetFour" Type="String" />
+            <Property Label="city" Type="String" />
+            <Property Label="state" Type="String" />
+            <Property Label="zipCode" Type="String" />
+        </ComplexType>
+        <ComplexType Label="EmployeeInfo">
+            <Property Label="firstName" Type="String" />
+            <Property Label="lastName" Type="String" />
+            <Property Label="middleName" Type="String" />
+            <Property Label="Birthday" Type="Date" />
+        </ComplexType>
+        <ComplexType Label="AuditEntry">
+            <Property Label="userId" Type="UserId" />
+            <Property Label="timestamp" Type="DateTime" />
+            <Property Label="user" Type="User">
+                <Binding Kind="Query" Label="ResolveUserInfo">
+                    <Output Type="User"/>
+                </Binding>
+            </Property>
+        </ComplexType>
+        <ComplexType Label="EmployeeUpdateOrCreate">
+            <Property Label="info" Type="EmployeeInfo" />
+        </ComplexType>
+        <EntityType Label="Employee">
+            <Property Label="employeeId" Type="EmployeeId" />
+            <Property Label="info" Type="EmployeeInfo" />
+        </EntityType>
+        <EntityType Label="EmployeeAddress">
+            <Property Label="id" Type="AddressId" />
+            <Property Label="employeeId" Type="EmployeeId" />
+            <Property Label="address" Type="Address" />
+        </EntityType>
+        <EntityType Label="EmployeeJob">
+
+        </EntityType>
+        <EntityType Label="EmployeeTask">
+
+        </EntityType>
+        <EntityType Label="EmployeeWorkItem">
+
+        </EntityType>
+        <CollectionType Label="EmployeeList">
+            <Item Type="Employee" />
+        </CollectionType>
+    </Graph>
+    <Graph Label="contacts" Uri="https://endpoint.com/api/contacts/$graph">
+        <Vertex Label="contact" Type="Contact" />
+        <EntityType Label="Contact">
+            <Property Label="id" Type="ContactId" isKey="true" />
+            <Property Label="info" Type="ContactInfo" />
+        </EntityType>
+        <ComplexType Label="ContactInfo">
+
+        </ComplexType>
+        <primitiveType Label="ContactId" />
+    </Graph>
+    <Graph Label="companies" Uri="https://endpoint.com/api/companies/$graph">
+        <Vertex Label="company" Type="Company" />
+        <Vertex Label="contact" Type="Contact" />
+        <Vertex Label="address" Type="CompanyAddress" />
+        <Vertex Label="addressType" Type="CompanyAddressType" />
+        <Edge Label="contacts" source="company" target="contact" />
+        <Edge Label="addresses" source="company" target="address" />
+        <Edge Label="types" source="address" target="addressType" />
+        <EntityType Label="Company">
+
+        </EntityType>
+    </Graph>
+</gdmx>

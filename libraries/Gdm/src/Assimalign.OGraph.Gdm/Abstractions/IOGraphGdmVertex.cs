@@ -20,4 +20,8 @@ public interface IOGraphGdmVertex : IOGraphGdmBindingElement
     /// Represents arbitrary metadata that can be associated with this node.
     /// </summary>
     IOGraphGdmMetadata Metadata { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    //IOGraphGdmRoot Child { get; }
 }
