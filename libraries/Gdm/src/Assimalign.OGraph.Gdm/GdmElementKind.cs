@@ -10,5 +10,6 @@ public enum GdmElementKind
     Vertex,
     Edge,
     Type,
-    Property
+    Property,
+    Key
 }

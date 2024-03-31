@@ -8,5 +8,9 @@ public interface IOGraphGdmEntityType : IOGraphGdmComplexType
     /// <summary>
     /// 
     /// </summary>
+    IOGraphGdmEntityKey Key { get; }
+    /// <summary>
+    /// 
+    /// </summary>
     GdmEntityKeyResolver KeyResolver { get; }
 }

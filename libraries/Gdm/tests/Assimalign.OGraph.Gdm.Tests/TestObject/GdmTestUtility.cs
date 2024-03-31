@@ -41,7 +41,7 @@ public static class GdmTestUtility
                 // 2. Custom Setter
 
                 // Configure Vertices
-                builder.AddVertex<Employee>("employee", entity =>
+                builder.AddVertex<Employee>("employees", entity =>
                 {
                     entity.HasLabel("employee");
                     entity.HasKey(p => p.EmployeeId);
@@ -84,35 +84,35 @@ public static class GdmTestUtility
                         });
                         
                 });
-                builder.AddVertex<EmployeeTaxInfo>("taxInfo", entity =>
+                builder.AddVertex<EmployeeTaxInfo>("employeeTaxInfo", entity =>
                 {
                     entity.HasLabel("employeeTaxInfo");
                     entity.HasKey(p => p.TaxInfoId);
 
                 });
-                builder.AddVertex<EmployeeAddress>("address", entity =>
+                builder.AddVertex<EmployeeAddress>("employeeAddresses", entity =>
                 {
                     entity.HasLabel("employeeAddress");
                     entity.HasKey(p => p.AddressId);
 
                 });
-                builder.AddVertex<EmployeeAddressType>("addressType", entity =>
+                builder.AddVertex<EmployeeAddressType>("employeeAddressTypes", entity =>
                 {
                     entity.HasLabel("employeeAddressType");
                     entity.HasKey(p => p.TypeId);
 
                 });
-                builder.AddVertex<EmployeeJob>("job", entity =>
+                builder.AddVertex<EmployeeJob>("employeeJobs", entity =>
                 {
                     entity.HasLabel("employeeJob");
                 });
-                builder.AddVertex<EmployeeTask>("task", entity =>
+                builder.AddVertex<EmployeeTask>("employeeTasks", entity =>
                 {
                     entity.HasLabel("employeeTask");
                     entity.HasKey(p => p.TaskId);
 
                 });
-                builder.AddVertex<EmployeeWorkItem>("workItem", entity =>
+                builder.AddVertex<EmployeeWorkItem>("employeeWorkItems", entity =>
                 {
                     entity.HasLabel("employeeWorkItem");
                     entity.HasKey(p => p.WorkItemId);

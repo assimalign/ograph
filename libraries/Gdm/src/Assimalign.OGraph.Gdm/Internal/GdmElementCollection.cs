@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
-internal class GdmElementCollection : List<IOGraphGdmElement>,
+internal class GdmElementCollection : List<IOGraphGdmLabeledElement>,
     IOGraphGdmElementCollection
 {
-    public TGdmElement Get<TGdmElement>(Label label) where TGdmElement : IOGraphGdmElement
+    public TGdmElement Get<TGdmElement>(Label label) where TGdmElement : IOGraphGdmLabeledElement
     {
         foreach (var item in this)
         {

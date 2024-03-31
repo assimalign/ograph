@@ -19,7 +19,7 @@ public interface IOGraphQueryProviderContext
     /// <summary>
     /// The starting node/vertex of the query.
     /// </summary>
-    IOGraphGdmElement Element { get; }
+    IOGraphGdmLabeledElement Element { get; }
     /// <summary>
     /// The service provider to be used in the query.
     /// </summary>

@@ -18,9 +18,17 @@ public interface IOGraphGdmProperty : IOGraphGdmBindingElement
     /// </summary>
     IOGraphGdmMetadata Metadata { get; }
     /// <summary>
-    /// Specifies whether the property the primary key.
+    /// The getter of the property value.
     /// </summary>
-    bool IsKey { get; }
+    GdmPropertyGetter Getter { get; }
+    /// <summary>
+    /// The setter of the property value.
+    /// </summary>
+    GdmPropertySetter Setter { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    bool IsReadOnly { get; }
     /// <summary>
     /// Computed properties extend complex or entity types that 
     /// are invoked at runtime.
@@ -30,12 +38,5 @@ public interface IOGraphGdmProperty : IOGraphGdmBindingElement
     /// 
     /// </summary>
     bool IsNullable { get; }
-    /// <summary>
-    /// The getter of the property value.
-    /// </summary>
-    GdmPropertyGetter Getter { get; }
-    /// <summary>
-    /// The setter of the property value.
-    /// </summary>
-    GdmPropertySetter Setter { get; }
 }
+

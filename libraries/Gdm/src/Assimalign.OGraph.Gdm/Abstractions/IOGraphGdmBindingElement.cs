@@ -10,7 +10,7 @@ namespace Assimalign.OGraph.Gdm;
 /// allowing us to extend the functionality of the model without 
 /// opening it up for modification.
 /// </remarks>
-public interface IOGraphGdmBindingElement : IOGraphGdmElement
+public interface IOGraphGdmBindingElement : IOGraphGdmLabeledElement
 {
     /// <summary>
     /// Gets the collection of bindings.
@@ -26,5 +26,5 @@ public interface IOGraphGdmBindingElement : IOGraphGdmElement
     /// 
     /// </summary>
     /// <param name="binding"></param>
-    //void Unbind(IOGraphGdmBinding binding);
+    void Unbind(IOGraphGdmBinding binding);
 }

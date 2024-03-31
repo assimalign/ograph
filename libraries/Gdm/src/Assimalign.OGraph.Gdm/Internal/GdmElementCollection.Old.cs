@@ -8,16 +8,16 @@ namespace Assimalign.OGraph.Gdm.Internal;
 [DebuggerDisplay("Count = {Count}")]
 internal class GdmElementCollectionT : IOGraphGdmElementCollection
 {
-    private readonly HashSet<IOGraphGdmElement> elements;
+    private readonly HashSet<IOGraphGdmLabeledElement> elements;
 
     public GdmElementCollectionT()
     {
-        elements = new HashSet<IOGraphGdmElement>();
+        elements = new HashSet<IOGraphGdmLabeledElement>();
     }
 
     public int Count => elements.Count;
     public bool IsReadOnly { get; internal set; }
-    public void Add(IOGraphGdmElement item)
+    public void Add(IOGraphGdmLabeledElement item)
     {
         AssertReadOnly();
         AssertNotNull(item);
@@ -110,7 +110,7 @@ internal class GdmElementCollectionT : IOGraphGdmElementCollection
         elements.Add(type);
     }
 
-    public bool Remove(IOGraphGdmElement item)
+    public bool Remove(IOGraphGdmLabeledElement item)
     {
         AssertReadOnly();
         AssertNotNull(item);
@@ -121,19 +121,19 @@ internal class GdmElementCollectionT : IOGraphGdmElementCollection
         AssertReadOnly();
         elements.Clear();
     }
-    public bool Contains(IOGraphGdmElement item)
+    public bool Contains(IOGraphGdmLabeledElement item)
     {
         AssertNotNull(item);
         throw new NotImplementedException();
     }
 
-    public void CopyTo(IOGraphGdmElement[] array, int arrayIndex)
+    public void CopyTo(IOGraphGdmLabeledElement[] array, int arrayIndex)
     {
         if (array is null) throw new ArgumentNullException("array");
         elements.CopyTo(array, arrayIndex);
     }
 
-    public IEnumerator<IOGraphGdmElement> GetEnumerator()
+    public IEnumerator<IOGraphGdmLabeledElement> GetEnumerator()
     {
         return elements.GetEnumerator();
     }

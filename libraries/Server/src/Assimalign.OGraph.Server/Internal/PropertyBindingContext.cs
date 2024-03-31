@@ -46,5 +46,5 @@ internal class PropertyBindingContext : IOGraphPropertyBindingContext
         throw new NotImplementedException();
     }
 
-    IOGraphGdmElement IOGraphGdmBindingContext.Element => Element;
+    IOGraphGdmLabeledElement IOGraphGdmBindingContext.Element => Element;
 }

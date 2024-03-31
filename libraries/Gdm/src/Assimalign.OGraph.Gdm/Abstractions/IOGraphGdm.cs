@@ -9,7 +9,4 @@ public interface IOGraphGdm : IOGraphGdmBindingElement
     /// Get the collection of elements in the model.
     /// </summary>
     IOGraphGdmElementCollection Elements { get; }
-
-    //void SerializeXml(XmlWriter writer);
-    //voider SerializeJson
 }

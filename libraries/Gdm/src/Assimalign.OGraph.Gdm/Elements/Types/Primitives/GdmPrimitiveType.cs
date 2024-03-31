@@ -8,10 +8,21 @@ public abstract class GdmPrimitiveType<T> : GdmType<T>,
 {
     public virtual string[]? Formats => [];
 
+    public virtual T Parse(string? value)
+    {
+        throw new NotImplementedException();
+    }
+
+    public virtual bool TryParse(string? value, out T result)
+    {
+        throw new NotImplementedException();
+    }
+
     #region Overloads
 
     /// <inheritdoc />
     public override GdmTypeKind Kind => GdmTypeKind.Primitive;
+
 
     /// <inheritdoc />
     public override string ToString()
@@ -33,6 +44,22 @@ public abstract class GdmPrimitiveType<T> : GdmType<T>,
     public override int GetHashCode()
     {
         return Label.GetHashCode();
+    }
+
+    object IOGraphGdmPrimitiveType.Parse(string? value)
+    {
+        return Parse(value)!;
+    }
+
+    bool IOGraphGdmPrimitiveType.TryParse(string? value, out object? result)
+    {
+        result = default;
+        if (TryParse(value, out var r))
+        {
+            result = r;
+            return true;
+        }
+        return false;
     }
 
     #endregion

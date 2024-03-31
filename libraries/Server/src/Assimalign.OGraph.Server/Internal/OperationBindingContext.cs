@@ -20,7 +20,7 @@ internal class OperationBindingContext : IOGraphOperationBindingContext
     public IOGraphGdmType RequestType { get; init; } = default!;
     public IServiceProvider ServiceProvider { get; init; } = default!;
     public QueryParser Parser { get; init; } = default!;
-    IOGraphGdmElement IOGraphGdmBindingContext.Element => Element;
+    IOGraphGdmLabeledElement IOGraphGdmBindingContext.Element => Element;
 
 
     public IOGraphOperationBinding Binding { get; init; } = default!;

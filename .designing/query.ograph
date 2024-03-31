@@ -3,8 +3,8 @@
 #    - /api/employees
 #    - /api/vertex('employees')
 # This endpoint represents the starting vertex or vertices
-https://endpoint.com/api/employees?query= 
-    v(employee)
+https://endpoint.com/api/employees?query=
+    v(employees)
         .project(
             id
             employeeId
@@ -59,7 +59,7 @@ https://endpoint.com/api/employees?query=
             skip 20
             take 20
         )
-        .edge(employee-[/departments]->department)
+        .edge(employees-[/departments]->employeeDepartments)
             .project(
                 id
                 departmentId
@@ -67,7 +67,7 @@ https://endpoint.com/api/employees?query=
                     name
                 }
             )
-        .edge(employee-[/addresses]->address)
+        .edge(employees-[/addresses]->employeeAddresses)
             .project(
                 id
                 addressId
@@ -90,10 +90,10 @@ https://endpoint.com/api/employees?query=
                     userId
                 }
             )
-            .edge(address-[/types]->addressType)
-        .edge(employee-[/primaryAddress]->address)
-        .edge(employee-[/addresses]->address: secondaryAddress, '01e2641c-81ce-4df5-81b3-d19ef18d30f5')
-        .edge(employee-[/jobs]->employeeJob)
+            .edge(employeeAddresses-[/types]->employeeAddressTypes)
+        .edge(employees-[/primaryAddresses]->employeeAddresses)
+        .edge(addresses: secondaryAddress, '01e2641c-81ce-4df5-81b3-d19ef18d30f5')
+        .edge(employees-[/jobs]->employeeJobs)
             .project(
                 id
                 jobId
@@ -103,7 +103,7 @@ https://endpoint.com/api/employees?query=
                 skip 0
                 take 20
             )
-            .edge(employeeJob-[/tasks]->employeeTask)
+            .edge(tasks)
                 .project(
                     taskId
                 )

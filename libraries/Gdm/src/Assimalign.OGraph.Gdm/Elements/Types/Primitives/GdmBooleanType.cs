@@ -21,4 +21,12 @@ public sealed class GdmBooleanType : GdmPrimitiveType<bool>
     {
         writer.WriteValue(value);
     }
+    public override bool Parse(string? value)
+    {
+        return bool.Parse(value!);
+    }
+    public override bool TryParse(string? value, out bool result)
+    {
+        return bool.TryParse(value, out result);
+    }
 }

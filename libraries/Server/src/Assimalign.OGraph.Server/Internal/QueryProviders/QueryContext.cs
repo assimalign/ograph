@@ -15,5 +15,5 @@ internal class QueryContext : IOGraphQueryProviderContext
 
     public QueryDocument QueryDocument => throw new NotImplementedException();
 
-    public IOGraphGdmElement Element => throw new NotImplementedException();
+    public IOGraphGdmLabeledElement Element => throw new NotImplementedException();
 }

@@ -8,5 +8,5 @@ public interface IOGraphGdmBindingContext
     /// <summary>
     /// Represents the element in which the binding is bound to.
     /// </summary>
-    IOGraphGdmElement Element { get; }
+    IOGraphGdmLabeledElement Element { get; }
 }
