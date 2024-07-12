@@ -4,7 +4,7 @@ using System.Xml;
 
 namespace Assimalign.OGraph.Gdm.Tests;
 
-public class GdmEmployeeId : GdmPrimitiveType<EmployeeId>
+public class GdmEmployeeId : GdmScalarType<EmployeeId>
 {
     public override Label Label => "EmployeeId";
 

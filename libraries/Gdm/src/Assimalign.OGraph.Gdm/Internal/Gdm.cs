@@ -22,4 +22,15 @@ internal class Gdm : IOGraphGdm
         }
         (Bindings as List<IOGraphGdmBinding>)!.Add(binding);
     }
+    void IOGraphGdmBindingElement.Unbind(IOGraphGdmBinding binding)
+    {
+        if (binding is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
+        }
+        if (!(Bindings as List<IOGraphGdmBinding>)!.Remove(binding))
+        {
+            // TODO: Throw error
+        }
+    }
 }

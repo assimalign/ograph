@@ -12,6 +12,7 @@ using Assimalign.OGraph.Gdm.Internal;
 public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor | DynamicallyAccessedMemberTypes.PublicProperties)] T> : GdmType<T>, IOGraphGdmEntityType
     where T : class, new()
 {
+    internal IOGraphGdmEntityKey key = default!;
     private readonly Action<IOGraphGdmEntityTypeDescriptor<T>> configure;
 
     /// <summary>
@@ -44,10 +45,7 @@ public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMember
     public IOGraphGdmPropertyCollection Properties { get; } = new GdmPropertyCollection();
 
     /// <inheritdoc />
-    public GdmEntityKeyResolver KeyResolver => instance =>
-    {
-        return Properties.First(p => p.IsKey).Getter.Invoke(instance)!;
-    };
+    public IOGraphGdmEntityKey Key => key;
 
     #region Overloads
     /// <inheritdoc />
@@ -165,7 +163,6 @@ public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMember
 
         return instance;
     }
-
     public override void Write(Utf8JsonWriter writer, T value)
     {
         if (value is null)
@@ -200,7 +197,6 @@ public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMember
 
         writer.WriteEndObject();
     }
-
     public override void Write(XmlWriter writer, T value)
     {
         if (value is null)

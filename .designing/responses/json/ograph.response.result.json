@@ -1,7 +1,7 @@
 {
     "@ograph.statusCode": 200,
+    "@ograph.identifier": "/",
     "data": {
-
         "@ograph.edges": {
             "addresses": {
                 "statusCode": 200,

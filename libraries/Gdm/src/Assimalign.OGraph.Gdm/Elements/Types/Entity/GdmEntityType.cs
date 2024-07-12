@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Xml;
 using System.Text.Json;
 using System.Diagnostics.CodeAnalysis;
@@ -17,6 +16,7 @@ public class GdmEntityType : IOGraphGdmEntityType
         DynamicallyAccessedMemberTypes.PublicProperties)]
     internal Type runtimeType;
     internal Label label;
+    internal IOGraphGdmEntityKey key;
 
     /// <summary>
     /// 
@@ -41,6 +41,7 @@ public class GdmEntityType : IOGraphGdmEntityType
         }
         this.configure = configure;
         this.runtimeType = type;
+        this.key = default!;
         this.Configure(new GdmEntityTypeDescriptor(this));
     }
 
@@ -60,10 +61,7 @@ public class GdmEntityType : IOGraphGdmEntityType
     public IOGraphGdmPropertyCollection Properties { get; } = new GdmPropertyCollection();
 
     /// <inheritdoc />
-    public GdmEntityKeyResolver KeyResolver => instance =>
-    {
-        return Properties.First(p => p.IsKey).Getter.Invoke(instance)!;
-    };
+    public IOGraphGdmEntityKey Key => key;
 
     /// <summary>
     /// 

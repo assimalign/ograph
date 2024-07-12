@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\..\..\libraries\Directory.Build.props" />
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<PackAsTool>true</PackAsTool>
+	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="README.md" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Include="README.md" />
+	</ItemGroup>
+	<Import Project="..\..\..\libraries\Directory.Build.targets" />
+</Project>

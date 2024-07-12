@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 
 namespace Assimalign.OGraph;
 
-public abstract partial record class Entity<T>
+public abstract partial class Entity<T>
 {
     // This will specify whether to start tracking changes.
     private bool isTracking;

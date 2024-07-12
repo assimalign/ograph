@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
-internal class GdmElementCollection : List<IOGraphGdmLabeledElement>,
+internal class GdmElementCollection : List<IOGraphGdmElement>,
     IOGraphGdmElementCollection
 {
     public TGdmElement Get<TGdmElement>(Label label) where TGdmElement : IOGraphGdmLabeledElement

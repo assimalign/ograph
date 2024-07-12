@@ -74,20 +74,20 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
         {
             model.Elements.Add(type);
 
-            switch (type)
-            {
-                case IOGraphGdmComplexType complex:
-                    {
+            //switch (type)
+            //{
+            //    case IOGraphGdmComplexType complex:
+            //        {
 
-                        break;
-                    }
-                case IOGraphGdmCollectionType collection:
-                    {
+            //            break;
+            //        }
+            //    case IOGraphGdmCollectionType collection:
+            //        {
 
 
-                        break;
-                    }
-            }
+            //            break;
+            //        }
+            //}
 
             if (type is IOGraphGdmComplexType complex) // This accounts for GDM Entity Types as well
             {

@@ -8,21 +8,21 @@ internal class GdmEntityTypeMissingKeyValidatorRule : GdmValidatorRule
 {
     public override void OnValidate(GdmValidatorContext context)
     {
-        var entityTypes = context.Model.GetGdmEntityTypes();
+        //var entityTypes = context.Model.GetGdmEntityTypes();
 
-        foreach (var entityType in entityTypes)
-        {
-            var property = entityType.Properties.FirstOrDefault(p => p.IsKey);
+        //foreach (var entityType in entityTypes)
+        //{
+        //    var property = entityType.Properties.FirstOrDefault(p => p.IsKey);
 
-            if (property is null)
-            {
-                context.AddFailure(error =>
-                {
-                    error.Code = GdmErrorCode.GDM0401;
-                    error.Message = Resources.GDM0401;
-                    error.Source = $"{entityType.Label}";
-                });
-            }
-        }
+        //    if (property is null)
+        //    {
+        //        context.AddFailure(error =>
+        //        {
+        //            error.Code = GdmErrorCode.GDM0401;
+        //            error.Message = Resources.GDM0401;
+        //            error.Source = $"{entityType.Label}";
+        //        });
+        //    }
+        //}
     }
 }

@@ -55,32 +55,6 @@ public static class OGraphGdmBuilderExtensions
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="builder"></param>
-    /// <param name="configure"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    public static IOGraphGdmBuilder AddVertex<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor | DynamicallyAccessedMemberTypes.PublicProperties)] T>(this IOGraphGdmBuilder builder, Action<IOGraphGdmEntityTypeDescriptor<T>> configure)
-        where T : class, new()
-    {
-        if (builder is null)
-        {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(builder));
-        }
-        if (configure is null)
-        {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
-        }
-        Action<IOGraphGdmVertexDescriptor<T>> action = vertex =>
-        {
-            vertex.HasLabel(typeof(T).Name);
-            vertex.HasType(GdmEntityType<T>.Create(configure));
-        };
-        return builder.AddVertex<T>(action);
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="builder"></param>
     /// <param name="label">The label of the vertex</param>
     /// <param name="configure"></param>
     /// <returns></returns>
@@ -131,7 +105,7 @@ public static class OGraphGdmBuilderExtensions
     /// <param name="configure"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static IOGraphGdmBuilder AddType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor | DynamicallyAccessedMemberTypes.PublicProperties)] T>(this IOGraphGdmBuilder builder, Action<IOGraphGdmComplexTypeDescriptor<T>> configure) where T : class, new()
+    public static IOGraphGdmBuilder AddComplexType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor | DynamicallyAccessedMemberTypes.PublicProperties)] T>(this IOGraphGdmBuilder builder, Action<IOGraphGdmComplexTypeDescriptor<T>> configure) where T : class, new()
     {
         if (builder is null)
         {
@@ -142,5 +116,25 @@ public static class OGraphGdmBuilderExtensions
             GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
         return builder.AddType(GdmComplexType<T>.Create(configure));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="builder"></param>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    public static IOGraphGdmBuilder AddEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor | DynamicallyAccessedMemberTypes.PublicProperties)] T>(this IOGraphGdmBuilder builder, Action<IOGraphGdmEntityTypeDescriptor<T>> configure) where T : class, new()
+    {
+        if (builder is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(builder));
+        }
+        if (configure is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+        }
+        return builder.AddType(GdmEntityType<T>.Create(configure));
     }
 }

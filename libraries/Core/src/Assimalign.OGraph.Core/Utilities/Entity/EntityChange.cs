@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public sealed record class EntityChange
+public sealed class EntityChange
 {
     /// <summary>
     /// The name of the property that changes.

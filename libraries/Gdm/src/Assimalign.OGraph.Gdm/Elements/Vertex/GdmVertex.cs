@@ -56,6 +56,18 @@ public class GdmVertex : IOGraphGdmVertex
         }
         bindings.Add(binding);
     }
+
+    void IOGraphGdmBindingElement.Unbind(IOGraphGdmBinding binding)
+    {
+        if (binding is null)
+        {
+            GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
+        }
+        if (!bindings.Remove(binding))
+        {
+            // TODO: Throw error
+        }
+    }
     #endregion
 
     #region Static Members

@@ -102,7 +102,7 @@ public class GdmListType<T> : GdmCollectionType<List<T>, T>
     #endregion
 
     #region Static Members
-    public static GdmListType<T> Create<TGdmType>() where TGdmType : GdmPrimitiveType<T>, new()
+    public static GdmListType<T> Create<TGdmType>() where TGdmType : GdmScalarType<T>, new()
     {
         return new GdmListType<T>(new TGdmType());
     }

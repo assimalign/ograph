@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace Assimalign.OGraph.Gdm;
+﻿namespace Assimalign.OGraph.Gdm;
 
 /// <summary>
 /// Extends functionality of GDM elements.
@@ -13,10 +10,11 @@ public interface IOGraphGdmBinding
     /// </summary>
     Label Label { get; }
     /// <summary>
-    /// 
+    /// The binding kind.
     /// </summary>
-    /// <param name="context"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    Task ExecuteAsync(IOGraphGdmBindingContext context, CancellationToken cancellationToken = default);
+    GdmBindingKind Kind { get; }
+    /// <summary>
+    /// Binding metadata.
+    /// </summary>
+    IOGraphGdmMetadata Metadata { get; }
 }

@@ -24,7 +24,6 @@ internal class GdmEntityTypeDescriptor : IOGraphGdmEntityTypeDescriptor
             throw new InvalidOperationException($"The property '{label}' does not exist on type {entityType.runtimeType!.Name}");
         }
         var property = entityType.GetProperty(propertyInfo);
-        property.IsKey = true;
         property.Getter ??= propertyInfo.GetValue;
         property.Setter ??= propertyInfo.SetValue;
         return this;

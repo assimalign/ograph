@@ -2,10 +2,10 @@
 
 namespace Assimalign.OGraph;
 
-public abstract partial record class Entity<T> : INotifyPropertyChanging, INotifyPropertyChanged
+public abstract partial class Entity<T> : INotifyPropertyChanging, INotifyPropertyChanged
 {
-    private event PropertyChangingEventHandler propertyChanging;
-    private event PropertyChangedEventHandler propertyChanged;
+    private event PropertyChangingEventHandler? propertyChanging;
+    private event PropertyChangedEventHandler? propertyChanged;
 
 
     event PropertyChangingEventHandler? INotifyPropertyChanging.PropertyChanging

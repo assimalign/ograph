@@ -64,7 +64,7 @@ internal class GdmElementCollectionT : IOGraphGdmElementCollection
     {
         switch (type)
         {
-            case IOGraphGdmPrimitiveType pt:
+            case IOGraphGdmScalarType pt:
                 {
                     Add(pt);
                     break;
@@ -105,7 +105,7 @@ internal class GdmElementCollectionT : IOGraphGdmElementCollection
     {
         elements.Add(type);
     }
-    private void Add(IOGraphGdmPrimitiveType type)
+    private void Add(IOGraphGdmScalarType type)
     {
         elements.Add(type);
     }
@@ -156,5 +156,35 @@ internal class GdmElementCollectionT : IOGraphGdmElementCollection
         {
             throw new ArgumentNullException(nameof(item));
         }
+    }
+
+    public TGdmElement Get<TGdmElement>(Label label) where TGdmElement : IOGraphGdmLabeledElement
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Add(IOGraphGdmElement item)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool Contains(IOGraphGdmElement item)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void CopyTo(IOGraphGdmElement[] array, int arrayIndex)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool Remove(IOGraphGdmElement item)
+    {
+        throw new NotImplementedException();
+    }
+
+    IEnumerator<IOGraphGdmElement> IEnumerable<IOGraphGdmElement>.GetEnumerator()
+    {
+        throw new NotImplementedException();
     }
 }

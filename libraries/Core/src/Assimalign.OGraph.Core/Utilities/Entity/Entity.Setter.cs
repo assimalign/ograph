@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public abstract partial record class Entity<T>
+public abstract partial class Entity<T>
 {
 
     // TODO: Revisit implementation

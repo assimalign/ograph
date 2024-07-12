@@ -28,7 +28,6 @@ public partial class ValueObjectTests
         Assert.Equal("myName", name.ToCamalCase());
     }
 
-
     [Fact(DisplayName = "Value Object (Label): To Pascal Case")]
     public void TestToPascalCase()
     {
@@ -36,7 +35,6 @@ public partial class ValueObjectTests
 
         Assert.Equal("MyName", name.ToPascalCase());
     }
-
 
     [Fact(DisplayName = "Value Object (Label): Comparison")]
     public void TestComparison()

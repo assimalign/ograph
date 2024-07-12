@@ -6,7 +6,7 @@ namespace Assimalign.OGraph.Gdm;
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphGdmElementCollection : ICollection<IOGraphGdmLabeledElement>
+public interface IOGraphGdmElementCollection : ICollection<IOGraphGdmElement>
 {
     /// <summary>
     /// Get's an element with the specified label that is of type <typeparamref name="TGdmElement"/>.

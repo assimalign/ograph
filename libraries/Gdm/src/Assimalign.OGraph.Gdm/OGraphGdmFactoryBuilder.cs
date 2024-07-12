@@ -7,6 +7,8 @@ using Assimalign.OGraph.Gdm.Internal;
 
 public sealed class OGraphGdmFactoryBuilder : IOGraphGdmFactoryBuilder
 {
+    private GdmBuilderStrategy strategy = GdmBuilderStrategy.Explicit;
+
     private readonly IList<IOGraphGdm> models;
     private readonly IDictionary<Label, IList<Action<IOGraphGdmBuilder>>> actions;
 
@@ -15,6 +17,14 @@ public sealed class OGraphGdmFactoryBuilder : IOGraphGdmFactoryBuilder
         models = new List<IOGraphGdm>();
         actions = new Dictionary<Label, IList<Action<IOGraphGdmBuilder>>>();
     }
+
+
+    public IOGraphGdmFactoryBuilder UseStrategy(GdmBuilderStrategy strategy)
+    {
+        this.strategy = strategy;
+        return this;
+    }
+
 
     public IOGraphGdmFactoryBuilder Configure(Label label, Action<IOGraphGdmBuilder> configure)
     {

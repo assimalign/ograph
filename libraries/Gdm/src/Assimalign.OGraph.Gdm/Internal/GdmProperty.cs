@@ -18,9 +18,9 @@ internal class GdmProperty : IOGraphGdmProperty
     public IOGraphGdmTypeReference Type { get; set; } = default!;
     public IOGraphGdmTypeReference DeclaringType { get; set; } = default!;
     public IOGraphGdmMetadata Metadata { get; init; }
-    public bool IsKey { get; set; }
     public bool IsComputed { get; set; }
     public bool IsNullable { get; set; } = true;
+    public bool IsReadOnly { get; set; }
     public GdmPropertyGetter Getter { get; set; } = default!;
     public GdmPropertySetter Setter { get; set; } = default!;
     public GdmElementKind ElementKind => GdmElementKind.Property;
@@ -71,5 +71,10 @@ internal class GdmProperty : IOGraphGdmProperty
             Label = property.Label,
             Type = property.Type
         };
+    }
+
+    public void Unbind(IOGraphGdmBinding binding)
+    {
+        (Bindings as List<IOGraphGdmBinding>)!.Remove(binding);
     }
 }

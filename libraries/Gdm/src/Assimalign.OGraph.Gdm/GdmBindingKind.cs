@@ -2,7 +2,8 @@
 
 public enum GdmBindingKind
 {
-    Operation,
+    Query,
+    Command,
     Event,
-    Property
+    Resolver
 }

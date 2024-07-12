@@ -93,18 +93,18 @@ public static class OGraphGdmExtensions
         return model.Elements.OfType<IOGraphGdmType>();
     }
     /// <summary>
-    /// Returns all the <see cref="IOGraphGdmPrimitiveType"/> instances in the graph model.
+    /// Returns all the <see cref="IOGraphGdmScalarType"/> instances in the graph model.
     /// </summary>
     /// <param name="model">The graph data model.</param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static IEnumerable<IOGraphGdmPrimitiveType> GetGdmPrimitiveTypes(this IOGraphGdm model)
+    public static IEnumerable<IOGraphGdmScalarType> GetGdmPrimitiveTypes(this IOGraphGdm model)
     {
         if (model is null)
         {
             throw new ArgumentNullException(nameof(model));
         }
-        return model.Elements.OfType<IOGraphGdmPrimitiveType>();
+        return model.Elements.OfType<IOGraphGdmScalarType>();
     }
     /// <summary>
     /// Returns all the <see cref="IOGraphGdmEnumType"/> instances in the graph model.
@@ -196,7 +196,7 @@ public static class OGraphGdmExtensions
         {
             foreach (var edge in vertex.Edges)
             {
-                var key = vertex.GetProperties().First(p => p.IsKey).Label;
+                var key = (vertex.Type as IOGraphGdmEntityType)!.Key.Property.Definition.Label;
                 var label = string.Join('/', root, $"{key}", edge.Definition.Label);
 
                 yield return string.Join('/', root, $"{key}", label);
@@ -205,7 +205,6 @@ public static class OGraphGdmExtensions
                 {
                     yield return child;
                 }
-
             }
         }
     }

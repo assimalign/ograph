@@ -30,7 +30,7 @@ public static class GdmTestUtility
 
                 // Configure Types
                 // Value Objects/DTO (Data Transfer Objects) 
-                builder.AddType<Employee>(complexType =>
+                builder.AddComplexType<Employee>(complexType =>
                 {
                     complexType.HasLabel("employeeUpdateOrCreate");
                     complexType.HasProperty(p => p.Info).UsePropertyName("info");

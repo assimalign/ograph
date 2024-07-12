@@ -13,7 +13,6 @@ public abstract class GdmCollectionType<TCollection, T> : GdmType<TCollection>,
     IOGraphGdmCollectionType
     where TCollection : IEnumerable<T>
 {
-    
     public abstract IOGraphGdmType ItemType { get; }
     public override GdmTypeKind Kind => GdmTypeKind.Collection;
 }

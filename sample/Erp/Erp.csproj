@@ -2,7 +2,9 @@
 	<Import Project="..\..\libraries\Directory.Build.props" />
 	<Import Project="..\..\libraries\Directory.Build.targets" />
 	<ItemGroup>
-	  <Folder Include="Entities\Contacts\" />
-	  <Folder Include="Entities\Companies\" />
+	  <Folder Include="Server\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\libraries\Core\src\Assimalign.OGraph\Assimalign.OGraph.csproj" />
 	</ItemGroup>
 </Project>

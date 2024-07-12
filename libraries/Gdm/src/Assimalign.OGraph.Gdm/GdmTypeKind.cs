@@ -5,7 +5,6 @@
 /// </summary>
 public enum GdmTypeKind
 {
-
     None,
     /// <summary>
     /// 
@@ -22,7 +21,7 @@ public enum GdmTypeKind
     /// <summary>
     /// 
     /// </summary>
-    Primitive,
+    Scalar,
     /// <summary>
     /// 
     /// </summary>

@@ -40,8 +40,6 @@ internal static class GdmTypeExtensions
     }
 
 
-
-
 //    public static IOGraphGdmType GetGdmType([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] this Type runtimeType)
 //    {
 //        if (!runtimeType.TryGetGdmType(out var gdmType))

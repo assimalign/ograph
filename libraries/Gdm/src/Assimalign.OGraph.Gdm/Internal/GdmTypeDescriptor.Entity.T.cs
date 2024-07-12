@@ -29,7 +29,6 @@ internal class GdmEntityTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAc
             throw new InvalidOperationException($"The property '{label}' does not exist on type {typeof(T).Name}");
         }
         var property = entityType.GetProperty(propertyInfo);
-        property.IsKey = true;
         property.Getter ??= propertyInfo.GetValue;
         property.Setter ??= propertyInfo.SetValue;
         return this;
@@ -40,7 +39,6 @@ internal class GdmEntityTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAc
         var property = entityType.GetProperty(propertyInfo);
         var method = expression.Compile();
 
-        property.IsKey = true;
         property.Getter ??= (instance) => method.Invoke((T)instance);
         property.Setter ??= propertyInfo.SetValue;
 
@@ -52,7 +50,6 @@ internal class GdmEntityTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAc
         var property = entityType.GetProperty(propertyInfo);
         var method = expression.Compile();
 
-        property.IsKey = true;
         property.Getter ??= (instance) => method.Invoke((T)instance);
         property.Setter ??= propertyInfo.SetValue;
 
