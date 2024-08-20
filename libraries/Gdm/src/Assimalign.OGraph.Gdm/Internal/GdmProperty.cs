@@ -29,11 +29,11 @@ internal class GdmProperty : IOGraphGdmProperty
     {
         if (binding is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
+            ThrowHelper.ThrowArgumentNullException(nameof(binding));
         }
         if (this.HasBinding(binding.Label))
         {
-            GdmThrowHelper.ThrowInvalidOperationException($"The element already contains a binding with the label: {binding.Label}");
+            ThrowHelper.ThrowInvalidOperationException($"The element already contains a binding with the label: {binding.Label}");
         }
         (Bindings as List<IOGraphGdmBinding>)!.Add(binding);
     }

@@ -12,11 +12,11 @@ public class GdmArrayType<T> : GdmCollectionType<T[], T>
     {
         if (itemType is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(itemType));
+            ThrowHelper.ThrowArgumentNullException(nameof(itemType));
         }
         if (!ItemType!.RuntimeType!.IsAssignableTo(typeof(T)))
         {
-            GdmThrowHelper.ThrowArgumentException("");
+            ThrowHelper.ThrowArgumentException("");
         }
 
         ItemType = itemType;

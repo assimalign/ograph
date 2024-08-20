@@ -18,7 +18,7 @@ internal class Gdm : IOGraphGdm
     {
         if (binding is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
+            ThrowHelper.ThrowArgumentNullException(nameof(binding));
         }
         (Bindings as List<IOGraphGdmBinding>)!.Add(binding);
     }
@@ -26,7 +26,7 @@ internal class Gdm : IOGraphGdm
     {
         if (binding is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
+            ThrowHelper.ThrowArgumentNullException(nameof(binding));
         }
         if (!(Bindings as List<IOGraphGdmBinding>)!.Remove(binding))
         {

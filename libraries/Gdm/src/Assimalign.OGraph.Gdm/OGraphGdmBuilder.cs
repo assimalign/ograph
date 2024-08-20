@@ -38,7 +38,7 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
     {
         if (configure is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+            ThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
 
         beforeBuild.Add(configure);
@@ -49,7 +49,7 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
     {
         if (configure is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+            ThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
 
         afterBuild.Add(configure);
@@ -64,7 +64,7 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
     {
         if (type is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(type));
+            ThrowHelper.ThrowArgumentNullException(nameof(type));
         }
 
         var elements = model.Elements;
@@ -147,7 +147,7 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
     {
         if (vertex is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(vertex));
+            ThrowHelper.ThrowArgumentNullException(nameof(vertex));
         }
 
         var hasVertex = model.Elements.OfType<IOGraphGdmVertex>().Any(p=>p.Label == vertex.Label);
@@ -211,7 +211,7 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
     {
         if (configure is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+            ThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
 
         IOGraphGdmBuilder builder = new OGraphGdmBuilder(label);

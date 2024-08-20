@@ -1,0 +1,108 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "oneOf": [
+        {
+            "$ref": "#/definitions/single"
+        },
+        {
+            "$ref": "#/definitions/collection"
+        }
+    ],
+    "definitions": {
+        "single": {
+            "type": "object",
+            "properties": {
+                "$status": {
+                    "type": "number"
+                },
+                "$errors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/$error"
+                    }
+                },
+                "$nodes": {
+                    "$ref": "#/definitions/$node"
+                }
+            },
+            "required": [
+                "$status",
+                "$nodes"
+            ]
+        },
+        "collection": {
+            "type": "object",
+            "properties": {
+                "$status": {
+                    "type": "number"
+                },
+                "$total": {
+                    "type": "number"
+                },
+                "$count": {
+                    "type": "number"
+                },
+                "$errors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/$error"
+                    }
+                },
+                "$nodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/$node"
+                    }
+                }
+            },
+            "required": [
+                "$total",
+                "$count",
+                "$status",
+                "$nodes"
+            ]
+        },
+        "$node": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+                "$edges": {
+                    "$ref": "#/definitions/$edges"
+                }
+            }
+        },
+        "$edges": {
+            "type": "object",
+            "minProperties": 1,
+            "patternProperties": {
+                "^[a-zA-Z0-9_@-]+$": {
+                    "type": "object",
+                    "oneOf": [
+                        {
+                            "$ref": "#/definitions/single"
+                        },
+                        {
+                            "$ref": "#/definitions/collection"
+                        }
+                    ]
+                }
+            }
+        },
+        "$error": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "code",
+                "message"
+            ]
+        }
+    }
+}

@@ -2,7 +2,6 @@
 
 public interface IOGraphGdmBindingParameter
 {
-    Label Label { get; }
-    GdmParameterKind Kind { get; }
+    string Name { get; }    
     IOGraphGdmTypeReference Type { get; }
 }

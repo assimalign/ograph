@@ -18,9 +18,6 @@
     <ScalarType Label="UInt64" />
     <ScalarType Label="Char" />
     <ScalarType Label="Boolean" />
-    <Operation Label="">
-
-    </Operation>
 
     <!-- 
         Binding Types/Kinds: Operation, Event, Property, Custom
@@ -60,32 +57,28 @@
             Query
      -->
 
+     <!-- 
 
-    <Graph Label="users" Uri="https://endpoint.com/api/users/$graph">
-        <!-- Use the collection of models to stich together a single cohesive 
-        Things to Consider:
-            - Method & Route Combination Conflicts
-
-         There should be two types of models
-         - Graph Relationship Model
-         - Service Model: 
+        Reserved Routes
+        /api/users/$transactions
+        /api/users/$subscriptions
 
         Exmaple Routes: (User Domain)
-        Users Node: Label - users 
+        Users Vertex: Label - users 
             - GET       /api/users
             - GET       /api/users/{userId}
             - POST      /api/users
             - PUT       /api/users/{userId}
             - DELETE    /api/users/{userId}
 
-        Users Profile Node: Label - profile [OneToOne]
+        Users Profile Vertex: Label - profile [OneToOne]
             - GET       /api/users/profiles
             - GET       /api/users/{userId}/profile
             - POST      /api/users/{userId}/profile
             - PUT       /api/users/{userId}/profile
             - DELETE    /api/users/{userId}/profile
 
-        Users Addresses: Label - addresses [OneToMany]
+        Users Addresses Vertex: Label - addresses [OneToMany]
             - GET       /api/users/addresses
             - GET       /api/users/{userId}/addresses
             - GET       /api/users/{userId}/primaryAddress [Edge]
@@ -94,21 +87,56 @@
             - PUT       /api/users/{userId}/addresses/{addressId}
             - DELETE    /api/users/{userId}/addresses/{addressId}
 
-        Users Address Types Node: Label - addresseTypes [OneToOne]
+        Users Address Types Vertex: Label - addresseTypes [OneToOne]
             - GET       /api/users/addressTypes
             - GET       /api/users/addresses/{addressId}/addressType
             - GET       /api/users/{userId}/addresses/{addressId}/addressType
             - POST      /api/users/addressTypes
             - PUT       /api/users/addressTypes/{addressTypeId}
             - DELETE    /api/users/addressTypes/{addressTypeId}
+
+
+        Reserved Routes:
+                - GET       /api/employees/$graph
+
+                Root Routes
+                - GET       /api/employees
+                - GET       /api/employees/{employeeId}
+                - GET       /api/employees/archive
+                - GET       /api/employees/archive/{employeeId}
+                - DELETE    /api/employees/archive/{employeeId} (Hard Delete)
+                - POST      /api/employees
+                - PUT       /api/employees/{employeeId}
+                - PATCH     /api/employees/{employeeId}
+                - DELETE    /api/employees/{employeeId} (Soft Delete)
+
+                - GET       /api/employees/addresses
+                - GET       /api/employees/{employeeId}/addresses
+                - GET       /api/employees/{employeeId}/addresses/{addressId}
+                - POST      /api/employees/{employeeId}/addresses
+                - PUT       /api/employees/{employeeId}/addresses/{addressId}
+                - DELETE    /api/employees/{employeeId}/addresses/{addressId}
+
+                - GET       /api/employees/{employeeId}/jobs
+                - GET       /api/employees/{employeeId}/tasks
+                - GET       /api/employees/{employeeId}/jobs/{jobId}/tasks
+                - GET       /api/employees/{employeeId}/jobs/{jobId}/tasks/{taskId}/workItems
+                - GET       /api/employees/{employeeId}/jobs/{jobId}/workItems
+                - GET       /api/employees/{employeeId}/addresses
     -->
+
+    <Graph Label="users">
         <Vertex Label="users" Type="User">
-            <!-- /api/users -->
-            <Query Label="GetUsers" IsBound="true">
+            <Query Label="getUsers" Method="GET" Route="users">
+                <Parameter Name="$query" Type="String" IsMapped="true">
+                    <Mapping Target="Query" />
+                </Parameter>
                 <ReturnType Type="UserCollection" />
             </Query>
-            <!-- /api/users/{userId} -->
-            <Query Label="GetUserById">
+            <Query Label="getUserById" Method="GET" Route="users/{userId}">
+                <Parameter Name="userId" Type="UserId" IsMapped="true">
+                    <Mapping Target="Route" />
+                </Parameter>
                 <ReturnType Type="User" />
                 <Meta>
                     <Key>Description</Key>
@@ -120,19 +148,39 @@
 
                     </Value>
                 </Meta>
+                <Meta>
+                    <Key Decorator="@http">Http</Key>
+                    <Value>
+                        <Headers>
+                            <Header />
+                        </Headers>
+                        <Query></Query>
+                    </Value>
+                </Meta>
             </Query>
-            <!-- POST       /api/users/ -->
-            <Command Label="CreateUser">
+            <Command Label="createUser">
+                <ReturnType Type="User" />
+            </Command>
+            <Command Label="updateUser">
+                <Parameter Name="userId" Type="UserId" IsMapped="true">
+                    <Mapping Target="Route" />
+                </Parameter>
+                <Parameter Name="data" Type="UserCreateOrUpdate" IsMapped="true">
+                    <Mapping Target="Body" />
+                </Parameter>
                 <ReturnType Type="User"/>
             </Command>
-            <!-- DELETE     /api/users/{userId} -->
-            <Command Label="DeleteUser">
-                <ReturnType Type="Null"/>
+            <Command Label="deleteUser">
+                <Parameter Name="UserId" Type="UserId" IsMapped="true">
+                    <Mapping Target="Route"/>
+                </Parameter>
             </Command>
+            <!-- <Event Label="userCreated">
+                <After Binding="createUser" />
+            </Event> -->
         </Vertex>
         <Vertex Label="address" Type="UserAddress">
-            <!-- GET        /api/users/addresses or /api/userAddresses -->
-            <Query Label="GetAllUserAddresses">
+            <Query Label="GetAllUserAddresses">             <!-- GET        /api/users/addresses or /api/userAddresses -->
                 <ReturnType Type="UserAddressCollection"/>
                 <Meta>
                     <Key>Description</Key>
@@ -208,6 +256,9 @@
             <Property Label="state" Type="String" />
             <Property Label="zipCode" Type="String" />
             <Property Label="postalCode" Type="String" />
+            <Property Label="fullAddress" Type="String">
+                
+            </Property>
         </EntityType>
         <CollectionType Label="UserAddressCollection">
             <Item Type="UserAddress" />
@@ -216,40 +267,7 @@
             <Property Label="emailAddress" Type="String" />
         </EntityType>
     </Graph>
-    <Graph Label="employees" Uri="https://endpoint.com/api/employees/$graph">
-        <!--
-            Endpoints: 
-
-                Reserved Routes:
-                - GET       /api/employees/$graph
-
-                Root Routes
-                - GET       /api/employees
-                - GET       /api/employees/{employeeId}
-                - GET       /api/employees/archive
-                - GET       /api/employees/archive/{employeeId}
-                - DELETE    /api/employees/archive/{employeeId} (Hard Delete)
-                - POST      /api/employees
-                - PUT       /api/employees/{employeeId}
-                - PATCH     /api/employees/{employeeId}
-                - DELETE    /api/employees/{employeeId} (Soft Delete)
-
-                - GET       /api/employees/addresses
-                - GET       /api/employees/{employeeId}/addresses
-                - GET       /api/employees/{employeeId}/addresses/{addressId}
-                - POST      /api/employees/{employeeId}/addresses
-                - PUT       /api/employees/{employeeId}/addresses/{addressId}
-                - DELETE    /api/employees/{employeeId}/addresses/{addressId}
-
-                - GET       /api/employees/{employeeId}/jobs
-                - GET       /api/employees/{employeeId}/tasks
-                - GET       /api/employees/{employeeId}/jobs/{jobId}/tasks
-                - GET       /api/employees/{employeeId}/jobs/{jobId}/tasks/{taskId}/workItems
-                - GET       /api/employees/{employeeId}/jobs/{jobId}/workItems
-                - GET       /api/employees/{employeeId}/addresses
-
-            [Command/Query] -> [Property Resolver] -> [Events] ->
-         -->
+    <Graph Label="employees">
         <Vertex Label="employees" Type="Employee">
             <!-- 
                 Scenarios:
@@ -530,6 +548,7 @@
                     <Value>The employee identifier.</Value>
                 </Meta>
             </Property>
+            <Property Label="userId" Type="users.UserId"/>
             <Property Label="info" Type="EmployeeInfo" />
         </EntityType>
         <EntityType Label="EmployeeAddress">
@@ -563,10 +582,10 @@
             <Item Type="EmployeeTask" />
         </CollectionType>
     </Graph>
-    <Graph Label="contacts" Uri="https://endpoint.com/api/contacts/$graph">
+    <Graph Label="contacts">
         <Vertex Label="contact" Type="Contact" />
         <EntityType Label="Contact">
-            <Property Label="id" Type="ContactId" isKey="true" />
+            <Property Label="id" Type="ContactId"/>
             <Property Label="info" Type="ContactInfo" />
         </EntityType>
         <ComplexType Label="ContactInfo">
@@ -574,16 +593,26 @@
         </ComplexType>
         <ScalarType Label="ContactId" />
     </Graph>
-    <Graph Label="companies" Uri="https://endpoint.com/api/companies/$graph">
-        <Vertex Label="company" Type="Company" />
-        <Vertex Label="contact" Type="Contact" />
-        <Vertex Label="address" Type="CompanyAddress" />
-        <Vertex Label="addressType" Type="CompanyAddressType" />
+    <Graph Label="companies">
+        <Vertex Label="companies" Type="Company" />
+        <Vertex Label="contacts" Type="Contact" />
+        <Vertex Label="addresses" Type="CompanyAddress" />
+        <Vertex Label="addressTypes" Type="CompanyAddressType" />
         <Edge Label="contacts" source="company" target="contact" />
         <Edge Label="addresses" source="company" target="address" />
         <Edge Label="types" source="address" target="addressType" />
         <EntityType Label="Company">
-            <Property Label="companyName" />
+            <Key Property="id"/>
+            <Property Label="id" Type="CompanyId"/>
+            <Property Label="details" Type="CompanyDetails"/>
         </EntityType>
+        <ScalarType Label="CompanyId" />
+        <ComplexType Label="CompanyDetails">
+            <Property Label="name" Type="String" />
+            
+        </ComplexType>
+    </Graph>
+    <Graph Label="notifications">
+
     </Graph>
 </gdmx>

@@ -22,7 +22,7 @@ public static class OGraphGdmTypeExtensions
     {
         if (gdmType is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(gdmType));
+            ThrowHelper.ThrowArgumentNullException(nameof(gdmType));
         }
         return new GdmListType<T>(gdmType);
     }

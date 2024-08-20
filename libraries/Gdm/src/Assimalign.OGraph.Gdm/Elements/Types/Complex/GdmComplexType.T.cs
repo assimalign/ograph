@@ -20,7 +20,7 @@ public class GdmComplexType<[DynamicallyAccessedMembers(DynamicallyAccessedMembe
     {
         if (configure is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+            ThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
         this.configure = configure;
         Configure(new GdmComplexTypeDescriptor<T>(this));

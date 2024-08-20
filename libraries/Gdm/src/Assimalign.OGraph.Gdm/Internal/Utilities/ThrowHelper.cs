@@ -5,7 +5,7 @@ namespace Assimalign.OGraph.Gdm.Internal;
 
 using Properties;
 
-internal static class GdmThrowHelper
+internal static class ThrowHelper
 {
     #region Common Exceptions
 

@@ -28,7 +28,7 @@ public static class OGraphGdmExtensions
     {
         if (element is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(element));
+            ThrowHelper.ThrowArgumentNullException(nameof(element));
         }
 
         return element.Bindings
@@ -46,7 +46,7 @@ public static class OGraphGdmExtensions
     {
         if (element is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(element));
+            ThrowHelper.ThrowArgumentNullException(nameof(element));
         }
         return element.Bindings.Any(p=>p.Label.Equals(label));
     }

@@ -21,7 +21,7 @@ public static class OGraphGdmBindingElementExtensions
 
         if (element is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(element));
+            ThrowHelper.ThrowArgumentNullException(nameof(element));
         }
         if (element.Bindings is not null)
         {

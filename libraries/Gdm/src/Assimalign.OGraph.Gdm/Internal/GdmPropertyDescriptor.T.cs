@@ -25,7 +25,7 @@ internal class GdmPropertyDescriptor<T> : IOGraphGdmPropertyDescriptor<T>
     {
         if (getter is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(getter));
+            ThrowHelper.ThrowArgumentNullException(nameof(getter));
         }
         property.Getter = getter;
         return this;
@@ -34,7 +34,7 @@ internal class GdmPropertyDescriptor<T> : IOGraphGdmPropertyDescriptor<T>
     {
         if (setter is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(setter));
+            ThrowHelper.ThrowArgumentNullException(nameof(setter));
         }
         property.Setter = setter;
         return this;
@@ -57,7 +57,7 @@ internal class GdmPropertyDescriptor<T> : IOGraphGdmPropertyDescriptor<T>
     {
         if (type is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(type));
+            ThrowHelper.ThrowArgumentNullException(nameof(type));
         }
         property.Type = new GdmTypeReference()
         {

@@ -1,8 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Globalization;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace Assimalign.OGraph;
 
@@ -21,13 +23,14 @@ using Gdm.Internal;
 /// </list>
 /// </remarks>
 [DebuggerDisplay("{Value}")]
+[TypeConverter(typeof(LabelTypeConverter))]
 public readonly struct Label : 
     IEquatable<Label>, 
     IEqualityComparer<Label>,
     IComparable<Label>
 {
     // Allowed characters for name
-    private const string pattern = "^[a-zA-Z0-9_@]+$";
+    private const string pattern = "^[a-zA-Z0-9_@-]+$";
 
     /// <summary>
     /// 
@@ -39,11 +42,11 @@ public readonly struct Label :
     {
         if (string.IsNullOrEmpty(value))
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(value));
+            ThrowHelper.ThrowArgumentNullException(nameof(value));
         }
         if (!Regex.IsMatch(value, pattern))
         {
-            GdmThrowHelper.ThrowInvalidLabel(value);
+            ThrowHelper.ThrowInvalidLabel(value);
         }
         Value = value;
     }
@@ -132,13 +135,13 @@ public readonly struct Label :
     }
 
     /// <inheritdoc />
-    public override bool Equals([NotNullWhen(true)] object? instance)
+    public override bool Equals(object? obj)
     {
-        if (instance is not Label name)
+        if (ReferenceEquals(null, obj))
         {
             return false;
         }
-        return this.Equals(name);
+        return obj is Label other && Equals(other);
     }
 
     /// <inheritdoc />
@@ -146,12 +149,6 @@ public readonly struct Label :
     {
         // TODO: Need to revisit. Not sure if I want the HashCode for the name to be the same as the instance of the string.
         return Value.GetHashCode();
-    }
-
-    /// <inheritdoc />
-    public bool Equals(Label name)
-    {
-        return Value.Equals(name.Value, StringComparison.Ordinal);
     }
 
     /// <inheritdoc />
@@ -166,10 +163,29 @@ public readonly struct Label :
         return name.GetHashCode();
     }
 
-    /// <inheritdoc />
-    public int CompareTo(Label name)
+
+    /// <inheritdoc cref="global::System.IEquatable{T}"/>
+    public bool Equals(Label other)
     {
-        return Value.CompareTo(name.Value);
+        return (Value, other.Value) switch
+        {
+            (null, null) => true,
+            (null, _) => false,
+            (_, null) => false,
+            (_, _) => Value.Equals(other.Value, StringComparison.Ordinal),
+        };
+    }
+
+    /// <inheritdoc cref="global::System.IComparable{TSelf}"/>
+    public int CompareTo(Label other)
+    {
+        return (Value, other.Value) switch
+        {
+            (null, null) => 0,
+            (null, _) => -1,
+            (_, null) => 1,
+            (_, _) => string.CompareOrdinal(Value, other.Value),
+        };
     }
 
     public static implicit operator Label(string value) => new Label(value);
@@ -189,4 +205,40 @@ public readonly struct Label :
     /// <param name="name"></param>
     /// <returns></returns>
     public static bool IsValid(string name) => Regex.IsMatch(name, pattern);
+
+    internal partial class LabelTypeConverter : TypeConverter
+    {
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
+        {
+            return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
+        }
+
+        public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
+        {
+            if (value is string stringValue)
+            {
+                return new Label(stringValue);
+            }
+
+            return base.ConvertFrom(context, culture, value);
+        }
+
+        public override bool CanConvertTo(ITypeDescriptorContext? context, Type? sourceType)
+        {
+            return sourceType == typeof(string) || base.CanConvertTo(context, sourceType);
+        }
+
+        public override object? ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, object? value, Type destinationType)
+        {
+            if (value is Label idValue)
+            {
+                if (destinationType == typeof(string))
+                {
+                    return idValue.Value;
+                }
+            }
+
+            return base.ConvertTo(context, culture, value, destinationType);
+        }
+    }
 }

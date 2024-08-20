@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<gdmx Version="1.0" xmlns="">
+	<Graph Label="users">
+		<Vertex Label="user" Type="User">
+			
+		</Vertex>
+		<Vertex Label="address" Type="UserAddress">
+			
+		</Vertex>
+		<Edge Label="addresses" Source="user" Target="address" />
+		<EntityType Label="User">
+			<Property Label="userId" Type="Guid" isKey="true" />
+			<Property Label="details" Type="UserDetails" />
+		</EntityType>
+		<ComplexType Label="UserDetails">
+			<Property Label="firstName" Type="String">
+				<Meta>
+					<Key>description</Key>
+					<Value>The first name of the user.</Value>
+				</Meta>
+			</Property>
+			<Property Label="lastName" Type="String" />
+			<Property Label="middleName" Type="String" />
+			<Property Label="fullName" Type="String" />
+			<Property Label="birthDate" Type="DateTime" />
+			<Property Label="fullName" Type="String">
+				<Resolver>
+
+				</Resolver>
+			</Property>
+		</ComplexType>
+		<ScalarType Label="UserId">
+			<Format Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
+		</ScalarType>
+	</Graph>
+	<Graph Label="employees">
+		
+	</Graph>
+	<Graph Label="companies">
+		
+	</Graph>
+	<Graph Label="contacts">
+		
+	</Graph>
+</gdmx>

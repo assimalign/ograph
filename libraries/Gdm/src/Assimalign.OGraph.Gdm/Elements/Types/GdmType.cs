@@ -48,7 +48,7 @@ public abstract class GdmType<T> : IOGraphGdmType
     {
         if (value is not T)
         {
-            GdmThrowHelper.ThrowInvalidTypeSerializationException(typeof(T), value.GetType());
+            ThrowHelper.ThrowInvalidTypeSerializationException(typeof(T), value.GetType());
         }
         return (T)value;
     }

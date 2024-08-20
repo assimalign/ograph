@@ -30,7 +30,7 @@ public sealed class OGraphGdmFactoryBuilder : IOGraphGdmFactoryBuilder
     {
         if (configure is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+            ThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
         if (actions.TryGetValue(label, out var builds))
         {

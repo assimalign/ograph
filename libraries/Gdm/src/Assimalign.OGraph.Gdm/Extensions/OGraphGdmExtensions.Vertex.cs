@@ -23,15 +23,15 @@ public static class OGraphGdmVertexExtensions
 
         if (vertex is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(vertex));
+            ThrowHelper.ThrowArgumentNullException(nameof(vertex));
         }
         if (vertex.Type is null || vertex.Type.Definition is null)
         {
-            GdmThrowHelper.ThrowVertexInvalidTypeReferenceIsNull(vertex.Label);
+            ThrowHelper.ThrowVertexInvalidTypeReferenceIsNull(vertex.Label);
         }
         if (vertex.Type.Definition is not IOGraphGdmEntityType entity)
         {
-            GdmThrowHelper.ThrowVertexInvalidTypeReferenceIsNotEntityType(vertex.Label);
+            ThrowHelper.ThrowVertexInvalidTypeReferenceIsNotEntityType(vertex.Label);
         }
         else
         {
@@ -51,15 +51,15 @@ public static class OGraphGdmVertexExtensions
     {
         if (vertex is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(vertex));
+            ThrowHelper.ThrowArgumentNullException(nameof(vertex));
         }
         if (vertex.Type is null || vertex.Type.Definition is null)
         {
-            GdmThrowHelper.ThrowVertexInvalidTypeReferenceIsNull(vertex.Label);
+            ThrowHelper.ThrowVertexInvalidTypeReferenceIsNull(vertex.Label);
         }
         if (vertex.Type.Definition is not IOGraphGdmEntityType entity)
         {
-            GdmThrowHelper.ThrowVertexInvalidTypeReferenceIsNotEntityType(vertex.Label);
+            ThrowHelper.ThrowVertexInvalidTypeReferenceIsNotEntityType(vertex.Label);
         }
         else 
         {
@@ -83,15 +83,15 @@ public static class OGraphGdmVertexExtensions
 
         if (vertex is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(vertex));
+            ThrowHelper.ThrowArgumentNullException(nameof(vertex));
         }
         else if (vertex.Type is null || vertex.Type.Definition is null)
         {
-            GdmThrowHelper.ThrowVertexInvalidTypeReferenceIsNull(vertex.Label);
+            ThrowHelper.ThrowVertexInvalidTypeReferenceIsNull(vertex.Label);
         }
         else if (vertex.Type.Definition is not IOGraphGdmEntityType entity)
         {
-            GdmThrowHelper.ThrowVertexInvalidTypeReferenceIsNotEntityType(vertex.Label);
+            ThrowHelper.ThrowVertexInvalidTypeReferenceIsNotEntityType(vertex.Label);
         }
         else
         {
@@ -113,7 +113,7 @@ public static class OGraphGdmVertexExtensions
     {
         if (type is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(type));
+            ThrowHelper.ThrowArgumentNullException(nameof(type));
         }
 
         var entityType = vertex.GetGdmEntityType();

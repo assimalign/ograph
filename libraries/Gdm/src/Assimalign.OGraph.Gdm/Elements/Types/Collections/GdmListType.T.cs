@@ -14,11 +14,11 @@ public class GdmListType<T> : GdmCollectionType<List<T>, T>
     {
         if (itemType is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(itemType));
+            ThrowHelper.ThrowArgumentNullException(nameof(itemType));
         }
         if (!itemType!.RuntimeType!.IsAssignableTo(typeof(T)))
         {
-            GdmThrowHelper.ThrowArgumentException("");
+            ThrowHelper.ThrowArgumentException("");
         }
 
         ItemType = itemType;

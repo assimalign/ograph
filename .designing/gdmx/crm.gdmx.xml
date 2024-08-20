@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<gdmx Version="1.0" xmlns="https://mycrm.com">
+	<Graph Label="Users">
+		<Vertex Label="Users" Type="User">
+			<Binding Label="GetUserById" Kind="Query">
+				<ReturnType Type="User"/>
+			</Binding>
+			<Binding Label="GetUsers" Kind="Query">
+				<ReturnType Type="UsersCollection"/>
+			</Binding>
+		</Vertex>
+		<Vertex Label="addresses" Type="UserAddress">
+			<Binding Label=""/>
+		</Vertex>
+		<Edge Label="addresses" Source="user" Target="address">
+
+		</Edge>
+		<EntityType Label="User">
+			<Property Name="UserId" Type="Guid" isKey="true" />
+			<Property Name="Details" Type="UserDetails" />
+		</EntityType>
+		<EntityType Label="UserProfile">
+
+		</EntityType>
+		<ComplexType Label="UserDetails">
+			<Property Label="firstName" Type="String">
+				<Meta>
+					<Key>description</Key>
+					<Value>The first name of the user.</Value>
+				</Meta>
+			</Property>
+			<Property Label="lastName" Type="String" />
+			<Property Label="middleName" Type="String" />
+			<Property Label="fullName" Type="String" />
+			<Property Label="birthDate" Type="DateTime" />
+			<Property Label="fullName" Type="String">
+				<Binding Label="">
+
+				</Binding>
+			</Property>
+		</ComplexType>
+		<ScalarType Label="UserId">
+			<Format Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
+		</ScalarType>
+	</Graph>
+	<Graph Label="Employees" Uri="https://domain.com/employees">
+		
+	</Graph>
+	<Graph Label="Companies" Uri="https://domain.com/companies">
+		<EntityType Label="Employee">
+			<Property Label="userId" Type="Users.UserId" />
+		</EntityType>
+	</Graph>
+	<Graph Label="Contacts" Uri="https://domain.com/contacts">
+		
+	</Graph>
+	<Graph Label="Notifications">
+		
+	</Graph>
+</gdmx>

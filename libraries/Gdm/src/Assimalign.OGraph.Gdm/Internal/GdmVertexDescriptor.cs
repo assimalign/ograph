@@ -25,7 +25,7 @@ internal class GdmVertexDescriptor : IOGraphGdmVertexDescriptor
     {
         if (type is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(type));
+            ThrowHelper.ThrowArgumentNullException(nameof(type));
         }
         vertex.type = new GdmTypeReference()
         {

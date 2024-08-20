@@ -28,11 +28,11 @@ public class GdmComplexType : IOGraphGdmComplexType
     {
         if (configure is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+            ThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
         if (type is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(type));
+            ThrowHelper.ThrowArgumentNullException(nameof(type));
         }
         this.configure = configure;
         this.runtimeType = type;

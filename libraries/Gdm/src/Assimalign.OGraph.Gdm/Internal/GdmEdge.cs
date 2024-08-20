@@ -22,7 +22,7 @@ internal class GdmEdge : IOGraphGdmEdge
     {
         if (binding is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
+            ThrowHelper.ThrowArgumentNullException(nameof(binding));
         }
         bindings.Add(binding);
     }
@@ -30,7 +30,7 @@ internal class GdmEdge : IOGraphGdmEdge
     {
         if (binding is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
+            ThrowHelper.ThrowArgumentNullException(nameof(binding));
         }
         if (!bindings.Remove(binding))
         {

@@ -116,3 +116,83 @@ https://endpoint.com/api/employees?query=
                             description
                         }
                     )
+
+
+
+v(providers)
+    .project(
+        id 
+        npi 
+        avatar 
+        bio 
+        credential 
+        dateOfBirth 
+        firstName 
+        title 
+        gender 
+        graduationYear 
+        isActive 
+        lastName
+        medicalSchoolName 
+        middleInitial 
+        practiceFocus 
+        professionalAffiliation 
+        suffix 
+        telehealth
+    )
+    .edge(providers:/languages)
+        .page(skip 0 take 25)
+        .project(
+            proficiency 
+            language { 
+                languageId 
+                languageDisplay 
+            }
+        )
+    .edge(providers:/communications)
+        .project(
+            systemId 
+            useId 
+            value
+        )
+    .edge(providers:/extensions)
+        .project(
+            lookupId 
+            lookup { 
+                label 
+            } 
+            value 
+            code
+        )
+    .edge(providers:/assignments)
+        .page(skip 0 take 25)
+        .project(
+            assignmentId 
+            locationId 
+            organizationId 
+            providerId
+        )
+        .edge(assignments:/location)
+            .project(
+                description 
+                id 
+                locationModeId
+                locationStatusId 
+                locationTypeId 
+                name 
+                organizationId 
+                phone 
+                transportation 
+                url 
+                address { 
+                   addressOne 
+                   addressTwo 
+                   city
+                   postalCode 
+                   stateProvince
+                }
+            )
+        .edge(assignments:/organization)
+            .project(
+                name
+            )

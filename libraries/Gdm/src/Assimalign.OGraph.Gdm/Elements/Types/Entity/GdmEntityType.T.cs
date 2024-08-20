@@ -23,7 +23,7 @@ public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMember
     {
         if (configure is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+            ThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
         this.configure = configure;
         Configure(new GdmEntityTypeDescriptor<T>(this));

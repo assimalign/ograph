@@ -63,11 +63,11 @@ public static class OGraphGdmBuilderExtensions
     {
         if (builder is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(builder));
+            ThrowHelper.ThrowArgumentNullException(nameof(builder));
         }
         if (configure is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+            ThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
         Action<IOGraphGdmVertexDescriptor<T>> action = vertex =>
         {
@@ -89,11 +89,11 @@ public static class OGraphGdmBuilderExtensions
     {
         if (builder is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(builder));
+            ThrowHelper.ThrowArgumentNullException(nameof(builder));
         }
         if (configure is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+            ThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
         return builder.AddVertex(GdmVertex<T>.Create(configure));
     }
@@ -109,11 +109,11 @@ public static class OGraphGdmBuilderExtensions
     {
         if (builder is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(builder));
+            ThrowHelper.ThrowArgumentNullException(nameof(builder));
         }
         if (configure is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+            ThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
         return builder.AddType(GdmComplexType<T>.Create(configure));
     }
@@ -129,11 +129,11 @@ public static class OGraphGdmBuilderExtensions
     {
         if (builder is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(builder));
+            ThrowHelper.ThrowArgumentNullException(nameof(builder));
         }
         if (configure is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+            ThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
         return builder.AddType(GdmEntityType<T>.Create(configure));
     }

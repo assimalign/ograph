@@ -22,11 +22,11 @@ public static class OGraphGdmVertexDescriptorExtensions
     {
         if (descriptor is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(descriptor));
+            ThrowHelper.ThrowArgumentNullException(nameof(descriptor));
         }
         if (configure is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+            ThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
         return descriptor.HasType(
             GdmEntityType<T>.Create(
@@ -45,11 +45,11 @@ public static class OGraphGdmVertexDescriptorExtensions
     {
         if (descriptor is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(descriptor));
+            ThrowHelper.ThrowArgumentNullException(nameof(descriptor));
         }
         if (configure is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+            ThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
         return descriptor.HasType(
             GdmEntityType<T>.Create(

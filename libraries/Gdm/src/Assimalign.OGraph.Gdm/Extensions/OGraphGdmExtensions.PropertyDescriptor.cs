@@ -22,11 +22,11 @@ public static class OGraphGdmPropertyDescriptorExtensions
     {
         if (descriptor is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(descriptor));
+            ThrowHelper.ThrowArgumentNullException(nameof(descriptor));
         }
         if (configure is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+            ThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
         return descriptor.UseType(
             GdmComplexType<T>.Create(
@@ -47,11 +47,11 @@ public static class OGraphGdmPropertyDescriptorExtensions
     {
         if (descriptor is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(descriptor));
+            ThrowHelper.ThrowArgumentNullException(nameof(descriptor));
         }
         if (configure is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+            ThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
         return descriptor.UseType(
             new GdmListType<T>(
@@ -75,11 +75,11 @@ public static class OGraphGdmPropertyDescriptorExtensions
     {
         if (descriptor is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(descriptor));
+            ThrowHelper.ThrowArgumentNullException(nameof(descriptor));
         }
         if (configure is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+            ThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
         return descriptor.UseType(
             new GdmListType<T>(
@@ -104,11 +104,11 @@ public static class OGraphGdmPropertyDescriptorExtensions
     {
         if (descriptor is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(descriptor));
+            ThrowHelper.ThrowArgumentNullException(nameof(descriptor));
         }
         if (configure is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+            ThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
         return descriptor.UseType(
             new GdmArrayType<T>(

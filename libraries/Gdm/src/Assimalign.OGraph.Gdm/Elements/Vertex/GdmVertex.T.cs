@@ -21,7 +21,7 @@ public class GdmVertex<T> : IOGraphGdmVertex
     {
         if (configure is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(configure));
+            ThrowHelper.ThrowArgumentNullException(nameof(configure));
         }
         this.configure = configure;
         this.Configure(new GdmVertexDescriptor<T>(this));
@@ -48,11 +48,11 @@ public class GdmVertex<T> : IOGraphGdmVertex
     {
         if (binding is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
+            ThrowHelper.ThrowArgumentNullException(nameof(binding));
         }
         if (this.HasBinding(binding.Label))
         {
-            GdmThrowHelper.ThrowInvalidOperationException($"The element already contains a binding with the label: {binding.Label}");
+            ThrowHelper.ThrowInvalidOperationException($"The element already contains a binding with the label: {binding.Label}");
         }
         bindings.Add(binding);
     }
@@ -60,7 +60,7 @@ public class GdmVertex<T> : IOGraphGdmVertex
     {
         if (binding is null)
         {
-            GdmThrowHelper.ThrowArgumentNullException(nameof(binding));
+            ThrowHelper.ThrowArgumentNullException(nameof(binding));
         }
         if (!bindings.Remove(binding))
         {

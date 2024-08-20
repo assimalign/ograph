@@ -21,7 +21,7 @@ internal class GdmFactory : IOGraphGdmFactory
 
         if (model is null)
         {
-            GdmThrowHelper.ThrowArgumentException("");
+            ThrowHelper.ThrowArgumentException("");
         }
 
         return model!;
