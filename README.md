@@ -90,3 +90,19 @@ There are three types of resolvers
 - Operation Resolver
 - Property Resolver(s)
 - Edge Resolver(s)
+
+
+
+
+# Project Dependencies
+```
+├── Assimalign.OGraph.csproj
+│   ├── Assimalign.OGraph.Server.csproj
+│   │   └── Assimalign.OGraph.Core.csproj
+│   │       ├── Assimalign.OGraph.Gdm.csproj
+|   │       └── Assimalign.OGraph.Syntax.csproj
+│   └── Assimalign.OGraph.Server.csproj
+│       └── Assimalign.OGraph.Core.csproj
+│           ├── Assimalign.OGraph.Gdm.csproj
+│           └── Assimalign.OGraph.Syntax.csproj
+```

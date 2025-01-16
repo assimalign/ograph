@@ -1,0 +1,10 @@
+<Project>
+	<PropertyGroup>
+		<Authors>Chase Crawford</Authors>
+		<RepositoryType>git</RepositoryType>
+		<Company>Assimalign</Company>
+		<Copyright>© Assimalign $([System.DateTime]::Now.ToString(`yyyy`))</Copyright>
+		<LangVersion>Latest</LangVersion>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+</Project>

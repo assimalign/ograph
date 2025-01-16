@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Exceptions
+namespace Assimalign.OGraph;
+
+public enum OGraphErrorCode
 {
-    internal class OGraphErrorCode
-    {
-    }
 }

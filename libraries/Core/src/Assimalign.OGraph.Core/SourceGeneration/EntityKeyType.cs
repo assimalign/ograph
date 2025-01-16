@@ -4,6 +4,8 @@ public enum EntityKeyType
 {
     String,
     Int,
+    Short,
     Long,
-    Guid
+    Guid,
+    GuidV7
 }

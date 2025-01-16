@@ -9,7 +9,7 @@ using Assimalign.OGraph.Syntax;
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphPropertyBindingContext : IOGraphGdmBindingContext
+public interface IOGraphPropertyBindingContext //: IOGraphGdmBindingContext
 {
     /// <summary>
     /// 
