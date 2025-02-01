@@ -7,4 +7,24 @@
 		<LangVersion>Latest</LangVersion>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
+	<!-- Fixed Version Info -->
+	<PropertyGroup>
+		<MajorVersion>1</MajorVersion>
+		<MinorVersion>0</MinorVersion>
+		<PatchVersion>0</PatchVersion>
+	</PropertyGroup>
+	<!-- Target Frameworks -->
+	<PropertyGroup>
+		<TargetFrameworkLatest>net9.0</TargetFrameworkLatest>
+		<TargetFrameworkForLibraries>net6.0;net8.0;$(TargetFrameworkLatest)</TargetFrameworkForLibraries>
+		<TargetFrameworkForBenchmark>$(TargetFrameworkLatest)</TargetFrameworkForBenchmark>
+		<TargetFrameworkForCli>$(TargetFrameworkLatest)</TargetFrameworkForCli>
+		<TargetFrameworkForVisualizer>$(TargetFrameworkLatest)</TargetFrameworkForVisualizer>
+		<TargetFrameworkForSdk>$(TargetFrameworkLatest)</TargetFrameworkForSdk>
+	</PropertyGroup>
+	<!-- Cohesion Build Properties -->
+	<PropertyGroup>
+		<OGraphVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)</OGraphVersion>
+		<OGraphRepositoryDirectory>$(MSBuildThisFileDirectory)</OGraphRepositoryDirectory>
+	</PropertyGroup>
 </Project>

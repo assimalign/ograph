@@ -13,8 +13,19 @@ public sealed class EntityKeyAttribute : Attribute
     {
         KeyType = keyType;
     }
+
+    public EntityKeyAttribute(EntityKeyType keyType, bool al )
+    {
+        
+    }
+
     /// <summary>
     /// 
     /// </summary>
     public EntityKeyType KeyType { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public bool AllowImplicitOperators { get; set; }
 }

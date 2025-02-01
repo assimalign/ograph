@@ -96,7 +96,7 @@ There are three types of resolvers
 
 # Project Dependencies
 ```
-├── Assimalign.OGraph.csproj
+├── Assimalign.OGraph.Sdk.csproj
 │   ├── Assimalign.OGraph.Server.csproj
 │   │   └── Assimalign.OGraph.Core.csproj
 │   │       ├── Assimalign.OGraph.Gdm.csproj

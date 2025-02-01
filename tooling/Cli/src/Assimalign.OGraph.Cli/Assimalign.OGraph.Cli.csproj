@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<PackAsTool>true</PackAsTool>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Sharprompt" />
+	</ItemGroup>
+</Project>

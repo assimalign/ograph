@@ -6,6 +6,9 @@ public enum EntityKeyType
     Int,
     Short,
     Long,
+    UInt,
+    UShort,
+    ULong,
     Guid,
     GuidV7
 }

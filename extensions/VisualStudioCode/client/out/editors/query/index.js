@@ -1,0 +1,218 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OGraphQueryEditorProvider = void 0;
+const vscode = require("vscode");
+const utils_1 = require("../../utils");
+class OGraphQueryEditorProvider {
+    static register(context) {
+        const provider = new OGraphQueryEditorProvider(context);
+        const providerRegistration = vscode.window.registerCustomEditorProvider(OGraphQueryEditorProvider.viewType, provider);
+        return providerRegistration;
+    }
+    constructor(context) {
+        this.context = context;
+        //#endregion
+        //#region Constructor
+        this.content = '';
+    }
+    //#endregion
+    resolveCustomTextEditor(document, panel, token) {
+        let isUpdateFromWebview = false;
+        let isBuffer = false;
+        this.content = document.getText();
+        // Setup initial content for the webview
+        panel.webview.options = {
+            enableScripts: true,
+            localResourceRoots: [
+                vscode.Uri.joinPath(this.context.extensionUri, 'resources'),
+                vscode.Uri.joinPath(this.context.extensionUri, 'client', 'out'),
+            ]
+        };
+        panel.webview.html = this.getHtmlForWebview(panel.webview, this.context.extensionUri, this.content);
+        const updateWebview = (msgType) => {
+            if (panel.visible) {
+                panel.webview.postMessage({
+                    type: msgType,
+                    text: this.content,
+                })
+                    .then((success) => {
+                    if (success) {
+                        // ...
+                    }
+                }, (reason) => {
+                    // If the editor is closed and the changes are not being saved the text editor does an undo,
+                    // which will trigger this function and try to send a message to the destroyed webview.
+                    if (!document.isClosed) {
+                        console.error('Json Editor', reason);
+                    }
+                });
+            }
+        };
+        // Receive message from the webview
+        panel.webview.onDidReceiveMessage(e => {
+            switch (e.type) {
+                case OGraphQueryEditorProvider.viewType + '.updateFromWebview': {
+                    isUpdateFromWebview = true;
+                    this.writeChangesToDocument(document, e.content);
+                    break;
+                }
+            }
+        });
+        /**
+         * When changes are made inside the webview a message to the extension will be sent with the new data.
+         * This will also change the model (= document). If the model is changed the onDidChangeTextDocument event
+         * will trigger and the SAME data would be sent back to the webview.
+         * To prevent this we check from where the changes came from (webview or somewhere else).
+         * If the changes are made inside the webview (this.isUpdateFromWebview === true) then we will send NO data
+         * to the webview. For example if the changes are made inside a separate editor then the data will be sent to
+         * the webview to synchronize it with the current content of the model.
+         */
+        const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument(e => {
+            if (e.document.uri.toString() === document.uri.toString() && e.contentChanges.length !== 0) {
+                this.content = e.document.getText();
+                // If the webview is in the background then no messages can be sent to it.
+                // So we have to remember that we need to update its content the next time the webview regain its focus.
+                if (!panel.visible) {
+                    isBuffer = true;
+                    return;
+                }
+                // Update the webviews content.
+                switch (e.reason) {
+                    case 1: { // Undo
+                        updateWebview(OGraphQueryEditorProvider.viewType + '.undo');
+                        break;
+                    }
+                    case 2: { // Redo
+                        updateWebview(OGraphQueryEditorProvider.viewType + '.redo');
+                        break;
+                    }
+                    case undefined: {
+                        // If the initial update came from the webview then we don't need to update the webview.
+                        if (!isUpdateFromWebview) {
+                            updateWebview(OGraphQueryEditorProvider.viewType + '.updateFromExtension');
+                        }
+                        isUpdateFromWebview = false;
+                        break;
+                    }
+                }
+            }
+        });
+        // Called when the view state changes (e.g. user switch the tab)
+        panel.onDidChangeViewState(() => {
+            switch (true) {
+                case panel.active: {
+                    this.content = document.getText();
+                    /* falls through */
+                }
+                case panel.visible: {
+                    // If changes has been made while the webview was not visible no messages could have been sent to the
+                    // webview. So we have to update the webview if it gets its focus back.
+                    if (isBuffer) {
+                        updateWebview(OGraphQueryEditorProvider.viewType + '.updateFromExtension');
+                        isBuffer = false;
+                    }
+                }
+            }
+        });
+        // Cleanup after editor was closed.
+        panel.onDidDispose(() => {
+            changeDocumentSubscription.dispose();
+        });
+    }
+    getHtmlForWebview(webview, extensionUri, initialContent) {
+        const vueAppUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'client', 'out', 'views', 'editor.mjs'));
+        const styleResetUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'resources', 'css', 'reset.css'));
+        const styleAppUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'client', 'out', 'views', 'editor.css'));
+        const nonce = (0, utils_1.getNonce)();
+        return `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="utf-8" />
+
+                <meta http-equiv="Content-Security-Policy" content="default-src 'none';
+                    style-src ${webview.cspSource};
+                    img-src ${webview.cspSource};
+                    script-src 'nonce-${nonce}';">
+
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                <link href="${styleResetUri}" rel="stylesheet" />
+                <link href="${styleAppUri}" rel="stylesheet" />
+
+                <title>Json Editor</title>
+            </head>
+            <body>
+                <div id="app"></div>
+                <script nonce="${nonce}">
+                    // Store the VsCodeAPI in a global variable
+                    const vscode = acquireVsCodeApi();
+                    // Set the initial state of the webview
+                    vscode.setState({
+                        viewType: '${OGraphQueryEditorProvider.viewType}',
+                        text: '${JSON.stringify(initialContent)}'
+                    });
+                </script>
+                <script type="text/javascript" src="${vueAppUri}" nonce="${nonce}"></script>
+            </body>
+            </html>
+        `;
+    }
+    writeChangesToDocument(document, content) {
+        const edit = new vscode.WorkspaceEdit();
+        const text = content;
+        edit.replace(document.uri, new vscode.Range(0, 0, document.lineCount, 0), text);
+        return vscode.workspace.applyEdit(edit)
+            .then((success) => {
+            if (success) {
+                this.content = content;
+            }
+            return success;
+        });
+    }
+    render(document, panel) {
+        const uri = this.context.extensionUri;
+        const vue = panel.webview.asWebviewUri(vscode.Uri.joinPath(uri, 'client', 'out', 'views', 'editor.mjs'));
+        const styleResetUri = panel.webview.asWebviewUri(vscode.Uri.joinPath(uri, 'resources', 'css', 'reset.css'));
+        const styleAppUri = panel.webview.asWebviewUri(vscode.Uri.joinPath(uri, 'client', 'out', 'views', 'editor.css'));
+        const nonce = (0, utils_1.getNonce)();
+        const html = `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="utf-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta http-equiv="Content-Security-Policy" content="default-src 'none';
+                    style-src ${panel.webview.cspSource};
+                    img-src ${panel.webview.cspSource};
+                    script-src 'nonce-${nonce}';">
+                <link href="${styleResetUri}" rel="stylesheet" />
+                <link href="${styleAppUri}" rel="stylesheet" />
+                <title>OGraph Editor</title>
+            </head>
+            <body>
+                <div id="app"></div>
+                <script nonce="${nonce}">
+                    // Store the VsCodeAPI in a global variable
+                    const vscode = acquireVsCodeApi();
+                    // Set the initial state of the webview
+                    vscode.setState({
+                        viewType: '${OGraphQueryEditorProvider.viewType}',
+                        text: '${document.lineAt(0).text}'
+                    });
+                </script>
+                <script type="text/javascript" src="${vue}" nonce="${nonce}"></script>
+            </body>
+            </html>
+        `;
+        panel.webview.html = html;
+    }
+    update(document, content) {
+        const edit = new vscode.WorkspaceEdit();
+        edit.replace(document.uri, new vscode.Range(0, 0, document.lineCount, 0), JSON.stringify(content, null, 2));
+        return vscode.workspace.applyEdit(edit);
+    }
+}
+exports.OGraphQueryEditorProvider = OGraphQueryEditorProvider;
+//#region Static Members
+OGraphQueryEditorProvider.viewType = 'ograph.editor';

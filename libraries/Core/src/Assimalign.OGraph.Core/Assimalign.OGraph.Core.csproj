@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<RootNamespace>Assimalign.OGraph</RootNamespace>
+		<TargetFrameworks>$(TargetFrameworkForLibraries)</TargetFrameworks>
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\Gdm\src\Assimalign.OGraph.Gdm\Assimalign.OGraph.Gdm.csproj" />

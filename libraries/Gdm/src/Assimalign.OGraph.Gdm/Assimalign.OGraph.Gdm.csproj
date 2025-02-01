@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<TargetFrameworks>$(TargetFrameworkForLibraries)</TargetFrameworks>
 	</PropertyGroup>
 	<ItemGroup>
 		<Compile Update="Properties\Resources.Designer.cs">

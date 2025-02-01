@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<RootNamespace> Assimalign.OGraph.Gdm</RootNamespace>
+		<RootNamespace>Assimalign.OGraph.Gdm</RootNamespace>
+		<TargetFrameworks>$(TargetFrameworkForLibraries)</TargetFrameworks>
 		<Description></Description>
 	</PropertyGroup>
 	<ItemGroup>

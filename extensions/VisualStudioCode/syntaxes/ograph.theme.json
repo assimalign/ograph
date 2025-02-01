@@ -1,0 +1,60 @@
+{
+    "name": "My Theme",
+    "colors": {},
+    "tokenColors": [
+        {
+            "scope": "keyword.roots.ograph",
+            "settings": {
+                "foreground": "#7DD137"
+            }
+        },
+        {
+            "scope": "keyword.nested.ograph",
+            "settings": {
+                "foreground": "#CD01B8"
+            }
+        },
+        {
+            "scope": "operator.pointer.ograph",
+            "settings": {
+                "foreground": "#3799D1"
+            }
+        },
+        {
+            "scope":"identifier.edgePath.ograph",
+            "settings":{
+                "foreground":"#0EA9B7"
+            }
+        },
+        {
+            "scope": "operators.conditional.ograph",
+            "settings":{
+                "foreground":"#C82DD3"
+            }
+        },
+        {
+            "scope": "operators.logical.ograph",
+            "settings":{
+                "foreground":"#693DD7"
+            }
+        },
+        {
+            "scope": "functions.main.ograph",
+            "settings":{
+                "foreground":"#DCDCAA"
+            }
+        },
+        {
+            "scope": "comment.line.ograph",
+            "settings": {
+                "foreground": "#329344"
+            }
+        },
+        {
+            "scope": "string.quoted.single.ograph",
+            "settings": {
+                "foreground": "#D69D85"
+            }
+        }
+    ]
+}

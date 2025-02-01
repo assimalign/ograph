@@ -1,5 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>$(TargetFrameworkForLibraries)</TargetFrameworks>
+	</PropertyGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\Core\src\Assimalign.OGraph.Core\Assimalign.OGraph.Core.csproj" />
+		<ProjectReference Include="..\..\..\Core\src\Assimalign.OGraph.Core\Assimalign.OGraph.Core.csproj" />
 	</ItemGroup>
 </Project>

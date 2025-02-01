@@ -1,0 +1,18 @@
+{
+	"name": "ograph-lsp-server",
+	"description": "Example implementation of a language server in node.",
+	"version": "1.0.0",
+	"author": "Microsoft Corporation",
+	"license": "MIT",
+	"engines": {
+		"node": "*"
+	},
+	"dependencies": {
+		"vscode-languageserver": "^9.0.1",
+		"vscode-languageserver-textdocument": "^1.0.2"
+	},
+	"devDependencies": {
+		"@types/node": "^22.13.0"
+	},
+	"scripts": {}
+}

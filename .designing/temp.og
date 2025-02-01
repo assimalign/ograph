@@ -1,0 +1,198 @@
+# Endpoint query: represents a vertex
+# This endpoint can be represented as 
+#    - /api/employees
+#    - /api/vertex('employees')
+# This endpoint represents the starting vertex or vertices
+https://endpoint.com/api/employees?query=
+    v(employees)
+        .project(
+            id
+            employeeId
+            employeeType
+            # Object
+            employeeInfo: info {
+                firstName
+                lastName
+                middleName
+            }
+            # Array of Objects
+            roles {
+                name
+                type
+            }
+            # Array of Strings
+            statuses
+            updated {
+                timestamp
+                userId
+            }
+            created {
+                timestamp
+                userId
+            }
+        )
+        .filter(
+            # Array Functions
+            any(roles, (
+                startswith(name, 'c')
+            )) eq false and
+            all(roles, {
+                type eq 1
+            }) and 
+            contains(statuses, '') and (
+                length(roles) gt 5 or 
+                length(roles) < 5
+            ) and 
+
+            # String Functions
+            length(emplyeeInfo.firstName) > 5 and
+            startswith(employeeInfo.firstName, 'c') and (
+                endswith(employeeInfo.lastName, 'e') or
+                endswith(employeeInfo.lastName, 'd')
+            ) and employeeType eq 1
+        )
+        .sort(
+            employeeInfo.firstName
+            employeeInfo.lastName desc
+        )
+        .page(
+            skip 20
+            take 20
+        )
+        .edge(employees-[/departments]->employeeDepartments)
+            .project(
+                id
+                departmentId
+                info: departmentInfo {
+                    name
+                }
+            )
+        .edge(employees-[/addresses]->employeeAddresses)
+            .project(
+                id
+                addressId
+                addressType
+                addressInfo {
+                    streetOne
+                    streetTwo
+                    streetThree
+                    streetFour
+                    city
+                    state
+                    zipCode
+                }
+                created {
+                    timestamp
+                    userId
+                }
+                updated {
+                    timestamp
+                    userId
+                }
+            )
+            .edge(employeeAddresses-[/types]->employeeAddressTypes)
+        .edge(employees-[/primaryAddresses]->employeeAddresses)
+        .edge(addresses: secondaryAddress, '01e2641c-81ce-4df5-81b3-d19ef18d30f5')
+        .edge(employees-[/jobs]->employeeJobs)
+            .project(
+                id
+                jobId
+                name
+            )
+            .page(
+                skip 0
+                take 20
+            )
+            .edge(tasks)
+                .project(
+                    taskId
+                )
+                .edge(employeeTask-[/workItems]->employeeTaskWorkItem)
+                    .project(
+                        id
+                        workItemId
+                        info {
+                            displayName
+                            description
+                        }
+                    )
+
+
+
+v(providers)
+    .project(
+        id 
+        npi 
+        avatar 
+        bio 
+        credential 
+        dateOfBirth 
+        firstName 
+        title 
+        gender 
+        graduationYear 
+        isActive 
+        lastName
+        medicalSchoolName 
+        middleInitial 
+        practiceFocus 
+        professionalAffiliation 
+        suffix 
+        telehealth
+    )
+    .edge(providers:/languages)
+        .page(skip 0 take 25)
+        .project(
+            proficiency 
+            language { 
+                languageId 
+                languageDisplay 
+            }
+        )
+    .edge(providers:/communications)
+        .project(
+            systemId 
+            useId 
+            value
+        )
+    .edge(providers:/extensions)
+        .project(
+            lookupId 
+            lookup { 
+                label 
+            } 
+            value 
+            code
+        )
+    .edge(providers:/assignments)
+        .page(skip 0 take 25)
+        .project(
+            assignmentId 
+            locationId 
+            organizationId 
+            providerId
+        )
+        .edge(assignments:/location)
+            .project(
+                description 
+                id 
+                locationModeId
+                locationStatusId 
+                locationTypeId 
+                name 
+                organizationId 
+                phone 
+                transportation 
+                url 
+                address { 
+                   addressOne 
+                   addressTwo 
+                   city
+                   postalCode 
+                   stateProvince
+                }
+            )
+        .edge(assignments:/organization)
+            .project(
+                name
+            )

@@ -1,0 +1,100 @@
+{
+  "name": "ograph",
+  "displayName": "OGraph",
+  "description": "OGraph query language",
+  "version": "0.0.1",
+  "main": "./client/out/extension",
+  "engines": {
+    "vscode": "^1.86.0"
+  },
+  "scripts": {
+    "deploy": "vsce publish --yarn",
+    "vscode:prepublish": "npm run compile",
+    "compile": "cd ./editor && vite build && cd .. && tsc -b",
+    "build": "tsc",
+    "watch": "tsc -b -w",
+    "debug": "bpm run compile && npm run watch",
+    "postinstall": "cd client && npm install && cd ../server && npm install && cd ../editor && npm install && cd .."
+  },
+  "activationEvents": [
+    "onLanguage:ograph"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "ograph",
+        "aliases": [
+          "OGraph",
+          "ograph"
+        ],
+        "extensions": [
+          ".ograph",
+          ".og"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "ograph",
+        "scopeName": "source.ograph",
+        "path": "./syntaxes/ograph.tmLanguage.json"
+      }
+    ],
+    "themes": [
+      {
+        "label": "OGraph Dark Theme",
+        "uiTheme": "vs-dark",
+        "path": "./syntaxes/ograph.theme.json"
+      }
+    ],
+    "customEditors": [
+      {
+        "viewType": "ograph.editor",
+        "displayName": "OGraph Query",
+        "selector": [
+          {
+            "filenamePattern": "*.ograph"
+          },
+          {
+            "filenamePattern": "*.og"
+          }
+        ]
+      }
+    ]
+  },
+  "configuration": {
+    "type": "object",
+    "properties": {
+      "ographLanguageServer.maxNumberOfProblems": {
+        "scope": "resource",
+        "type": "number",
+        "default": 100,
+        "description": "Controls the maximum number of problems produced by the server."
+      },
+      "ographLanguageServer.trace.server": {
+        "scope": "window",
+        "type": "string",
+        "enum": [
+          "off",
+          "messages",
+          "verbose"
+        ],
+        "default": "off",
+        "description": "Traces the communication between VS Code and the language server."
+      }
+    }
+  },
+  "dependencies": {
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "@types/vscode": "^1.96.0",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "tsup": "^8.3.6",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.11",
+    "vscode": "^1.1.37"
+  }
+}

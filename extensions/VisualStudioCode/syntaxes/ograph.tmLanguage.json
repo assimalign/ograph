@@ -1,0 +1,100 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "OGraph",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#literals"
+		},
+		{
+			"include": "#operators"
+		},
+		{
+			"include": "#functions"
+		},
+		{
+			"include": "#identifiers"
+		},
+		{
+			"include": "#comments"
+		},
+		{
+			"name": "storage.type.other.url.odata",
+			"match": "\\bhttps?://[^ ?]*"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [
+				{
+					"name": "keyword.roots.ograph",
+					"match": "\\b(v|edge)\\b"
+				},
+				{
+					"name": "keyword.nested.ograph",
+					"match": "\\b(project|page|sort|filter)\\b"
+				}
+			]
+		},
+		"literals": {
+			"patterns": [
+				{
+					"name": "string.quoted.single.ograph",
+					"begin": "'",
+					"end": "'",
+					"patterns": [
+						{
+							"name": "constant.character.escape.ograph",
+							"match": "\\\\."
+						}
+					]
+				}
+			]
+		},
+		"identifiers": {
+			"patterns": [
+				{
+					"begin": "[",
+					"end": "]",
+					"name": "identifier.edgePath.ograph",
+					"match": "\/([a-zA-Z0-9]+)"
+				}
+			]
+		},
+		"functions": {
+			"patterns": [
+				{
+					"name": "functions.main.ograph",
+					"match": "\\b(startswith|endswith|sum|min|max|average|countdistinct|concat|contains|endswith|indexof|length|startswith|substring|tolower|toupper|trim|date|day|fractionalseconds|hour|maxdatetime|mindatetime|minute|month|now|second|time|totaloffsetminutes|totalseconds|year|ceiling|floor|round|cast|isof|geo\\.distance|geo\\.intersects|geo\\.length|any|all)\\b"
+				}
+			]
+		},
+		"operators": {
+			"patterns": [
+				{
+					"name": "operator.pointer.ograph",
+					"match": "\\->"
+				},
+				{
+					"name": "operators.logical.ograph",
+					"match": "\\b(and|or)\\b"
+				},
+				{
+					"name": "operators.conditional.ograph",
+					"match": "\\b(eq|ne|gt|gte|lt|lte)\\b"
+				}
+			]
+		},
+		"comments": {
+			"patterns": [
+				{
+					"name": "comment.line.ograph",
+					"match": "#.*"
+				}
+			]
+		}
+	},
+	"scopeName": "source.ograph"
+}
