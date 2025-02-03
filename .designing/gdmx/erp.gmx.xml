@@ -1,91 +1,108 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<gdmx Version="1.0" xmlns="https://mycrm.com">
+<?xml version="1.0" encoding="utf-8"?>
+<gdmx Version="1.0" xmlns="https://mycrm.com" Label="erp">
+    <Graph Label="Core">
+        <ComplexType Label="AuditEntry">
+            <Property Label="userId" Type="Users.UserId" IsReadOnly="true" IsNullable="false" />
+            <Property Label="timestamp" Type="DateTimeOffset" IsReadOnly="true" IsNullable="false" />
+            <Function Label="user">
+
+            </Function>
+        </ComplexType>
+    </Graph>
     <Graph Label="Users">
-        <Vertex Label="users" Type="User">
-            <Query Label="GetUsers">
-                <ReturnType Type="UserCollection"/>
-            </Query>
-            <Query Label="GetUserById">
-                <Parameter Label="userId" Type="UserId"/>
-                <ReturnType Type="UserCollection"/>
-            </Query>
-            <Command Label="CreateUser">
-                <Parameter Label="user" Type="UserCreateOrUpdate"/>
-                <ReturnType Type="User"/>
-            </Command> 
-            <Command Label="UpdateUser">
-                <Parameter Label="userId" Type="UserId"/>
-                <Parameter Label="user" Type="UserCreateOrUpdate"/>
-                <ReturnType Type="User"/>
-            </Command> 
-            <Command Label="DeleteUser">
-                <Parameter Label="userId" Type="UserId"/>
-                <ReturnType Type="User"/>
-            </Command> 
+        <Vertex Label="Users" Type="User">
+            <Operation Label="search" Kind="Query" IsBound="true">
+                <ReturnType Type="UserCollection" />
+            </Operation>
+            <Operation Label="lookup" Kind="Query">
+                <Parameter Label="userId" Type="UserId" />
+                <ReturnType Type="UserCollection" />
+            </Operation>
+            <Operation Label="create" Kind="Command">
+                <Parameter Label="user" Type="UserCreateOrUpdate" />
+                <ReturnType Type="User" />
+            </Operation>
+            <Operation Label="update" Kind="Command">
+                <Parameter Label="userId" Type="UserId" />
+                <Parameter Label="user" Type="UserCreateOrUpdate" />
+                <ReturnType Type="User" />
+            </Operation>
+            <Operation Label="delete" Kind="Command">
+                <Parameter Label="userId" Type="UserId" />
+                <ReturnType Type="User" />
+            </Operation>
+            <Event Label="onDelete">
+                <Binding On="DeleteUser" />
+            </Event>
         </Vertex>
         <EntityType Label="User">
-            <Key Property="id"/>
-			<Property Name="id" Type="UserId" IsReadOnly="false" IsComputed="false" IsNullable="false" />
-			<Property Name="info" Type="UserDetails" IsReadOnly="false" IsComputed="false" IsNullable="false" />
-            <Property Name="createdBy" Type="AuditEntry" IsReadOnly="false" IsComputed="false" IsNullable="false" />
-            <Property Name="updatedBy" Type="AuditEntry" IsReadOnly="false" IsComputed="false" IsNullable="true" />
-		</EntityType>
+            <Key Property="id" />
+            <Property Label="id" Type="UserId" IsReadOnly="false" IsNullable="false" />
+            <Property Label="info" Type="UserDetails" IsReadOnly="false" IsNullable="false" />
+            <Property Label="createdBy" Type="AuditEntry" IsReadOnly="false" IsNullable="false" />
+            <Property Label="updatedBy" Type="Core.AuditEntry" IsReadOnly="false" IsNullable="true" />
+        </EntityType>
         <CollectionType Label="UserCollection">
-            <Item Type="User"/>
+            <Item Type="User" />
         </CollectionType>
         <ComplexType Label="UserCreateOrUpdate">
-            <Property Label="firstName" Type="String" IsReadOnly="false" IsComputed="false" IsNullable="false"/>
-            <Property Label="lastName" Type="String" IsReadOnly="false" IsComputed="false" IsNullable="false" />
-			<Property Label="middleName" Type="String" IsReadOnly="false" IsComputed="false" IsNullable="true"  />
-			<Property Label="birthdate" Type="DateTime" IsReadOnly="false" IsComputed="false" IsNullable="false" />
+            <Property Label="firstName" Type="String" IsReadOnly="false"
+                IsNullable="false" />
+            <Property Label="lastName" Type="String" IsReadOnly="false"
+                IsNullable="false" />
+            <Property Label="middleName" Type="String" IsReadOnly="false"
+                IsNullable="true" />
+            <Property Label="birthdate" Type="DateTime" IsReadOnly="false"
+                IsNullable="false" />
         </ComplexType>
-		<ComplexType Label="UserInfo">
-			<Property Label="firstName" Type="String" IsReadOnly="false" IsComputed="false" IsNullable="false">
+        <ComplexType Label="UserInfo">
+            <Property Label="firstName" Type="String" IsReadOnly="false" IsNullable="false">
                 <Meta>
-                    <Key>Description</Key>
+                    <Key Decorator="">Description</Key>
                     <Value>The users first name.</Value>
                 </Meta>
             </Property>
-			<Property Label="lastName" Type="String" IsReadOnly="false" IsComputed="false" IsNullable="false" />
-			<Property Label="middleName" Type="String" IsReadOnly="false" IsComputed="false" IsNullable="true"  />
-			<Property Label="birthdate" Type="DateTime" IsReadOnly="false" IsComputed="false" IsNullable="false" />
-			<Property Label="fullName" Type="String" IsReadOnly="false" IsComputed="false" IsNullable="false">
-                <Binding Label="FullNameResolver" Kind="Resolver">
-                    <ReturnType Type="String" />
-                </Binding>
-			</Property>
-		</ComplexType>
-        <ComplexType Label="AuditEntry">
-            <Property Label="userId" Type="UserId" IsReadOnly="true" IsComputed="false" IsNullable="false" />
-            <Property Label="timestamp" Type="DateTimeOffset" IsReadOnly="true" IsComputed="false" IsNullable="false" />
+            <Property Label="lastName" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Label="middleName" Type="String" IsReadOnly="false" IsNullable="true" />
+            <Property Label="birthdate" Type="DateTime" IsReadOnly="false" IsNullable="false" />
+            <Property Label="fullName" Type="String" IsReadOnly="false" IsNullable="false">
+                <Operation Label="format" Kind="Resolver" IsDefault="true">
+
+                </Operation>
+            </Property>
+            <Function Label="fullName" IsBound="true">
+                <ReturnType Type="String" />
+            </Function>
         </ComplexType>
         <ScalarType Label="UserId">
-			<Format Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
-		</ScalarType>
+            <Format
+                Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
+        </ScalarType>
     </Graph>
     <Graph Label="Employees">
         <Vertex Label="employees" Type="Employee">
             <Query Label="GetEmployees">
-                <ReturnType Type="EmployeeList"/>
+                <ReturnType Type="EmployeeList" />
             </Query>
             <Query Label="GetEmployeeById">
-                <Parameter Label="employeeId" Type="EmployeeId"/>
-                <ReturnType Type="Employee"/>
+                <Parameter Label="employeeId" Type="EmployeeId" />
+                <ReturnType Type="Employee" />
             </Query>
             <Command Label="CreateEmployee">
-                <ReturnType Type="Employee"/>
+                <ReturnType Type="Employee" />
             </Command>
             <Command Label="UpdateEmployee">
-                <Parameter Label="employeeId" Type="EmployeeId"/>
-                <ReturnType Type="Employee"/>
+                <Parameter Label="employeeId" Type="EmployeeId" />
+                <Parameter Label="employee" Type="Employee" />
+                <ReturnType Type="Employee" />
             </Command>
             <Command Label="DeleteEmployee">
-                <Parameter Label="employeeId" Type="EmployeeId"/>
-                <ReturnType Type="Employee"/>
+                <Parameter Label="employeeId" Type="EmployeeId" />
+                <ReturnType Type="Employee" />
             </Command>
             <Command Label="PatchEmployee">
-                <Parameter Label="employeeId" Type="EmployeeId"/>
-                <ReturnType Type="Employee"/>
+                <Parameter Label="employeeId" Type="EmployeeId" />
+                <ReturnType Type="Employee" />
             </Command>
             <Event Label="EmployeeCreated">
                 <After Binding="CreateEmployee" />
@@ -99,7 +116,7 @@
         </Vertex>
         <Vertex Label="employeeAddresses" Type="EmployeeAddress">
             <Query Label="GetEmployeeAddresses">
-                <ReturnType Type="EmployeeAddressList"/>
+                <ReturnType Type="EmployeeAddressList" />
             </Query>
         </Vertex>
         <Vertex Label="employeeAddressTypes" Type="EmployeeAddressType">
@@ -107,31 +124,31 @@
                 <Action Kind="Create" />
             </Binding>
         </Vertex>
-        <Vertex Label="employeeJobs" Type="EmployeeJob"/>
-        <Vertex Label="employeeTasks" Type="EmployeeTask"/>
-        <Vertex Label="employeeWorkItems" Type="EmployeeWorkItem"/>
-        <Vertex Label="employeeTaxInfo" Type="EmployeeTaxInfo"/>
+        <Vertex Label="employeeJobs" Type="EmployeeJob" />
+        <Vertex Label="employeeTasks" Type="EmployeeTask" />
+        <Vertex Label="employeeWorkItems" Type="EmployeeWorkItem" />
+        <Vertex Label="employeeTaxInfo" Type="EmployeeTaxInfo" />
         <Edge Label="addresses" Source="employees" Target="employeeAddresses">
             <Query Label="GetEmployeeAddresses">
-                <Parameter Label="employeeId" Type="EmployeeId"/>
-                <ReturnType Type="EmployeeAddressList"/>
+                <Parameter Label="employeeId" Type="EmployeeId" />
+                <ReturnType Type="EmployeeAddressList" />
             </Query>
             <Query Label="GetEmployeeAddressesById">
-                <Parameter Label="employeeId" Type="EmployeeId"/>
-                <Parameter Label="addressId" Type="AddressId"/>
-                <ReturnType Type="EmployeeAddress"/>
+                <Parameter Label="employeeId" Type="EmployeeId" />
+                <Parameter Label="addressId" Type="AddressId" />
+                <ReturnType Type="EmployeeAddress" />
             </Query>
         </Edge>
         <Edge Label="primaryAddress" Source="employees" Target="employeeAddresses">
             <Query Label="GetEmployeePrimaryAddresses">
-                <Parameter Label="employeeId" Type="EmployeeId"/>
+                <Parameter Label="employeeId" Type="EmployeeId" />
                 <ReturnType Type="EmployeeAddress" />
             </Query>
         </Edge>
         <Edge Label="types" Source="employeeAddresses" Target="employeeAddressTypes">
             <Query Label="GetEmployeeAddressTypes">
-                <Parameter Label="employeeId" Type="EmployeeId"/>
-                <Parameter Label="addressId" Type="AddressId"/>
+                <Parameter Label="employeeId" Type="EmployeeId" />
+                <Parameter Label="addressId" Type="AddressId" />
                 <ReturnType Type="EmployeeAddressType" />
             </Query>
         </Edge>
@@ -152,44 +169,61 @@
         </Edge>
 
         <ScalarType Label="EmployeeId">
-            <Format Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
+            <Format
+                Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
         </ScalarType>
         <ScalarType Label="JobId">
-            <Format Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
+            <Format
+                Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
         </ScalarType>
         <ScalarType Label="TaskId">
-            <Format Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
+            <Format
+                Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
         </ScalarType>
         <ScalarType Label="WorkItemId">
-            <Format Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
+            <Format
+                Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
         </ScalarType>
         <ScalarType Label="AddressId">
-            <Format Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
+            <Format
+                Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
         </ScalarType>
         <EnumType Label="EmployeeKind">
-            <Member Label="FullTime" Value="1"/>
-            <Member Label="PartTime" Value="2"/>
+            <Member Label="FullTime" Value="1" />
+            <Member Label="PartTime" Value="2" />
             <Member Label="Contractor" Value="3" />
         </EnumType>
         <ComplexType Label="Address">
-            <Property Label="streetOne" Type="String" IsReadOnly="false" IsNullable="false" IsComputed="false"/>
-            <Property Label="streetTwo" Type="String" IsReadOnly="false" IsNullable="false" IsComputed="false"/>
-            <Property Label="streetThree" Type="String" IsReadOnly="false" IsNullable="true" IsComputed="false"/>
-            <Property Label="streetFour" Type="String" IsReadOnly="false" IsNullable="true" IsComputed="false"/>
-            <Property Label="city" Type="String" IsReadOnly="false" IsNullable="false" IsComputed="false"/>
-            <Property Label="state" Type="String" IsReadOnly="false" IsNullable="false" IsComputed="false"/>
-            <Property Label="zipCode" Type="String" IsReadOnly="false" IsNullable="false" IsComputed="false"/>
-            <Property Label="fullAddress" Type="String" IsReadOnly="false" IsNullable="false" IsComputed="false">
-                
+            <Property Label="streetOne" Type="String" IsReadOnly="false" IsNullable="false"
+            />
+            <Property Label="streetTwo" Type="String" IsReadOnly="false" IsNullable="false"
+            />
+            <Property Label="streetThree" Type="String" IsReadOnly="false" IsNullable="true"
+            />
+            <Property Label="streetFour" Type="String" IsReadOnly="false" IsNullable="true"
+            />
+            <Property Label="city" Type="String" IsReadOnly="false" IsNullable="false"
+            />
+            <Property Label="state" Type="String" IsReadOnly="false" IsNullable="false"
+            />
+            <Property Label="zipCode" Type="String" IsReadOnly="false" IsNullable="false"
+            />
+            <Property Label="fullAddress" Type="String" IsReadOnly="false" IsNullable="false"
+            >
+
             </Property>
         </ComplexType>
         <ComplexType Label="EmployeeInfo">
-            <Property Label="firstName" Type="String" IsReadOnly="false" IsNullable="false" IsComputed="false" />
-            <Property Label="lastName" Type="String" IsReadOnly="false" IsNullable="false" IsComputed="false" />
-            <Property Label="middleName" Type="String" IsReadOnly="false" IsNullable="true" IsComputed="false" />
-            <Property Label="fullName" Type="String" IsReadOnly="true" IsNullable="true" IsComputed="true">
+            <Property Label="firstName" Type="String" IsReadOnly="false" IsNullable="false"
+            />
+            <Property Label="lastName" Type="String" IsReadOnly="false" IsNullable="false"
+            />
+            <Property Label="middleName" Type="String" IsReadOnly="false" IsNullable="true"
+            />
+            <Property Label="fullName" Type="String" IsReadOnly="true" IsNullable="true"
+            >
                 <Binding Kind="Resolver">
-                    <ReturnType Type="String"/>
+                    <ReturnType Type="String" />
                 </Binding>
             </Property>
             <Property Label="Birthday" Type="Date" />
@@ -214,7 +248,7 @@
                     <Value>The employee identifier.</Value>
                 </Meta>
             </Property>
-            <Property Label="userId" Type="users.UserId"/>
+            <Property Label="userId" Type="users.UserId" />
             <Property Label="info" Type="EmployeeInfo" />
         </EntityType>
         <EntityType Label="EmployeeAddress">
@@ -248,7 +282,10 @@
             <Item Type="EmployeeTask" />
         </CollectionType>
     </Graph>
-    <Graph Label="Organization"></Graph>
+    <Graph Label="Organization">
+        <Vertex Label="OrganizationAddress">
+        </Vertex>
+    </Graph>
     <Graph Label="Inventory"></Graph>
     <Graph Label="Warehouses"></Graph>
     <Graph Label="Packaging"></Graph>

@@ -88,7 +88,6 @@ public static class GdmTestUtility
                 {
                     entity.HasLabel("employeeTaxInfo");
                     entity.HasKey(p => p.TaxInfoId);
-
                 });
                 builder.AddVertex<EmployeeAddress>("employeeAddresses", entity =>
                 {

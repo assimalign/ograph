@@ -8,6 +8,4 @@ export declare class OGraphQueryEditorProvider implements vscode.CustomTextEdito
     resolveCustomTextEditor(document: vscode.TextDocument, panel: vscode.WebviewPanel, token: vscode.CancellationToken): Thenable<void> | void;
     private getHtmlForWebview;
     private writeChangesToDocument;
-    private render;
-    private update;
 }

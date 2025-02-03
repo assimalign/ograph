@@ -62,9 +62,4 @@ public abstract class GdmScalarType<T> : GdmType<T>,
     }
 
     #endregion
-
-
-
-
-
 }

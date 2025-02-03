@@ -12,12 +12,14 @@ public interface IOGraphGdmComplexTypeDescriptor<T>
     /// <param name="label"></param>
     /// <returns></returns>
     IOGraphGdmComplexTypeDescriptor<T> HasLabel(Label label);
+
     /// <summary>
     /// 
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
     IOGraphGdmPropertyDescriptor HasProperty(Label name);
+
     /// <summary>
     /// 
     /// </summary>
@@ -25,4 +27,12 @@ public interface IOGraphGdmComplexTypeDescriptor<T>
     /// <param name="expression"></param>
     /// <returns></returns>
     IOGraphGdmPropertyDescriptor<TProperty> HasProperty<TProperty>(Expression<Func<T, TProperty>> expression);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TFunction"></typeparam>
+    /// <param name="expression"></param>
+    /// <returns></returns>
+    IOGraphGdmFunctionDescriptor<TFunction> HasFunction<TFunction>(Expression<Func<T, TFunction>> expression);
 }

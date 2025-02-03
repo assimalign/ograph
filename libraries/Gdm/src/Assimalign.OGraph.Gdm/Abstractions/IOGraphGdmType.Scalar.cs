@@ -6,12 +6,14 @@ public interface IOGraphGdmScalarType : IOGraphGdmType
     /// An array of Regex patterns that are acceptable formats.
     /// </summary>
     string?[]? Formats { get; }
+    
     /// <summary>
-    /// 
+    /// Parses the value type.
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
     object Parse(object? value);
+
     /// <summary>
     /// 
     /// </summary>

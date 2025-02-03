@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents an entire graph model.
 /// </summary>
-public interface IOGraphGdm : IOGraphGdmBindingElement
+public interface IOGraphGdm : IOGraphGdmBindableElement
 {
     /// <summary>
     /// Get the collection of elements in the model.

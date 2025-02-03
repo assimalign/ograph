@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Assimalign.OGraph.Gdm;
+﻿namespace Assimalign.OGraph.Gdm;
 
 /// <summary>
 /// An edge links two nodes together.
@@ -8,19 +6,21 @@ namespace Assimalign.OGraph.Gdm;
 /// <remarks>
 /// <i>An edge is also referred to as a Link.</i>
 /// </remarks>
-public interface IOGraphGdmEdge : IOGraphGdmBindingElement
+public interface IOGraphGdmEdge : IOGraphGdmLabeledElement
 {
     //Label - ! The Edge Label must match a literal segment of on operation on the target vertex. Operation Methods must not be mismatched
     /// <summary>
     /// The source vertex.
     /// </summary>
     IOGraphGdmVertexReference Source { get; }
+
     /// <summary>
     /// The target vertex.
     /// </summary>
     IOGraphGdmVertexReference Target { get; }
+
     /// <summary>
-    /// Metadata for the edge.
+    /// Get the collection of operations for this edge.
     /// </summary>
-    IOGraphGdmMetadata Metadata { get; }
+    IOGraphGdmOperationCollection Operations { get; }
 }

@@ -9,12 +9,9 @@ public interface IOGraphGdmBinding
     /// The binding label.
     /// </summary>
     Label Label { get; }
+
     /// <summary>
     /// The binding kind.
     /// </summary>
     GdmBindingKind Kind { get; }
-    /// <summary>
-    /// Binding metadata.
-    /// </summary>
-    IOGraphGdmMetadata Metadata { get; }
 }

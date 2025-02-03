@@ -1,26 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm;
 
-public readonly struct MetaKey
+/// <summary>
+/// 
+/// </summary>
+public readonly struct MetaKey : IComparable<MetaKey>
 {
-    public MetaKey(string value)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="key"></param>
+    public MetaKey(string key)
     {
-        Value = value;
+        Value = key;
     }
 
-    public MetaKey(string value, string decorator) : this(value)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="decorator"></param>
+    public MetaKey(string key, string decorator) : this(key)
     {
         Decorator = decorator;
     }
+
+    #region Properties
+
     /// <summary>
     /// 
     /// </summary>
     public string Value { get; }
+
     /// <summary>
     /// 
     /// </summary>
@@ -28,4 +40,24 @@ public readonly struct MetaKey
     /// Use this decorator to enhance metadata information.
     /// </remarks>
     public string? Decorator { get; }
+
+    #endregion
+
+    #region Overloads
+
+    public override string ToString()
+    {
+        return string.Join('@', Value, Decorator);
+    }
+
+    #endregion
+
+    #region Methods
+
+    public int CompareTo(MetaKey other)
+    {
+        throw new NotImplementedException();
+    }
+
+    #endregion
 }

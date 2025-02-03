@@ -24,13 +24,16 @@ public abstract class GdmType<T> : IOGraphGdmType
         {
             label = typeName;
         }
+
+
     }
 
-    public Type RuntimeType => typeof(T);
-    public GdmElementKind ElementKind => GdmElementKind.Type;
-
+    public Type RuntimeType { get; } = typeof(T);
+    public GdmElementKind ElementKind { get; } = GdmElementKind.Type;
+    public IOGraphGdmMetadata Meta { get; } = new GdmMetadata();
     public virtual Label Label => label;
     public abstract GdmTypeKind Kind { get; }
+
     public abstract T Read(ref Utf8JsonReader reader);
     public abstract T Read(XmlReader reader);
     public abstract void Write(Utf8JsonWriter writer, T value);

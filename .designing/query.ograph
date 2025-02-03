@@ -14,6 +14,7 @@ https://endpoint.com/api/employees?query=
                 firstName
                 lastName
                 middleName
+                fullName(): name
             }
             # Array of Objects
             roles {
@@ -27,7 +28,7 @@ https://endpoint.com/api/employees?query=
                 userId
             }
             created {
-                timestamp
+                timestamp$format('')
                 userId
             }
         )
@@ -196,3 +197,5 @@ v(providers)
             .project(
                 name
             )
+.v(employees)
+    .project()

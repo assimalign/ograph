@@ -178,7 +178,7 @@ export class OGraphQueryEditorProvider implements vscode.CustomTextEditorProvide
                 <link href="${styleResetUri}" rel="stylesheet" />
                 <link href="${styleAppUri}" rel="stylesheet" />
 
-                <title>Json Editor</title>
+                <title>OGraph Editor</title>
             </head>
             <body>
                 <div id="app"></div>
@@ -188,7 +188,7 @@ export class OGraphQueryEditorProvider implements vscode.CustomTextEditorProvide
                     // Set the initial state of the webview
                     vscode.setState({
                         viewType: '${OGraphQueryEditorProvider.viewType}',
-                        text: '${JSON.stringify(initialContent)}'
+                        text: '${initialContent}'
                     });
                 </script>
                 <script type="text/javascript" src="${vueAppUri}" nonce="${nonce}"></script>
@@ -214,61 +214,5 @@ export class OGraphQueryEditorProvider implements vscode.CustomTextEditorProvide
                 }
                 return success
             });
-    }
-
-    private render(document: vscode.TextDocument, panel: vscode.WebviewPanel) {
-        const uri = this.context.extensionUri
-        const vue = panel.webview.asWebviewUri(vscode.Uri.joinPath(
-            uri, 'client',  'out', 'views', 'editor.mjs'
-        ));
-        const styleResetUri = panel.webview.asWebviewUri(vscode.Uri.joinPath(
-            uri, 'resources', 'css', 'reset.css'
-        ));
-        const styleAppUri = panel.webview.asWebviewUri(vscode.Uri.joinPath(
-            uri, 'client', 'out', 'views', 'editor.css'
-        ));
-        const nonce = getNonce();
-
-        const html = `
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="utf-8" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <meta http-equiv="Content-Security-Policy" content="default-src 'none';
-                    style-src ${panel.webview.cspSource};
-                    img-src ${panel.webview.cspSource};
-                    script-src 'nonce-${nonce}';">
-                <link href="${styleResetUri}" rel="stylesheet" />
-                <link href="${styleAppUri}" rel="stylesheet" />
-                <title>OGraph Editor</title>
-            </head>
-            <body>
-                <div id="app"></div>
-                <script nonce="${nonce}">
-                    // Store the VsCodeAPI in a global variable
-                    const vscode = acquireVsCodeApi();
-                    // Set the initial state of the webview
-                    vscode.setState({
-                        viewType: '${OGraphQueryEditorProvider.viewType}',
-                        text: '${document.lineAt(0).text}'
-                    });
-                </script>
-                <script type="text/javascript" src="${vue}" nonce="${nonce}"></script>
-            </body>
-            </html>
-        `;
-        panel.webview.html = html
-    }
-
-
-    private update(document: vscode.TextDocument, content: any) {
-        const edit = new vscode.WorkspaceEdit();
-        edit.replace(
-            document.uri,
-            new vscode.Range(0, 0, document.lineCount, 0),
-            JSON.stringify(content, null, 2));
-
-        return vscode.workspace.applyEdit(edit);
     }
 }

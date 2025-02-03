@@ -17,8 +17,8 @@ internal class GdmEdge : IOGraphGdmEdge
     public IOGraphGdmVertexReference Target { get; set; } = default!;
     public IOGraphGdmMetadata Metadata { get; }
     public GdmElementKind ElementKind => GdmElementKind.Edge;
-    IEnumerable<IOGraphGdmBinding> IOGraphGdmBindingElement.Bindings => bindings;
-    void IOGraphGdmBindingElement.Bind(IOGraphGdmBinding binding)
+    IEnumerable<IOGraphGdmBinding> IOGraphGdmBindableElement.Bindings => bindings;
+    void IOGraphGdmBindableElement.Bind(IOGraphGdmBinding binding)
     {
         if (binding is null)
         {
@@ -26,7 +26,7 @@ internal class GdmEdge : IOGraphGdmEdge
         }
         bindings.Add(binding);
     }
-    void IOGraphGdmBindingElement.Unbind(IOGraphGdmBinding binding)
+    void IOGraphGdmBindableElement.Unbind(IOGraphGdmBinding binding)
     {
         if (binding is null)
         {

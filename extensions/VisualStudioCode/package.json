@@ -11,9 +11,8 @@
     "deploy": "vsce publish --yarn",
     "vscode:prepublish": "npm run compile",
     "compile": "cd ./editor && vite build && cd .. && tsc -b",
-    "build": "tsc",
     "watch": "tsc -b -w",
-    "debug": "bpm run compile && npm run watch",
+    "debug": "npm run compile && npm run watch",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd ../editor && npm install && cd .."
   },
   "activationEvents": [

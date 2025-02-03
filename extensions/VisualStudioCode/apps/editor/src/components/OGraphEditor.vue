@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1>My Json-Editor</h1>
-        <textarea id="editor" ref="textEditor" @keydown.tab.prevent="enableTab" @input.prevent="sendData">
+        <textarea id="editor" ref="textEditor" @keydown.tab.prevent="enableTab" @input.prevent="sendData" >
        </textarea>
     </div>
 </template>
@@ -16,9 +16,7 @@ export default defineComponent({
     setup(props) {
         const vscode = inject('vscode') as VsCode;
         const textEditor: Ref<HTMLTextAreaElement | null> = ref(null);
-
-            console.log(vscode)
-
+            
         let cursorPosition = 0;
         let textLength = 0;
 

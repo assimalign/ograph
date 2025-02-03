@@ -6,3 +6,10 @@ export const getNonce = (): string => {
 	}
 	return text;
 }
+
+
+export const DOMBuilder = () => {
+
+
+	
+}

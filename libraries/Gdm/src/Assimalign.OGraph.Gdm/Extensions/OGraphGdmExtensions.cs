@@ -23,7 +23,7 @@ public static class OGraphGdmExtensions
     /// <param name="label"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static TGdmBinding? GetBinding<TGdmBinding>(this IOGraphGdmBindingElement element, Label label)
+    public static TGdmBinding? GetBinding<TGdmBinding>(this IOGraphGdmBindableElement element, Label label)
         where TGdmBinding : IOGraphGdmBinding
     {
         if (element is null)
@@ -42,7 +42,7 @@ public static class OGraphGdmExtensions
     /// <param name="label"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static bool HasBinding(this IOGraphGdmBindingElement element, Label label)
+    public static bool HasBinding(this IOGraphGdmBindableElement element, Label label)
     {
         if (element is null)
         {

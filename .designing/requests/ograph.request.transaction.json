@@ -2,9 +2,9 @@
     "batch": [
         {
             "vertex": "users",
-            "commands": {
-                "updateUser": {
-
+            "data": {
+                "create": {
+                        
 
                     "@edge": {
                         

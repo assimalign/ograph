@@ -10,10 +10,13 @@ public readonly struct GdmEnumValue
         Name = name;
         Value = value;
     }
+
+
     /// <summary>
     /// The string name of the enum.
     /// </summary>
     public string Name { get; }
+
     /// <summary>
     /// The underlying value of the enum.
     /// </summary>

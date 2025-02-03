@@ -35,8 +35,7 @@ public interface IOGraphGdmPropertyDescriptor
     /// <param name="key"></param>
     /// <param name="value"></param>
     /// <returns></returns>
-    IOGraphGdmPropertyDescriptor UseMetadata(Label key, object value);
-    IOGraphGdmPropertyDescriptor IsComputed();
+    IOGraphGdmPropertyDescriptor UseMeta(string key, string value);
     IOGraphGdmPropertyDescriptor IsRequired();
     /// <summary>
     /// 

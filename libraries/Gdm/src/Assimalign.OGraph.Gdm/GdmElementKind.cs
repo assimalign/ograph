@@ -10,6 +10,10 @@ public enum GdmElementKind
     Vertex,
     Edge,
     Type,
+    Operation,
+    Event,
+    Key,
     Property,
-    Key
+    Function,
+    Parameter,
 }

@@ -37,7 +37,7 @@ internal class GdmPropertyDescriptor : IOGraphGdmPropertyDescriptor
         property.Setter = setter;
         return this;
     }
-    public IOGraphGdmPropertyDescriptor UseMetadata(Label key, object value)
+    public IOGraphGdmPropertyDescriptor UseMeta(Label key, object value)
     {
         property.Metadata.Add(key, value);
         return this;

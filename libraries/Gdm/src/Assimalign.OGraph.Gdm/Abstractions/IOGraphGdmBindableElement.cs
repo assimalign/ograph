@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Assimalign.OGraph.Gdm;
+﻿namespace Assimalign.OGraph.Gdm;
 
 /// <summary>
 /// Represents an element that accepts bindings
@@ -10,18 +8,19 @@ namespace Assimalign.OGraph.Gdm;
 /// allowing us to extend the functionality of the model without 
 /// opening it up for modification.
 /// </remarks>
-public interface IOGraphGdmBindingElement : IOGraphGdmLabeledElement
+public interface IOGraphGdmBindableElement : IOGraphGdmLabeledElement
 {
     /// <summary>
-    /// Gets the collection of bindings.
+    /// Specifies whther the elemet has been bound.
     /// </summary>
-    /// <remarks>Bindings should be unique based on label.</remarks>
-    IEnumerable<IOGraphGdmBinding> Bindings { get; }
+    bool IsBound { get; }
+
     /// <summary>
-    /// Binds an object to the element.
+    /// 
     /// </summary>
     /// <param name="binding"></param>
     void Bind(IOGraphGdmBinding binding);
+
     /// <summary>
     /// 
     /// </summary>

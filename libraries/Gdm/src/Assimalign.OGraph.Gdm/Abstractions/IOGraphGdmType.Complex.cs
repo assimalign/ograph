@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Assimalign.OGraph.Gdm;
+﻿namespace Assimalign.OGraph.Gdm;
 
 /// <summary>
 /// 
@@ -12,4 +9,9 @@ public interface IOGraphGdmComplexType : IOGraphGdmType
     /// A collection of properties
     /// </summary>
     IOGraphGdmPropertyCollection Properties { get; }
+
+    /// <summary>
+    /// A ollection of functions.
+    /// </summary>
+    IOGraphGdmFunctionCollection Functions { get; }
 }

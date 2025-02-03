@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getNonce = void 0;
+exports.DOMBuilder = exports.getNonce = void 0;
 const getNonce = () => {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -10,3 +10,6 @@ const getNonce = () => {
     return text;
 };
 exports.getNonce = getNonce;
+const DOMBuilder = () => {
+};
+exports.DOMBuilder = DOMBuilder;

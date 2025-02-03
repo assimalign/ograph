@@ -14,7 +14,7 @@ public static class OGraphGdmBindingElementExtensions
     /// <param name="binding"></param>
     /// <exception cref="ArgumentNullException"></exception>
     /// <returns></returns>
-    public static bool HasBinding<T>(this IOGraphGdmBindingElement element, out T? binding) 
+    public static bool HasBinding<T>(this IOGraphGdmBindableElement element, out T? binding) 
         where T : IOGraphGdmBinding
     {
         binding = default;

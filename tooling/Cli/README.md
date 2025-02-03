@@ -1,8 +1,10 @@
-﻿
 
 
-## CLI Hirearchy
 
-| Commands | Arguments | 
-| -------- | --------- |
-| codegen  |		   |
+## Commands
+
+| Commands | Arguments |     |
+| -------- | --------- | --- |
+| codegen  |           |     |
+| format   |           |     |
+|          |           |     |

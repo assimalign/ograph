@@ -43,8 +43,8 @@ public class GdmVertex<T> : IOGraphGdmVertex
     public GdmElementKind ElementKind => GdmElementKind.Vertex;
 
     #region Explicit Implementations
-    IEnumerable<IOGraphGdmBinding> IOGraphGdmBindingElement.Bindings => bindings;
-    void IOGraphGdmBindingElement.Bind(IOGraphGdmBinding binding)
+    IEnumerable<IOGraphGdmBinding> IOGraphGdmBindableElement.Bindings => bindings;
+    void IOGraphGdmBindableElement.Bind(IOGraphGdmBinding binding)
     {
         if (binding is null)
         {
@@ -56,7 +56,7 @@ public class GdmVertex<T> : IOGraphGdmVertex
         }
         bindings.Add(binding);
     }
-    void IOGraphGdmBindingElement.Unbind(IOGraphGdmBinding binding)
+    void IOGraphGdmBindableElement.Unbind(IOGraphGdmBinding binding)
     {
         if (binding is null)
         {
