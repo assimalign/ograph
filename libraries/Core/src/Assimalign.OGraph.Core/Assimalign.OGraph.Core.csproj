@@ -4,10 +4,12 @@
 		<TargetFrameworks>$(TargetFrameworkForLibraries)</TargetFrameworks>
 	</PropertyGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\Gdm\src\Assimalign.OGraph.Gdm\Assimalign.OGraph.Gdm.csproj" />
-		<ProjectReference Include="..\..\..\Syntax\src\Assimalign.OGraph.Syntax\Assimalign.OGraph.Syntax.csproj" />
+	  <Compile Remove="ValueObjects\**" />
+	  <EmbeddedResource Remove="ValueObjects\**" />
+	  <None Remove="ValueObjects\**" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="ValueObjects\" />
+		<ProjectReference Include="..\..\..\Gdm\src\Assimalign.OGraph.Gdm\Assimalign.OGraph.Gdm.csproj" />
+		<ProjectReference Include="..\..\..\Syntax\src\Assimalign.OGraph.Syntax\Assimalign.OGraph.Syntax.csproj" />
 	</ItemGroup>
 </Project>

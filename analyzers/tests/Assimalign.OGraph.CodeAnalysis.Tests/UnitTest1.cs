@@ -46,8 +46,7 @@ namespace Assimalign.OGraph
         UInt,
         UShort,
         ULong,
-        Guid,
-        GuidV7
+        Guid
     }
 }";
 
@@ -71,6 +70,8 @@ namespace Assimalign.OGraph
         // You can also verify the exact generated source if needed
         var generatedSource = result.GeneratedTrees[0].ToString();
         Assert.NotNull(generatedSource);
+
+        CSharpSourceGeneratorVerifier<EntityKeyAttributeIncrementalGenerator, Ver>
     }
 
 
@@ -98,7 +99,4 @@ namespace Assimalign.OGraph
             references,
             compilationOptions);
     }
-
-
-
 }

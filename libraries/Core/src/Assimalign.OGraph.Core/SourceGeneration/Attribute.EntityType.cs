@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph;
 
-public sealed class ValueObjectAttribute : Attribute
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+internal sealed class EntityTypeAttribute : Attribute
 {
-    public ValueObjectAttribute()
+    public EntityTypeAttribute()
     {
+        
     }
 }

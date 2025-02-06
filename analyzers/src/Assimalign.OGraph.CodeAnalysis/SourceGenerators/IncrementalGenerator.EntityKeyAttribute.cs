@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Xml.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Assimalign.OGraph.CodeAnalysis;
 
@@ -19,8 +19,9 @@ public class EntityKeyAttributeIncrementalGenerator : IIncrementalGenerator
     {
         public string? Name { get; set; }
         public string? Namespace { get; set; }
-        public StructType? ValueType { get; set; }
+        public string? RuntimeType { get; set; }
         public bool IncludeImplicitOperators { get; set; }
+        public bool IncludeIsValidMethod { get; set; }
     }
     enum StructType
     {
@@ -57,6 +58,7 @@ public class EntityKeyAttributeIncrementalGenerator : IIncrementalGenerator
 
                         return (name == fqmd || name == fqmd.Split('.').Last());
                     });
+
                 if (attribute is not null && attribute.ArgumentList is not null)
                 {
                     // Extract the key value from the attribute
@@ -66,14 +68,21 @@ public class EntityKeyAttributeIncrementalGenerator : IIncrementalGenerator
                     {
                         if (argument.Expression is MemberAccessExpressionSyntax member &&
                             member.Expression is IdentifierNameSyntax identifier &&
-                            identifier.ToString() == "EntityKeyKind")
+                            identifier.ToString() == "EntityKeyRuntimeType")
                         {
-                            if (Enum.TryParse<StructType>(member.Name.ToString(), out var type))
+                            @struct.RuntimeType = member.Name.ToString() switch
                             {
-                                @struct.ValueType = type;
-                            }
+                                "Int" => "int",
+                                "Short" => "short",
+                                "Long" => "long",
+                                "UInt" => "uint",
+                                "UShort" => "ushort",
+                                "ULong" => "ulong",
+                                "String" => "string",
+                                "Guid" => "Guid"
+                            };
                         }
-                        if (argument.NameEquals is NameEqualsSyntax equals &&  equals.Name is IdentifierNameSyntax identifier1 &&  argument.Expression is LiteralExpressionSyntax literal)
+                        if (argument.NameEquals is NameEqualsSyntax equals && equals.Name is IdentifierNameSyntax identifier1 && argument.Expression is LiteralExpressionSyntax literal)
                         {
                             var value = literal.ToString();
 
@@ -81,6 +90,10 @@ public class EntityKeyAttributeIncrementalGenerator : IIncrementalGenerator
                             {
                                 case "IncludeImplicitOperators" when bool.TryParse(value, out var bln):
                                     @struct.IncludeImplicitOperators = bln;
+                                    break;
+
+                                case "IncludeIsValidMethod" when bool.TryParse(value, out var bln):
+                                    @struct.IncludeIsValidMethod = bln;
                                     break;
                             }
                         }
@@ -162,26 +175,14 @@ public class EntityKeyAttributeIncrementalGenerator : IIncrementalGenerator
 
         WriteConsturctor(builder, info);
         WriteProperties(builder, info);
-        WriteOverloads(builder, info);
         WriteMethods(builder, info);
+        WriteOverloads(builder, info);
         WriteOperators(builder, info);
 
         builder.AppendLine("    }");
         builder.AppendLine("}");
 
         return builder.ToString();
-        //
-        //	// Generate additional code for the struct
-        //	var sourceBuilder = new StringBuilder($@"
-        //namespace {info.Namespace}
-        //{{
-        //    public partial struct {info.Name}
-        //    {{
-        //        public string GetEntityKey() => ""test"";
-        //    }}
-        //}}");
-        //
-        //	return sourceBuilder.ToString();
     }
     private static void WriteInterfaces(StringBuilder builder, StructContext info)
     {
@@ -221,10 +222,19 @@ public class EntityKeyAttributeIncrementalGenerator : IIncrementalGenerator
         builder.Append("        public ");
         builder.Append(info.Name);
         builder.Append("(");
-        builder.Append(GetTypeInfo(info));
+        builder.Append(info.RuntimeType);
         builder.Append(" ");
         builder.AppendLine("value)");
         builder.AppendLine("        {");
+
+        if (info.IncludeIsValidMethod)
+        {
+            builder.AppendLine("			if (!IsValid(value, out string message))");
+            builder.AppendLine("			{");
+            builder.AppendLine("				throw new ArgumentException(message);");
+            builder.AppendLine("			}");
+        }
+
         builder.AppendLine("			Value = value;");
         builder.AppendLine("        }");
         builder.AppendLine();
@@ -233,7 +243,7 @@ public class EntityKeyAttributeIncrementalGenerator : IIncrementalGenerator
     {
 
         builder.Append("		public ");
-        builder.Append(GetTypeInfo(info));
+        builder.Append(info.RuntimeType);
         builder.AppendLine(" Value { get; }");
         builder.AppendLine();
     }
@@ -260,17 +270,37 @@ public class EntityKeyAttributeIncrementalGenerator : IIncrementalGenerator
                 "<=" => "a.CompareTo(b) <= 0;",
             });
         }
+
+        if (info.IncludeImplicitOperators)
+        {
+            builder.Append("		public static implicit operator ");
+            builder.Append(info.RuntimeType);
+            builder.Append("(");
+            builder.Append(info.Name);
+            builder.AppendLine(" item) => item.Value;");
+
+            builder.Append("		public static implicit operator ");
+            builder.Append(info.Name);
+            builder.Append("(");
+            builder.Append(info.RuntimeType);
+            builder.Append(" item) => new ");
+            builder.Append(info.Name);
+            builder.AppendLine("(item);");
+        }
     }
     private static void WriteOverloads(StringBuilder builder, StructContext info)
     {
         builder.AppendLine("		public override int GetHashCode() => Value.GetHashCode();");
-        builder.AppendLine(info.ValueType switch
+        builder.AppendLine(info.RuntimeType switch
         {
-            StructType.Int => "		public override string ToString() => Value.ToString(global::System.Globalization.CultureInfo.InvariantCulture);",
-            StructType.Long => "		public override string ToString() => Value.ToString(global::System.Globalization.CultureInfo.InvariantCulture);",
-            StructType.Short => "		public override string ToString() => Value.ToString(global::System.Globalization.CultureInfo.InvariantCulture);",
-            StructType.String => "		public override string ToString() => Value;",
-            StructType.Guid => "		public override string ToString() => Value.ToString();"
+            "int" => "		public override string ToString() => Value.ToString(global::System.Globalization.CultureInfo.InvariantCulture);",
+            "long" => "		public override string ToString() => Value.ToString(global::System.Globalization.CultureInfo.InvariantCulture);",
+            "short" => "		public override string ToString() => Value.ToString(global::System.Globalization.CultureInfo.InvariantCulture);",
+            "uint" => "		public override string ToString() => Value.ToString(global::System.Globalization.CultureInfo.InvariantCulture);",
+            "ulong" => "		public override string ToString() => Value.ToString(global::System.Globalization.CultureInfo.InvariantCulture);",
+            "ushort" => "		public override string ToString() => Value.ToString(global::System.Globalization.CultureInfo.InvariantCulture);",
+            "string" => "		public override string ToString() => Value;",
+            "Guid" => "		public override string ToString() => Value.ToString();"
         });
         builder.AppendLine("		public override bool Equals(object? obj)");
         builder.AppendLine("		{");
@@ -286,6 +316,13 @@ public class EntityKeyAttributeIncrementalGenerator : IIncrementalGenerator
     }
     private static void WriteMethods(StringBuilder builder, StructContext info)
     {
+        if (info.IncludeIsValidMethod)
+        {
+            builder.Append("		public partial bool IsValid(");
+            builder.Append(info.RuntimeType);
+            builder.AppendLine(" value, out string message);");
+        }
+
         // Write CompareTo
         builder.Append("		public int CompareTo(");
         builder.Append(info.Name);
@@ -303,21 +340,17 @@ public class EntityKeyAttributeIncrementalGenerator : IIncrementalGenerator
         builder.AppendLine("			#endif");
         builder.AppendLine("			string? format,");
         builder.AppendLine("			global::System.IFormatProvider? formatProvider)");
-        builder.AppendLine("			=> Value.ToString(format, formatProvider);");
 
+        if (info.RuntimeType.Equals("string"))
+        {
+            builder.AppendLine("			=> Value.ToString(formatProvider);");
+        }
+        else
+        {
+            builder.AppendLine("			=> Value.ToString(format, formatProvider);");
+        }
 
         builder.AppendLine();
-    }
-    private static string GetTypeInfo(StructContext info)
-    {
-        return info.ValueType switch
-        {
-            StructType.Short => "short",
-            StructType.Int => "int",
-            StructType.Long => "long",
-            StructType.String => "string",
-            StructType.Guid => "Guid"
-        };
     }
 
     #endregion

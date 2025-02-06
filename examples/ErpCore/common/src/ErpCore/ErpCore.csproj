@@ -1,14 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Domains\Customers\" />
-    <Folder Include="Domains\Sales\" />
-  </ItemGroup>
-
+	<ItemGroup>
+		<Folder Include="Domains\Customers\" />
+		<Folder Include="Domains\Sales\" />
+	</ItemGroup>
+	<ItemGroup>
+		<Analyzer Include="C:\Source\repos\assimalign\ograph\analyzers\src\Assimalign.OGraph.CodeAnalysis\bin\Debug\netstandard2.0\Assimalign.OGraph.CodeAnalysis.dll"/>
+	</ItemGroup>
 </Project>
