@@ -29,7 +29,7 @@ internal static class TestHelpers
             model.AddVertex<Employee>(vertex =>
             {
                 vertex.HasLabel("employee");
-                vertex.HasType(entity =>
+                vertex.HasEntityType(entity =>
                 {
                     entity.HasKey(p => p.EmployeeId);
 

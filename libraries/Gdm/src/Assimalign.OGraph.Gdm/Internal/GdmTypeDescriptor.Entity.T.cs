@@ -6,7 +6,11 @@ using System.Reflection;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
-internal class GdmEntityTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T> : IOGraphGdmEntityTypeDescriptor<T>
+using Assimalign.OGraph.Gdm.Elements;
+
+internal class GdmEntityTypeDescriptor<[DynamicallyAccessedMembers(
+    DynamicallyAccessedMemberTypes.PublicParameterlessConstructor |
+    DynamicallyAccessedMemberTypes.PublicProperties)] T> : IOGraphGdmEntityTypeDescriptor<T>
     where T : class, new()
 {
     private readonly GdmEntityType<T> entityType;

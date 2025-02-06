@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<gdmx Version="1.0" xmlns="https://mycrm.com" Label="erp">
+<gdmx Version="1.0" xmlns="https://erpcore.com" Label="ErpCore">
     <Graph Label="Core">
         <ComplexType Label="AuditEntry">
             <Property Label="userId" Type="Users.UserId" IsReadOnly="true" IsNullable="false" />
             <Property Label="timestamp" Type="DateTimeOffset" IsReadOnly="true" IsNullable="false" />
             <Function Label="user">
-
+                <ReturnType Type="ERpCore.Users.User"/>
             </Function>
         </ComplexType>
     </Graph>
@@ -46,14 +46,10 @@
             <Item Type="User" />
         </CollectionType>
         <ComplexType Label="UserCreateOrUpdate">
-            <Property Label="firstName" Type="String" IsReadOnly="false"
-                IsNullable="false" />
-            <Property Label="lastName" Type="String" IsReadOnly="false"
-                IsNullable="false" />
-            <Property Label="middleName" Type="String" IsReadOnly="false"
-                IsNullable="true" />
-            <Property Label="birthdate" Type="DateTime" IsReadOnly="false"
-                IsNullable="false" />
+            <Property Label="firstName" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Label="lastName" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Label="middleName" Type="String" IsReadOnly="false" IsNullable="true" />
+            <Property Label="birthdate" Type="DateTime" IsReadOnly="false" IsNullable="false" />
         </ComplexType>
         <ComplexType Label="UserInfo">
             <Property Label="firstName" Type="String" IsReadOnly="false" IsNullable="false">
@@ -65,11 +61,7 @@
             <Property Label="lastName" Type="String" IsReadOnly="false" IsNullable="false" />
             <Property Label="middleName" Type="String" IsReadOnly="false" IsNullable="true" />
             <Property Label="birthdate" Type="DateTime" IsReadOnly="false" IsNullable="false" />
-            <Property Label="fullName" Type="String" IsReadOnly="false" IsNullable="false">
-                <Operation Label="format" Kind="Resolver" IsDefault="true">
-
-                </Operation>
-            </Property>
+            <Property Label="fullName" Type="String" IsReadOnly="false" IsNullable="false"/>
             <Function Label="fullName" IsBound="true">
                 <ReturnType Type="String" />
             </Function>
@@ -129,15 +121,15 @@
         <Vertex Label="employeeWorkItems" Type="EmployeeWorkItem" />
         <Vertex Label="employeeTaxInfo" Type="EmployeeTaxInfo" />
         <Edge Label="addresses" Source="employees" Target="employeeAddresses">
-            <Query Label="GetEmployeeAddresses">
+            <Operation Label="GetEmployeeAddresses">
                 <Parameter Label="employeeId" Type="EmployeeId" />
                 <ReturnType Type="EmployeeAddressList" />
-            </Query>
-            <Query Label="GetEmployeeAddressesById">
+            </Operation>
+            <Operation Label="GetEmployeeAddressesById">
                 <Parameter Label="employeeId" Type="EmployeeId" />
                 <Parameter Label="addressId" Type="AddressId" />
                 <ReturnType Type="EmployeeAddress" />
-            </Query>
+            </Operation>
         </Edge>
         <Edge Label="primaryAddress" Source="employees" Target="employeeAddresses">
             <Query Label="GetEmployeePrimaryAddresses">
@@ -169,8 +161,7 @@
         </Edge>
 
         <ScalarType Label="EmployeeId">
-            <Format
-                Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
+            <Format Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
         </ScalarType>
         <ScalarType Label="JobId">
             <Format
@@ -194,22 +185,14 @@
             <Member Label="Contractor" Value="3" />
         </EnumType>
         <ComplexType Label="Address">
-            <Property Label="streetOne" Type="String" IsReadOnly="false" IsNullable="false"
-            />
-            <Property Label="streetTwo" Type="String" IsReadOnly="false" IsNullable="false"
-            />
-            <Property Label="streetThree" Type="String" IsReadOnly="false" IsNullable="true"
-            />
-            <Property Label="streetFour" Type="String" IsReadOnly="false" IsNullable="true"
-            />
-            <Property Label="city" Type="String" IsReadOnly="false" IsNullable="false"
-            />
-            <Property Label="state" Type="String" IsReadOnly="false" IsNullable="false"
-            />
-            <Property Label="zipCode" Type="String" IsReadOnly="false" IsNullable="false"
-            />
-            <Property Label="fullAddress" Type="String" IsReadOnly="false" IsNullable="false"
-            >
+            <Property Label="streetOne" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Label="streetTwo" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Label="streetThree" Type="String" IsReadOnly="false" IsNullable="true" />
+            <Property Label="streetFour" Type="String" IsReadOnly="false" IsNullable="true" />
+            <Property Label="city" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Label="state" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Label="zipCode" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Label="fullAddress" Type="String" IsReadOnly="false" IsNullable="false" >
 
             </Property>
         </ComplexType>
@@ -286,8 +269,12 @@
         <Vertex Label="OrganizationAddress">
         </Vertex>
     </Graph>
-    <Graph Label="Inventory"></Graph>
-    <Graph Label="Warehouses"></Graph>
-    <Graph Label="Packaging"></Graph>
-    <Graph Label="Shipping"></Graph>
+    <Graph Label="Inventory">
+    </Graph>
+    <Graph Label="Warehouses">
+    </Graph>
+    <Graph Label="Packaging">
+    </Graph>
+    <Graph Label="Shipping">
+    </Graph>
 </gdmx>

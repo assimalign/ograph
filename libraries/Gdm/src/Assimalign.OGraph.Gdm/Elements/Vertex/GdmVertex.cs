@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Collections.Generic;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Elements;
 
 using Assimalign.OGraph.Gdm.Internal;
 
@@ -11,10 +11,10 @@ using Assimalign.OGraph.Gdm.Internal;
 public class GdmVertex : IOGraphGdmVertex
 {
     private readonly Action<IOGraphGdmVertexDescriptor> configure;
-    private readonly IList<IOGraphGdmBinding> bindings = new List<IOGraphGdmBinding>();
 
     internal Label label;
-    internal IOGraphGdmTypeReference? type;
+    internal IOGraphGdmType? type;
+    internal IOGraphGdmGraph? graph;
 
     public GdmVertex() : this(descriptor => { }) { }
     GdmVertex(Action<IOGraphGdmVertexDescriptor> configure)
@@ -37,38 +37,12 @@ public class GdmVertex : IOGraphGdmVertex
     }
 
     public Label Label => label;
-    public IOGraphGdmTypeReference Type => type!;
-    public IOGraphGdmEdgeReferenceCollection Edges { get; } = new GdmEdgeReferenceCollection();
-    public IOGraphGdmMetadata Metadata { get; } = new GdmMetadata();
+    public IOGraphGdmType Type => type!;
+    public IOGraphGdmEdgeCollection Edges { get; } = new GdmEdgeCollection();
+    public IOGraphGdmOperationCollection Operations { get; } = new GdmVertexOperationCollection();
+    public IOGraphGdmMetadata Meta { get; } = new GdmMetadata();
+    public IOGraphGdmGraph Graph => graph!;
     public GdmElementKind ElementKind => GdmElementKind.Vertex;
-
-    #region Explicit Implementations
-    IEnumerable<IOGraphGdmBinding> IOGraphGdmBindableElement.Bindings => bindings;
-    void IOGraphGdmBindableElement.Bind(IOGraphGdmBinding binding)
-    {
-        if (binding is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(binding));
-        }
-        if (this.HasBinding(binding.Label))
-        {
-            ThrowHelper.ThrowInvalidOperationException($"The element already contains a binding with the label: {binding.Label}");
-        }
-        bindings.Add(binding);
-    }
-
-    void IOGraphGdmBindableElement.Unbind(IOGraphGdmBinding binding)
-    {
-        if (binding is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(binding));
-        }
-        if (!bindings.Remove(binding))
-        {
-            // TODO: Throw error
-        }
-    }
-    #endregion
 
     #region Static Members
     /// <summary>

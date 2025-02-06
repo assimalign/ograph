@@ -11,15 +11,20 @@ public interface IOGraphGdmVertex : IOGraphGdmLabeledElement
     /// <summary>
     /// The type bound to this vertex.
     /// </summary>
-    IOGraphGdmTypeReference Type { get; } // TODO: Revisit whether IOGraphEntityType should be specified explicitly
-
-    /// <summary>
-    /// A collection of edges that are connected to this node.
-    /// </summary>
-    IOGraphGdmEdgeReferenceCollection Edges { get; }
+    IOGraphGdmType Type { get; } // TODO: Revisit whether IOGraphEntityType should be specified explicitly
 
     /// <summary>
     /// A collection of operations defined for the vertex
     /// </summary>
     IOGraphGdmOperationCollection Operations { get; }
+
+    /// <summary>
+    /// A collection of edges that are connected to this node.
+    /// </summary>
+    IOGraphGdmEdgeCollection Edges { get; }
+
+    /// <summary>
+    /// The graph in which the vertex belongs to.
+    /// </summary>
+    IOGraphGdmGraph Graph { get; }
 }

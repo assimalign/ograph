@@ -21,7 +21,7 @@ public partial class BuilderTests
             model.AddVertex<Employee>(vertex =>
             {
                 vertex.HasLabel("employee");
-                vertex.HasType(entity =>
+                vertex.HasEntityType(entity =>
                 {
                     entity.HasKey(p => p.EmployeeId);
 
@@ -59,7 +59,7 @@ public partial class BuilderTests
             model.AddVertex<EmployeeAddress>(vertex =>
             {
                 vertex.HasLabel("address");
-                vertex.HasType(entity =>
+                vertex.HasEntityType(entity =>
                 {
                     entity.HasKey(p => p.AddressId);
                     entity.HasProperty(p => p.AddressId);
@@ -68,7 +68,7 @@ public partial class BuilderTests
             model.AddVertex<EmployeeAddressType>(vertex =>
             {
                 vertex.HasLabel("addressType");
-                vertex.HasType(entity =>
+                vertex.HasEntityType(entity =>
                 {
                     entity.HasKey(p => p.TypeId);
                     entity.HasProperty(p => p.TypeId);
@@ -77,7 +77,7 @@ public partial class BuilderTests
             model.AddVertex<EmployeeTaxInfo>(vertex =>
             {
                 vertex.HasLabel("taxInfo");
-                vertex.HasType(entity =>
+                vertex.HasEntityType(entity =>
                 {
                     entity.HasKey(p => p.TaxInfoId);
                     entity.HasProperty(p => p.EmployeeId);

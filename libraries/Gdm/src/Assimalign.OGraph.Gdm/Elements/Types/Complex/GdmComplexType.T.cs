@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Xml;
+using System.Linq;
 using System.Text.Json;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Elements;
 
 using Assimalign.OGraph.Gdm.Internal;
 
@@ -16,7 +17,7 @@ public class GdmComplexType<[DynamicallyAccessedMembers(DynamicallyAccessedMembe
 
     public GdmComplexType() : this(descriptor => { }) { }
 
-    GdmComplexType(Action<IOGraphGdmComplexTypeDescriptor<T>> configure)
+    internal GdmComplexType(Action<IOGraphGdmComplexTypeDescriptor<T>> configure)
     {
         if (configure is null)
         {
@@ -26,21 +27,19 @@ public class GdmComplexType<[DynamicallyAccessedMembers(DynamicallyAccessedMembe
         Configure(new GdmComplexTypeDescriptor<T>(this));
     }
 
-    /// <inheritdoc />
+    #region Properties
+
+    public IOGraphGdmMemberCollection Members { get; } = new GdmMemberCollection();
     public override GdmTypeKind Kind => GdmTypeKind.Complex;
 
-    /// <inheritdoc />
-    public IOGraphGdmPropertyCollection Properties { get; } = new GdmPropertyCollection();
+    #endregion
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="descriptor"></param>
+    #region Methods
+
     protected virtual void Configure(IOGraphGdmComplexTypeDescriptor<T> descriptor)
     {
         configure?.Invoke(descriptor);
     }
-
     public override T Read(ref Utf8JsonReader reader)
     {
         if (reader.TokenType != JsonTokenType.StartObject)
@@ -69,11 +68,7 @@ public class GdmComplexType<[DynamicallyAccessedMembers(DynamicallyAccessedMembe
             {
                 // TODO: throw invalid operation exception
             }
-            if (property!.IsComputed)
-            {
-                // TODO: throw invalid operation. Cannot set computed value
-            }
-            if (!property.IsNullable && reader.TokenType == JsonTokenType.Null)
+            if (!property!.IsNullable && reader.TokenType == JsonTokenType.Null)
             {
                 // TODO:throw invalid operation. Property is required.
             }
@@ -116,11 +111,7 @@ public class GdmComplexType<[DynamicallyAccessedMembers(DynamicallyAccessedMembe
             {
                 // TODO: throw invalid operation exception
             }
-            if (property!.IsComputed)
-            {
-                // TODO: throw invalid operation. Cannot set computed value
-            }
-            if (!property.IsNullable && reader.NodeType == XmlNodeType.Text)
+            if (!property!.IsNullable && reader.NodeType == XmlNodeType.Text)
             {
                 // TODO:throw invalid operation. Property is required.
             }
@@ -143,10 +134,10 @@ public class GdmComplexType<[DynamicallyAccessedMembers(DynamicallyAccessedMembe
 
         writer.WriteStartObject();
 
-        foreach (var property in Properties)
+        foreach (var property in Members.OfType<IOGraphGdmProperty>())
         {
             var label = property.Label;
-            var type = property!.Type.Definition;
+            var type = property!.Type;
             var getter = property!.Getter;
             var propertyValue = getter.Invoke(value);
 
@@ -177,10 +168,10 @@ public class GdmComplexType<[DynamicallyAccessedMembers(DynamicallyAccessedMembe
 
         writer.WriteStartElement(Label);
 
-        foreach (var property in Properties)
+        foreach (var property in Members.OfType<IOGraphGdmProperty>())
         {
             var label = property.Label;
-            var type = property!.Type.Definition;
+            var type = property!.Type;
             var getter = property!.Getter;
             var propertyValue = getter.Invoke(value);
 
@@ -200,6 +191,8 @@ public class GdmComplexType<[DynamicallyAccessedMembers(DynamicallyAccessedMembe
 
         writer.WriteEndElement();
     }
+
+    #endregion
 
     #region Overloads
 

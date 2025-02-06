@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Collections.Generic;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Elements;
 
 using Assimalign.OGraph.Gdm.Internal;
 
@@ -10,22 +10,41 @@ using Assimalign.OGraph.Gdm.Internal;
 public class GdmVertex<T> : IOGraphGdmVertex
     where T : class, new()
 {
-    private readonly Action<IOGraphGdmVertexDescriptor<T>> configure;
-    private readonly IList<IOGraphGdmBinding> bindings = new List<IOGraphGdmBinding>();
+    private readonly Action<IOGraphGdmVertexDescriptor<T>>? configure;
 
-    internal Label label;
-    internal IOGraphGdmTypeReference? type;
+    #region Constructors
 
-    public GdmVertex() : this(descriptor => { }) { }
-    GdmVertex(Action<IOGraphGdmVertexDescriptor<T>> configure)
+    public GdmVertex()
     {
-        if (configure is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(configure));
-        }
+
+    }
+    internal GdmVertex(Action<IOGraphGdmVertexDescriptor<T>> configure)
+    {
         this.configure = configure;
         this.Configure(new GdmVertexDescriptor<T>(this));
     }
+    internal GdmVertex(Label label, IOGraphGdmGraph graph, Action<IOGraphGdmVertexDescriptor<T>> configure)
+        : this(configure)
+    {
+        Label = label;
+        Graph = graph;
+    }
+
+    #endregion
+
+    #region Properties 
+
+    public Label Label { get; internal set; }
+    public IOGraphGdmType Type { get; internal set; } = default!;
+    public IOGraphGdmEdgeCollection Edges { get; } = new GdmEdgeCollection();
+    public IOGraphGdmOperationCollection Operations { get; } = new GdmVertexOperationCollection();
+    public IOGraphGdmMetadata Meta { get; } = new GdmMetadata();
+    public IOGraphGdmGraph Graph { get; internal set; } = default!;
+    public GdmElementKind ElementKind => GdmElementKind.Vertex;
+
+    #endregion
+
+    #region Methods
 
     /// <summary>
     /// 
@@ -36,50 +55,7 @@ public class GdmVertex<T> : IOGraphGdmVertex
         configure?.Invoke(descriptor);
     }
 
-    public Label Label => label;
-    public IOGraphGdmTypeReference Type => type!;
-    public IOGraphGdmEdgeReferenceCollection Edges { get; } = new GdmEdgeReferenceCollection();
-    public IOGraphGdmMetadata Metadata { get; } = new GdmMetadata();
-    public GdmElementKind ElementKind => GdmElementKind.Vertex;
-
-    #region Explicit Implementations
-    IEnumerable<IOGraphGdmBinding> IOGraphGdmBindableElement.Bindings => bindings;
-    void IOGraphGdmBindableElement.Bind(IOGraphGdmBinding binding)
-    {
-        if (binding is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(binding));
-        }
-        if (this.HasBinding(binding.Label))
-        {
-            ThrowHelper.ThrowInvalidOperationException($"The element already contains a binding with the label: {binding.Label}");
-        }
-        bindings.Add(binding);
-    }
-    void IOGraphGdmBindableElement.Unbind(IOGraphGdmBinding binding)
-    {
-        if (binding is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(binding));
-        }
-        if (!bindings.Remove(binding))
-        {
-            // TODO: Throw error
-        }
-    }
     #endregion
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="configure"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    public static GdmVertex<T> Create(Action<IOGraphGdmVertexDescriptor<T>> configure) 
-    {
-        return new GdmVertex<T>(configure);
-    }
 
     #region Overload Members
 
@@ -103,6 +79,22 @@ public class GdmVertex<T> : IOGraphGdmVertex
             return GetHashCode() == instance.GetHashCode();
         }
         return false;
+    }
+
+    #endregion
+
+    #region Helpers
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="configure"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static GdmVertex<T> Create(Action<IOGraphGdmVertexDescriptor<T>> configure)
+    {
+        return new GdmVertex<T>(configure);
     }
 
     #endregion

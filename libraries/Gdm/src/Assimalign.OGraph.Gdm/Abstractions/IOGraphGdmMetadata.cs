@@ -8,4 +8,5 @@ namespace Assimalign.OGraph.Gdm;
 /// </summary>
 public interface IOGraphGdmMetadata : IDictionary<string, string>
 {
+    // TODO: Revisit a more robust metadata structure
 }

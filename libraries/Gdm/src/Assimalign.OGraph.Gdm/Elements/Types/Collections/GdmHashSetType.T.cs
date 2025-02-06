@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Elements;
 
 public class GdmHashSetType<T> : GdmCollectionType<HashSet<T>, T> 
 {

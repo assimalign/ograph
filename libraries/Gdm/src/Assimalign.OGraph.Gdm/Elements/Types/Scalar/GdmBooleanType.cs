@@ -3,7 +3,7 @@ using System.Xml;
 using System.Text.Json;
 using Assimalign.OGraph.Gdm.Internal;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Elements;
 
 public sealed class GdmBooleanType : GdmScalarType<bool>
 {

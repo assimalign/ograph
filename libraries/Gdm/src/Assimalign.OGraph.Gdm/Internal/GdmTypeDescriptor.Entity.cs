@@ -2,6 +2,8 @@
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
+using Assimalign.OGraph.Gdm.Elements;
+
 internal class GdmEntityTypeDescriptor : IOGraphGdmEntityTypeDescriptor
 {
     private readonly GdmEntityType entityType;

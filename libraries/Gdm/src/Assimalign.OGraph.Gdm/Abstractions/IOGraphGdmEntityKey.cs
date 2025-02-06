@@ -8,5 +8,5 @@ public interface IOGraphGdmEntityKey : IOGraphGdmElement
     /// <summary>
     /// Gets the property reference of the Entity Key.
     /// </summary>
-    IOGraphGdmPropertyReference Property { get; }
+    IOGraphGdmProperty Property { get; }
 }

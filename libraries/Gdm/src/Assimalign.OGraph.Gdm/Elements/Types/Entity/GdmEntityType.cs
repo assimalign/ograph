@@ -3,7 +3,7 @@ using System.Xml;
 using System.Text.Json;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Elements;
 
 using Assimalign.OGraph.Gdm.Internal;
 
@@ -17,6 +17,7 @@ public class GdmEntityType : IOGraphGdmEntityType
     internal Type runtimeType;
     internal Label label;
     internal IOGraphGdmEntityKey key;
+    internal IOGraphGdmGraph graph;
 
     /// <summary>
     /// 
@@ -58,10 +59,16 @@ public class GdmEntityType : IOGraphGdmEntityType
     public GdmElementKind ElementKind => GdmElementKind.Type;
 
     /// <inheritdoc />
-    public IOGraphGdmPropertyCollection Properties { get; } = new GdmPropertyCollection();
+    public IOGraphGdmMemberCollection Members { get; } = new GdmMemberCollection();
 
     /// <inheritdoc />
     public IOGraphGdmEntityKey Key => key;
+
+    /// <inheritdoc />
+    public IOGraphGdmGraph Graph => graph!;
+
+    /// <inheritdoc />
+    public IOGraphGdmMetadata Meta { get; } = new GdmMetadata();
 
     /// <summary>
     /// 
@@ -101,11 +108,7 @@ public class GdmEntityType : IOGraphGdmEntityType
             {
                 // TODO: throw invalid operation exception
             }
-            if (property!.IsComputed)
-            {
-                // TODO: throw invalid operation. Cannot set computed value
-            }
-            if (!property.IsNullable && reader.TokenType == JsonTokenType.Null)
+            if (!property!.IsNullable && reader.TokenType == JsonTokenType.Null)
             {
                 // TODO:throw invalid operation. Property is required.
             }
@@ -150,11 +153,7 @@ public class GdmEntityType : IOGraphGdmEntityType
             {
                 // TODO: throw invalid operation exception
             }
-            if (property!.IsComputed)
-            {
-                // TODO: throw invalid operation. Cannot set computed value
-            }
-            if (!property.IsNullable && reader.NodeType == XmlNodeType.Text)
+            if (!property!.IsNullable && reader.NodeType == XmlNodeType.Text)
             {
                 // TODO:throw invalid operation. Property is required.
             }

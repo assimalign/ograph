@@ -3,7 +3,7 @@ using System.Xml;
 using System.Text.Json;
 using System.Diagnostics;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Elements;
 
 using Assimalign.OGraph.Gdm.Internal;
 
@@ -14,24 +14,21 @@ using Assimalign.OGraph.Gdm.Internal;
 [DebuggerDisplay("Type = {Label}")]
 public abstract class GdmType<T> : IOGraphGdmType
 {
-    internal Label label;
-
     public GdmType()
     {
         var typeName = RuntimeType.Name;
         // Let's only override the label if it has valid characters
         if (Label.IsValid(typeName))
         {
-            label = typeName;
+            Label = typeName;
         }
-
-
     }
 
     public Type RuntimeType { get; } = typeof(T);
     public GdmElementKind ElementKind { get; } = GdmElementKind.Type;
     public IOGraphGdmMetadata Meta { get; } = new GdmMetadata();
-    public virtual Label Label => label;
+    public IOGraphGdmGraph Graph { get; internal set; } = default!;
+    public virtual Label Label { get; internal set; }
     public abstract GdmTypeKind Kind { get; }
 
     public abstract T Read(ref Utf8JsonReader reader);

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Xml;
+using System.Linq;
 using System.Text.Json;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Elements;
 
 using Assimalign.OGraph.Gdm.Internal;
 
@@ -17,6 +18,7 @@ public class GdmComplexType : IOGraphGdmComplexType
         DynamicallyAccessedMemberTypes.PublicProperties)]
     internal Type runtimeType;
     internal Label label;
+    internal IOGraphGdmGraph grpah;
 
     public GdmComplexType([DynamicallyAccessedMembers(
         DynamicallyAccessedMemberTypes.PublicParameterlessConstructor |
@@ -51,7 +53,9 @@ public class GdmComplexType : IOGraphGdmComplexType
     public Type RuntimeType => runtimeType;
     public GdmTypeKind Kind => GdmTypeKind.Complex;
     public GdmElementKind ElementKind => GdmElementKind.Type;
-    public IOGraphGdmPropertyCollection Properties { get; } = new GdmPropertyCollection();
+    public IOGraphGdmMemberCollection Members { get; } = new GdmMemberCollection();
+    public IOGraphGdmGraph Graph => Graph!;
+    public IOGraphGdmMetadata Meta { get; } = new GdmMetadata();
 
     public virtual object Read(ref Utf8JsonReader reader)
     {
@@ -81,11 +85,7 @@ public class GdmComplexType : IOGraphGdmComplexType
             {
                 // TODO: throw invalid operation exception
             }
-            if (property!.IsComputed)
-            {
-                // TODO: throw invalid operation. Cannot set computed value
-            }
-            if (!property.IsNullable && reader.TokenType == JsonTokenType.Null)
+            if (!property!.IsNullable && reader.TokenType == JsonTokenType.Null)
             {
                 // TODO:throw invalid operation. Property is required.
             }
@@ -128,11 +128,7 @@ public class GdmComplexType : IOGraphGdmComplexType
             {
                 // TODO: throw invalid operation exception
             }
-            if (property!.IsComputed)
-            {
-                // TODO: throw invalid operation. Cannot set computed value
-            }
-            if (!property.IsNullable && reader.NodeType == XmlNodeType.Text)
+            if (!property!.IsNullable && reader.NodeType == XmlNodeType.Text)
             {
                 // TODO:throw invalid operation. Property is required.
             }
@@ -163,7 +159,7 @@ public class GdmComplexType : IOGraphGdmComplexType
 
             writer.WriteStartObject();
 
-            foreach (var property in (this as IOGraphGdmComplexType).Properties)
+            foreach (var property in this.Members.OfType<IOGraphGdmProperty>())
             {
                 var propertyName = property.Label;
                 var propertyType = property.Type.Definition;

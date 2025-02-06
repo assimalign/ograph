@@ -9,6 +9,14 @@ internal static class ThrowHelper
 {
     #region Common Exceptions
 
+    public static void ThrowIfNull(object value, string paramName)
+    {
+        if (value is null)
+        {
+            ThrowArgumentNullException(paramName);
+        }
+    }
+
     [DoesNotReturn]
     public static void ThrowArgumentNullException(string paramName) =>
         throw new ArgumentNullException(paramName);
@@ -64,8 +72,18 @@ internal static class ThrowHelper
     #region Serialization Exceptions
 
     [DoesNotReturn]
+    public static void ThrowInvalidContentException(string source, Exception innerException) =>
+        throw new GdmSerializationException(GdmErrorCode.GDM3001, Resources.GDM3001, innerException)
+        {
+            Source = source
+        };
+
+    [DoesNotReturn]
     public static void ThrowInvalidContentException(string source) =>
-        throw new GdmSerializationException(GdmErrorCode.GDM3001, source, Resources.GDM3001);
+        throw new GdmSerializationException(GdmErrorCode.GDM3001, Resources.GDM3001)
+        {
+            Source = source
+        };
 
     [DoesNotReturn]
     public static void ThrowInvalidTypeSerializationException(Type expected, Type received) =>

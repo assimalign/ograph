@@ -6,12 +6,14 @@
 public interface IOGraphGdmParameter : IOGraphGdmLabeledElement
 {
     /// <summary>
-    /// The parameter type reference.
-    /// </summary>
-    IOGraphGdmTypeReference Type { get; }
-
-    /// <summary>
     /// 
     /// </summary>
     bool IsRequired { get; }
+
+    /// <summary>
+    /// The parameter type reference.
+    /// </summary>
+    IOGraphGdmType Type { get; }
+
+
 }

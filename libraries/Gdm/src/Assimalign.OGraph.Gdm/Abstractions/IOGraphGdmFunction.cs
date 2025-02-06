@@ -1,11 +1,14 @@
 ﻿namespace Assimalign.OGraph.Gdm;
 
-public interface IOGraphGdmFunction : IOGraphGdmBindableElement
+/// <summary>
+/// 
+/// </summary>
+public interface IOGraphGdmFunction : IOGraphGdmMember
 {
     /// <summary>
     /// Gets the input type, if any.
     /// </summary>
-    IOGraphGdmTypeReference ReturnType { get; }
+    IOGraphGdmType ReturnType { get; }
 
     /// <summary>
     /// A collection of parameters

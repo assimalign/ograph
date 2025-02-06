@@ -2,17 +2,38 @@
 using System.Xml;
 using System.Text.Json;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Elements;
+
+using Assimalign.OGraph.Gdm.Internal;
 
 public sealed class GdmUriType : GdmScalarType<Uri>
 {
     public override Uri Read(ref Utf8JsonReader reader)
     {
-        return new Uri(reader.GetString()!);
+        if (reader.TokenType != JsonTokenType.String)
+        {
+            ThrowHelper.ThrowInvalidContentException("");
+        }
+
+        var value = reader.GetString();
+
+        if (!Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out var uri))
+        {
+            ThrowHelper.ThrowInvalidContentException("", new JsonException());
+        }
+
+        return uri;
     }
     public override Uri Read(XmlReader reader)
     {
-        return new Uri(reader.ReadContentAsString());
+        var value = reader.ReadContentAsString();
+
+        if (!Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out var uri))
+        {
+            ThrowHelper.ThrowInvalidContentException("", new XmlException(""));
+        }
+
+        return uri;
     }
     public override void Write(Utf8JsonWriter writer, Uri value)
     {

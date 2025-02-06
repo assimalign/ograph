@@ -2,6 +2,8 @@
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
+using Assimalign.OGraph.Gdm.Elements;
+
 internal class GdmVertexDescriptor<T> : IOGraphGdmVertexDescriptor<T>
     where T : class, new()
 {
@@ -22,7 +24,7 @@ internal class GdmVertexDescriptor<T> : IOGraphGdmVertexDescriptor<T>
         vertex.label = label;
         return this;
     }
-    public IOGraphGdmVertexDescriptor<T> HasType(IOGraphGdmEntityType type)
+    public IOGraphGdmVertexDescriptor<T> HasEntityType(IOGraphGdmEntityType type)
     {
         if (type is null)
         {
@@ -45,9 +47,9 @@ internal class GdmVertexDescriptor<T> : IOGraphGdmVertexDescriptor<T>
         return this;
     }
 
-    public IOGraphGdmVertexDescriptor<T> HasType<TGdmType>() where TGdmType : IOGraphGdmEntityType, new()
+    public IOGraphGdmVertexDescriptor<T> HasEntityType<TGdmType>() where TGdmType : IOGraphGdmEntityType, new()
     {
-        return HasType(new TGdmType());
+        return HasEntityType(new TGdmType());
     }
 
     IOGraphGdmVertexDescriptor<T> IOGraphGdmVertexDescriptor<T>.HasEdge<TTarget>(Label label)

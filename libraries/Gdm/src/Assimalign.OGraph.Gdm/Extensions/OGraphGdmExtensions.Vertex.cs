@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Assimalign.OGraph.Gdm;
 
 using Internal;
+using Elements;
 
 public static class OGraphGdmVertexExtensions
 {
@@ -25,21 +26,18 @@ public static class OGraphGdmVertexExtensions
         {
             ThrowHelper.ThrowArgumentNullException(nameof(vertex));
         }
-        if (vertex.Type is null || vertex.Type.Definition is null)
-        {
-            ThrowHelper.ThrowVertexInvalidTypeReferenceIsNull(vertex.Label);
-        }
-        if (vertex.Type.Definition is not IOGraphGdmEntityType entity)
+        if (vertex.Type is not IOGraphGdmEntityType entity)
         {
             ThrowHelper.ThrowVertexInvalidTypeReferenceIsNotEntityType(vertex.Label);
         }
         else
         {
-            property = entity.Properties.FirstOrDefault(p => p.Label == label);
+            property = entity.Members.OfType<IOGraphGdmProperty>().FirstOrDefault(p => p.Label == label);
         }
 
         return property is not null;
     }
+    
     /// <summary>
     /// Get's the properties from the entity reference bound to the vertex.
     /// </summary>
@@ -53,21 +51,12 @@ public static class OGraphGdmVertexExtensions
         {
             ThrowHelper.ThrowArgumentNullException(nameof(vertex));
         }
-        if (vertex.Type is null || vertex.Type.Definition is null)
-        {
-            ThrowHelper.ThrowVertexInvalidTypeReferenceIsNull(vertex.Label);
-        }
-        if (vertex.Type.Definition is not IOGraphGdmEntityType entity)
+        if (vertex.Type is not IOGraphGdmEntityType entity)
         {
             ThrowHelper.ThrowVertexInvalidTypeReferenceIsNotEntityType(vertex.Label);
         }
-        else 
-        {
-            foreach (var property in entity.Properties)
-            {
-                yield return property;
-            }
-        }
+
+        return (vertex.Type as IOGraphGdmEntityType)!.Members.OfType<IOGraphGdmProperty>();
     }
 
     /// <summary>
@@ -85,11 +74,11 @@ public static class OGraphGdmVertexExtensions
         {
             ThrowHelper.ThrowArgumentNullException(nameof(vertex));
         }
-        else if (vertex.Type is null || vertex.Type.Definition is null)
+        else if (vertex.Type is null || vertex.Type is null)
         {
             ThrowHelper.ThrowVertexInvalidTypeReferenceIsNull(vertex.Label);
         }
-        else if (vertex.Type.Definition is not IOGraphGdmEntityType entity)
+        else if (vertex.Type is not IOGraphGdmEntityType entity)
         {
             ThrowHelper.ThrowVertexInvalidTypeReferenceIsNotEntityType(vertex.Label);
         }

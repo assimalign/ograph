@@ -2,7 +2,7 @@
 using System.Xml;
 using System.Text.Json;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Elements;
 
 public class GdmGuidType : GdmScalarType<Guid>
 {

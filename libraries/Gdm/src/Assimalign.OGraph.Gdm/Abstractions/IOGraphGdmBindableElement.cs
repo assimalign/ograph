@@ -15,15 +15,9 @@ public interface IOGraphGdmBindableElement : IOGraphGdmLabeledElement
     /// </summary>
     bool IsBound { get; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="binding"></param>
-    void Bind(IOGraphGdmBinding binding);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="binding"></param>
-    void Unbind(IOGraphGdmBinding binding);
+    //// <summary>
+    //// 
+    //// </summary>
+    //// <param name="binding"></param>
+   // void Bind(IOGraphGdmBinding binding);
 }

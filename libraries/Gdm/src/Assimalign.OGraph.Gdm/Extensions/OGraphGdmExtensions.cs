@@ -8,6 +8,7 @@ using System.Collections.Generic;
 namespace Assimalign.OGraph.Gdm;
 
 using Assimalign.OGraph.Gdm.Internal;
+using System.Xml.Linq;
 
 
 /// <summary>
@@ -16,6 +17,52 @@ using Assimalign.OGraph.Gdm.Internal;
 public static class OGraphGdmExtensions
 {
     /// <summary>
+    /// Finds the first element in the collection
+    /// </summary>
+    /// <typeparam name="TElement"></typeparam>
+    /// <param name="elements"></param>
+    /// <param name="label"></param>
+    /// <returns></returns>
+    public static TElement Find<TElement>(this IEnumerable<TElement> elements, Label label) 
+        where TElement : IOGraphGdmLabeledElement
+    {
+        AssertNull(elements, nameof(elements));
+        return elements.OfType<TElement>().First(p => p.Equals(label));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="model"></param>
+    /// <param name="label"></param>
+    /// <returns></returns>
+    public static IOGraphGdmGraph GetGraph(this IOGraphGdm model, Label label)
+    {
+        AssertNull(model, nameof(model));
+        return model.Elements.Find<IOGraphGdmGraph>(label);
+    }
+
+    private static void AssertNull(object value, string paramName)
+    {
+        if (value is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(paramName);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="graph"></param>
+    /// <param name="label"></param>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public static bool TryGetType(this IOGraphGdmGraph graph, Label label, out IOGraphGdmType type)
+    {
+        throw new NotImplementedException();
+    }
+    /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="TGdmBinding"></typeparam>
@@ -23,18 +70,18 @@ public static class OGraphGdmExtensions
     /// <param name="label"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static TGdmBinding? GetBinding<TGdmBinding>(this IOGraphGdmBindableElement element, Label label)
-        where TGdmBinding : IOGraphGdmBinding
-    {
-        if (element is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(element));
-        }
+    //public static TGdmBinding? GetBinding<TGdmBinding>(this IOGraphGdmBindableElement element, Label label)
+    //    where TGdmBinding : IOGraphGdmBinding
+    //{
+    //    if (element is null)
+    //    {
+    //        ThrowHelper.ThrowArgumentNullException(nameof(element));
+    //    }
 
-        return element.Bindings
-            .OfType<TGdmBinding>()
-            .FirstOrDefault(p => p.Label.Equals(label));
-    }
+    //    return element.Bindings
+    //        .OfType<TGdmBinding>()
+    //        .FirstOrDefault(p => p.Label.Equals(label));
+    //}
     /// <summary>
     /// 
     /// </summary>
@@ -42,14 +89,14 @@ public static class OGraphGdmExtensions
     /// <param name="label"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static bool HasBinding(this IOGraphGdmBindableElement element, Label label)
-    {
-        if (element is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(element));
-        }
-        return element.Bindings.Any(p=>p.Label.Equals(label));
-    }
+    //public static bool HasBinding(this IOGraphGdmBindableElement element, Label label)
+    //{
+    //    if (element is null)
+    //    {
+    //        ThrowHelper.ThrowArgumentNullException(nameof(element));
+    //    }
+    //    return element.Bindings.Any(p=>p.Label.Equals(label));
+    //}
     /// <summary>
     /// Returns all the <see cref="IOGraphGdmVertex"/> instances in the graph model.
     /// </summary>
@@ -177,35 +224,65 @@ public static class OGraphGdmExtensions
         return model.Elements.OfType<IOGraphGdmProperty>();
     }
 
-
-    private static IEnumerable<string> GetPaths(this IOGraphGdm model)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IEnumerable<IOGraphGdmFunction> GetGdmFunctions(this IOGraphGdm model)
     {
-        var root = model.Label;
-
-        yield return root;
-
-        foreach (var vertex in model.GetGdmVertices())
+        if (model is null)
         {
-            foreach (var path in Paths(root, vertex))
-            {
-                yield return path;
-            }
+            throw new ArgumentNullException(nameof(model));
         }
-
-        IEnumerable<string> Paths(string root, IOGraphGdmVertex vertex)
-        {
-            foreach (var edge in vertex.Edges)
-            {
-                var key = (vertex.Type as IOGraphGdmEntityType)!.Key.Property.Definition.Label;
-                var label = string.Join('/', root, $"{key}", edge.Definition.Label);
-
-                yield return string.Join('/', root, $"{key}", label);
-
-                foreach (var child in Paths(label, edge.Definition.Target.Definition))
-                {
-                    yield return child;
-                }
-            }
-        }
+        return model.Elements.OfType<IOGraphGdmFunction>();
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IEnumerable<IOGraphGdmGraph> GetGdmGraphs(this IOGraphGdm model)
+    {
+        if (model is null)
+        {
+            throw new ArgumentNullException(nameof(model));
+        }
+        return model.Elements.OfType<IOGraphGdmGraph>();
+    }
+
+
+    //private static IEnumerable<string> GetPaths(this IOGraphGdm model)
+    //{
+    //    var root = model.Label;
+
+    //    yield return root;
+
+    //    foreach (var vertex in model.GetGdmVertices())
+    //    {
+    //        foreach (var path in Paths(root, vertex))
+    //        {
+    //            yield return path;
+    //        }
+    //    }
+
+    //    IEnumerable<string> Paths(string root, IOGraphGdmVertex vertex)
+    //    {
+    //        foreach (var edge in vertex.Edges)
+    //        {
+    //            var key = (vertex.Type as IOGraphGdmEntityType)!.Key.Property.Definition.Label;
+    //            var label = string.Join('/', root, $"{key}", edge.Definition.Label);
+
+    //            yield return string.Join('/', root, $"{key}", label);
+
+    //            foreach (var child in Paths(label, edge.Definition.Target.Definition))
+    //            {
+    //                yield return child;
+    //            }
+    //        }
+    //    }
+    //}
 }

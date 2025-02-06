@@ -3,7 +3,7 @@ using System.Xml;
 using System.Text.Json;
 using System.Globalization;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Elements;
 
 public sealed class GdmUInt64Type : GdmScalarType<UInt64>
 {

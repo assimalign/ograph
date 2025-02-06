@@ -5,29 +5,20 @@ namespace Assimalign.OGraph.Gdm;
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphGdmGraph : IOGraphGdmBindableElement
+public interface IOGraphGdmGraph : IOGraphGdmLabeledElement
 {
     /// <summary>
     /// A collection of edges within the graph.
     /// </summary>
-    IEnumerable<IOGraphGdmEdge> Edges { get; }
+    IOGraphGdmEdgeCollection Edges { get; }
 
     /// <summary>
     /// A collection of vertices within the graph.
     /// </summary>
-    IEnumerable<IOGraphGdmVertex> Vertices { get; }
+    IOGraphGdmVertexCollection Vertices { get; }
 
     /// <summary>
-    /// 
+    /// A collection of types defined within the graph.
     /// </summary>
-    /// <param name="label"></param>
-    /// <returns></returns>
-    IOGraphGdmEdge GetEdge(Label label);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="label"></param>
-    /// <returns></returns>
-    IOGraphGdmVertex GetVertex(Label label);
+    IOGraphGdmTypeCollection Types { get; }
 }

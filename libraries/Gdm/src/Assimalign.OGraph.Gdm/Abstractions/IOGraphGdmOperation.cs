@@ -1,5 +1,8 @@
 ﻿namespace Assimalign.OGraph.Gdm;
 
+/// <summary>
+/// 
+/// </summary>
 public interface IOGraphGdmOperation : IOGraphGdmBindableElement
 {
     /// <summary>
@@ -10,7 +13,7 @@ public interface IOGraphGdmOperation : IOGraphGdmBindableElement
     /// <summary>
     /// Gets the input type, if any.
     /// </summary>
-    IOGraphGdmTypeReference ReturnType { get; }
+    IOGraphGdmType ReturnType { get; }
 
     /// <summary>
     /// Gets a collection of parameters for 

@@ -2,24 +2,25 @@
 using System.Linq;
 using System.Xml;
 using System.Text.Json;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Elements;
 
 using Assimalign.OGraph.Gdm.Internal;
 
-public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor | DynamicallyAccessedMemberTypes.PublicProperties)] T> : GdmType<T>, IOGraphGdmEntityType
+public class GdmEntityType<[DynamicallyAccessedMembers(
+    DynamicallyAccessedMemberTypes.PublicParameterlessConstructor | 
+    DynamicallyAccessedMemberTypes.PublicProperties)] T> : 
+    GdmType<T>, IOGraphGdmEntityType
     where T : class, new()
 {
-    internal IOGraphGdmEntityKey key = default!;
     private readonly Action<IOGraphGdmEntityTypeDescriptor<T>> configure;
 
     /// <summary>
     /// Default constructure.
     /// </summary>
     public GdmEntityType() : this(descriptor => { }) { }
-    GdmEntityType(Action<IOGraphGdmEntityTypeDescriptor<T>> configure)
+    internal GdmEntityType(Action<IOGraphGdmEntityTypeDescriptor<T>> configure)
     {
         if (configure is null)
         {
@@ -28,6 +29,16 @@ public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMember
         this.configure = configure;
         Configure(new GdmEntityTypeDescriptor<T>(this));
     }
+
+    #region Properties
+
+    public IOGraphGdmEntityKey Key { get; internal set; } = default!;
+    public IOGraphGdmMemberCollection Members { get; } = new GdmMemberCollection();
+    public override GdmTypeKind Kind => GdmTypeKind.Entity;
+
+    #endregion
+
+    #region Methods
 
     /// <summary>
     /// 
@@ -38,14 +49,7 @@ public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMember
         configure.Invoke(descriptor);
     }
 
-    /// <inheritdoc />
-    public override GdmTypeKind Kind => GdmTypeKind.Entity;
-
-    /// <inheritdoc />
-    public IOGraphGdmPropertyCollection Properties { get; } = new GdmPropertyCollection();
-
-    /// <inheritdoc />
-    public IOGraphGdmEntityKey Key => key;
+    #endregion
 
     #region Overloads
     /// <inheritdoc />
@@ -98,11 +102,7 @@ public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMember
             {
                 // TODO: throw invalid operation exception
             }
-            if (property!.IsComputed)
-            {
-                // TODO: throw invalid operation. Cannot set computed value
-            }
-            if (!property.IsNullable && reader.TokenType == JsonTokenType.Null)
+            if (!property!.IsNullable && reader.TokenType == JsonTokenType.Null)
             {
                 // TODO:throw invalid operation. Property is required.
             }
@@ -145,11 +145,7 @@ public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMember
             {
                 // TODO: throw invalid operation exception
             }
-            if (property!.IsComputed)
-            {
-                // TODO: throw invalid operation. Cannot set computed value
-            }
-            if (!property.IsNullable && reader.NodeType == XmlNodeType.Text)
+            if (!property!.IsNullable && reader.NodeType == XmlNodeType.Text)
             {
                 // TODO:throw invalid operation. Property is required.
             }
@@ -172,7 +168,7 @@ public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMember
 
         writer.WriteStartObject();
 
-        foreach (var property in Properties)
+        foreach (var property in Members.OfType<IOGraphGdmProperty>())
         {
             var label = property.Label;
             var type = property!.Type.Definition;
@@ -206,7 +202,7 @@ public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMember
 
         writer.WriteStartElement(Label);
 
-        foreach (var property in Properties)
+        foreach (var property in Members.OfType<IOGraphGdmProperty>())
         {
             var label = property.Label;
             var type = property!.Type.Definition;
@@ -231,7 +227,8 @@ public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMember
     }
     #endregion
 
-    #region Static Members/Methods
+    #region Helpers 
+
     /// <summary>
     /// 
     /// </summary>
@@ -243,5 +240,6 @@ public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMember
     {
         return new GdmEntityType<T>(configure);
     }
+
     #endregion
 }

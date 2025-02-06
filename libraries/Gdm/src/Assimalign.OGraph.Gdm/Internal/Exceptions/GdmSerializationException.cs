@@ -1,4 +1,6 @@
-﻿namespace Assimalign.OGraph.Gdm.Internal;
+﻿using System;
+
+namespace Assimalign.OGraph.Gdm.Internal;
 
 internal class GdmSerializationException : GdmException
 {
@@ -7,13 +9,12 @@ internal class GdmSerializationException : GdmException
     {
         ErrorCode = errorCode;
     }
-    public GdmSerializationException(GdmErrorCode errorCode, string source, string? message) 
-        : base(message)
+
+    public GdmSerializationException(GdmErrorCode errorCode, string? message, Exception innerException)
+        : base(message, innerException)
     {
         ErrorCode = errorCode;
-        Source = source;
     }
 
-    public override string? Source { get; set; }
     public override GdmErrorCode ErrorCode { get; }
 }

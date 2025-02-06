@@ -10,4 +10,3 @@ public interface IOGraphGdmEnumType : IOGraphGdmType
     /// </summary>
     public GdmEnumValue[] Values { get; }
 }
-

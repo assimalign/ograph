@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Diagnostics;
 using System.Collections.Generic;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Elements;
 
 using Assimalign.OGraph.Gdm.Internal;
 

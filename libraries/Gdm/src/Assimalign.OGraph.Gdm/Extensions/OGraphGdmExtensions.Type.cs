@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.OGraph.Gdm;
 
+using Assimalign.OGraph.Gdm.Elements;
 using Assimalign.OGraph.Gdm.Internal;
 
 public static class OGraphGdmTypeExtensions
@@ -31,7 +32,7 @@ public static class OGraphGdmTypeExtensions
     {
         property = default;
 
-        foreach (var item in complexType.Properties)
+        foreach (var item in complexType.Members.OfType<IOGraphGdmProperty>())
         {
             if (item.Label == label)
             {

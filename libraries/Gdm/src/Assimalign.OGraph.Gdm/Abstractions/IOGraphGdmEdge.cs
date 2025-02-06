@@ -9,18 +9,24 @@
 public interface IOGraphGdmEdge : IOGraphGdmLabeledElement
 {
     //Label - ! The Edge Label must match a literal segment of on operation on the target vertex. Operation Methods must not be mismatched
-    /// <summary>
-    /// The source vertex.
-    /// </summary>
-    IOGraphGdmVertexReference Source { get; }
 
     /// <summary>
     /// The target vertex.
     /// </summary>
-    IOGraphGdmVertexReference Target { get; }
+    IOGraphGdmVertex Target { get; }
+
+    /// <summary>
+    /// The source vertex.
+    /// </summary>
+    IOGraphGdmVertex Source { get; }
 
     /// <summary>
     /// Get the collection of operations for this edge.
     /// </summary>
     IOGraphGdmOperationCollection Operations { get; }
+
+    /// <summary>
+    /// The graph in which the vertex belongs to.
+    /// </summary>
+    IOGraphGdmGraph Graph { get; }
 }

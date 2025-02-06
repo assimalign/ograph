@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Elements;
 
 public abstract class GdmScalarType<T> : GdmType<T>,
     IOGraphGdmScalarType

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
+using Assimalign.OGraph.Gdm.Elements;
+
 internal class GdmVertexDescriptor : IOGraphGdmVertexDescriptor
 {
     private readonly GdmVertex vertex;
@@ -21,7 +23,7 @@ internal class GdmVertexDescriptor : IOGraphGdmVertexDescriptor
         return this;
     }
 
-    public IOGraphGdmVertexDescriptor HasType(IOGraphGdmEntityType type)
+    public IOGraphGdmVertexDescriptor HasEntityType(IOGraphGdmEntityType type)
     {
         if (type is null)
         {
@@ -34,8 +36,8 @@ internal class GdmVertexDescriptor : IOGraphGdmVertexDescriptor
         return this;
     }
 
-    public IOGraphGdmVertexDescriptor HasType<TGdmType>() where TGdmType : IOGraphGdmEntityType, new()
+    public IOGraphGdmVertexDescriptor HasEntityType<TGdmType>() where TGdmType : IOGraphGdmEntityType, new()
     {
-        return HasType(new TGdmType());
+        return HasEntityType(new TGdmType());
     }
 }

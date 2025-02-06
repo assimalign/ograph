@@ -3,17 +3,12 @@
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphGdmProperty : IOGraphGdmLabeledElement
+public interface IOGraphGdmProperty : IOGraphGdmMember
 {
     /// <summary>
     /// The OGraph Property Type.
     /// </summary>
-    IOGraphGdmTypeReference Type { get; }
-
-    /// <summary>
-    /// References the entity or complex type in which the property is a member of.
-    /// </summary>
-    IOGraphGdmTypeReference DeclaringType { get; }
+    IOGraphGdmType Type { get; }
 
     /// <summary>
     /// The getter of the property value.

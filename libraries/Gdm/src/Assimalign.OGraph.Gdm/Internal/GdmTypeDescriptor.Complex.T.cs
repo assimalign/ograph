@@ -5,7 +5,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
-internal class GdmComplexTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T> : IOGraphGdmComplexTypeDescriptor<T> 
+using Assimalign.OGraph.Gdm.Elements;
+
+internal class GdmComplexTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T> : IOGraphGdmComplexTypeDescriptor<T>
     where T : class, new()
 {
     private readonly GdmComplexType<T> complexType;
@@ -13,6 +15,11 @@ internal class GdmComplexTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyA
     public GdmComplexTypeDescriptor(GdmComplexType<T> complexType)
     {
         this.complexType = complexType;
+    }
+
+    public IOGraphGdmFunctionDescriptor<TFunction> HasFunction<TFunction>(Expression<Func<T, TFunction>> expression)
+    {
+        throw new NotImplementedException();
     }
 
     public IOGraphGdmComplexTypeDescriptor<T> HasLabel(Label label)

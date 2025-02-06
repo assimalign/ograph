@@ -19,6 +19,11 @@ public interface IOGraphGdmType : IOGraphGdmLabeledElement
     GdmTypeKind Kind { get; }
 
     /// <summary>
+    /// The Graph in which the type belongs to.
+    /// </summary>
+    IOGraphGdmGraph Graph { get; }
+
+    /// <summary>
     /// The underlying .NET Type.
     /// </summary>
     /// <remarks>

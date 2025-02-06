@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-namespace Assimalign.OGraph.Gdm;
+namespace Assimalign.OGraph.Gdm.Elements;
 
 public class GdmEnumType<TEnum> : GdmType<TEnum>
     where TEnum : struct, Enum
