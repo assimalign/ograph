@@ -43,6 +43,15 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
         return this;
     }
 
+    IOGraphGdmBuilder IOGraphGdmBuilder.AddMeta(string key, string value)
+    {
+        actions.Add(model =>
+        {
+            model.Meta.Add(key, value);
+        });
+        return this;
+    }
+
 
 
 

@@ -21,9 +21,14 @@ public class GdmVertex<T> : IOGraphGdmVertex
     internal GdmVertex(Action<IOGraphGdmVertexDescriptor<T>> configure)
     {
         this.configure = configure;
-        this.Configure(new GdmVertexDescriptor<T>(this));
+
+        var descriptor = new GdmVertexDescriptor<T>(this);
+
+        this.Configure(descriptor);
+
+        
     }
-    internal GdmVertex(Label label, IOGraphGdmGraph graph, Action<IOGraphGdmVertexDescriptor<T>> configure)
+    internal GdmVertex(Label label, GdmGraph graph, Action<IOGraphGdmVertexDescriptor<T>> configure)
         : this(configure)
     {
         Label = label;

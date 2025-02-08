@@ -4,8 +4,11 @@
 		<TargetFrameworks>$(TargetFrameworkForLibraries)</TargetFrameworks>
 	</PropertyGroup>
 	<ItemGroup>
+	  <Compile Remove="Internal\Elements\**" />
 	  <Compile Remove="System\**" />
+	  <EmbeddedResource Remove="Internal\Elements\**" />
 	  <EmbeddedResource Remove="System\**" />
+	  <None Remove="Internal\Elements\**" />
 	  <None Remove="System\**" />
 	</ItemGroup>
 	<ItemGroup>
@@ -20,5 +23,8 @@
 			<Generator>ResXFileCodeGenerator</Generator>
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Abstractions\Descriptors\" />
 	</ItemGroup>
 </Project>

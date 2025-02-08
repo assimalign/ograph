@@ -4,8 +4,17 @@ using System.Text.Json;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
+using Internal;
+
 public sealed class GdmFloatType : GdmScalarType<Single>
 {
+    public GdmFloatType(GdmGraph graph)
+    {
+        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+    }
+
+    public override GdmGraph Graph { get; internal set; }
+    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Float;
     public override float Read(ref Utf8JsonReader reader)
     {
         return reader.GetSingle();
@@ -21,5 +30,13 @@ public sealed class GdmFloatType : GdmScalarType<Single>
     public override void Write(XmlWriter writer, float value)
     {
         writer.WriteValue(value);
+    }
+    public override float Parse(string? value)
+    {
+        return float.Parse(value!);
+    }
+    public override bool TryParse(string? value, out float result)
+    {
+        return float.TryParse(value!, out result);
     }
 }

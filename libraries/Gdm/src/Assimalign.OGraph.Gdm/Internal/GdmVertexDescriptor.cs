@@ -11,33 +11,37 @@ using Assimalign.OGraph.Gdm.Elements;
 internal class GdmVertexDescriptor : IOGraphGdmVertexDescriptor
 {
     private readonly GdmVertex vertex;
+    private readonly GdmGraph graph;
 
-    public GdmVertexDescriptor(GdmVertex vertex)
+    public GdmVertexDescriptor(GdmVertex vertex, GdmGraph graph)
     {
         this.vertex = vertex;
+        this.graph = graph;
+
     }
 
-    public IOGraphGdmVertexDescriptor HasLabel(Label label)
+    public IOGraphGdmVertexDescriptor AddMeta(string key, string value)
     {
-        vertex.label = label;
-        return this;
+        throw new NotImplementedException();
+    }
+
+    public IOGraphGdmVertexDescriptor HasOperation(IOGraphGdmOperation operation)
+    {
+        throw new NotImplementedException();
     }
 
     public IOGraphGdmVertexDescriptor HasEntityType(IOGraphGdmEntityType type)
     {
-        if (type is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(type));
-        }
-        vertex.type = new GdmTypeReference()
-        {
-            Definition = type
-        };
-        return this;
+        throw new NotImplementedException();
     }
 
-    public IOGraphGdmVertexDescriptor HasEntityType<TGdmType>() where TGdmType : IOGraphGdmEntityType, new()
+    public IOGraphGdmVertexDescriptor HasEntityType(Func<IOGraphGdmGraph, IOGraphGdmEntityType> type)
     {
-        return HasEntityType(new TGdmType());
+        throw new NotImplementedException();
+    }
+
+    public IOGraphGdmVertexDescriptor HasLabel(Label label)
+    {
+        throw new NotImplementedException();
     }
 }

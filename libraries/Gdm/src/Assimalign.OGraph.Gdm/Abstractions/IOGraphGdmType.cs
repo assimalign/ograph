@@ -32,6 +32,12 @@ public interface IOGraphGdmType : IOGraphGdmLabeledElement
     Type RuntimeType { get; }
 
     /// <summary>
+    /// Indicates whether the type is a primitive type specified by
+    /// the OGraph Specification.
+    /// </summary>
+    bool IsPrimitive { get; }
+
+    /// <summary>
     /// Writes the provided <paramref name="value"/> to JSON.
     /// </summary>
     /// <param name="writer"></param>

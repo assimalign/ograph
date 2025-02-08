@@ -5,6 +5,7 @@ namespace Assimalign.OGraph.Gdm.Tests;
 
 using Internal;
 
+
 public partial class ValueObjectTests
 {
     [Fact(DisplayName = "Value Object (Label): Invalid Character")]

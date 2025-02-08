@@ -12,7 +12,7 @@ public partial class OGraphBuilderTests
     public void Test1()
     {
         
-        var model = GdmTestUtility.CreateFluentOnlyModel();
+        var model = GdmBuilderUtility.CreateFluentOnlyModel();
 
         var vertices = model.GetGdmVertices();
         var types = model.GetGdmTypes();

@@ -4,7 +4,30 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
-using Assimalign.OGraph.Gdm.Internal;
+using Internal;
+
+public class Vertex : IOGraphGdmVertex
+{
+    public Vertex(Label label, GdmEntityType entityType)
+    {
+        Label = label;
+        Type = entityType;
+        Graph = entityType.Graph;
+    }
+
+    public Label Label { get; }
+    public GdmEntityType Type { get; internal set; }
+    public GdmGraph Graph { get; internal set; }
+    public GdmEdgeCollection Edges { get; } = new GdmEdgeCollection();
+    public GdmVertexOperationCollection Operations { get; } = new GdmVertexOperationCollection();
+    public GdmMetadata Meta { get; } = new GdmMetadata();
+    public GdmElementKind ElementKind => GdmElementKind.Vertex;
+    IOGraphGdmType IOGraphGdmVertex.Type => Type;
+    IOGraphGdmMetadata IOGraphGdmElement.Meta => Meta;
+    IOGraphGdmOperationCollection IOGraphGdmVertex.Operations => Operations;
+    IOGraphGdmEdgeCollection IOGraphGdmVertex.Edges => Edges;
+    IOGraphGdmGraph IOGraphGdmVertex.Graph => Graph;
+}
 
 
 [DebuggerDisplay("Vertex = {Label}")]

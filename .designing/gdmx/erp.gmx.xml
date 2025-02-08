@@ -14,7 +14,7 @@
             <Operation Label="search" Kind="Query" IsBound="true">
                 <ReturnType Type="UserCollection" />
             </Operation>
-            <Operation Label="lookup" Kind="Query">
+            <Operation Label="lookup" Kind="Operation">
                 <Parameter Label="userId" Type="UserId" />
                 <ReturnType Type="UserCollection" />
             </Operation>
@@ -35,6 +35,10 @@
                 <Binding On="DeleteUser" />
             </Event>
         </Vertex>
+        <Vertex Label="Profile" Type="UserProfile">
+
+        </Vertex>
+
         <EntityType Label="User">
             <Key Property="id" />
             <Property Label="id" Type="UserId" IsReadOnly="false" IsNullable="false" />
@@ -66,6 +70,8 @@
                 <ReturnType Type="String" />
             </Function>
         </ComplexType>
+        <ScalarType Label="Int32" IsPrimitive="true">
+        </ScalarType>
         <ScalarType Label="UserId">
             <Format
                 Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
@@ -73,29 +79,29 @@
     </Graph>
     <Graph Label="Employees">
         <Vertex Label="employees" Type="Employee">
-            <Query Label="GetEmployees">
+            <Operation Label="GetEmployees" Kind="Query">
                 <ReturnType Type="EmployeeList" />
-            </Query>
-            <Query Label="GetEmployeeById">
+            </Operation>
+            <Operation Label="GetEmployeeById" Kind="Query">
                 <Parameter Label="employeeId" Type="EmployeeId" />
                 <ReturnType Type="Employee" />
-            </Query>
-            <Command Label="CreateEmployee">
+            </Operation>
+            <Operation Label="CreateEmployee" Kind="Command">
                 <ReturnType Type="Employee" />
-            </Command>
-            <Command Label="UpdateEmployee">
+            </Operation>
+            <Operation Label="UpdateEmployee" Kind="Command">
                 <Parameter Label="employeeId" Type="EmployeeId" />
                 <Parameter Label="employee" Type="Employee" />
                 <ReturnType Type="Employee" />
-            </Command>
-            <Command Label="DeleteEmployee">
+            </Operation>
+            <Operation Label="DeleteEmployee" Kind="Command">
                 <Parameter Label="employeeId" Type="EmployeeId" />
                 <ReturnType Type="Employee" />
-            </Command>
-            <Command Label="PatchEmployee">
+            </Operation>
+            <Operation Label="PatchEmployee" Kind="Command">
                 <Parameter Label="employeeId" Type="EmployeeId" />
                 <ReturnType Type="Employee" />
-            </Command>
+            </Operation>
             <Event Label="EmployeeCreated">
                 <After Binding="CreateEmployee" />
             </Event>
@@ -107,9 +113,9 @@
             </Event>
         </Vertex>
         <Vertex Label="employeeAddresses" Type="EmployeeAddress">
-            <Query Label="GetEmployeeAddresses">
+            <Operation Label="GetEmployeeAddresses">
                 <ReturnType Type="EmployeeAddressList" />
-            </Query>
+            </Operation>
         </Vertex>
         <Vertex Label="employeeAddressTypes" Type="EmployeeAddressType">
             <Binding Kind="Command" Label="CreateEmployeeAddressType">
@@ -132,17 +138,17 @@
             </Operation>
         </Edge>
         <Edge Label="primaryAddress" Source="employees" Target="employeeAddresses">
-            <Query Label="GetEmployeePrimaryAddresses">
+            <Operation Label="GetEmployeePrimaryAddresses">
                 <Parameter Label="employeeId" Type="EmployeeId" />
                 <ReturnType Type="EmployeeAddress" />
-            </Query>
+            </Operation>
         </Edge>
         <Edge Label="types" Source="employeeAddresses" Target="employeeAddressTypes">
-            <Query Label="GetEmployeeAddressTypes">
+            <Operation Label="GetEmployeeAddressTypes">
                 <Parameter Label="employeeId" Type="EmployeeId" />
                 <Parameter Label="addressId" Type="AddressId" />
                 <ReturnType Type="EmployeeAddressType" />
-            </Query>
+            </Operation>
         </Edge>
         <Edge Label="taxInfo" Source="employee" Target="taxInfo">
 

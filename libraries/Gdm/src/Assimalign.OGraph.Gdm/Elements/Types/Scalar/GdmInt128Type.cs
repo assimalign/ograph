@@ -3,11 +3,19 @@ using System;
 using System.Xml;
 using System.Text.Json;
 using System.Globalization;
+using Assimalign.OGraph.Gdm.Internal;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
 public sealed class GdmInt128Type : GdmScalarType<Int128>
 {
+    public GdmInt128Type(GdmGraph graph)
+    {
+        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+    }
+
+    public override GdmGraph Graph { get; internal set; }
+    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Int;
     public override Int128 Read(ref Utf8JsonReader reader)
     {
         return Int128.Parse(reader.ValueSpan,
@@ -28,7 +36,14 @@ public sealed class GdmInt128Type : GdmScalarType<Int128>
     {
         writer.WriteRaw(value.ToString());
     }
-
+    public override Int128 Parse(string? value)
+    {
+        return Int128.Parse(value!);
+    }
+    public override bool TryParse(string? value, out Int128 result)
+    {
+        return Int128.TryParse(value, out result);
+    }
     private unsafe byte[] ConvertToBytes(Int128 value)
     {
         var array = new byte[16];

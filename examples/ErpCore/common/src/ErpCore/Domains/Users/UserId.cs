@@ -4,9 +4,7 @@ namespace ErpCore;
 
 using Assimalign.OGraph;
 
-[EntityKey(EntityKeyRuntimeType.Guid,
-    IncludeImplicitOperators = true,
-    IncludeIsValidMethod = true)]
+[EntityKey(EntityKeyRuntimeType.Int)]
 public partial struct UserId
 {
     public partial bool IsValid(Guid value, out string message)

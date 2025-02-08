@@ -1,57 +1,57 @@
-﻿using System;
-using System.Xml;
-using System.Text.Json;
+﻿//using System;
+//using System.Xml;
+//using System.Text.Json;
 
-namespace Assimalign.OGraph.Gdm.Elements;
+//namespace Assimalign.OGraph.Gdm.Elements;
 
-using Assimalign.OGraph.Gdm.Internal;
+//using Assimalign.OGraph.Gdm.Internal;
 
-public class GdmArrayType<T> : GdmCollectionType<T[], T>
-{
-    public GdmArrayType(IOGraphGdmType itemType)
-    {
-        if (itemType is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(itemType));
-        }
-        if (!ItemType!.RuntimeType!.IsAssignableTo(typeof(T)))
-        {
-            ThrowHelper.ThrowArgumentException("");
-        }
+//public class GdmArrayType<T> : GdmCollectionType<T[], T>
+//{
+//    public GdmArrayType(IOGraphGdmType itemType)
+//    {
+//        if (itemType is null)
+//        {
+//            ThrowHelper.ThrowArgumentNullException(nameof(itemType));
+//        }
+//        if (!ItemType!.RuntimeType!.IsAssignableTo(typeof(T)))
+//        {
+//            ThrowHelper.ThrowArgumentException("");
+//        }
 
-        ItemType = itemType;
+//        ItemType = itemType;
 
-        if (Label.IsValid(ItemType!.RuntimeType!.Name))
-        {
-            label = ItemType!.RuntimeType!.Name + "Array";
-        }
-    }
+//        if (Label.IsValid(ItemType!.RuntimeType!.Name))
+//        {
+//            label = ItemType!.RuntimeType!.Name + "Array";
+//        }
+//    }
 
-    public override IOGraphGdmType ItemType { get; }
+//    public override IOGraphGdmType ItemType { get; }
 
-    public override T[] Read(ref Utf8JsonReader reader)
-    {
-        var items = new T[4]; // use 4 as buffer
-        var count = 0;
+//    public override T[] Read(ref Utf8JsonReader reader)
+//    {
+//        var items = new T[4]; // use 4 as buffer
+//        var count = 0;
 
 
 
-        Array.Resize<T>(ref items, count);
-        return items;
-    }
+//        Array.Resize<T>(ref items, count);
+//        return items;
+//    }
 
-    public override T[] Read(XmlReader reader)
-    {
-        throw new NotImplementedException();
-    }
+//    public override T[] Read(XmlReader reader)
+//    {
+//        throw new NotImplementedException();
+//    }
 
-    public override void Write(Utf8JsonWriter writer, T[] value)
-    {
-        throw new NotImplementedException();
-    }
+//    public override void Write(Utf8JsonWriter writer, T[] value)
+//    {
+//        throw new NotImplementedException();
+//    }
 
-    public override void Write(XmlWriter writer, T[] value)
-    {
-        throw new NotImplementedException();
-    }
-}
+//    public override void Write(XmlWriter writer, T[] value)
+//    {
+//        throw new NotImplementedException();
+//    }
+//}

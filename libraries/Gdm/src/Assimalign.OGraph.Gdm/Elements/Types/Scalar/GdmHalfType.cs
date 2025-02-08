@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assimalign.OGraph.Gdm.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,23 +11,35 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 public sealed class GdmHalfType : GdmScalarType<Half>
 {
+    public GdmHalfType(GdmGraph graph)
+    {
+        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+    }
+    public override GdmGraph Graph { get; internal set; }
+    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Float;
+
     public override Half Read(ref Utf8JsonReader reader)
     {
         throw new NotImplementedException();
     }
-
     public override Half Read(XmlReader reader)
     {
         throw new NotImplementedException();
     }
-
     public override void Write(Utf8JsonWriter writer, Half value)
     {
         throw new NotImplementedException();
     }
-
     public override void Write(XmlWriter writer, Half value)
     {
         throw new NotImplementedException();
+    }
+    public override Half Parse(string? value)
+    {
+        return Half.Parse(value!);
+    }
+    public override bool TryParse(string? value, out Half result)
+    {
+        return Half.TryParse(value!, out result);  
     }
 }

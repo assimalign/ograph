@@ -1,12 +1,19 @@
 ﻿using System;
 using System.Xml;
 using System.Text.Json;
-using Assimalign.OGraph.Gdm.Internal;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
-public sealed class GdmBooleanType : GdmScalarType<bool>
+using Internal;
+
+public class GdmBooleanType : GdmScalarType<bool>
 {
+    public GdmBooleanType(GdmGraph graph) 
+    {
+        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+    }
+    public override GdmGraph Graph { get; internal set; }
+    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Boolean;
     public override bool Read(ref Utf8JsonReader reader)
     {
         return reader.GetBoolean();
@@ -23,22 +30,12 @@ public sealed class GdmBooleanType : GdmScalarType<bool>
     {
         writer.WriteValue(value);
     }
-    public override bool Parse(object? value)
+    public override bool Parse(string? value)
     {
-        if (value is not string str)
-        {
-            throw new ArgumentException("");
-        }
-
-        return bool.Parse(str);
+        return bool.Parse(value!);
     }
-    public override bool TryParse(object? value, out bool result)
+    public override bool TryParse(string? value, out bool result)
     {
-        result = false;
-        if (value is not string str)
-        {
-            return false;
-        }
-        return bool.TryParse(str, out result);
+        return bool.TryParse(value!, out result);
     }
 }

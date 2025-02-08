@@ -3,13 +3,92 @@ using System.Xml;
 using System.Linq;
 using System.Text.Json;
 using System.Diagnostics;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
-using Assimalign.OGraph.Gdm.Internal;
+using Internal;
 
-public class GdmComplexType : IOGraphGdmComplexType
+public class GdmComplexType : GdmType, IOGraphGdmComplexType
+{
+    public GdmComplexType(
+        Label label,
+        GdmGraph graph,
+        [DynamicallyAccessedMembers(
+        DynamicallyAccessedMemberTypes.PublicParameterlessConstructor |
+        DynamicallyAccessedMemberTypes.PublicProperties)] Type runtimeType)
+    {
+        Label = label;
+        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+        RuntimeType = ThrowHelper.ThrowIfNull(runtimeType, nameof(runtimeType));
+    }
+
+    public Label Label { get; }
+    public GdmGraph Graph { get; }
+    public GdmMemberCollection Members { get; } = new GdmMemberCollection();
+    public GdmMetadata Meta { get; } = new GdmMetadata();
+    public Type RuntimeType { get; internal set; }
+    public GdmTypeKind Kind => GdmTypeKind.Entity;
+    public GdmElementKind ElementKind => GdmElementKind.Type;
+    public bool IsPrimitive => false;
+    IOGraphGdmMemberCollection IOGraphGdmComplexType.Members => Members;
+    IOGraphGdmGraph IOGraphGdmType.Graph => Graph;
+    IOGraphGdmMetadata IOGraphGdmElement.Meta => Meta;
+
+    object IOGraphGdmType.Read(ref Utf8JsonReader reader)
+    {
+        throw new NotImplementedException();
+    }
+
+    object IOGraphGdmType.Read(XmlReader reader)
+    {
+        throw new NotImplementedException();
+    }
+
+    void IOGraphGdmType.Write(Utf8JsonWriter writer, object value)
+    {
+        throw new NotImplementedException();
+    }
+
+    void IOGraphGdmType.Write(XmlWriter writer, object value)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class GdmComplexTypeM : GdmType, IOGraphGdmComplexType
+{
+    [DynamicallyAccessedMembers(
+        DynamicallyAccessedMemberTypes.PublicParameterlessConstructor |
+        DynamicallyAccessedMemberTypes.PublicProperties)]
+    private Type runtimeType;
+
+    public GdmComplexTypeM(Label label, GdmGraph graph, [DynamicallyAccessedMembers(
+        DynamicallyAccessedMemberTypes.PublicParameterlessConstructor |
+        DynamicallyAccessedMemberTypes.PublicProperties)] Type runtimeType)
+    {
+        Label = label;
+        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+        RuntimeType = ThrowHelper.ThrowIfNull(runtimeType, nameof(runtimeType));
+    }
+
+    public override Label Label { get; internal set; }
+    public override Type RuntimeType { get => runtimeType; internal set => runtimeType = value; }
+    public override GdmGraph Graph { get; internal set; }
+    public GdmMemberCollection Members { get; } = new GdmMemberCollection();
+    public override GdmTypeKind Kind { get; } = GdmTypeKind.Complex;
+    IOGraphGdmMemberCollection IOGraphGdmComplexType.Members => Members;
+
+
+    public override object Read(ref Utf8JsonReader reader)
+    {
+        Activator.CreateInstance(runtimeType);
+        throw new NotImplementedException();
+    }
+}
+
+public class GdmComplexTypeOld : IOGraphGdmComplexType
 {
     private readonly Action<IOGraphGdmComplexTypeDescriptor> configure;
 

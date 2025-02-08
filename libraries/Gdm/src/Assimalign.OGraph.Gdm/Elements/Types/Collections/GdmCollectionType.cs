@@ -4,15 +4,10 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
-/// <summary>
-/// 
-/// </summary>
-/// <typeparam name="TCollection"></typeparam>
-/// <typeparam name="T"></typeparam>
-public abstract class GdmCollectionType<TCollection, T> : GdmType<TCollection>, 
-    IOGraphGdmCollectionType
+public abstract class GdmCollectionType<TCollection, T> : GdmType<TCollection>, IOGraphGdmCollectionType
     where TCollection : IEnumerable<T>
 {
-    public abstract IOGraphGdmType ItemType { get; }
+    public abstract GdmType ItemType { get; internal set; }
     public override GdmTypeKind Kind => GdmTypeKind.Collection;
+    IOGraphGdmType IOGraphGdmCollectionType.ItemType => ItemType;
 }

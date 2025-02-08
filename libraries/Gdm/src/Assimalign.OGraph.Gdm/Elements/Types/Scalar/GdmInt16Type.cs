@@ -5,8 +5,16 @@ using System.Globalization;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
+using Internal;
+
 public sealed class GdmInt16Type : GdmScalarType<Int16>
 {
+    public GdmInt16Type(GdmGraph graph)
+    {
+        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+    }
+    public override GdmGraph Graph { get; internal set; }
+    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Int;
     public override short Read(ref Utf8JsonReader reader)
     {
         return reader.GetInt16();
@@ -22,9 +30,16 @@ public sealed class GdmInt16Type : GdmScalarType<Int16>
     {
         writer.WriteNumberValue(value);
     }
-
     public override void Write(XmlWriter writer, short value)
     {
         writer.WriteValue(value);
+    }
+    public override short Parse(string? value)
+    {
+        return short.Parse(value!);
+    }
+    public override bool TryParse(string? value, out short result)
+    {
+        return short.TryParse(value!, out result);
     }
 }

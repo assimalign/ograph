@@ -11,7 +11,7 @@ public interface IOGraphGdmVertex : IOGraphGdmLabeledElement
     /// <summary>
     /// The type bound to this vertex.
     /// </summary>
-    IOGraphGdmType Type { get; } // TODO: Revisit whether IOGraphEntityType should be specified explicitly
+    IOGraphGdmType Type { get; }
 
     /// <summary>
     /// A collection of operations defined for the vertex

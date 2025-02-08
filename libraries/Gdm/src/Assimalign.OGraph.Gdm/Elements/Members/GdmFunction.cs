@@ -1,11 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Assimalign.OGraph.Gdm.Elements;
 
-namespace Assimalign.OGraph.Gdm.Elements;
+using Internal;
 
-public class GdmFunction
+public class GdmFunction : GdmMember, IOGraphGdmFunction
 {
+    public GdmFunction(
+        Label label,
+        GdmType returnType,
+        GdmType declaringType)
+        : base(label, declaringType)
+    {
+        ReturnType = ThrowHelper.ThrowIfNull(returnType, nameof(returnType));
+    }
+
+    public GdmType ReturnType { get; }
+    public GdmParameterCollection Parameters { get; } = new GdmParameterCollection();
+    public override GdmElementKind ElementKind => GdmElementKind.Function;
+
+    IOGraphGdmType IOGraphGdmFunction.ReturnType => ReturnType;
+    IOGraphGdmParameterCollection IOGraphGdmFunction.Parameters => Parameters;
+
 }

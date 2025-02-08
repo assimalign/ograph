@@ -6,7 +6,7 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 
 [DebuggerDisplay("Count = {Count}")]
-internal class GdmEdgeCollection : List<IOGraphGdmEdge>,
+public class GdmEdgeCollection : List<IOGraphGdmEdge>,
     IOGraphGdmEdgeCollection
 {
     public IOGraphGdmEdge this[Label label] => this.Find(label);

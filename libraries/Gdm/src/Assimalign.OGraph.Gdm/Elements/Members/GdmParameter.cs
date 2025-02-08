@@ -1,20 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
+using Internal;
+
 public class GdmParameter : IOGraphGdmParameter
 {
-    public GdmParameter()
+    public GdmParameter(Label label, GdmType type, bool isRequired = false)
     {
-        
+        Label = label;
+        Type = ThrowHelper.ThrowIfNull(type, nameof(type));
+        IsRequired = isRequired;
     }
-    public Label Label => throw new NotImplementedException();
-    public IOGraphGdmType Type => throw new NotImplementedException();
-    public bool IsRequired => throw new NotImplementedException();
+
+    public Label Label { get; }
+    public GdmType Type { get; }
+    public GdmMetadata Meta { get; } = new GdmMetadata();
+    public bool IsRequired { get; }
     public GdmElementKind ElementKind { get; } = GdmElementKind.Parameter;
-    public IOGraphGdmMetadata Meta { get; } = new GdmMetadata();
+    IOGraphGdmType IOGraphGdmParameter.Type => Type;
+    IOGraphGdmMetadata IOGraphGdmElement.Meta => Meta;
 }

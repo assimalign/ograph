@@ -5,8 +5,17 @@ using System.Globalization;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
+using Internal;
+
 public sealed class GdmUInt32Type : GdmScalarType<UInt32>
 {
+    public GdmUInt32Type(GdmGraph graph)
+    {
+        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+    }
+
+    public override GdmGraph Graph { get; internal set; }
+    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Int;
     public override uint Read(ref Utf8JsonReader reader)
     {
         return reader.GetUInt32();
@@ -25,5 +34,13 @@ public sealed class GdmUInt32Type : GdmScalarType<UInt32>
     public override void Write(XmlWriter writer, uint value)
     {
         writer.WriteValue(value.ToString());
+    }
+    public override uint Parse(string? value)
+    {
+        return uint.Parse(value!);
+    }
+    public override bool TryParse(string? value, out uint result)
+    {
+        return uint.TryParse(value!, out result);
     }
 }

@@ -17,6 +17,26 @@ internal static class ThrowHelper
         }
     }
 
+    public static T ThrowIfNull<T>(T value, string paramName)
+    {
+        if (value is null)
+        {
+            ThrowArgumentNullException(paramName);
+        }
+
+        return value;
+    }
+
+    public static T ThrowIfNotType<T>(object value)
+    {
+        if (value is not T type)
+        {
+            throw new ArgumentException("");
+        }
+
+        return type;
+    }
+
     [DoesNotReturn]
     public static void ThrowArgumentNullException(string paramName) =>
         throw new ArgumentNullException(paramName);
@@ -72,21 +92,21 @@ internal static class ThrowHelper
     #region Serialization Exceptions
 
     [DoesNotReturn]
-    public static void ThrowInvalidContentException(string source, Exception innerException) =>
+    public static void ThrowInvalidDeserializationContentException(string source, Exception innerException) =>
         throw new GdmSerializationException(GdmErrorCode.GDM3001, Resources.GDM3001, innerException)
         {
             Source = source
         };
 
     [DoesNotReturn]
-    public static void ThrowInvalidContentException(string source) =>
+    public static void ThrowInvalidDeserializationContentException(string source) =>
         throw new GdmSerializationException(GdmErrorCode.GDM3001, Resources.GDM3001)
         {
             Source = source
         };
 
     [DoesNotReturn]
-    public static void ThrowInvalidTypeSerializationException(Type expected, Type received) =>
+    public static void ThrowInvalidSerializationTypeException(Type expected, Type received) =>
         throw new InvalidOperationException($"Invalid type serialization. Expected type {expected.Name}. Received type {received.Name}");
     #endregion
 }

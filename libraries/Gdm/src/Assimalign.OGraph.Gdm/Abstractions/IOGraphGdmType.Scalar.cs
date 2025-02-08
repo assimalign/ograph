@@ -1,12 +1,20 @@
 ﻿namespace Assimalign.OGraph.Gdm;
 
+/// <summary>
+/// 
+/// </summary>
 public interface IOGraphGdmScalarType : IOGraphGdmType
 {
     /// <summary>
     /// An array of Regex patterns that are acceptable formats.
     /// </summary>
     string?[]? Formats { get; }
-    
+
+    /// <summary>
+    /// The primitive type the scalar type represents.
+    /// </summary>
+    GdmPrimitiveType PrimitiveType { get; }
+
     /// <summary>
     /// Parses the value type.
     /// </summary>

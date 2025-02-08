@@ -1,55 +1,51 @@
 ﻿using System;
 using System.Xml;
 using System.Text.Json;
-using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
-using Assimalign.OGraph.Gdm.Internal;
-
-/// <summary>
-/// An abstract base type.
-/// </summary>
-/// <typeparam name="T"></typeparam>
-[DebuggerDisplay("Type = {Label}")]
-public abstract class GdmType<T> : IOGraphGdmType
+public abstract class GdmType : IOGraphGdmType
 {
-    public GdmType()
-    {
-        var typeName = RuntimeType.Name;
-        // Let's only override the label if it has valid characters
-        if (Label.IsValid(typeName))
-        {
-            Label = typeName;
-        }
-    }
-
-    public Type RuntimeType { get; } = typeof(T);
-    public GdmElementKind ElementKind { get; } = GdmElementKind.Type;
-    public IOGraphGdmMetadata Meta { get; } = new GdmMetadata();
-    public IOGraphGdmGraph Graph { get; internal set; } = default!;
-    public virtual Label Label { get; internal set; }
+    public abstract Label Label { get; internal set; }
     public abstract GdmTypeKind Kind { get; }
+    public abstract GdmGraph Graph { get; internal set; }
+    public abstract Type RuntimeType { get; internal set; }
+    public GdmMetadata Meta { get; } = new GdmMetadata();
+    public GdmElementKind ElementKind { get; } = GdmElementKind.Type;
+    public bool IsPrimitive => this is 
+        GdmBooleanType or
+        GdmStringType or
+        GdmInt32Type;
 
-    public abstract T Read(ref Utf8JsonReader reader);
-    public abstract T Read(XmlReader reader);
-    public abstract void Write(Utf8JsonWriter writer, T value);
-    public abstract void Write(XmlWriter writer, T value);
+    IOGraphGdmMetadata IOGraphGdmElement.Meta => Meta;
+    IOGraphGdmGraph IOGraphGdmType.Graph => Graph;
 
-
-    object IOGraphGdmType.Read(ref Utf8JsonReader reader) => Read(ref reader)!;
-    object IOGraphGdmType.Read(XmlReader reader) => Read(reader)!;
-    void IOGraphGdmType.Write(Utf8JsonWriter writer, object value) => Write(writer, AssertType(value));
-    void IOGraphGdmType.Write(XmlWriter writer, object value) => Write(writer, AssertType(value));
-
-    
-
-    private T AssertType(object value)
+    public object Read(ref Utf8JsonReader reader)
     {
-        if (value is not T)
+        return GetType().Read(ref reader);
+    }
+    public object Read(XmlReader reader)
+    {
+        return GetType().Read(reader);
+    }
+    public void Write(Utf8JsonWriter writer, object value)
+    {
+        GetType().Write(writer, value);
+    }
+    public void Write(XmlWriter writer, object value)
+    {
+        GetType().Write(writer, value);
+    }
+    
+    private IOGraphGdmType GetType()
+    {
+        foreach (var type in Graph.Types)
         {
-            ThrowHelper.ThrowInvalidTypeSerializationException(typeof(T), value.GetType());
+            if (type.RuntimeType == RuntimeType && type.Label == Label)
+            {
+                return type;
+            }
         }
-        return (T)value;
+        throw new InvalidOperationException();
     }
 }

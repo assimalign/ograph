@@ -4,8 +4,16 @@ using System.Text.Json;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
+using Internal;
+
 public sealed class GdmDoubleType : GdmScalarType<Double>
 {
+    public GdmDoubleType(GdmGraph graph)
+    {
+        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+    }
+    public override GdmGraph Graph { get; internal set; }
+    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Float;
     public override double Read(ref Utf8JsonReader reader)
     {
         return reader.GetDouble();
@@ -21,5 +29,13 @@ public sealed class GdmDoubleType : GdmScalarType<Double>
     public override void Write(XmlWriter writer, double value)
     {
         writer.WriteValue(value);
+    }
+    public override double Parse(string? value)
+    {
+        throw new NotImplementedException();
+    }
+    public override bool TryParse(string? value, out double result)
+    {
+        throw new NotImplementedException();
     }
 }

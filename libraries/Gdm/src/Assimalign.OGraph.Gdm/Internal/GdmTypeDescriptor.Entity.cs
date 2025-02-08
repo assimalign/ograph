@@ -12,38 +12,60 @@ internal class GdmEntityTypeDescriptor : IOGraphGdmEntityTypeDescriptor
     {
         this.entityType = entityType;
     }
-    public IOGraphGdmEntityTypeDescriptor HasLabel(Label label)
-    {
-        entityType.label = label;
-        return this;
-    }
+
     public IOGraphGdmEntityTypeDescriptor HasKey(Label label)
     {
-        var runtimeType = entityType.runtimeType;
-        var propertyInfo = runtimeType!.GetProperty(label);
-        if (propertyInfo is null)
-        {
-            throw new InvalidOperationException($"The property '{label}' does not exist on type {entityType.runtimeType!.Name}");
-        }
-        var property = entityType.GetProperty(propertyInfo);
-        property.Getter ??= propertyInfo.GetValue;
-        property.Setter ??= propertyInfo.SetValue;
-        return this;
+        throw new NotImplementedException();
     }
+
+    public IOGraphGdmEntityTypeDescriptor HasLabel(Label label)
+    {
+        throw new NotImplementedException();
+    }
+
     public IOGraphGdmPropertyDescriptor HasProperty(Label label)
     {
-        var propertyInfo = entityType.runtimeType!.GetProperty(label);
-        if (propertyInfo is null)
-        {
-            throw new InvalidOperationException($"The property '{label}' does not exist on type {entityType.runtimeType!.Name}");
-        }
-        var property = entityType.GetProperty(propertyInfo);
-        property.Getter ??= propertyInfo.GetValue;
-        property.Setter ??= propertyInfo.SetValue;
-        property.DeclaringType = new GdmTypeReference()
-        {
-            Definition = entityType,
-        };
-        return new GdmPropertyDescriptor(property);
+        throw new NotImplementedException();
     }
+
+    public IOGraphGdmPropertyDescriptor WithMeta(string key, string value)
+    {
+        throw new NotImplementedException();
+    }
+
+
+    //public IOGraphGdmEntityTypeDescriptor HasLabel(Label label)
+    //{
+    //    entityType.label = label;
+    //    return this;
+    //}
+    //public IOGraphGdmEntityTypeDescriptor HasKey(Label label)
+    //{
+    //    var runtimeType = entityType.runtimeType;
+    //    var propertyInfo = runtimeType!.GetProperty(label);
+    //    if (propertyInfo is null)
+    //    {
+    //        throw new InvalidOperationException($"The property '{label}' does not exist on type {entityType.runtimeType!.Name}");
+    //    }
+    //    var property = entityType.GetProperty(propertyInfo);
+    //    property.Getter ??= propertyInfo.GetValue;
+    //    property.Setter ??= propertyInfo.SetValue;
+    //    return this;
+    //}
+    //public IOGraphGdmPropertyDescriptor HasProperty(Label label)
+    //{
+    //    var propertyInfo = entityType.runtimeType!.GetProperty(label);
+    //    if (propertyInfo is null)
+    //    {
+    //        throw new InvalidOperationException($"The property '{label}' does not exist on type {entityType.runtimeType!.Name}");
+    //    }
+    //    var property = entityType.GetProperty(propertyInfo);
+    //    property.Getter ??= propertyInfo.GetValue;
+    //    property.Setter ??= propertyInfo.SetValue;
+    //    property.DeclaringType = new GdmTypeReference()
+    //    {
+    //        Definition = entityType,
+    //    };
+    //    return new GdmPropertyDescriptor(property);
+    //}
 }

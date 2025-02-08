@@ -1,16 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using System.Xml;
+using System.Text.Json;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
+using Internal;
+
 public sealed class GdmCharType : GdmScalarType<char>
 {
+    public GdmCharType(GdmGraph graph)
+    {
+        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+    }
+
+    public override GdmGraph Graph { get; internal set; }
+    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.String;
     public override char Read(ref Utf8JsonReader reader)
     {
         var value = reader.GetString();
@@ -22,19 +26,25 @@ public sealed class GdmCharType : GdmScalarType<char>
 
         return value[0];
     }
-
     public override char Read(XmlReader reader)
     {
         return reader.ReadElementContentAsString()[0];
     }
-
     public override void Write(Utf8JsonWriter writer, char value)
     {
         //writer.WriteBooleanValue(value);
     }
-
     public override void Write(XmlWriter writer, char value)
     {
         //writer.WriteValue(value);
+    }
+
+    public override char Parse(string? value)
+    {
+        return char.Parse(value!);
+    }
+    public override bool TryParse(string? value, out char result)
+    {
+        return char.TryParse(value, out result);
     }
 }

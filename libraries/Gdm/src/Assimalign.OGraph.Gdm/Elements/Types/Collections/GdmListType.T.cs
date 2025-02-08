@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Xml;
 using System.Text.Json;
-using System.Diagnostics;
 using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Gdm.Elements;
@@ -10,27 +9,20 @@ using Assimalign.OGraph.Gdm.Internal;
 
 public class GdmListType<T> : GdmCollectionType<List<T>, T>
 {
-    public GdmListType(IOGraphGdmType itemType)
+    public GdmListType(GdmType itemType, GdmGraph graph)
     {
-        if (itemType is null)
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(itemType));
-        }
-        if (!itemType!.RuntimeType!.IsAssignableTo(typeof(T)))
-        {
-            ThrowHelper.ThrowArgumentException("");
-        }
-
-        ItemType = itemType;
-
+        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+        ItemType = ThrowHelper.ThrowIfNull(itemType, nameof(itemType));
+ 
         if (Label.IsValid(ItemType!.RuntimeType!.Name))
         {
-            label = ItemType!.RuntimeType!.Name + "List";
+            Label = ItemType!.RuntimeType!.Name + "List";
         }
     }
-
     #region Overloads
-    public override IOGraphGdmType ItemType { get; }
+    public override Label Label { get; internal set; } = "List";
+    public override GdmType ItemType { get; internal set; }
+    public override GdmGraph Graph { get; internal set; }
     public override List<T> Read(ref Utf8JsonReader reader)
     {
         var list = new List<T>();

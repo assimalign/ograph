@@ -5,8 +5,17 @@ using System.Globalization;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
+using Internal;
+
 public sealed class GdmUInt64Type : GdmScalarType<UInt64>
 {
+    public GdmUInt64Type(GdmGraph graph)
+    {
+        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+    }
+
+    public override GdmGraph Graph { get; internal set; }
+    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Int;
     public override ulong Read(ref Utf8JsonReader reader)
     {
         return reader.GetUInt64();
@@ -25,5 +34,13 @@ public sealed class GdmUInt64Type : GdmScalarType<UInt64>
     public override void Write(XmlWriter writer, ulong value)
     {
         writer.WriteValue(value.ToString());
+    }
+    public override ulong Parse(string? value)
+    {
+        return ulong.Parse(value!);
+    }
+    public override bool TryParse(string? value, out ulong result)
+    {
+        return ulong.TryParse(value!, out result);
     }
 }

@@ -56,4 +56,9 @@ internal class GdmVertexDescriptor<T> : IOGraphGdmVertexDescriptor<T>
     {
         return this;
     }
+
+    public IOGraphGdmVertexDescriptor<T> AddMeta(string key, string value)
+    {
+        throw new NotImplementedException();
+    }
 }
