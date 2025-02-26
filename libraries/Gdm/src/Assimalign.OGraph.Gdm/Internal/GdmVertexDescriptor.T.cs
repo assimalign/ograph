@@ -14,50 +14,32 @@ internal class GdmVertexDescriptor<T> : IOGraphGdmVertexDescriptor<T>
         this.vertex = vertex;
     }
 
-    public IOGraphGdmVertexDescriptor<T> HasEdge<TTarget>(Action<IOGraphGdmEdgeDescriptor<T, TTarget>> configure) where TTarget : class, new()
+    public IOGraphGdmVertexDescriptor<T> AddMeta(string key, string value)
     {
         throw new NotImplementedException();
     }
 
-    public IOGraphGdmVertexDescriptor<T> HasLabel(Label label)
+    public IOGraphGdmVertexDescriptor<T> HasOperation(IOGraphGdmOperation operation)
     {
-        vertex.label = label;
-        return this;
+        throw new NotImplementedException();
     }
+
+    public IOGraphGdmVertexDescriptor<T> HasOperation(Func<IOGraphGdmGraph, IOGraphGdmOperation> func)
+    {
+        throw new NotImplementedException();
+    }
+
     public IOGraphGdmVertexDescriptor<T> HasEntityType(IOGraphGdmEntityType type)
     {
-        if (type is null)
-        {
-            throw new ArgumentNullException(nameof(type));
-        }
-        if (type.RuntimeType is null)
-        {
-            throw new ArgumentException("The provided GDM Type has not runtime type");
-        }
-        if (!type.RuntimeType.IsAssignableTo((typeof(T))))
-        {
-            throw new InvalidOperationException($"The underlying runtime type: {type.RuntimeType.Name} is not assignable to {typeof(T).Name}.");
-        }
-
-        vertex.type = new GdmTypeReference()
-        {
-            Definition = type
-        };
-
-        return this;
+        throw new NotImplementedException();
     }
 
-    public IOGraphGdmVertexDescriptor<T> HasEntityType<TGdmType>() where TGdmType : IOGraphGdmEntityType, new()
+    public IOGraphGdmVertexDescriptor<T> HasEntityType(Func<IOGraphGdmGraph, IOGraphGdmEntityType> func)
     {
-        return HasEntityType(new TGdmType());
+        throw new NotImplementedException();
     }
 
-    IOGraphGdmVertexDescriptor<T> IOGraphGdmVertexDescriptor<T>.HasEdge<TTarget>(Label label)
-    {
-        return this;
-    }
-
-    public IOGraphGdmVertexDescriptor<T> AddMeta(string key, string value)
+    public IOGraphGdmVertexDescriptor<T> HasLabel(GdmLabel label)
     {
         throw new NotImplementedException();
     }

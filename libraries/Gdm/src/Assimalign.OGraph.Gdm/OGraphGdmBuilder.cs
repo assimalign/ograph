@@ -12,7 +12,7 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
     private readonly Gdm model;
     private readonly List<Action<Gdm>> actions;
 
-    OGraphGdmBuilder(Label label)
+    OGraphGdmBuilder(GdmName label)
     {
         this.model = new Gdm(label);
         this.actions = new List<Action<Gdm>>();
@@ -22,22 +22,23 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
     {
         ThrowHelper.ThrowIfNull(graph, nameof(graph));
 
+        return (this as IOGraphGdmBuilder).AddGraph(model => graph);
+    }
+
+    IOGraphGdmBuilder IOGraphGdmBuilder.AddGraph(Func<IOGraphGdm, IOGraphGdmGraph> func)
+    {
+        ThrowHelper.ThrowIfNull(func, nameof(func));
+
         actions.Add(model =>
         {
-            model.Elements.Add(graph);
+            var graph = func.Invoke(model);
 
-            foreach (var vertix in graph.Vertices)
+            if (model.Graphs.Contains(graph))
             {
-                model.Elements.Add(vertix);
+                return;
             }
-            foreach (var edge in graph.Edges)
-            {
-                model.Elements.Add(edge);
-            }
-            foreach (var type in graph.Types)
-            {
-                model.Elements.Add(type);
-            }
+
+            model.Graphs.Add(graph);
         });
 
         return this;
@@ -51,10 +52,6 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
         });
         return this;
     }
-
-
-
-
 
     IOGraphGdm IOGraphGdmBuilder.Build()
     {
@@ -71,7 +68,7 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
     /// </summary>
     /// <param name="label">The label of the model.</param>
     /// <returns></returns>
-    public static IOGraphGdmBuilder Create(Label label)
+    public static IOGraphGdmBuilder Create(GdmName label)
     {
         return new OGraphGdmBuilder(label);
     }

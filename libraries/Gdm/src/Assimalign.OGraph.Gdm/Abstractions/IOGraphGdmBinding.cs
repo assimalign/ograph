@@ -8,7 +8,7 @@ public interface IOGraphGdmBinding
     /// <summary>
     /// The binding label.
     /// </summary>
-    Label Label { get; }
+    GdmName Name { get; }
 
     /// <summary>
     /// The binding kind.

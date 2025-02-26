@@ -4,15 +4,15 @@ using Internal;
 
 public abstract class GdmMember : IOGraphGdmMember
 {
-    protected GdmMember(Label label, GdmType declaringType)
+    protected GdmMember(GdmName name, GdmType declaringType)
     {
-        Label = label;
+        Name = name;
         DeclaringType = ThrowHelper.ThrowIfNull(declaringType, nameof(declaringType));
     }
 
 
     public virtual bool IsBound { get; internal set; }
-    public virtual Label Label { get; internal set; }
+    public virtual GdmName Name { get; internal set; }
     public virtual GdmType DeclaringType { get; internal set; }
     public abstract GdmElementKind ElementKind { get; }
     public GdmMetadata Meta { get; } = new GdmMetadata();
@@ -37,7 +37,9 @@ public abstract class GdmMember : IOGraphGdmMember
         return false;
     }
 
+    bool IOGraphGdmMember.IsProperty(out IOGraphGdmProperty property) => IsProperty(out property as IOGraphGdmProperty);
 
-    IOGraphGdmMetadata IOGraphGdmElement.Meta => Meta;
+
+    IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
     IOGraphGdmType IOGraphGdmMember.DeclaringType => DeclaringType;
 }

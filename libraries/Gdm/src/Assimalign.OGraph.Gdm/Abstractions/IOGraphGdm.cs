@@ -8,5 +8,5 @@ public interface IOGraphGdm : IOGraphGdmLabeledElement
     /// <summary>
     /// Get the collection of elements in the model.
     /// </summary>
-    IOGraphGdmElementCollection Elements { get; }
+    IOGraphGdmGraphCollection Graphs { get; }
 }

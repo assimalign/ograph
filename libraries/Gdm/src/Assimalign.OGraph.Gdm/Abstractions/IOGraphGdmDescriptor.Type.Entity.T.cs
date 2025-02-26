@@ -5,7 +5,7 @@ namespace Assimalign.OGraph.Gdm;
 
 public interface IOGraphGdmEntityTypeDescriptor<T> where T : class, new()
 {
-    IOGraphGdmEntityTypeDescriptor<T> HasLabel(Label label);
+    IOGraphGdmEntityTypeDescriptor<T> HasName(GdmName name);
     IOGraphGdmEntityTypeDescriptor<T> HasKey(IOGraphGdmEntityKey key);
     IOGraphGdmEntityTypeDescriptor<T> HasKey(Func<IOGraphGdmEntityType, IOGraphGdmEntityKey> func);
     IOGraphGdmEntityTypeDescriptor<T> HasProperty(IOGraphGdmProperty property);

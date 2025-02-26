@@ -1,0 +1,189 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:simpleType name="PrimitiveTypes">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="String" />
+            <xs:enumeration value="Boolean" />
+            <xs:enumeration value="Int" />
+            <xs:enumeration value="Uuid" />
+            <xs:enumeration value="Float" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="Property">
+        <xs:attribute name="Name" type="xs:string" use="required" />
+        <xs:attribute name="Type" use="required">
+            <xs:simpleType>
+                <xs:union>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="String" />
+                            <xs:enumeration value="Boolean" />
+                            <xs:enumeration value="Int" />
+                            <xs:enumeration value="Uuid" />
+                            <xs:enumeration value="Float" />
+                        </xs:restriction>
+                    </xs:simpleType>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string" />
+                    </xs:simpleType>
+                </xs:union>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="IsNullable" type="xs:boolean" />
+        <xs:attribute name="IsReadOnly" type="xs:boolean" />
+    </xs:complexType>
+    <xs:complexType name="ComplexType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="Property" maxOccurs="unbounded" minOccurs="0" type="Property" />
+        </xs:choice>
+        <xs:attribute name="Name" type="xs:string" use="required" />
+    </xs:complexType>
+    <xs:complexType name="CollectionType">
+        <xs:sequence>
+            <xs:element name="Item">
+                <xs:complexType>
+                    <xs:attribute name="Type" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="Name" type="xs:string" use="required" />
+    </xs:complexType>
+    <xs:complexType name="EnumType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="Member" maxOccurs="unbounded" minOccurs="1">
+                <xs:complexType>
+                    <xs:attribute name="Name" use="required" />
+                    <xs:attribute name="Value" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+        <xs:attribute name="Name" type="xs:string" use="required" />
+    </xs:complexType>
+    <xs:complexType name="EntityType">
+        <xs:sequence>
+            <xs:element name="Key" minOccurs="1" maxOccurs="1">
+                <xs:complexType>
+                    <xs:attribute name="Property" use="required" type="xs:string" />
+                </xs:complexType>
+            </xs:element>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element name="Property" maxOccurs="unbounded" minOccurs="0" type="Property" />
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="Name" type="xs:string" use="required" />
+    </xs:complexType>
+    <xs:complexType name="ScalarType">
+        <xs:sequence>
+            <xs:element name="PrimitiveType" minOccurs="1" maxOccurs="1">
+                <xs:complexType>
+                    <xs:attribute name="Type" type="PrimitiveTypes" />
+                </xs:complexType>
+            </xs:element>
+            <xs:choice>
+                <xs:element name="Format" minOccurs="0" maxOccurs="unbounded" />
+
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="Name" type="xs:string" use="required" />
+    </xs:complexType>
+    <xs:complexType name="Vertex">
+        <xs:sequence maxOccurs="unbounded" minOccurs="0">
+            <xs:choice>
+                <xs:element name="Path" maxOccurs="unbounded" minOccurs="0" type="Path" />
+                <xs:element name="Meta" type="Meta" maxOccurs="unbounded" minOccurs="0" />
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="Label" type="xs:string" use="required" />
+        <xs:attribute name="Type" type="xs:string" use="required" />
+    </xs:complexType>
+    <xs:complexType name="Edge">
+        <xs:sequence maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="Meta" type="Meta" />
+        </xs:sequence>
+        <xs:attribute name="Label" type="xs:string" use="required" />
+        <xs:attribute name="Source" type="xs:string" use="required" />
+        <xs:attribute name="Target" type="xs:string" use="required" />
+    </xs:complexType>
+    <xs:complexType name="Path">
+        <xs:sequence>
+            <xs:choice>
+                <xs:element name="Query" type="Query" maxOccurs="unbounded" minOccurs="0" />
+                <xs:element name="Command" type="Command" maxOccurs="unbounded" minOccurs="0" />
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="Value" use="required" type="xs:string" />
+        <xs:attribute name="Kind" />
+    </xs:complexType>
+    <xs:complexType name="Query">
+        <xs:sequence>
+            <xs:element name="Meta" type="Meta" maxOccurs="unbounded" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="xs:string" use="required" />
+    </xs:complexType>
+    <xs:complexType name="Command">
+        <xs:sequence>
+            <xs:element name="Meta" type="Meta" maxOccurs="unbounded" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="xs:string" use="required" />
+        <xs:attribute name="State" type="xs:string" use="required" />
+    </xs:complexType>
+    <xs:complexType name="Meta">
+        <xs:all>
+            <xs:element name="Key" type="xs:string" />
+            <xs:element name="Value" />
+        </xs:all>
+    </xs:complexType>
+    <xs:element name="Gdmx">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Graph" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                            <xs:choice>
+                                <xs:element name="Vertex" minOccurs="0" maxOccurs="unbounded" type="Vertex" />
+                                <xs:element name="Edge" minOccurs="0" maxOccurs="unbounded" type="Edge" />
+                                <xs:element name="EntityType" minOccurs="0" maxOccurs="unbounded" type="EntityType">
+                                    <xs:key name="PropertyName">
+                                        <xs:selector xpath=".//Property" />
+                                        <xs:field xpath="@Name" />
+                                    </xs:key>
+                                    <xs:keyref name="KeyProperty" refer="PropertyName">
+                                        <xs:selector xpath=".//Key" />
+                                        <xs:field xpath="@Property" />
+                                    </xs:keyref>
+                                </xs:element>
+                                <xs:element name="ComplexType" minOccurs="0" maxOccurs="unbounded" type="ComplexType" />
+                                <xs:element name="CollectionType" minOccurs="0" maxOccurs="unbounded" type="CollectionType" />
+                                <xs:element name="ScalarType" minOccurs="0" maxOccurs="unbounded" type="ScalarType" />
+                                <xs:element name="EnumType" minOccurs="0" maxOccurs="unbounded" type="EnumType" />
+                            </xs:choice>
+                        </xs:sequence>
+                        <xs:attribute name="Name" use="required" type="xs:string" />
+                    </xs:complexType>
+                    <xs:key name="EntityName">
+                        <xs:selector xpath=".//EntityType" />
+                        <xs:field xpath="@Name" />
+                    </xs:key>
+                    <xs:key name="VertexNameKey">
+                        <xs:selector xpath=".//Vertex" />
+                        <xs:field xpath="@Label" />
+                    </xs:key>
+                    <xs:keyref name="EdgeSource" refer="VertexNameKey">
+                        <xs:selector xpath=".//Edge" />
+                        <xs:field xpath="@Source" />
+                    </xs:keyref>
+                    <xs:keyref name="EdgeTarget" refer="VertexNameKey">
+                        <xs:selector xpath=".//Edge" />
+                        <xs:field xpath="@Target" />
+                    </xs:keyref>
+                    <xs:keyref name="VertexType" refer="EntityName">
+                        <xs:selector xpath=".//Vertex" />
+                        <xs:field xpath="@Type" />
+                    </xs:keyref>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="Version" fixed="1.0" use="required" />
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+   

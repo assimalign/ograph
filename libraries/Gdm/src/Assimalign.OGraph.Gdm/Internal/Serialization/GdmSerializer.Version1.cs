@@ -14,7 +14,6 @@ internal class GdmVersion1Serializer : OGraphGdmSerializer
 
     public override Task<IOGraphGdm> DeserializeAsync(Stream stream, CancellationToken cancellationToken = default)
     {
-        
         var reader = XmlReader.Create(stream, new XmlReaderSettings()
         {
             IgnoreWhitespace = true
@@ -28,20 +27,26 @@ internal class GdmVersion1Serializer : OGraphGdmSerializer
     {
         var writer = XmlWriter.Create(stream, new XmlWriterSettings()
         {
-            
+            Async = true,
         });
 
+        await writer.WriteStartDocumentAsync();
+        await writer.WriteStartElementAsync(null, localName: GdmElementKey.Root, null);
+        await writer.WriteAttributeStringAsync(null, "Version", null, "1.0");
 
         foreach (var graph in model.GetGdmGraphs())
         {
-            await WriteGrpahAsync(writer, graph);
+            await WriteGraphAsync(writer, graph);
         }
+
+        await writer.WriteEndElementAsync();
+        await writer.WriteEndDocumentAsync();
     }
 
     #region Writes
 
 
-    private async Task WriteGrpahAsync(XmlWriter writer, IOGraphGdmGraph graph)
+    private async Task WriteGraphAsync(XmlWriter writer, IOGraphGdmGraph graph)
     {
         await writer.WriteStartElementAsync(null, localName: GdmElementKey.Graph, null);
 

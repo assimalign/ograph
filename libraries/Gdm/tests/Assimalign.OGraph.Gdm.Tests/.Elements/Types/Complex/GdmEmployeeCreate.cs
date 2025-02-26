@@ -10,6 +10,6 @@ public class GdmEmployeeCreate : GdmComplexType<Employee>
 {
     protected override void Configure(IOGraphGdmComplexTypeDescriptor<Employee> descriptor)
     {
-        descriptor.HasLabel("EmployeeCreate");
+        descriptor.HasName("EmployeeCreate");
     }
 }

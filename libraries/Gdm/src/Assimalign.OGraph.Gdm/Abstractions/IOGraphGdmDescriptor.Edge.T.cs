@@ -16,7 +16,7 @@ public interface IOGraphGdmEdgeDescriptor<TSource, TTarget>
     /// </summary>
     /// <param name="label"></param>
     /// <returns></returns>
-    IOGraphGdmEdgeDescriptor<TSource, TTarget> HasLabel(Label label);
+    IOGraphGdmEdgeDescriptor<TSource, TTarget> HasLabel(GdmLabel label);
     /// <summary>
     /// 
     /// </summary>

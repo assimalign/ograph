@@ -13,7 +13,7 @@ public sealed class GdmTimeType : GdmScalarType<TimeOnly>
         Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
     }
 
-    public override Label Label => "Time";
+    public override GdmName Name => "Time";
     public override GdmGraph Graph { get; internal set; }
     public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.String;
     public override TimeOnly Read(ref Utf8JsonReader reader)

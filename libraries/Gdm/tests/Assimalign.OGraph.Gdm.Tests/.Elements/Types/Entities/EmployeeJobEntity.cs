@@ -10,7 +10,7 @@ public class EmployeeJobEntity : GdmEntityType<EmployeeJob>
 {
     protected override void Configure(IOGraphGdmEntityTypeDescriptor<EmployeeJob> descriptor)
     {
-        descriptor.HasLabel("employeeJob");
+        descriptor.HasName("employeeJob");
         descriptor.HasKey(p => p.JobId);
 
 

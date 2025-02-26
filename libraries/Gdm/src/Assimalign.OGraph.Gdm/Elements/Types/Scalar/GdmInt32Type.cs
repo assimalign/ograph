@@ -6,7 +6,7 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-public sealed class GdmInt32Type : GdmScalarType<Int32>
+public class GdmInt32Type : GdmScalarType<Int32>
 {
     public GdmInt32Type(GdmGraph graph)
     {

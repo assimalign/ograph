@@ -16,5 +16,5 @@ public interface IOGraphClientFactory
     /// </summary>
     /// <param name="label"></param>
     /// <returns></returns>
-    IOGraphClient Create(Label label);
+    IOGraphClient Create(GdmLabel label);
 }

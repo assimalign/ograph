@@ -1,51 +1,52 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
-using Assimalign.OGraph.Gdm.Internal;
+using Internal;
 
-[DebuggerDisplay("Vertex = {Label}")]
-public class GdmVertex<T> : IOGraphGdmVertex
+[DebuggerDisplay("{Label} [Vertex]")]
+public class GdmVertex<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : 
+    IOGraphGdmVertex 
     where T : class, new()
 {
     private readonly Action<IOGraphGdmVertexDescriptor<T>>? configure;
 
     #region Constructors
 
-    public GdmVertex()
-    {
-
-    }
-    internal GdmVertex(Action<IOGraphGdmVertexDescriptor<T>> configure)
+    GdmVertex(Action<IOGraphGdmVertexDescriptor<T>> configure)
     {
         this.configure = configure;
-
-        var descriptor = new GdmVertexDescriptor<T>(this);
-
-        this.Configure(descriptor);
-
-        
+        Configure(new GdmVertexDescriptor<T>(this));
     }
-    internal GdmVertex(Label label, GdmGraph graph, Action<IOGraphGdmVertexDescriptor<T>> configure)
-        : this(configure)
+
+    public GdmVertex(GdmLabel label, GdmEntityType<T> type, GdmGraph graph) : this(descriptor =>
     {
-        Label = label;
-        Graph = graph;
+        descriptor.HasLabel(label);
+        descriptor.HasEntityType(type);
+    })
+    {
+        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
     }
 
     #endregion
 
-    #region Properties 
+    #region Properties
 
-    public Label Label { get; internal set; }
-    public IOGraphGdmType Type { get; internal set; } = default!;
-    public IOGraphGdmEdgeCollection Edges { get; } = new GdmEdgeCollection();
-    public IOGraphGdmOperationCollection Operations { get; } = new GdmVertexOperationCollection();
-    public IOGraphGdmMetadata Meta { get; } = new GdmMetadata();
-    public IOGraphGdmGraph Graph { get; internal set; } = default!;
+    public GdmLabel Label { get; internal set; } = typeof(T).Name;
+    public GdmEntityType<T> Type { get; internal set; } = default!;
+    public GdmGraph Graph { get; internal set; } = default!;
+    public GdmEdgeCollection Edges { get; } = new GdmEdgeCollection();
+    public GdmVertexOperationCollection Operations { get; } = new GdmVertexOperationCollection();
+    public GdmMetadata Meta { get; } = new GdmMetadata();
     public GdmElementKind ElementKind => GdmElementKind.Vertex;
+    IOGraphGdmType IOGraphGdmVertex.Type => Type;
+    IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
+    IOGraphGdmOperationCollection IOGraphGdmVertex.Operations => Operations;
+    IOGraphGdmEdgeCollection IOGraphGdmVertex.Edges => Edges;
+    IOGraphGdmGraph IOGraphGdmVertex.Graph => Graph;
 
     #endregion
 
@@ -62,45 +63,13 @@ public class GdmVertex<T> : IOGraphGdmVertex
 
     #endregion
 
-    #region Overload Members
-
-    /// <inheritdoc />
-    public override string ToString()
-    {
-        return Label;
-    }
-
-    /// <inheritdoc />
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Label, typeof(IOGraphGdmVertex));
-    }
-
-    /// <inheritdoc />
-    public override bool Equals(object? instance)
-    {
-        if (instance is not null)
-        {
-            return GetHashCode() == instance.GetHashCode();
-        }
-        return false;
-    }
-
-    #endregion
-
-    #region Helpers
-
     /// <summary>
     /// 
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     /// <param name="configure"></param>
     /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
     public static GdmVertex<T> Create(Action<IOGraphGdmVertexDescriptor<T>> configure)
     {
         return new GdmVertex<T>(configure);
     }
-
-    #endregion
 }

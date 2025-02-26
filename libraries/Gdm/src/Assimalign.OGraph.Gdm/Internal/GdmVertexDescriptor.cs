@@ -40,7 +40,7 @@ internal class GdmVertexDescriptor : IOGraphGdmVertexDescriptor
         throw new NotImplementedException();
     }
 
-    public IOGraphGdmVertexDescriptor HasLabel(Label label)
+    public IOGraphGdmVertexDescriptor HasLabel(GdmLabel label)
     {
         throw new NotImplementedException();
     }

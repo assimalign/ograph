@@ -10,7 +10,7 @@ public class EmployeeTaskEntity : GdmEntityType<EmployeeTask>
 {
     protected override void Configure(IOGraphGdmEntityTypeDescriptor<EmployeeTask> descriptor)
     {
-        descriptor.HasLabel("employeeJobTask");
+        descriptor.HasName("employeeJobTask");
         descriptor.HasKey(p => p.TaskId);
 
         descriptor.HasProperty(p => p.CreatedBy).UsePropertyName("createdBy").UseType<GdmAuditField>();

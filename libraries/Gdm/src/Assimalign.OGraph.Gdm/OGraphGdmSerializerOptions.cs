@@ -1,4 +1,6 @@
-﻿namespace Assimalign.OGraph.Gdm;
+﻿using System.Collections.Generic;
+
+namespace Assimalign.OGraph.Gdm;
 
 /// <summary>
 /// 
@@ -9,4 +11,9 @@ public class OGraphGdmSerializerOptions
     /// The serialization version
     /// </summary>
     public OGraphVersion Version { get; set; } = OGraphVersion.Version1;
+
+    /// <summary>
+    /// Meta providers;
+    /// </summary>
+    public List<OGraphGdmMetaProvider> MetaProviders { get; } = new List<OGraphGdmMetaProvider>();
 }

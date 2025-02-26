@@ -8,12 +8,17 @@
 /// allowing us to extend the functionality of the model without 
 /// opening it up for modification.
 /// </remarks>
-public interface IOGraphGdmBindableElement : IOGraphGdmLabeledElement
+public interface IOGraphGdmBindableElement : IOGraphGdmNamedElement
 {
     /// <summary>
     /// Specifies whther the elemet has been bound.
     /// </summary>
     bool IsBound { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+   // IOGraphGdmDirectiveCollection Directives { get; }
 
     //// <summary>
     //// 

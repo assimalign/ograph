@@ -87,6 +87,10 @@ internal static class ThrowHelper
     public static void ThrowInvalidLabel(string source) =>
         throw new GdmModelException(GdmErrorCode.GDM5001, source, Resources.GDM5001);
 
+    [DoesNotReturn]
+    public static void ThrowInvalidName(string source) =>
+        throw new GdmModelException(GdmErrorCode.GDM5001, source, Resources.GDM5001);
+
     #endregion
 
     #region Serialization Exceptions

@@ -8,9 +8,9 @@ namespace Assimalign.OGraph.Gdm.Elements;
 public class GdmMemberCollection : List<GdmMember>, IOGraphGdmMemberCollection
 {
     public bool IsReadOnly => throw new NotImplementedException();
-    public GdmMember this[Label label] => (this as IEnumerable<GdmMember>).Find(label);
+    public GdmMember this[GdmLabel label] => (this as IEnumerable<GdmMember>).Find(label);
 
-    IOGraphGdmMember IOGraphGdmMemberCollection.this[Label label] => this[label];
+    IOGraphGdmMember IOGraphGdmMemberCollection.this[GdmLabel label] => this[label];
     void ICollection<IOGraphGdmMember>.Add(IOGraphGdmMember item)
     {
         base.Add(AssertType(item));

@@ -6,7 +6,7 @@ namespace Assimalign.OGraph.Gdm.Tests;
 
 public class GdmEmployeeId : GdmScalarType<EmployeeId>
 {
-    public override Label Label => "EmployeeId";
+    public override GdmName Label => "EmployeeId";
 
     public override EmployeeId Read(ref Utf8JsonReader reader)
     {

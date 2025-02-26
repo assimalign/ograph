@@ -15,7 +15,7 @@ internal class GdmComplexTypeCheckRule : GdmValidatorRule
      */
     public override void OnValidate(GdmValidatorContext context)
     {
-        var complexTypes = context.Model.Elements.OfType<IOGraphGdmComplexType>();
+        var complexTypes = context.Model.Graphs.OfType<IOGraphGdmComplexType>();
 
         foreach (var complexType in complexTypes)
         {

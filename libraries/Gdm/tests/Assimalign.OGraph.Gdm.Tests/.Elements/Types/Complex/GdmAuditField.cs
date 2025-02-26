@@ -10,7 +10,7 @@ public class GdmAuditField : GdmComplexType<AuditField>
 {
     protected override void Configure(IOGraphGdmComplexTypeDescriptor<AuditField> descriptor)
     {
-        descriptor.HasLabel("EmployeeAuditField");
+        descriptor.HasName("EmployeeAuditField");
         descriptor.HasProperty(p => p.UserId).UsePropertyName("userId");
         descriptor.HasProperty(p => p.Timestamp).UsePropertyName("timestamp");
     }

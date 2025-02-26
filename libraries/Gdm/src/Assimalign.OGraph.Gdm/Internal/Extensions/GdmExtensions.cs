@@ -8,7 +8,7 @@ namespace Assimalign.OGraph.Gdm.Internal;
 
 internal static class GdmExtensions
 {
-    public static TElement Find<TElement>(this IEnumerable<TElement> elements, Label label) where TElement : IOGraphGdmLabeledElement
+    public static TElement Find<TElement>(this IEnumerable<TElement> elements, GdmLabel label) where TElement : IOGraphGdmLabeledElement
     {
         return elements.OfType<TElement>().First(p => p.Equals(label));
     }

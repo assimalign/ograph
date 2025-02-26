@@ -6,33 +6,13 @@ namespace Assimalign.OGraph.Gdm;
 
 using Elements;
 using Internal;
-using System.Linq.Expressions;
 
-
-public static class Temp<TKey> where TKey : struct
-{
-    public static IOGraphGdmEntityTypeDescriptor<T> HasKey<T>(
-        this IOGraphGdmEntityTypeDescriptor<T>  descriptor, 
-        Expression<Func<T, TKey>> expression)
-    {
-
-    }
-}
 
 public static class OGraphGdmDescriptorExtensions
 {
-    #region Descriptor Extensions: Property 
+    #region Descriptor Extensions: Property
 
 
-
-    public static IOGraphGdmPropertyDescriptor<T> UseType<T>(this IOGraphGdmPropertyDescriptor<T> descriptor)
-        where T : GdmBooleanType, new()
-    {
-        return descriptor.UseType(graph =>
-        {
-            return new T(graph);
-        });
-    }
 
     /// <summary>
     /// A fluent method for binding a complex type property being described.
@@ -43,16 +23,17 @@ public static class OGraphGdmDescriptorExtensions
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
     public static IOGraphGdmPropertyDescriptor<T?> UseType<[
-        DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(
+        DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>(
         this IOGraphGdmPropertyDescriptor<T?> descriptor,
         Action<IOGraphGdmComplexTypeDescriptor<T>> configure) where T : class, new()
     {
         ThrowHelper.ThrowIfNull(descriptor, nameof(descriptor));
         ThrowHelper.ThrowIfNull(configure, nameof(configure));
 
-        return descriptor.UseType(
-            GdmComplexType<T>.Create(
-                configure));
+        return descriptor.UseType(graph =>
+        {
+
+        });
     }
 
     /// <summary>
@@ -64,17 +45,22 @@ public static class OGraphGdmDescriptorExtensions
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
     public static IOGraphGdmPropertyDescriptor<IEnumerable<T>?> UseType<[
-        DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(
+        DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>(
         this IOGraphGdmPropertyDescriptor<IEnumerable<T>?> descriptor,
         Action<IOGraphGdmComplexTypeDescriptor<T>> configure) where T : class, new()
     {
         ThrowHelper.ThrowIfNull(descriptor, nameof(descriptor));
         ThrowHelper.ThrowIfNull(configure, nameof(configure));
 
-        return descriptor.UseType(
-            new GdmListType<T>(
-                GdmComplexType<T>.Create(
-                    configure)));
+        return descriptor.UseType(graph =>
+        {
+
+        });
+
+        //return descriptor.UseType(
+        //    new GdmListType<T>(
+        //        GdmComplexType<T>.Create(
+        //            configure)));
     }
 
     /// <summary>
@@ -87,20 +73,25 @@ public static class OGraphGdmDescriptorExtensions
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
     public static IOGraphGdmPropertyDescriptor<IEnumerable<T>?> UseType<[
-        DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(
+        DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>(
         this IOGraphGdmPropertyDescriptor<IEnumerable<T>?> descriptor,
-        Label label,
+        GdmLabel label,
         Action<IOGraphGdmComplexTypeDescriptor<T>> configure) where T : class, new()
     {
         ThrowHelper.ThrowIfNull(descriptor, nameof(descriptor));
         ThrowHelper.ThrowIfNull(configure, nameof(configure));
 
-        return descriptor.UseType(
-            new GdmListType<T>(
-                GdmComplexType<T>.Create(configure))
-            {
-                label = label
-            });
+        return descriptor.UseType(graph =>
+        {
+
+        });
+
+        //return descriptor.UseType(
+        //    new GdmListType<T>(
+        //        GdmComplexType<T>.Create(configure))
+        //    {
+        //        label = label
+        //    });
     }
 
     /// <summary>
@@ -112,7 +103,7 @@ public static class OGraphGdmDescriptorExtensions
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
     public static IOGraphGdmPropertyDescriptor<T[]?> UseType<[
-        DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(
+        DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>(
         this IOGraphGdmPropertyDescriptor<T[]?> descriptor,
         Action<IOGraphGdmComplexTypeDescriptor<T>> configure)
         where T : class, new()
@@ -120,10 +111,15 @@ public static class OGraphGdmDescriptorExtensions
         ThrowHelper.ThrowIfNull(descriptor, nameof(descriptor));
         ThrowHelper.ThrowIfNull(configure, nameof(configure));
 
-        return descriptor.UseType(
-            new GdmArrayType<T>(
-                GdmComplexType<T>.Create(
-                    configure)));
+        return descriptor.UseType(graph =>
+        {
+
+        });
+
+        //return descriptor.UseType(
+        //    new GdmArrayType<T>(
+        //        GdmComplexType<T>.Create(
+        //            configure)));
     }
 
     #endregion
@@ -139,8 +135,7 @@ public static class OGraphGdmDescriptorExtensions
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
     public static IOGraphGdmVertexDescriptor<T> HasEntityType<[
-        DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor |
-        DynamicallyAccessedMemberTypes.PublicProperties)] T>(
+        DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>(
         this IOGraphGdmVertexDescriptor<T> descriptor,
         Action<IOGraphGdmEntityTypeDescriptor<T>> configure)
         where T : class, new()
@@ -160,7 +155,7 @@ public static class OGraphGdmDescriptorExtensions
     /// <param name="descriptor"></param>
     /// <param name="configure"></param>
     /// <returns></returns>
-    public static IOGraphGdmVertexDescriptor HasType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor | DynamicallyAccessedMemberTypes.PublicProperties)] T>(
+    public static IOGraphGdmVertexDescriptor HasType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>(
         this IOGraphGdmVertexDescriptor descriptor,
         Action<IOGraphGdmEntityTypeDescriptor<T>> configure) where T : class, new()
     {
@@ -185,21 +180,20 @@ public static class OGraphGdmDescriptorExtensions
     /// <param name="configure"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static IOGraphGdmVertexDescriptor<T> AddVertex<[
-        DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor |
-        DynamicallyAccessedMemberTypes.PublicProperties)] T>(
+    public static IOGraphGdmGraphDescriptor AddVertex<[
+        DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>(
         this IOGraphGdmGraphDescriptor descriptor,
-        Label label,
+        GdmLabel label,
         Action<IOGraphGdmEntityTypeDescriptor<T>> configure)
         where T : class, new()
     {
         ThrowHelper.ThrowIfNull(descriptor, nameof(descriptor));
         ThrowHelper.ThrowIfNull(configure, nameof(configure));
 
-        var descriptor = new GdmVertexDescriptor<T>(label, configure);
-
         return descriptor.AddVertex(graph =>
         {
+            var type = new GdmEntityType<T>();
+            var descriptor = new GdmEntityTypeDescriptor<T>(type, graph);
             return new GdmVertex<T>()
             {
                 Label = label,

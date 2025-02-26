@@ -40,7 +40,6 @@ public abstract class OGraphGdmSerializer
     /// <returns></returns>
     public abstract Task SerializeAsync(Stream stream, IOGraphGdm model, CancellationToken cancellationToken = default);
 
-
     /// <summary>
     /// 
     /// </summary>

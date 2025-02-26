@@ -13,7 +13,7 @@ public sealed class GdmDateTimeOffsetType : GdmScalarType<DateTimeOffset>
         Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
     }
 
-    public override GdmGraph Graph { get; internal set; }
+    public override GdmGraph Graph { get; internal set; } = default!;
     public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.String;
     public override DateTimeOffset Read(ref Utf8JsonReader reader)
     {

@@ -3,7 +3,7 @@
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphGdmParameter : IOGraphGdmLabeledElement
+public interface IOGraphGdmParameter : IOGraphGdmNamedElement
 {
     /// <summary>
     /// 
@@ -14,6 +14,5 @@ public interface IOGraphGdmParameter : IOGraphGdmLabeledElement
     /// The parameter type reference.
     /// </summary>
     IOGraphGdmType Type { get; }
-
 
 }

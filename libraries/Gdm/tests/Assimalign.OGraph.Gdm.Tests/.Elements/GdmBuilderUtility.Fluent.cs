@@ -13,52 +13,103 @@ public static partial class GdmBuilderUtility
 {
     private static IOGraphGdm CreateFluentModel()
     {
-        return OGraphGdmBuilder.Create("ErpCore")
-            .AddGraph("organizations", descriptor =>
-            {
-                descriptor.AddMeta("description", "");
 
-                descriptor.AddVertex<Organization>("organizations", descriptor =>
+        // Builder process 
+        return OGraphGdmBuilder.Create("ErpCore")
+            .AddGraph("organizations", graph =>
+            {
+                graph.AddMeta("description", "");
+
+                #region Types
+
+                graph.AddComplexType<Organization>(complex =>
                 {
-                    descriptor.HasLabel("Organization");
+                    complex.HasName("CreateOrUpdateOrganization");
+                });
+
+                #endregion
+
+                graph.AddVertex<Organization>(vertex =>
+                {
+                    vertex.HasLabel("organizations");
+                    vertex.HasEntityType(entity =>
+                    {
+                        entity.HasName("Organization");
+                        entity.HasKey(p => p.Id);
+
+                        entity.HasProperty(p => p.Id);
+                        entity.HasProperty(p => p.Created)
+                            .UseType(complex =>
+                            {
+                                complex.HasProperty(p => p.UserId);
+                                complex.HasProperty(p => p.Timestamp).UseType<GdmDateTimeOffsetType>();
+                                //complex.HasProperty(p=>p.)
+                            });
+                    });
+
+
+                    //vertex.HasOperation();
+                });
+                graph.AddVertex<Organization>("organizations", descriptor =>
+                {
+                    descriptor.HasName("Organization");
                     descriptor.HasKey(p => p.Id);
                     descriptor.HasProperty(p => p.Id)
                         .AddMeta("description", "")
                         .IsRequired();
 
-                    descriptor.HasKey(entity =>
-                    {
-                        var property = entity.Members
-                            .OfType<GdmProperty>()
-                            .First();
-
-                        return new GdmEntityKey(property);
-                    });
-
-
                     descriptor.AddMeta("", "");
+
                 });
             })
-            .AddGraph("users", descriptor =>
+            .AddGraph("users", graph =>
             {
-
-                descriptor.AddVertex<User>("Users", descriptor =>
+                graph.AddEntityType<User>(entity =>
                 {
-                    descriptor.HasLabel("User");
-                    descriptor.HasKey(p => p.Id);
+                    entity.HasName("User");
+                    entity.HasKey(p => p.Id);
 
-
-                    descriptor.AddMeta("", "");
-
-                    descriptor.HasProperty(p => p.Id).UsePropertyName("id")
-                        .UseType(graph =>
+                    entity.HasProperty(p => p.Id).UsePropertyName("id");
+                    entity.HasProperty(p => p.Info).UsePropertyName("info")
+                        .IsRequired()
+                        .UseType(complex =>
                         {
-                           
+                            complex.HasName("UserInfo");
+                            complex.HasProperty(p => p.FirstName).UsePropertyName("firstName");
                         });
+                    entity.AddMeta("", "");
                 });
-                descriptor.AddVertex<UserProfile>("Profile", entity =>
+                graph.AddComplexType<User>(complex =>
                 {
-                    entity.HasLabel("UserProfile");
+                    complex.HasName("CreateOrUpdateUser");
+                    complex.HasProperty(p => p.Info);
+                });
+
+                graph.AddVertex<User>(vertex =>
+                {
+                    vertex.HasLabel("users");
+                    vertex.HasEntityType(entity =>
+                    {
+                        entity.HasName("User");
+                        entity.HasKey(p => p.Id);
+
+                        entity.HasProperty(p => p.Id).UsePropertyName("id");
+                        entity.HasProperty(p => p.Info).UsePropertyName("info")
+                            .IsRequired()
+                            .UseType(complex =>
+                            {
+                                complex.HasName("UserInfo");
+                                complex.HasProperty(p => p.FirstName).UsePropertyName("firstName");
+                            });
+
+                        entity.AddMeta("", "");
+                    });
+
+                    //vertex.HasOperation()
+                });
+                graph.AddVertex<UserProfile>("Profile", entity =>
+                {
+                    entity.HasName("UserProfile");
                 });
             })
             .AddGraph("employees", graph =>
@@ -68,27 +119,24 @@ public static partial class GdmBuilderUtility
                     vertex.HasLabel("employees");
                     vertex.HasEntityType(entity =>
                     {
-                        entity.HasLabel("Employee");
+                        entity.HasName("Employee");
                         entity.HasKey(p => p.EmployeeId);
                         entity.HasProperty(p => p.EmployeeId)
                             .UsePropertyName("id")
-                            .WithMeta("", "");
-                    });
-                    
-
-                    vertex.AddQuery("GetEmployeeById", operation =>
-                    {
-                        operation.AddParameter("id");
-                    });
-
-                    vertex.AddQuery("GetEmployees", operation =>
-                    {
-                        operation.AddParameter("id", p => p.IsRequired());
+                            .AddMeta("", "");
                     });
                 });
-                graph.AddVertex<EmployeeAddress>("addresses", entity =>
+                graph.AddVertex<EmployeeAddress>(vertex =>
                 {
-                    entity.HasLabel("EmployeeAddress");
+                    vertex.HasLabel("employeeAddresses");
+                });
+                graph.AddVertex<EmployeeJob>(vertex =>
+                {
+                    vertex.HasLabel("employeeJobs");
+                    vertex.HasEntityType(entity =>
+                    {
+                        entity.HasName("Job");
+                    });
                 });
             })
             .Build();

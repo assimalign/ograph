@@ -15,7 +15,7 @@ public static class OGraphGdmBuilderExtensions
     /// <returns></returns>
     public static IOGraphGdmBuilder AddGraph(
         this IOGraphGdmBuilder builder, 
-        Label label, 
+        GdmLabel label, 
         Action<IOGraphGdmGraphDescriptor> configure)
     {
         return builder.AddGraph(GdmGraph.Create(label, configure));

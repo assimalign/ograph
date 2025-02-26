@@ -14,13 +14,13 @@ public class GdmListType<T> : GdmCollectionType<List<T>, T>
         Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
         ItemType = ThrowHelper.ThrowIfNull(itemType, nameof(itemType));
  
-        if (Label.IsValid(ItemType!.RuntimeType!.Name))
+        if (GdmLabel.IsValid(ItemType!.RuntimeType!.Name))
         {
             Label = ItemType!.RuntimeType!.Name + "List";
         }
     }
     #region Overloads
-    public override Label Label { get; internal set; } = "List";
+    public override GdmLabel Label { get; internal set; } = "List";
     public override GdmType ItemType { get; internal set; }
     public override GdmGraph Graph { get; internal set; }
     public override List<T> Read(ref Utf8JsonReader reader)

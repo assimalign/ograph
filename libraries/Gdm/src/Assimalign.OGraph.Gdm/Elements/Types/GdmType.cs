@@ -6,7 +6,7 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 public abstract class GdmType : IOGraphGdmType
 {
-    public abstract Label Label { get; internal set; }
+    public abstract GdmName Name { get; internal set; }
     public abstract GdmTypeKind Kind { get; }
     public abstract GdmGraph Graph { get; internal set; }
     public abstract Type RuntimeType { get; internal set; }
@@ -17,7 +17,7 @@ public abstract class GdmType : IOGraphGdmType
         GdmStringType or
         GdmInt32Type;
 
-    IOGraphGdmMetadata IOGraphGdmElement.Meta => Meta;
+    IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
     IOGraphGdmGraph IOGraphGdmType.Graph => Graph;
 
     public object Read(ref Utf8JsonReader reader)

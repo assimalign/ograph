@@ -6,7 +6,7 @@
 public interface IOGraphGdmEntityType : IOGraphGdmComplexType
 {
     /// <summary>
-    /// 
+    /// The key of the entity.
     /// </summary>
     IOGraphGdmEntityKey Key { get; }
 }

@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Xml;
 using System.Text.Json;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
-public abstract class GdmType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : GdmType
+public abstract class GdmType<T> : GdmType
 {
     protected GdmType()
     {
         var typeName = RuntimeType.Name;
 
         // Let's only override the label if it has valid characters
-        if (Label.IsValid(typeName))
+        if (GdmName.IsValid(typeName))
         {
-            Label = typeName;
+            Name = typeName;
         }
     }
 
-    public override Label Label { get; internal set; }
+    public override GdmName Name { get; internal set; }
     public override Type RuntimeType { get; internal set; } = typeof(T);
     public abstract new T Read(ref Utf8JsonReader reader);
     public abstract new T Read(XmlReader reader);

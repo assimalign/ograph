@@ -17,8 +17,8 @@ public class GdmVertexOperationCollection : List<IOGraphGdmVertexOperation>, IOG
     }
 
 
-    public IOGraphGdmVertexOperation this[Label label] => this.OfType<IOGraphGdmVertexOperation>().Find(label);
-    IOGraphGdmOperation IOGraphGdmOperationCollection.this[Label label]
+    public IOGraphGdmVertexOperation this[GdmLabel label] => this.OfType<IOGraphGdmVertexOperation>().Find(label);
+    IOGraphGdmOperation IOGraphGdmOperationCollection.this[GdmLabel label]
     {
         get
         {

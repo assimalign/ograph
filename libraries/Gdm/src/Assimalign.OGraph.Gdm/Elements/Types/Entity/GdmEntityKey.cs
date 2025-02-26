@@ -14,5 +14,5 @@ public class GdmEntityKey : IOGraphGdmEntityKey
     public GdmElementKind ElementKind => GdmElementKind.Key;
 
     IOGraphGdmProperty IOGraphGdmEntityKey.Property => Property ;
-    IOGraphGdmMetadata IOGraphGdmElement.Meta => Meta;
+    IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
 }

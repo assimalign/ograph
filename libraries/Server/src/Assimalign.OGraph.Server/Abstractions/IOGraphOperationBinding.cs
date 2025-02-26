@@ -13,7 +13,7 @@ public interface IOGraphOperationBinding : IOGraphGdmBinding
     /// <summary>
     /// A unique label as the operation name.
     /// </summary>
-    Label Label { get; }
+    GdmName Label { get; }
     /// <summary>
     /// The operation route.
     /// </summary>

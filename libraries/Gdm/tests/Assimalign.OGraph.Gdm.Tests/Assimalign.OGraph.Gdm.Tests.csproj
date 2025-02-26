@@ -17,6 +17,7 @@
 	  <Compile Include=".Objects\Domains\Employees\Entities\EmployeeTask.cs" />
 	  <Compile Include=".Objects\Domains\Employees\Entities\EmployeeTaxInfo.cs" />
 	  <Compile Include=".Objects\Domains\Employees\Entities\EmployeeWorkItem.cs" />
+	  <Compile Include=".Objects\Domains\Employees\Models\EmployeeCreateOrUpdate.cs" />
 	  <Compile Include=".Objects\Domains\Entity.cs" />
 	  <Compile Include=".Objects\Domains\Organization\Entities\Organization.cs" />
 	  <Compile Include=".Objects\Domains\Organization\ValueObjects\OrganizationId.cs" />

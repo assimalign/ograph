@@ -8,6 +8,7 @@ namespace Assimalign.OGraph.Gdm.Internal;
 
 internal class GdmElementKey
 {
+    public const string Root = "Gdmx";
     public const string ScalarType = "ScalarType";
     public const string ComplexType = "ComplexType";
     public const string EntityType = "EntityType";

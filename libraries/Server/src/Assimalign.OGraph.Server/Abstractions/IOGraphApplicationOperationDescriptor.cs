@@ -2,16 +2,16 @@
 
 public interface IOGraphApplicationOperationDescriptor
 {
-    IOGraphOperationBindingDescriptor MapQuery(Label label);
-    IOGraphOperationBindingDescriptor MapCommand(Label label);
+    IOGraphOperationBindingDescriptor MapQuery(GdmLabel label);
+    IOGraphOperationBindingDescriptor MapCommand(GdmLabel label);
 
 
 
 
 
-    IOGraphOperationBindingDescriptor MapGet(Label operationName);
-    IOGraphOperationBindingDescriptor MapPut(Label operationName);
-    IOGraphOperationBindingDescriptor MapPost(Label operationName);
-    IOGraphOperationBindingDescriptor MapPatch(Label operationName);
-    IOGraphOperationBindingDescriptor MapDelete(Label operationName);
+    IOGraphOperationBindingDescriptor MapGet(GdmLabel operationName);
+    IOGraphOperationBindingDescriptor MapPut(GdmLabel operationName);
+    IOGraphOperationBindingDescriptor MapPost(GdmLabel operationName);
+    IOGraphOperationBindingDescriptor MapPatch(GdmLabel operationName);
+    IOGraphOperationBindingDescriptor MapDelete(GdmLabel operationName);
 }

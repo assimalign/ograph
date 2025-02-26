@@ -28,7 +28,7 @@ public static class OGraphGdmTypeExtensions
         return new GdmListType<T>(gdmType);
     }
 
-    public static bool TryGetProperty(this IOGraphGdmComplexType complexType, Label label, out IOGraphGdmProperty? property)
+    public static bool TryGetProperty(this IOGraphGdmComplexType complexType, GdmLabel label, out IOGraphGdmProperty? property)
     {
         property = default;
 

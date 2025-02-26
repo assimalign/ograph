@@ -10,7 +10,7 @@ public class EmployeeWorkItemEntity : GdmEntityType<EmployeeWorkItem>
 {
     protected override void Configure(IOGraphGdmEntityTypeDescriptor<EmployeeWorkItem> descriptor)
     {
-        descriptor.HasLabel("employeeWorkItem");
+        descriptor.HasName("employeeWorkItem");
         descriptor.HasKey(p => p.WorkItemId);
 
         descriptor.HasProperty(p => p.CreatedBy).UsePropertyName("createdBy").UseType<GdmAuditField>();

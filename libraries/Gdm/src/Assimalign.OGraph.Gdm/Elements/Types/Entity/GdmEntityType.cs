@@ -9,16 +9,17 @@ using Internal;
 
 public class GdmEntityType : GdmType, IOGraphGdmEntityType
 {
+    public GdmEntityType()
+    {
+        
+    }
     public GdmEntityType(
-        Label label,
+        GdmName name,
         GdmEntityKey key,
         GdmGraph graph,
-        [DynamicallyAccessedMembers(
-        DynamicallyAccessedMemberTypes.PublicParameterlessConstructor |
-        DynamicallyAccessedMemberTypes.PublicProperties | 
-        DynamicallyAccessedMemberTypes.PublicMethods)] Type runtimeType)
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type runtimeType)
     {
-        Label = label;
+        Name = name;
         Key = ThrowHelper.ThrowIfNull(key, nameof(key));
         Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
         RuntimeType = ThrowHelper.ThrowIfNull(runtimeType, nameof(runtimeType));
@@ -26,39 +27,37 @@ public class GdmEntityType : GdmType, IOGraphGdmEntityType
 
     #region Properties
 
-    public override Label Label { get; internal set; }
-    public override  GdmGraph Graph { get; internal set; }
-    public GdmEntityKey Key { get; internal set; }
+    public override GdmName Name { get; internal set; } = default!;
+    public override GdmGraph Graph { get; internal set; } = default!;
+    public GdmEntityKey Key { get; internal set; } = default!;
     public GdmMemberCollection Members { get; internal set; } = new GdmMemberCollection();
-    public override Type RuntimeType { get; internal set; }
+    public override Type RuntimeType { get; internal set; } = default!;
     public override GdmTypeKind Kind => GdmTypeKind.Entity;
     IOGraphGdmEntityKey IOGraphGdmEntityType.Key => Key;
     IOGraphGdmMemberCollection IOGraphGdmComplexType.Members => Members;
     IOGraphGdmGraph IOGraphGdmType.Graph => Graph;
-    IOGraphGdmMetadata IOGraphGdmElement.Meta => Meta;
+    IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
 
     #endregion
 
     #region Methods
-    public override object Read(ref Utf8JsonReader reader)
+    public new object Read(ref Utf8JsonReader reader)
     {
         return base.Read(ref reader);
     }
-    public override object Read(XmlReader reader)
+    public new object Read(XmlReader reader)
     {
         return base.Read(reader);
     }
-    public override void Write(Utf8JsonWriter writer, object value)
+    public new void Write(Utf8JsonWriter writer, object value)
     {
         base.Write(writer, value);
     }
-    public override void Write(XmlWriter writer, object value)
+    public new void Write(XmlWriter writer, object value)
     {
         base.Write(writer, value);
     }
     #endregion
-
-   
 }
 
 

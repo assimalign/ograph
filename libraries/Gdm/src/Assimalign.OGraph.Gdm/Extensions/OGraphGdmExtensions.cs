@@ -23,7 +23,7 @@ public static class OGraphGdmExtensions
     /// <param name="elements"></param>
     /// <param name="label"></param>
     /// <returns></returns>
-    public static TElement Find<TElement>(this IEnumerable<TElement> elements, Label label) 
+    public static TElement Find<TElement>(this IEnumerable<TElement> elements, GdmLabel label) 
         where TElement : IOGraphGdmLabeledElement
     {
         AssertNull(elements, nameof(elements));
@@ -36,10 +36,10 @@ public static class OGraphGdmExtensions
     /// <param name="model"></param>
     /// <param name="label"></param>
     /// <returns></returns>
-    public static IOGraphGdmGraph GetGraph(this IOGraphGdm model, Label label)
+    public static IOGraphGdmGraph GetGraph(this IOGraphGdm model, GdmLabel label)
     {
         AssertNull(model, nameof(model));
-        return model.Elements.Find<IOGraphGdmGraph>(label);
+        return model.Graphs.Find<IOGraphGdmGraph>(label);
     }
 
     private static void AssertNull(object value, string paramName)
@@ -58,7 +58,7 @@ public static class OGraphGdmExtensions
     /// <param name="type"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public static bool TryGetType(this IOGraphGdmGraph graph, Label label, out IOGraphGdmType type)
+    public static bool TryGetType(this IOGraphGdmGraph graph, GdmLabel label, out IOGraphGdmType type)
     {
         throw new NotImplementedException();
     }
@@ -109,7 +109,7 @@ public static class OGraphGdmExtensions
         {
             throw new ArgumentNullException(nameof(model));
         }
-        return model.Elements.OfType<IOGraphGdmVertex>();
+        return model.Graphs.OfType<IOGraphGdmVertex>();
     }
     /// <summary>
     /// Returns all the <see cref="IOGraphGdmEdge"/> instances in the graph model.
@@ -123,7 +123,7 @@ public static class OGraphGdmExtensions
         {
             throw new ArgumentNullException(nameof(model));
         }
-        return model.Elements.OfType<IOGraphGdmEdge>();
+        return model.Graphs.OfType<IOGraphGdmEdge>();
     }
     /// <summary>
     /// Returns all the <see cref="IOGraphGdmType"/> instances in the graph model.
@@ -137,7 +137,7 @@ public static class OGraphGdmExtensions
         {
             throw new ArgumentNullException(nameof(model));
         }
-        return model.Elements.OfType<IOGraphGdmType>();
+        return model.Graphs.OfType<IOGraphGdmType>();
     }
     /// <summary>
     /// Returns all the <see cref="IOGraphGdmScalarType"/> instances in the graph model.
@@ -151,7 +151,7 @@ public static class OGraphGdmExtensions
         {
             throw new ArgumentNullException(nameof(model));
         }
-        return model.Elements.OfType<IOGraphGdmScalarType>();
+        return model.Graphs.OfType<IOGraphGdmScalarType>();
     }
     /// <summary>
     /// Returns all the <see cref="IOGraphGdmEnumType"/> instances in the graph model.
@@ -165,7 +165,7 @@ public static class OGraphGdmExtensions
         {
             throw new ArgumentNullException(nameof(model));
         }
-        return model.Elements.OfType<IOGraphGdmEnumType>();
+        return model.Graphs.OfType<IOGraphGdmEnumType>();
     }
     /// <summary>
     /// Returns all the <see cref="IOGraphGdmEntityType"/> instances in the graph model.
@@ -179,7 +179,7 @@ public static class OGraphGdmExtensions
         {
             throw new ArgumentNullException(nameof(model));
         }
-        return model.Elements.OfType<IOGraphGdmEntityType>();
+        return model.Graphs.OfType<IOGraphGdmEntityType>();
     }
     /// <summary>
     /// Returns all the <see cref="IOGraphGdmComplexType"/> instances in the graph model.
@@ -193,7 +193,7 @@ public static class OGraphGdmExtensions
         {
             throw new ArgumentNullException(nameof(model));
         }
-        return model.Elements.OfType<IOGraphGdmComplexType>();
+        return model.Graphs.OfType<IOGraphGdmComplexType>();
     }
     /// <summary>
     /// Returns all the <see cref="IOGraphGdmCollectionType"/> instances in the graph model.
@@ -207,7 +207,7 @@ public static class OGraphGdmExtensions
         {
             throw new ArgumentNullException(nameof(model));
         }
-        return model.Elements.OfType<IOGraphGdmCollectionType>();
+        return model.Graphs.OfType<IOGraphGdmCollectionType>();
     }
     /// <summary>
     /// Returns all the <see cref="IOGraphGdmProperty"/> instances in the graph model.
@@ -221,7 +221,7 @@ public static class OGraphGdmExtensions
         {
             throw new ArgumentNullException(nameof(model));
         }
-        return model.Elements.OfType<IOGraphGdmProperty>();
+        return model.Graphs.OfType<IOGraphGdmProperty>();
     }
 
     /// <summary>
@@ -236,7 +236,7 @@ public static class OGraphGdmExtensions
         {
             throw new ArgumentNullException(nameof(model));
         }
-        return model.Elements.OfType<IOGraphGdmFunction>();
+        return model.Graphs.OfType<IOGraphGdmFunction>();
     }
 
     /// <summary>
@@ -251,7 +251,7 @@ public static class OGraphGdmExtensions
         {
             throw new ArgumentNullException(nameof(model));
         }
-        return model.Elements.OfType<IOGraphGdmGraph>();
+        return model.Graphs.OfType<IOGraphGdmGraph>();
     }
 
 

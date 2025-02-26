@@ -4,7 +4,7 @@ namespace Assimalign.OGraph.Gdm;
 
 public interface IOGraphGdmComplexTypeDescriptor
 {
-    IOGraphGdmComplexTypeDescriptor HasLabel(Label label);
+    IOGraphGdmComplexTypeDescriptor HasName(GdmName name);
     IOGraphGdmComplexTypeDescriptor HasFunction(IOGraphGdmFunction function);
     IOGraphGdmComplexTypeDescriptor HasFunction(Func<IOGraphGdmComplexType, IOGraphGdmFunction> func);
     IOGraphGdmComplexTypeDescriptor HasProperty(IOGraphGdmProperty property);

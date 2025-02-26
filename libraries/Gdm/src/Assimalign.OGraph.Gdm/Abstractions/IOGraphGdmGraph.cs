@@ -5,8 +5,13 @@ namespace Assimalign.OGraph.Gdm;
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphGdmGraph : IOGraphGdmLabeledElement
+public interface IOGraphGdmGraph : IOGraphGdmBindableElement
 {
+    /// <summary>
+    /// A collection of types defined within the graph.
+    /// </summary>
+    IOGraphGdmTypeCollection Types { get; }
+
     /// <summary>
     /// A collection of edges within the graph.
     /// </summary>
@@ -16,9 +21,4 @@ public interface IOGraphGdmGraph : IOGraphGdmLabeledElement
     /// A collection of vertices within the graph.
     /// </summary>
     IOGraphGdmVertexCollection Vertices { get; }
-
-    /// <summary>
-    /// A collection of types defined within the graph.
-    /// </summary>
-    IOGraphGdmTypeCollection Types { get; }
 }

@@ -1,0 +1,41 @@
+{
+    "$strategy": "parallel",
+    "$batch": {
+        "employees": {
+            "command": "create",
+            "parameters": {
+                
+            },
+            "$continueWith": {
+                
+            }
+        }
+    },
+    "transaction": [
+        {
+
+        }
+    ],
+    "vertex": "employees",
+    "command": "update",
+    "parameters": {
+        "employeeId": "",
+        "employee": {
+            "type": 2,
+            "info": {
+                "firstName": "",
+                "lastName": ""
+            }
+        }
+    },
+    "edges": {
+        "addresses": [
+            {
+                "command": "create",
+                "parameters": {
+                    
+                }
+            }
+        ]
+    }
+}

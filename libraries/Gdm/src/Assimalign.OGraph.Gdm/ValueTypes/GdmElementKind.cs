@@ -11,9 +11,11 @@ public enum GdmElementKind
     Edge,
     Type,
     Operation,
-    Event,
+    //Event,
     Key,
     Property,
     Function,
     Parameter,
+    Map
+    //Directive
 }

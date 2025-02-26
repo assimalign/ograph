@@ -7,7 +7,7 @@ using Internal;
 public class GdmProperty : GdmMember, IOGraphGdmProperty
 {
     public GdmProperty(
-        Label label, 
+        GdmName label, 
         GdmType type, 
         GdmType declaringType,
         bool isReadOnly = false,
@@ -20,7 +20,7 @@ public class GdmProperty : GdmMember, IOGraphGdmProperty
     }
 
     public GdmProperty(
-        Label label,
+        GdmName label,
         GdmType type,
         GdmType declaringType,
         GdmPropertyGetter getter,

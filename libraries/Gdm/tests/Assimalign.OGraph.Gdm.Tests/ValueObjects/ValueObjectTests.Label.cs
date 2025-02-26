@@ -11,20 +11,20 @@ public partial class ValueObjectTests
     [Fact(DisplayName = "Value Object (Label): Invalid Character")]
     public void TestInvalidNameCharacter()
     {
-        Assert.Throws<GdmModelException>(() =>
+        Assert.Throws<GdmModelException>((Action)(() =>
         {
-            Label name = "test property";
-        });
-        Assert.Throws<ArgumentNullException>(() =>
+            GdmName name = "test property";
+        }));
+        Assert.Throws<ArgumentNullException>((Action)(() =>
         {
-            Label name = "";
-        });
+            GdmName name = "";
+        }));
     }
 
     [Fact(DisplayName = "Value Object (Label): To Camal Case")]
     public void TestToCamalCase()
     {
-        Label name = "MyName";
+        GdmName name = "MyName";
 
         Assert.Equal("myName", name.ToCamalCase());
     }
@@ -32,7 +32,7 @@ public partial class ValueObjectTests
     [Fact(DisplayName = "Value Object (Label): To Pascal Case")]
     public void TestToPascalCase()
     {
-        Label name = "myName";
+        GdmName name = "myName";
 
         Assert.Equal("MyName", name.ToPascalCase());
     }
@@ -40,8 +40,8 @@ public partial class ValueObjectTests
     [Fact(DisplayName = "Value Object (Label): Comparison")]
     public void TestComparison()
     {
-        Label name1 = "abc";
-        Label name2 = "abd";
+        GdmName name1 = "abc";
+        GdmName name2 = "abd";
 
         Assert.Equal(name1.Value.CompareTo(name2.Value), name1.CompareTo(name2));
     }
@@ -49,9 +49,9 @@ public partial class ValueObjectTests
     [Fact(DisplayName = "Value Object (Name): Equality")]
     public void TestComparisonEquality()
     {
-        Label name1 = "abc";
-        Label name2 = "abc";
-        Label name3 = "abd";
+        GdmName name1 = "abc";
+        GdmName name2 = "abc";
+        GdmName name3 = "abd";
 
         Assert.True(name1 == name2);
         Assert.True(name2 != name3);

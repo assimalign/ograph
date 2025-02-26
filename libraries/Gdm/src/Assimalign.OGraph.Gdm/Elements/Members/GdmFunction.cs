@@ -5,7 +5,7 @@ using Internal;
 public class GdmFunction : GdmMember, IOGraphGdmFunction
 {
     public GdmFunction(
-        Label label,
+        GdmLabel label,
         GdmType returnType,
         GdmType declaringType)
         : base(label, declaringType)

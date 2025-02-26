@@ -9,4 +9,18 @@ public interface IOGraphGdmMember : IOGraphGdmBindableElement
     /// References the entity or complex type in which the property or function is a member of.
     /// </summary>
     IOGraphGdmType DeclaringType { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="function"></param>
+    /// <returns></returns>
+    bool IsFunction(out IOGraphGdmFunction function);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="property"></param>
+    /// <returns></returns>
+    bool IsProperty(out IOGraphGdmProperty property);
 }

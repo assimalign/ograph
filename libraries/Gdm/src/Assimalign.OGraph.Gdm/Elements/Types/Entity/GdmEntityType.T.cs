@@ -7,10 +7,16 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : GdmType<T>, IOGraphGdmEntityType
+public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : 
+    GdmType<T>, IOGraphGdmEntityType
     where T : class, new()
 {
-    public GdmEntityType(Label label, GdmEntityKey key, GdmGraph graph)
+
+    public GdmEntityType()
+    {
+        
+    }
+    public GdmEntityType(GdmLabel label, GdmEntityKey key, GdmGraph graph)
     {
         Label = label;
         Key = ThrowHelper.ThrowIfNull(key, nameof(key));
@@ -18,16 +24,16 @@ public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMember
     }
 
 
-    public override Label Label { get; internal set; }
-    public override GdmGraph Graph { get; internal set; }
-    public GdmEntityKey Key { get; internal set; }
+    public override GdmLabel Label { get; internal set; } = default!;
+    public override GdmGraph Graph { get; internal set; } = default!;
+    public GdmEntityKey Key { get; internal set; } = default!;
     public GdmMemberCollection Members { get; internal set; } = new GdmMemberCollection();
     public override Type RuntimeType { get; internal set; } = typeof(T);
     public override GdmTypeKind Kind => GdmTypeKind.Entity;
     IOGraphGdmEntityKey IOGraphGdmEntityType.Key => Key;
     IOGraphGdmMemberCollection IOGraphGdmComplexType.Members => Members;
     IOGraphGdmGraph IOGraphGdmType.Graph => Graph;
-    IOGraphGdmMetadata IOGraphGdmElement.Meta => Meta;
+    IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
 
     public override T Read(ref Utf8JsonReader reader)
     {

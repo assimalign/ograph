@@ -13,7 +13,7 @@ public sealed class GdmTimeSpanType : GdmScalarType<TimeSpan>
         Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
     }
 
-    public override Label Label => "TimeSpan";
+    public override GdmLabel Label => "TimeSpan";
     public override GdmGraph Graph { get; internal set; }
     public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.String;
     public override TimeSpan Read(ref Utf8JsonReader reader)

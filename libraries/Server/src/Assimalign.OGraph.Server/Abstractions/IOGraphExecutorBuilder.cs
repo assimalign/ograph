@@ -8,7 +8,7 @@ public interface IOGraphExecutorBuilder
 {
     IOGraphExecutorBuilder ConfigureOptions(OGraphExecutorOptions options);
     IOGraphExecutorBuilder ConfigureOptions(Action<OGraphExecutorOptions> configure);
-    IOGraphExecutorBuilder ConfigureModel(Label label, Action<IOGraphGdmBuilder> configure);
+    IOGraphExecutorBuilder ConfigureModel(GdmName label, Action<IOGraphGdmBuilder> configure);
     IOGraphExecutorBuilder ConfigureApplication(Action<IOGraphApplicationBuilder> configure);
     IOGraphExecutor Build();
 }

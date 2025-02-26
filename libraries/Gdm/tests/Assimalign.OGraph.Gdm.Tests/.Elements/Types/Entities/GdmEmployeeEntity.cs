@@ -6,7 +6,7 @@ public class GdmEmployeeEntity : GdmEntityType<Employee>
 {
     protected override void Configure(IOGraphGdmEntityTypeDescriptor<Employee> descriptor)
     {
-        descriptor.HasLabel("Employee");
+        descriptor.HasName("Employee");
         descriptor.HasKey(p => p.EmployeeId);
 
         descriptor.HasProperty(p => p.EmployeeId)

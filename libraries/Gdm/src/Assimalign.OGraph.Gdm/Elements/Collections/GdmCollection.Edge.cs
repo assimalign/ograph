@@ -9,5 +9,5 @@ namespace Assimalign.OGraph.Gdm.Elements;
 public class GdmEdgeCollection : List<IOGraphGdmEdge>,
     IOGraphGdmEdgeCollection
 {
-    public IOGraphGdmEdge this[Label label] => this.Find(label);
+    public IOGraphGdmEdge this[GdmLabel label] => this.Find(label);
 }

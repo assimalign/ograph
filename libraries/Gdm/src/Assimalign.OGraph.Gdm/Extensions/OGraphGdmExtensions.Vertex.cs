@@ -18,7 +18,7 @@ public static class OGraphGdmVertexExtensions
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="GdmException"></exception>
-    public static bool TryGetProperty(this IOGraphGdmVertex vertex, Label label, out IOGraphGdmProperty? property)
+    public static bool TryGetProperty(this IOGraphGdmVertex vertex, GdmLabel label, out IOGraphGdmProperty? property)
     {
         property = null;
 

@@ -14,14 +14,14 @@ public interface IOGraphGdmVertex : IOGraphGdmLabeledElement
     IOGraphGdmType Type { get; }
 
     /// <summary>
-    /// A collection of operations defined for the vertex
-    /// </summary>
-    IOGraphGdmOperationCollection Operations { get; }
-
-    /// <summary>
     /// A collection of edges that are connected to this node.
     /// </summary>
     IOGraphGdmEdgeCollection Edges { get; }
+
+    /// <summary>
+    /// A collection of operations defined for the vertex
+    /// </summary>
+    IOGraphGdmPathCollection Paths { get; }
 
     /// <summary>
     /// The graph in which the vertex belongs to.
