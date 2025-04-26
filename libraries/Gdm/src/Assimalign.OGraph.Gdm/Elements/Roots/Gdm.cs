@@ -3,15 +3,15 @@ using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
-[DebuggerDisplay("{Label} [Model]")]
+[DebuggerDisplay("{Name} [Model]")]
 public class Gdm : IOGraphGdm
 {
-    public Gdm(GdmLabel label)
+    public Gdm(GdmName name)
     {
-        Label = label;
+        Name = name;
     }
 
-    public GdmLabel Label { get; }
+    public GdmName Name { get; }
     public GdmGraphCollection Graphs { get; } = new GdmGraphCollection();
     public GdmMetadata Meta { get; } = new GdmMetadata();
     public GdmElementKind ElementKind { get; } = GdmElementKind.Model;

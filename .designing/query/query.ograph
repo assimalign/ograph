@@ -67,7 +67,7 @@ Query: v(employees)
             skip 20
             take 20
         )
-        .edge(>addresses)
+        .edge(./addresses)
             .project(
                 id
                 address {

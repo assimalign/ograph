@@ -2,6 +2,7 @@
 using System.Xml;
 using System.Text.Json;
 using Assimalign.OGraph.Gdm.Internal;
+using System.Runtime.Serialization;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 

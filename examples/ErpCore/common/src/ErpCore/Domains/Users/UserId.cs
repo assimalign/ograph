@@ -4,10 +4,14 @@ namespace ErpCore;
 
 using Assimalign.OGraph;
 
-[EntityKey(EntityKeyRuntimeType.Int)]
-public partial struct UserId
+[GdmScalarType(ScalarUnderlyingType.Int, 
+    IncludeImplicitOperators = true,
+    IncludeIsValidMethod = true,
+    GdmTypeNamespace = "ErpCore.Gdm")]
+[GdmOmittedComplexType("TestValue")]
+public partial class UserId
 {
-    public partial bool IsValid(Guid value, out string message)
+    public static partial bool IsValid(int value, out string message)
     {
         message = string.Empty;
 

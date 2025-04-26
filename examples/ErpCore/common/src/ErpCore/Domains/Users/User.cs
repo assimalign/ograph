@@ -1,6 +1,11 @@
-﻿namespace ErpCore;
+﻿using Assimalign.OGraph;
 
-public class User
+namespace ErpCore;
+
+
+
+[GdmPickedComplexType("UserCreateInput", Include = ["Info", "Username"])]
+public partial class User
 {
     public UserId Id { get; set; }
     public UserInfo? Info { get; set; }

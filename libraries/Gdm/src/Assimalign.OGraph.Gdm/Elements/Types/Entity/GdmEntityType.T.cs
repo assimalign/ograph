@@ -16,15 +16,15 @@ public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMember
     {
         
     }
-    public GdmEntityType(GdmLabel label, GdmEntityKey key, GdmGraph graph)
+    public GdmEntityType(GdmName name, GdmEntityKey key, GdmGraph graph)
     {
-        Label = label;
+        Name = name;
         Key = ThrowHelper.ThrowIfNull(key, nameof(key));
         Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
     }
 
 
-    public override GdmLabel Label { get; internal set; } = default!;
+    public override GdmName Name { get; internal set; } = default!;
     public override GdmGraph Graph { get; internal set; } = default!;
     public GdmEntityKey Key { get; internal set; } = default!;
     public GdmMemberCollection Members { get; internal set; } = new GdmMemberCollection();

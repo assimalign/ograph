@@ -1,6 +1,9 @@
 ﻿namespace Assimalign.OGraph.Gdm;
 
-public interface IOGraphGdmPath
+/// <summary>
+/// 
+/// </summary>
+public interface IOGraphGdmPath : IOGraphGdmElement
 {
     /// <summary>
     /// 
@@ -11,4 +14,9 @@ public interface IOGraphGdmPath
     /// 
     /// </summary>
     IOGraphGdmOperationCollection Operations { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    IOGraphGdmVertex Vertex { get; }
 }

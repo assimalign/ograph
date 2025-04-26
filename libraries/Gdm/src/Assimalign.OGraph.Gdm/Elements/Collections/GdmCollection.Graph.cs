@@ -32,19 +32,16 @@ public class GdmGraphCollection : IOGraphGdmGraphCollection
         ThrowHelper.ThrowIfNull(item, nameof(item));
         Add(ThrowHelper.ThrowIfNotType<GdmGraph>(item));
     }
-
-    
-
     bool ICollection<IOGraphGdmGraph>.Contains(IOGraphGdmGraph item)
     {
         throw new NotImplementedException();
     }
-
     void ICollection<IOGraphGdmGraph>.CopyTo(IOGraphGdmGraph[] array, int arrayIndex)
     {
         throw new NotImplementedException();
     }
-
+   
+    
     IEnumerator<IOGraphGdmGraph> IEnumerable<IOGraphGdmGraph>.GetEnumerator()
     {
         throw new NotImplementedException();

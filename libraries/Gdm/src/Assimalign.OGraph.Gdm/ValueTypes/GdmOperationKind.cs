@@ -2,6 +2,12 @@
 
 public enum GdmOperationKind
 {
-    Query,
-    Command
+    //Query,
+    //Command
+
+    Query,  // GET
+    Insert, // POST
+    Delete, // DELETE
+    Update, // PUT
+    Merge,  // PATCH
 }

@@ -9,10 +9,8 @@ using Internal;
 public class GdmBooleanType : GdmScalarType<bool>
 {
     public GdmBooleanType(GdmGraph graph) 
-    {
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
-    }
-    public override GdmGraph Graph { get; internal set; }
+        : base(graph) { }
+
     public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Boolean;
     public override bool Read(ref Utf8JsonReader reader)
     {

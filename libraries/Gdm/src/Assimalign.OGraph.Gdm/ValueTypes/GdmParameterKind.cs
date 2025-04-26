@@ -3,5 +3,6 @@
 public enum GdmParameterKind
 {
     Path,
-    Input
+    Input,
+    Query
 }

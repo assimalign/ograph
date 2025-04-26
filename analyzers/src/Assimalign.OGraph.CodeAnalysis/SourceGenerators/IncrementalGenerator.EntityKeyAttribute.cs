@@ -41,11 +41,18 @@ public class EntityKeyAttributeIncrementalGenerator : IIncrementalGenerator
             predicate: (node, _) => node is StructDeclarationSyntax,
             transform: static (context, _) =>
             {
+                var declaration = (StructDeclarationSyntax)context.TargetNode;
+
+                declaration.GetNameOfType();
+
+                declaration.GetAttributeArgumentOfType<bool>("Assimalign.OGraph.EntityKeyAttribute", "IncludeImplicitOperators");
+
                 var @struct = new StructContext()
                 {
                     Namespace = GetStructNamespace(context),
                     Name = GetStructName(context)
                 };
+
 
                 var node = (StructDeclarationSyntax)context.TargetNode;
                 var attribute = node.AttributeLists

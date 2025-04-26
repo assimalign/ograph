@@ -5,12 +5,10 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
-
 	<ItemGroup>
-		<Folder Include="Domains\Customers\" />
-		<Folder Include="Domains\Sales\" />
+		<Analyzer Include="C:\Source\repos\assimalign\ograph\analyzers\src\Assimalign.OGraph.CodeAnalysis\bin\Debug\netstandard2.0\Assimalign.OGraph.CodeAnalysis.dll" />
 	</ItemGroup>
 	<ItemGroup>
-		<Analyzer Include="C:\Source\repos\assimalign\ograph\analyzers\src\Assimalign.OGraph.CodeAnalysis\bin\Debug\netstandard2.0\Assimalign.OGraph.CodeAnalysis.dll"/>
+		<ProjectReference Include="..\..\..\..\..\libraries\Core\src\Assimalign.OGraph.Core\Assimalign.OGraph.Core.csproj" />
 	</ItemGroup>
 </Project>

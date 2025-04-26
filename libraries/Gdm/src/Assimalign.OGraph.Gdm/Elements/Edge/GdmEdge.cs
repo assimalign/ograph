@@ -12,11 +12,11 @@ public class GdmEdge : IOGraphGdmEdge
     {
         
     }
-    IOGraphGdmVertex IOGraphGdmEdge.Target => throw new NotImplementedException();
 
+    IOGraphGdmVertex IOGraphGdmEdge.Target => throw new NotImplementedException();
     IOGraphGdmVertex IOGraphGdmEdge.Source => throw new NotImplementedException();
 
-    IOGraphGdmOperationCollection IOGraphGdmEdge.Operations => throw new NotImplementedException();
+    IOGraphGdmStepCollection IOGraphGdmEdge.Steps => throw new NotImplementedException();
 
     IOGraphGdmGraph IOGraphGdmEdge.Graph => throw new NotImplementedException();
 

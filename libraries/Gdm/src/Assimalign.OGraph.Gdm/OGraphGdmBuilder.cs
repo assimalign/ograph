@@ -7,14 +7,24 @@ namespace Assimalign.OGraph.Gdm;
 using Assimalign.OGraph.Gdm.Internal;
 using Assimalign.OGraph.Gdm.Elements;
 
+
+/*
+    Build Process
+        1. Configure Types
+    
+ */
+
+/// <summary>
+/// 
+/// </summary>
 public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
 {
     private readonly Gdm model;
     private readonly List<Action<Gdm>> actions;
 
-    OGraphGdmBuilder(GdmName label)
+    OGraphGdmBuilder(GdmName name)
     {
-        this.model = new Gdm(label);
+        this.model = new Gdm(name);
         this.actions = new List<Action<Gdm>>();
     }
 
@@ -71,6 +81,16 @@ public sealed class OGraphGdmBuilder : IOGraphGdmBuilder
     public static IOGraphGdmBuilder Create(GdmName label)
     {
         return new OGraphGdmBuilder(label);
+    }
+
+    IOGraphGdmBuilder IOGraphGdmBuilder.BeforeBuild(Action<IOGraphGdm> action)
+    {
+        throw new NotImplementedException();
+    }
+
+    IOGraphGdmBuilder IOGraphGdmBuilder.AfterBuild(Action<IOGraphGdm> action)
+    {
+        throw new NotImplementedException();
     }
 }
 

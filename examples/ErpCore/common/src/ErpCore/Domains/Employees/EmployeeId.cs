@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assimalign.OGraph.Gdm;
-
-public interface IOGraphGdmQueryOperation
+namespace ErpCore.Domains.Employees
 {
+    class EmployeeId
+    {
+    }
 }

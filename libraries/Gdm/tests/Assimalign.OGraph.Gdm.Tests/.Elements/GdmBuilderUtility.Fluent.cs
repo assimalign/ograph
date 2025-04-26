@@ -13,23 +13,29 @@ public static partial class GdmBuilderUtility
 {
     private static IOGraphGdm CreateFluentModel()
     {
-
         // Builder process 
         return OGraphGdmBuilder.Create("ErpCore")
-            .AddGraph("organizations", graph =>
+            .AddGraph("Organizations", descriptor =>
             {
-                graph.AddMeta("description", "");
+                descriptor.AddMeta("description", "");
+
+
+                descriptor.AddVertex(graph =>
+                {
+                    return default;
+                });
 
                 #region Types
 
-                graph.AddComplexType<Organization>(complex =>
-                {
-                    complex.HasName("CreateOrUpdateOrganization");
-                });
+                //graph.AddType()
+                //graph.AddComplexType<Organization>(complex =>
+                //{
+                //    complex.HasName("CreateOrUpdateOrganization");
+                //});
 
                 #endregion
 
-                graph.AddVertex<Organization>(vertex =>
+                descriptor.AddVertex<Organization>(vertex =>
                 {
                     vertex.HasLabel("organizations");
                     vertex.HasEntityType(entity =>
@@ -48,13 +54,13 @@ public static partial class GdmBuilderUtility
                     });
 
 
-                    //vertex.HasOperation();
                 });
-                graph.AddVertex<Organization>("organizations", descriptor =>
+                descriptor.AddVertex<Organization>("organizations", descriptor =>
                 {
                     descriptor.HasName("Organization");
                     descriptor.HasKey(p => p.Id);
                     descriptor.HasProperty(p => p.Id)
+                        .UsePropertyName("id")
                         .AddMeta("description", "")
                         .IsRequired();
 
@@ -62,7 +68,7 @@ public static partial class GdmBuilderUtility
 
                 });
             })
-            .AddGraph("users", graph =>
+            .AddGraph("Administration", graph =>
             {
                 graph.AddEntityType<User>(entity =>
                 {
@@ -111,8 +117,14 @@ public static partial class GdmBuilderUtility
                 {
                     entity.HasName("UserProfile");
                 });
+
+                graph.AddEdge<User, UserProfile>(edge =>
+                {
+
+                });
+
             })
-            .AddGraph("employees", graph =>
+            .AddGraph("Hrm", graph =>
             {
                 graph.AddVertex<Employee>(vertex =>
                 {
@@ -121,6 +133,7 @@ public static partial class GdmBuilderUtility
                     {
                         entity.HasName("Employee");
                         entity.HasKey(p => p.EmployeeId);
+
                         entity.HasProperty(p => p.EmployeeId)
                             .UsePropertyName("id")
                             .AddMeta("", "");
@@ -138,6 +151,10 @@ public static partial class GdmBuilderUtility
                         entity.HasName("Job");
                     });
                 });
+            })
+            .AddGraph("Wms", graph =>
+            {
+
             })
             .Build();
     }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- <Gdmx Version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="gdmx.xsd"> -->
-<Gdmx Version="1.0">
+<Gdmx Name="ErpCore" Version="1.0">
     <!-- 
             Build Process: [Add Types] ->  []
 
@@ -79,10 +79,10 @@
 
                 Collections:
     -->
-    <Graph Name="Employees">
+    <Graph Name="HumanResource">
         <Vertex Label="Employees" Type="Employee">
             <Path Value="Employees" Kind="Disconnected">
-                <Query Name="Get">
+                <Operation Name="Get" Kind="Query">
                     <ReturnType Type="EmployeeList" />
                     <Meta>
                         <Key>Http@Http</Key>
@@ -93,67 +93,76 @@
                             <QueryParam />
                         </Value>
                     </Meta>
-                </Query>
-                <Command Name="Create" State="Add">
+                </Operation>
+                <Operation Name="Create" Kind="Create">
                     <ReturnType Type="Employee" />
-                    <ArgumentType Type="CreateOrUpdateEmployee" />
-                </Command>
+                    <Parameter Name="employee" Type="CreateOrUpdateEmployee" Kind="Input" />
+                </Operation>
             </Path>
             <Path Value="Employees{employeeId}" Kind="Trivial">
-                <Query Name="GetById">
+                <Operation Name="GetById" Kind="Query">
                     <Parameter Name="employeeId" Type="EmployeeId" Kind="Path" />
                     <ReturnType Type="Employee" />
-                </Query>
-                <Command Name="Delete" State="Delete">
+                </Operation>
+                <Operation Name="Delete" Kind="Delete">
                     <Parameter Name="employeeId" Type="EmployeeId" Kind="Path" />
                     <Parameter Name="hardDelete" Type="Boolean" Kind="Query" />
-                </Command>
-                <Command Name="Update" State="Update">
+                </Operation>
+                <Operation Name="Update" Kind="Update">
                     <Parameter Name="employeeId" Type="EmployeeId" Kind="Path" />
                     <ReturnType Type="Employee" />
-                </Command>
-                <Command Name="Patch" State="Patch">
+                </Operation>
+                <Operation Name="Patch" Kind="Merge">
                     <Parameter Name="employeeId" Type="EmployeeId" Kind="Path" />
                     <ReturnType Type="Employee" />
-                </Command>
+                </Operation>
             </Path>
         </Vertex>
         <Vertex Label="EmployeesAddresses" Type="EmployeeAddress">
             <Path Value="EmployeesAddresses" Kind="Disconnected">
-                <Query Name="GetAll">
+                <Operation Name="GetAll" Kind="Query">
                     <ReturnType Type="EmployeeAddressList" />
-                </Query>
+                </Operation>
             </Path>
-            <Path Value="EmployeesAddresses{addressId}" Kind="Trivial">
-                <Query Name="GetAnyById">
+            <Path Value="EmployeesAddresses{addressId}">
+                <Operation Name="GetAnyById" Kind="Query">
                     <Parameter Name="addressId" Type="AddressId" Kind="Path" />
                     <ReturnType Type="EmployeeAddress" />
-                </Query>
+                </Operation>
             </Path>
-            <Path Value="Employees{employeeId}/[Addresses]/EmployeesAddresses" Kind="Path">
-                <Query Name="Get">
+            <Path Value="Employees{employeeId}/[Addresses]/EmployeesAddresses">
+                <Operation Name="Get" Kind="Query">
                     <Parameter Name="employeeId" Type="EmployeeId" Kind="Path" />
                     <ReturnType Type="EmployeeAddressList" />
-                </Query>
+                </Operation>
+                <Operation Name="Create" Kind="Create">
+                    <Parameter Name="employeeId" Type="EmployeeId" Kind="Path" />
+                    <Parameter Name="employee" Type="EmployeeCreateOrUpdate" Kind="Input" />
+                    <ReturnType Name="Employee" />
+                </Operation>
             </Path>
-            <Path Value="Employees{employeeId}/[Addresses]/EmployeesAddresses{addressId}" Kind="Path">
-                <Query Name="GetById">
+            <Path Value="Employees{employeeId}/[Addresses]/EmployeesAddresses{addressId}">
+                <Operation Name="GetById" Kind="Query">
                     <Parameter Name="employeeId" Type="EmployeeId" Kind="Path" />
                     <Parameter Name="addressId" Type="AddressId" Kind="Path" />
                     <ReturnType Type="EmployeeAddress" />
-                </Query>
-                <Command Name="Update">
+                </Operation>
+                <Operation Name="Update" Kind="Update">
                     <Parameter Name="employeeId" Type="EmployeeId" Kind="Path" />
                     <Parameter Name="addressId" Type="AddressId" Kind="Path" />
                     <Parameter Name="employee" Type="EmployeeCreateOrUpdate" Kind="Input" />
                     <ReturnType Name="Employee" />
-                </Command>
-                <Command Name="Patch">
+                </Operation>
+                <Operation Name="Patch" Kind="Merge">
                     <Parameter Name="employeeId" Type="EmployeeId" Kind="Path" />
                     <Parameter Name="addressId" Type="AddressId" Kind="Path" />
                     <Parameter Name="employee" Type="EmployeePatch" Kind="Input" />
                     <ReturnType Name="Employee" />
-                </Command>
+                </Operation>
+                <Operation Name="Delete" Kind="Delete">
+                    <Parameter Name="employeeId" Type="EmployeeId" Kind="Path" />
+                    <Parameter Name="addressId" Type="AddressId" Kind="Path" />
+                </Operation>
             </Path>
             <Path Value="Employees{employeeId}/[PrimaryAddress]/EmployeesAddresses">
                 <Query Name="Get">
@@ -162,14 +171,39 @@
             </Path>
         </Vertex>
         <Vertex Label="EmployeesAddressesTypes" Type="EmployeeAddressType">
-            <Path Value="EmployeesAddressesTypes" />
-            <Path Value="EmployeesAddressesTypes{typeId}" />
+            <Path Value="EmployeesAddressesTypes">
+                <Query Name="">
+                    <ReturnType Type="" />
+                </Query>
+            </Path>
+            <Path Value="EmployeesAddressesTypes{typeId}">
+                <Query Name="">
+                    <ReturnType Type="" />
+                </Query>
+            </Path>
         </Vertex>
         <Vertex Label="EmployeesJobs" Type="EmployeeJob">
-            <Path Value="EmployeesJobs" />
-            <Path Value="EmployeesJobs{jobId}" />
-            <Path Value="Employees{employeeId}/[Jobs]/EmployeesJobs" />
-            <Path Value="Employees{employeeId}/[Jobs]/EmployeesJobs{jobId}" />
+            <Path Value="EmployeesJobs">
+                <Query Name="">
+                    <ReturnType Type="EmployeeJobList" />
+                </Query>
+            </Path>
+            <Path Value="EmployeesJobs{jobId}">
+                <Query Name="">
+                    <ReturnType Type="EmployeeJob" />
+                </Query>
+            </Path>
+            <Path Value="Employees{employeeId}/[Jobs]/EmployeesJobs">
+                <Query Name="Get">
+                    <ReturnType Type="EmployeeJobList" />
+                </Query>
+            </Path>
+            <Path Value="Employees{employeeId}/[Jobs]/EmployeesJobs{jobId}">
+                <Query Name="Get">
+                    <Parameter Name="" Type="" Kind="" />
+                    <ReturnType Type="EmployeeJob" />
+                </Query>
+            </Path>
         </Vertex>
         <Vertex Label="EmployeesTasks" Type="EmployeeTask">
             <Path Value="Employees{employeeId}/[tasks]/EmployeesTasks">
@@ -212,19 +246,21 @@
         <Edge Label="Addresses" Source="Employees" Target="EmployeesAddresses">
             <Step Value="Employees/[Addresses]/EmployeesAddresses">
                 <Query Name="Resolve">
-                    <ReturnType Type="EmployeeAddressList"/>
+                    <ReturnType Type="EmployeeAddressList" />
                 </Query>
             </Step>
             <Step Value="Employees/[Addresses]/EmployeesAddresses{addressId}">
                 <Query Name="ResolveAddresses">
-                    <ReturnType Type="EmployeeAddress"/>
+                    <ReturnType Type="EmployeeAddress" />
                 </Query>
             </Step>
             <Step Value="Employees{employeeId}/[Addresses]/EmployeesAddresses">
-                
+                <Query Name="">
+                    <ReturnType Type="" />
+                </Query>
             </Step>
             <Step Value="Employees{employeeId}/[Addresses]/EmployeesAddresses{addressId}">
-                
+                <Query Name="" />
             </Step>
         </Edge>
         <Edge Label="PrimaryAddress" Source="Employees" Target="EmployeesAddresses">
@@ -239,17 +275,56 @@
                 </Query>
             </Step>
         </Edge>
-        <Edge Label="Types" Source="EmployeesAddresses" Target="EmployeesAddressesTypes" />
-        <Edge Label="TaxInfo" Source="Employees" Target="EmployeesTaxInfo" />
-        <Edge Label="Jobs" Source="Employees" Target="EmployeesJobs" />
-        <Edge Label="Tasks" Source="EmployeesJobs" Target="EmployeesTasks">
-            <Step Value="EmployeesJobs/[Tasks]/EmployeesTasks">
-
+        <Edge Label="Types" Source="EmployeesAddresses" Target="EmployeesAddressesTypes">
+            <Step Value="">
+                <Query Name="">
+                    <ReturnType Type="" />
+                </Query>
             </Step>
         </Edge>
-        <Edge Label="Tasks" Source="Employees" Target="EmployeesTasks" />
-        <Edge Label="WorkItems" Source="EmployeesTasks" Target="EmployeesWorkItems" />
-        <Edge Label="Employee" Source="EmployeesAddresses" Target="Employees" />
+        <Edge Label="TaxInfo" Source="Employees" Target="EmployeesTaxInfo">
+            <Step Value="">
+                <Query Name="">
+                    <ReturnType Type="" />
+                </Query>
+            </Step>
+        </Edge>
+        <Edge Label="Jobs" Source="Employees" Target="EmployeesJobs">
+            <Step Value="">
+                <Query Name="">
+                    <ReturnType Type="" />
+                </Query>
+                <Command Name="" />
+            </Step>
+        </Edge>
+        <Edge Label="Tasks" Source="EmployeesJobs" Target="EmployeesTasks">
+            <Step Value="EmployeesJobs/[Tasks]/EmployeesTasks">
+                <Query Name="">
+                    <ReturnType Type="" />
+                </Query>
+            </Step>
+        </Edge>
+        <Edge Label="Tasks" Source="Employees" Target="EmployeesTasks">
+            <Step Value="">
+                <Query Name="">
+                    <ReturnType Type="" />
+                </Query>
+            </Step>
+        </Edge>
+        <Edge Label="WorkItems" Source="EmployeesTasks" Target="EmployeesWorkItems">
+            <Step Value="">
+                <Query Name="">
+                    <ReturnType Type="" />
+                </Query>
+            </Step>
+        </Edge>
+        <Edge Label="Employee" Source="EmployeesAddresses" Target="Employees">
+            <Step Value="">
+                <Query Name="">
+                    <ReturnType Type="" />
+                </Query>
+            </Step>
+        </Edge>
         <EntityType Name="Employee">
             <Key Property="id" />
             <Property Name="id" Type="EmployeeId" />
@@ -312,7 +387,7 @@
             <Property Name="userId" Type="UserId" IsReadOnly="false" IsNullable="false" />
             <Property Name="timestamp" Type="DateTime" IsReadOnly="false" IsNullable="false" />
             <Property Name="user" Type="User" IsReadOnly="true" IsNullable="false">
-                <Flag Name="filter" Value="enabled" />
+                <Option Name="filter" Value="enabled" />
             </Property>
         </ComplexType>
         <ComplexType Name="EmployeeUpdateOrCreate">
@@ -361,9 +436,14 @@
             <Format Pattern="MM/DD/YYYY" />
         </ScalarType>
     </Graph>
-    <Graph Name="Organizations">
+    <Graph Name="Organization">
         <Vertex Label="Organizations" Type="Organization" />
-        <Vertex Label="organizationsLocations" Type="OrganizationLocation" />
+        <Vertex Label="OrganizationsLocations" Type="OrganizationLocation" />
+        <Edge Label="Employees" Source="Organizations" Target="Employees">
+            <Step Value="Organizations/[Employees]/Employees">
+                <Operation Name="" Kind="Query" />
+            </Step>
+        </Edge>
         <EntityType Name="Organization">
             <Key Property="id" />
             <Property Name="id" Type="OrganizationId" />
@@ -379,8 +459,25 @@
             <PrimitiveType Type="Int" />
         </ScalarType>
     </Graph>
+    <Graph Name="Administration">
+        <EntityType Name="User" />
+        <EntityType Name="Role" />
+        <EntityType Name="Group" />
+        <EntityType Name="Permission" />
+        <EntityType Name="Tenant" />
+    </Graph>
+    <Graph Name="Payroll" />
     <Graph Name="Inventory" />
-    <Graph Name="Warehouses" />
+    <Graph Name="Warehousing" />
     <Graph Name="Packaging" />
     <Graph Name="Shipping" />
+    <Graph Name="Billing" />
+    <Graph Name="Purchasing">
+        <EntityType Name="PurchaseOrder" />
+    </Graph>
+    <Graph Name="Procurement" />
+    <Graph Name="Vendors" />
+    <Graph Name="Receiving" />
+    <Graph Name="Scheduling" />
+    <Graph Name="MasterDataManagement" />
 </Gdmx>

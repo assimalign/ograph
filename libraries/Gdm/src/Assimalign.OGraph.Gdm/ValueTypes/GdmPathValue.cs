@@ -13,17 +13,24 @@ public readonly struct GdmPathValue
         
     }
 
-    public string Value { get; }
+    public GdmStepValue[] Steps { get; }
 
 
-    public static void Parse(string value)
+
+    #region Operators
+
+
+    public static implicit operator GdmPathValue(string value)
     {
-
+        return new GdmPathValue(value);
     }
-}
+
+    public static implicit operator string(GdmPathValue value)
+    {
+        return value.ToString()!;
+    }
 
 
-public readonly struct GdmPathSegment
-{
 
+    #endregion
 }

@@ -14,5 +14,5 @@ public abstract class OGraphGdmMetaProvider
     public abstract string Name { get; }
 
 
-    Task SerializeAsync()
+    //Task SerializeAsync()
 }

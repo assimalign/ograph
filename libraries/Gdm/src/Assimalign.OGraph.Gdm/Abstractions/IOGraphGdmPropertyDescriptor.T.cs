@@ -5,7 +5,6 @@ namespace Assimalign.OGraph.Gdm;
 public interface IOGraphGdmPropertyDescriptor<T>
 {
     IOGraphGdmPropertyDescriptor<T> UsePropertyName(GdmName name);
-    IOGraphGdmPropertyDescriptor<T> UseType<TType>() where TType : IOGraphGdmType;
     IOGraphGdmPropertyDescriptor<T> UseType(IOGraphGdmType type);
     IOGraphGdmPropertyDescriptor<T> UseType(Func<IOGraphGdmGraph, IOGraphGdmType> type);
     IOGraphGdmPropertyDescriptor<T> UseGetter(GdmPropertyGetter getter);

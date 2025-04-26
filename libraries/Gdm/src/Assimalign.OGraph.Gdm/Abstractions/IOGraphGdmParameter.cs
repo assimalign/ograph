@@ -6,13 +6,7 @@
 public interface IOGraphGdmParameter : IOGraphGdmNamedElement
 {
     /// <summary>
-    /// 
-    /// </summary>
-    bool IsRequired { get; }
-
-    /// <summary>
     /// The parameter type reference.
     /// </summary>
     IOGraphGdmType Type { get; }
-
 }

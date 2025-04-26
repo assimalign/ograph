@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Assimalign.OGraph.CodeAnalysis.SourceGenerators
+namespace Assimalign.OGraph.CodeAnalysis;
+
+internal class EntityTypeAttributeIncrementalGenerator
 {
-    internal class EntityTypeAttributeIncrementalGenerator
-    {
-    }
 }

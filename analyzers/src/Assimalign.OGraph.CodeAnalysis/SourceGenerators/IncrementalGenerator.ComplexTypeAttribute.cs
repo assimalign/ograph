@@ -4,6 +4,6 @@ using System.Text;
 
 namespace Assimalign.OGraph.CodeAnalysis;
 
-internal class ComplexTypeAttributeIncrementalGenerator
+public class ComplexTypeAttributeIncrementalGenerator
 {
 }

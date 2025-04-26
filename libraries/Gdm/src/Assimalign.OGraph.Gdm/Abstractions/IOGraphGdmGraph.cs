@@ -5,7 +5,7 @@ namespace Assimalign.OGraph.Gdm;
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphGdmGraph : IOGraphGdmBindableElement
+public interface IOGraphGdmGraph : IOGraphGdmNamedElement
 {
     /// <summary>
     /// A collection of types defined within the graph.
@@ -21,4 +21,9 @@ public interface IOGraphGdmGraph : IOGraphGdmBindableElement
     /// A collection of vertices within the graph.
     /// </summary>
     IOGraphGdmVertexCollection Vertices { get; }
+
+    /// <summary>
+    /// The root model.
+    /// </summary>
+    IOGraphGdm Model { get; }
 }

@@ -13,10 +13,8 @@ public readonly struct GdmName : IEquatable<GdmName>, IComparable<GdmName>
 
     public GdmName(string value)
     {
-        if (string.IsNullOrEmpty(value))
-        {
-            ThrowHelper.ThrowArgumentNullException(nameof(value));
-        }
+        ThrowHelper.ThrowIfNullOrEmpty(value);
+        
         if (Regex.IsMatch(value, pattern))
         {
             ThrowHelper.ThrowInvalidName(value);

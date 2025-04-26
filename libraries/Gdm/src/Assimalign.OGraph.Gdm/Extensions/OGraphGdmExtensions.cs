@@ -23,23 +23,34 @@ public static class OGraphGdmExtensions
     /// <param name="elements"></param>
     /// <param name="label"></param>
     /// <returns></returns>
-    public static TElement Find<TElement>(this IEnumerable<TElement> elements, GdmLabel label) 
+    public static TElement Find<TElement>(
+        this IEnumerable<TElement> elements, 
+        GdmLabel label) 
         where TElement : IOGraphGdmLabeledElement
     {
         AssertNull(elements, nameof(elements));
         return elements.OfType<TElement>().First(p => p.Equals(label));
     }
 
+    public static TElement Find<TElement>(
+        this IEnumerable<TElement> elements, 
+        GdmName name)
+        where TElement : IOGraphGdmNamedElement
+    {
+        AssertNull(elements, nameof(elements));
+        return elements.OfType<TElement>().First(p => p.Equals(name));
+    }
+
     /// <summary>
     /// 
     /// </summary>
     /// <param name="model"></param>
-    /// <param name="label"></param>
+    /// <param name="name"></param>
     /// <returns></returns>
-    public static IOGraphGdmGraph GetGraph(this IOGraphGdm model, GdmLabel label)
+    public static IOGraphGdmGraph GetGraph(this IOGraphGdm model, GdmName name)
     {
         AssertNull(model, nameof(model));
-        return model.Graphs.Find<IOGraphGdmGraph>(label);
+        return model.Graphs.Find<IOGraphGdmGraph>(name);
     }
 
     private static void AssertNull(object value, string paramName)

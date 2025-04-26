@@ -2,12 +2,13 @@
 
 namespace Assimalign.OGraph.Gdm;
 
-using Assimalign.OGraph.Gdm.Elements;
+using Elements;
+using Internal;
 
 public static class OGraphGdmBuilderExtensions
 {
     /// <summary>
-    /// 
+    /// Adds a graph to
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="label"></param>
@@ -15,9 +16,12 @@ public static class OGraphGdmBuilderExtensions
     /// <returns></returns>
     public static IOGraphGdmBuilder AddGraph(
         this IOGraphGdmBuilder builder, 
-        GdmLabel label, 
+        GdmLabel label,
         Action<IOGraphGdmGraphDescriptor> configure)
     {
+        ThrowHelper.ThrowIfNull(builder, nameof(builder));
+        ThrowHelper.ThrowIfNull(configure, nameof(configure));
+
         return builder.AddGraph(GdmGraph.Create(label, configure));
     }
 }

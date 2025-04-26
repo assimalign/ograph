@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm;
 
-[DebuggerDisplay("{ToString()}")]
+[DebuggerDisplay("{ToString(), n}")]
 public readonly struct GdmMetaKey
 {
     /// <summary>

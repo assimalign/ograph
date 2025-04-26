@@ -11,7 +11,7 @@ public interface IOGraphGdmBinding
     GdmName Name { get; }
 
     /// <summary>
-    /// The binding kind.
+    /// The element the binding is associated with.
     /// </summary>
-    GdmBindingKind Kind { get; }
+    IOGraphGdmBindableElement Element { get; }
 }

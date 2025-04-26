@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Assimalign.OGraph.Gdm;
+﻿namespace Assimalign.OGraph.Gdm;
 
 /// <summary>
 /// An edge links two nodes together.

@@ -10,7 +10,7 @@ public interface IOGraphGdmOperationCollection : ICollection<IOGraphGdmOperation
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="label"></param>
+    /// <param name="name"></param>
     /// <returns></returns>
-    IOGraphGdmOperation this[GdmLabel label] { get; }
+    IOGraphGdmOperation this[GdmName name] { get; }
 }

@@ -9,4 +9,9 @@ public interface IOGraphGdmOperationParameter : IOGraphGdmParameter
     /// 
     /// </summary>
     IOGraphGdmOperation Operation { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    GdmParameterKind Kind { get; }
 }

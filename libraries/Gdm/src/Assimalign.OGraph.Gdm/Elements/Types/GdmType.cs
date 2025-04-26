@@ -8,7 +8,7 @@ public abstract class GdmType : IOGraphGdmType
 {
     public abstract GdmName Name { get; internal set; }
     public abstract GdmTypeKind Kind { get; }
-    public abstract GdmGraph Graph { get; internal set; }
+    public virtual GdmGraph Graph { get; internal set; } = default!;
     public abstract Type RuntimeType { get; internal set; }
     public GdmMetadata Meta { get; } = new GdmMetadata();
     public GdmElementKind ElementKind { get; } = GdmElementKind.Type;

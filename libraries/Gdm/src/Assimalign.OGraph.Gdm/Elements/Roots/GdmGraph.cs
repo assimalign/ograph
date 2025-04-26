@@ -6,12 +6,14 @@ using Assimalign.OGraph.Gdm.Internal;
 
 public class GdmGraph : IOGraphGdmGraph
 {
-    public GdmGraph(GdmLabel label)
+    public GdmGraph(GdmName name, Gdm model)
     {
-        Label = label;
+        Name = name;
+        Model = model;
     }
 
-    public GdmLabel Label { get; }
+    public GdmName Name { get; }
+    public Gdm Model { get; }
     public GdmEdgeCollection Edges { get; } = new GdmEdgeCollection();
     public GdmVertexCollection Vertices { get; } = new GdmVertexCollection();
     public GdmTypeCollection Types = new GdmTypeCollection();
@@ -23,11 +25,12 @@ public class GdmGraph : IOGraphGdmGraph
     IOGraphGdmVertexCollection IOGraphGdmGraph.Vertices => Vertices;
     IOGraphGdmTypeCollection IOGraphGdmGraph.Types => Types;
     IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
+    IOGraphGdm IOGraphGdmGraph.Model => Model;  
 
 
-    public static IOGraphGdmGraph Create(GdmLabel label, Action<IOGraphGdmGraphDescriptor> configure)
+    public static IOGraphGdmGraph Create(GdmName name, Gdm model, Action<IOGraphGdmGraphDescriptor> configure)
     {
-        var graph = new GdmGraph(label);
+        var graph = new GdmGraph(name, model);
 
         if (configure is null)
         {

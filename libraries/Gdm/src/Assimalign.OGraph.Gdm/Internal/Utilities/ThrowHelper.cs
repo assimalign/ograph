@@ -4,28 +4,67 @@ using System.Diagnostics.CodeAnalysis;
 namespace Assimalign.OGraph.Gdm.Internal;
 
 using Properties;
+using System.Collections;
+using System.Runtime.CompilerServices;
 
 internal static class ThrowHelper
 {
     #region Common Exceptions
 
-    public static void ThrowIfNull(object value, string paramName)
+    internal static T ThrowIfNull<T>(
+        [NotNull] T? argument,
+        [CallerArgumentExpression(nameof(argument))] string? paramName = null)
     {
-        if (value is null)
-        {
-            ThrowArgumentNullException(paramName);
-        }
-    }
-
-    public static T ThrowIfNull<T>(T value, string paramName)
-    {
-        if (value is null)
+        if (argument is null)
         {
             ThrowArgumentNullException(paramName);
         }
 
-        return value;
+        return argument;
     }
+
+    internal static string ThrowIfNullOrEmpty(
+        [NotNull] string? argument,
+        [CallerArgumentExpression(nameof(argument))] string? paramName = null)
+    {
+        if (string.IsNullOrEmpty(argument))
+        {
+            ThrowArgumentNullException(paramName);
+        }
+
+        return argument;
+    }
+
+    internal static T ThrowIfNullOrNone<T>(
+        [NotNull] T argument,
+        [CallerArgumentExpression(nameof(argument))] string? paramName = null) where T : IEnumerable
+    {
+        switch (argument)
+        {
+            case null:
+            case ICollection collection when collection.Count == 0:
+            case Array array when array.Length == 0:
+                ThrowArgumentNullException(paramName);
+                break;
+        }
+
+        return argument;
+    }
+
+
+    internal static T ThrowIfNotDefined<T>(
+        [NotNull] T argument,
+        [CallerArgumentExpression(nameof(argument))] string? paramName = null) where T : struct, Enum
+    {
+        if (!Enum.IsDefined(argument))
+        {
+            throw new ArgumentException($"The integral value does not exist in {typeof(T).Name}");
+        }
+
+        return argument;
+    }
+
+
 
     public static T ThrowIfNotType<T>(object value)
     {
@@ -54,8 +93,6 @@ internal static class ThrowHelper
     [DoesNotReturn]
     public static void ThrowUnknownError() =>
         throw new GdmUnknownException();
-
-    
 
     #region Validation/Model Exceptions
 

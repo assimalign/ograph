@@ -18,11 +18,23 @@ public interface IOGraphGdmBindableElement : IOGraphGdmNamedElement
     /// <summary>
     /// 
     /// </summary>
-   // IOGraphGdmDirectiveCollection Directives { get; }
+    /// <param name="binding"></param>
+    //void Set(IOGraphGdmBinding binding);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    //IOGraphGdmBinding Get();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    // IOGraphGdmDirectiveCollection Directives { get; }
 
     //// <summary>
     //// 
     //// </summary>
     //// <param name="binding"></param>
-   // void Bind(IOGraphGdmBinding binding);
+    // void Bind(IOGraphGdmBinding binding);
 }

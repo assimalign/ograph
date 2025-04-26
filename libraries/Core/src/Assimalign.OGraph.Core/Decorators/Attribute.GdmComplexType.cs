@@ -3,9 +3,9 @@
 namespace Assimalign.OGraph;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-public sealed class ComplexTypeAttribute : Attribute
+public sealed class GdmComplexTypeAttribute : Attribute
 {
-    public ComplexTypeAttribute()
+    public GdmComplexTypeAttribute()
     {
     }
 }
