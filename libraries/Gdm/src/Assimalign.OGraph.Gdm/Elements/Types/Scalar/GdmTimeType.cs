@@ -8,13 +8,9 @@ using Internal;
 
 public sealed class GdmTimeType : GdmScalarType<TimeOnly>
 {
-    public GdmTimeType(GdmGraph graph)
-    {
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
-    }
-
-    public override GdmName Name => "Time";
-    public override GdmGraph Graph { get; internal set; }
+    public GdmTimeType() { }
+    public GdmTimeType(GdmGraph graph) : base(graph) { }
+    public override GdmName Name { get; internal set; } = "Time";
     public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.String;
     public override TimeOnly Read(ref Utf8JsonReader reader)
     {

@@ -9,12 +9,9 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 public sealed class GdmInt128Type : GdmScalarType<Int128>
 {
-    public GdmInt128Type(GdmGraph graph)
-    {
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
-    }
+    public GdmInt128Type() { }
+    public GdmInt128Type(GdmGraph graph) : base(graph) { }
 
-    public override GdmGraph Graph { get; internal set; }
     public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Int;
     public override Int128 Read(ref Utf8JsonReader reader)
     {

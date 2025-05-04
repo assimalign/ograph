@@ -66,7 +66,7 @@ internal static class ThrowHelper
 
 
 
-    public static T ThrowIfNotType<T>(object value)
+    public static T ThrowIfNotType<T>(object? value)
     {
         if (value is not T type)
         {
@@ -76,8 +76,17 @@ internal static class ThrowHelper
         return type;
     }
 
+    public static T ThrowIfNotType<T, T1, T2>(T value) 
+        where T1 : T
+        where T2 : T
+    {
+
+
+        return value;
+    }
+
     [DoesNotReturn]
-    public static void ThrowArgumentNullException(string paramName) =>
+    public static void ThrowArgumentNullException(string? paramName) =>
         throw new ArgumentNullException(paramName);
 
     [DoesNotReturn]

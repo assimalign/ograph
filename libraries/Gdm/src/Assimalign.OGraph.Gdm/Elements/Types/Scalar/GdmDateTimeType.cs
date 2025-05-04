@@ -8,11 +8,11 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 public sealed class GdmDateTimeType : GdmScalarType<DateTime>
 {
-    public GdmDateTimeType(GdmGraph graph)
+    public GdmDateTimeType() { }
+    public GdmDateTimeType(GdmGraph graph) : base(graph)
     {
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+       
     }
-    public override GdmGraph Graph { get; internal set; }
     //public override string[]? Formats => new[]
     //{
     //    "yyyy-MM-dd",
@@ -23,7 +23,7 @@ public sealed class GdmDateTimeType : GdmScalarType<DateTime>
     //    "yyyy-MM-ddTHH:mm:ss.fffffffzzz"
     //};
 
-    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.String;
+    public override GdmPrimitiveType PrimitiveType { get; } = GdmPrimitiveType.String;
 
     public override DateTime Read(ref Utf8JsonReader reader)
     {

@@ -8,11 +8,11 @@ using Internal;
 
 public sealed class GdmDecimalType : GdmScalarType<Decimal>
 {
-    public GdmDecimalType(GdmGraph graph)
+    public GdmDecimalType() { }
+    public GdmDecimalType(GdmGraph graph) : base(graph)
     {
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+
     }
-    public override GdmGraph Graph { get; internal set; }
     public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Float;
     public override decimal Read(ref Utf8JsonReader reader)
     {

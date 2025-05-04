@@ -21,7 +21,7 @@ public interface IOGraphGdmEdge : IOGraphGdmLabeledElement
     IOGraphGdmVertex Source { get; }
 
     /// <summary>
-    /// A collction of operation mappings.
+    /// A collection of operation mappings.
     /// </summary>
     IOGraphGdmStepCollection Steps { get; }
 

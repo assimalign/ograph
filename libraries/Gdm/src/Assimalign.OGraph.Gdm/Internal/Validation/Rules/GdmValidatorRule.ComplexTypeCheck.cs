@@ -51,7 +51,7 @@ internal class GdmComplexTypeCheckRule : GdmValidatorRule
                 context.AddFailure(error =>
                 {
                     error.Message = "Delegates are not allowed as complex types.";
-                    error.Source = complexType.Label;
+                    error.Source = complexType.Name;
                 });
             }
             // 3. Check if type has default constructor
@@ -60,7 +60,7 @@ internal class GdmComplexTypeCheckRule : GdmValidatorRule
                 context.AddFailure(error =>
                 {
                     error.Message = $"The type {runtimeType.Name} does not have a default constructor. {runtimeType.Name}.ctor()";
-                    error.Source = complexType.Label;
+                    error.Source = complexType.Name;
                 });
             }
             else if (runtimeType.IsAssignableTo(typeof(string)))
@@ -68,7 +68,7 @@ internal class GdmComplexTypeCheckRule : GdmValidatorRule
                 context.AddFailure(error =>
                 {
                     error.Message = "System.String is not allowed as a complex type.";
-                    error.Source = complexType.Label;
+                    error.Source = complexType.Name;
                 });
             }
         }

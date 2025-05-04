@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace Assimalign.OGraph.Gdm.Elements;
 
 [DebuggerDisplay("{Name} [Model]")]
-public class Gdm : IOGraphGdm
+public class Gdm : GdmElement, IOGraphGdm
 {
     public Gdm(GdmName name)
     {
@@ -13,8 +13,7 @@ public class Gdm : IOGraphGdm
 
     public GdmName Name { get; }
     public GdmGraphCollection Graphs { get; } = new GdmGraphCollection();
-    public GdmMetadata Meta { get; } = new GdmMetadata();
-    public GdmElementKind ElementKind { get; } = GdmElementKind.Model;
+    public override GdmElementKind ElementKind { get; } = GdmElementKind.Model;
 
     IOGraphGdmGraphCollection IOGraphGdm.Graphs => Graphs;
     IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;

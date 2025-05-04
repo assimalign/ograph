@@ -7,51 +7,80 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-public class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : 
-    GdmType<T>, IOGraphGdmEntityType
+
+public abstract class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : GdmEntityType
     where T : class, new()
 {
+    private readonly Action<GdmEntityTypeDescriptor<T>> _configure;
 
-    public GdmEntityType()
+    #region Constructors
+
+    protected GdmEntityType()
     {
-        
-    }
-    public GdmEntityType(GdmName name, GdmEntityKey key, GdmGraph graph)
-    {
-        Name = name;
-        Key = ThrowHelper.ThrowIfNull(key, nameof(key));
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+        _configure = Configure;
     }
 
+    public GdmEntityType(GdmName key, GdmGraph graph) 
+        : base(key, typeof(T), graph)
+    {
+        _configure = Configure;
+    }
 
-    public override GdmName Name { get; internal set; } = default!;
-    public override GdmGraph Graph { get; internal set; } = default!;
-    public GdmEntityKey Key { get; internal set; } = default!;
-    public GdmMemberCollection Members { get; internal set; } = new GdmMemberCollection();
-    public override Type RuntimeType { get; internal set; } = typeof(T);
-    public override GdmTypeKind Kind => GdmTypeKind.Entity;
-    IOGraphGdmEntityKey IOGraphGdmEntityType.Key => Key;
-    IOGraphGdmMemberCollection IOGraphGdmComplexType.Members => Members;
-    IOGraphGdmGraph IOGraphGdmType.Graph => Graph;
-    IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
+    public GdmEntityType(GdmName name, GdmName key, GdmGraph graph) 
+        : base(name, key, typeof(T), graph)
+    {
+        _configure = Configure;
+    }
 
-    public override T Read(ref Utf8JsonReader reader)
+    #endregion
+
+
+    #region Methods
+
+    protected virtual void Configure(GdmEntityTypeDescriptor<T> descriptor)
     {
-        throw new NotImplementedException();
+
     }
-    public override T Read(XmlReader reader)
+    public virtual new T Read(ref Utf8JsonReader reader)
     {
-        throw new NotImplementedException();
+        return ThrowHelper.ThrowIfNotType<T>(base.Read(ref reader));
     }
-    public override void Write(XmlWriter writer, T value)
+    public virtual new T Read(XmlReader reader)
     {
-        throw new NotImplementedException();
+        return ThrowHelper.ThrowIfNotType<T>(base.Read(reader));
     }
-    public override void Write(Utf8JsonWriter writer, T value)
+    public virtual void Write(Utf8JsonWriter writer, T value)
     {
-        throw new NotImplementedException();
+        base.Write(writer, value);
+    }
+    public virtual void Write(XmlWriter writer, T value)
+    {
+        base.Write(writer, value);
+    }
+    public sealed override void Write(Utf8JsonWriter writer, object value)
+    {
+        Write(writer, ThrowHelper.ThrowIfNotType<T>(value));
+    }
+    public sealed override void Write(XmlWriter writer, object value)
+    {
+        Write(writer, ThrowHelper.ThrowIfNotType<T>(value));
+    }
+
+    #endregion
+
+    internal override void Initialize(GdmGraph graph)
+    {
+        var descriptor = new GdmEntityTypeDescriptor<T>(graph);
+
+        if (_configure is not null)
+        {
+            _configure.Invoke(descriptor);
+        }
+
+        base.Initialize(graph);
     }
 }
+
 
 //public class GdmEntityType<[DynamicallyAccessedMembers(
 //    DynamicallyAccessedMemberTypes.PublicParameterlessConstructor | 

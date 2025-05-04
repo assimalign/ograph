@@ -8,12 +8,9 @@ using Internal;
 
 public sealed class GdmFloatType : GdmScalarType<Single>
 {
-    public GdmFloatType(GdmGraph graph)
-    {
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
-    }
+    public GdmFloatType() { }
+    public GdmFloatType(GdmGraph graph) : base(graph) { }
 
-    public override GdmGraph Graph { get; internal set; }
     public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Float;
     public override float Read(ref Utf8JsonReader reader)
     {

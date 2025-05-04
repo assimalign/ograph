@@ -13,6 +13,8 @@ public class GdmEdge : IOGraphGdmEdge
         
     }
 
+
+
     IOGraphGdmVertex IOGraphGdmEdge.Target => throw new NotImplementedException();
     IOGraphGdmVertex IOGraphGdmEdge.Source => throw new NotImplementedException();
 

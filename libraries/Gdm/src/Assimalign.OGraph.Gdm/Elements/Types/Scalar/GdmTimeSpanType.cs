@@ -8,13 +8,10 @@ using Internal;
 
 public sealed class GdmTimeSpanType : GdmScalarType<TimeSpan>
 {
-    public GdmTimeSpanType(GdmGraph graph)
-    {
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
-    }
+    public GdmTimeSpanType() { }
+    public GdmTimeSpanType(GdmGraph graph) : base(graph) { }
 
-    public override GdmLabel Label => "TimeSpan";
-    public override GdmGraph Graph { get; internal set; }
+    public override GdmName Name { get; internal set; } = "TimeSpan";
     public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.String;
     public override TimeSpan Read(ref Utf8JsonReader reader)
     {

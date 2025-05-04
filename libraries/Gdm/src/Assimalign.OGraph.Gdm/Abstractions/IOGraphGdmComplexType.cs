@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-
-namespace Assimalign.OGraph.Gdm;
+﻿namespace Assimalign.OGraph.Gdm;
 
 /// <summary>
 /// 
@@ -9,7 +6,7 @@ namespace Assimalign.OGraph.Gdm;
 public interface IOGraphGdmComplexType : IOGraphGdmType
 {
     /// <summary>
-    /// 
+    /// Gets the collection of members.
     /// </summary>
     IOGraphGdmMemberCollection Members { get; }
 }

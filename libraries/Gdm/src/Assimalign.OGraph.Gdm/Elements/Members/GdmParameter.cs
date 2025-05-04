@@ -20,4 +20,6 @@ public class GdmParameter : IOGraphGdmParameter
     public GdmElementKind ElementKind { get; } = GdmElementKind.Parameter;
     IOGraphGdmType IOGraphGdmParameter.Type => Type;
     IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
+
+    GdmName IOGraphGdmNamedElement.Name => throw new NotImplementedException();
 }

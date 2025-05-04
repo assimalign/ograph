@@ -8,13 +8,13 @@ using Internal;
 
 public sealed class GdmDateType : GdmScalarType<DateOnly>
 {
-    public GdmDateType(GdmGraph graph)
+    public GdmDateType() { }
+    public GdmDateType(GdmGraph graph) : base(graph)
     {
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+
     }
-    public override GdmName Name => "Date";
-    public override GdmGraph Graph { get; internal set; }
-    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.String;
+    public override GdmName Name { get; internal set; } = "Date";
+    public override GdmPrimitiveType PrimitiveType { get; } = GdmPrimitiveType.String;
     public override DateOnly Read(ref Utf8JsonReader reader)
     {
         return DateOnly.Parse(reader.GetString()!);

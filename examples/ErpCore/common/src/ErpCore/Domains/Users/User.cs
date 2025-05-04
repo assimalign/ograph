@@ -1,9 +1,9 @@
-﻿using Assimalign.OGraph;
+﻿using Assimalign.OGraph.Gdm;
 
 namespace ErpCore;
 
 
-
+[GdmEntityType]
 [GdmPickedComplexType("UserCreateInput", Include = ["Info", "Username"])]
 public partial class User
 {

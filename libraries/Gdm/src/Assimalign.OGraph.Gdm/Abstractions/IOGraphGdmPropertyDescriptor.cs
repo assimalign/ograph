@@ -2,11 +2,11 @@
 
 namespace Assimalign.OGraph.Gdm;
 
-public interface IOGraphGdmPropertyDescriptor
+public interface IOGraphGdmPropertyDescriptor : IOGraphGdmDescriptor<IOGraphGdmProperty>
 {
     IOGraphGdmPropertyDescriptor UsePropertyName(GdmName name);
     IOGraphGdmPropertyDescriptor UseType(IOGraphGdmType type);
-    IOGraphGdmPropertyDescriptor UseType(Func<IOGraphGdmGraph, IOGraphGdmType> type);
+    //IOGraphGdmPropertyDescriptor UseType(Func<IOGraphGdmGraph, IOGraphGdmType> type);
     IOGraphGdmPropertyDescriptor UseGetter(GdmPropertyGetter getter);
     IOGraphGdmPropertyDescriptor UseSetter(GdmPropertySetter setter);
     IOGraphGdmPropertyDescriptor AddMeta(string key, string value);

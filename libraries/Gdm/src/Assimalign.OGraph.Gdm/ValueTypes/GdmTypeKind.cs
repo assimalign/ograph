@@ -6,22 +6,27 @@
 public enum GdmTypeKind
 {
     None,
+
     /// <summary>
     /// 
     /// </summary>
     Entity,
+
     /// <summary>
     /// 
     /// </summary>
     Collection,
+
     /// <summary>
     /// 
     /// </summary>
     Complex,
+
     /// <summary>
     /// 
     /// </summary>
     Scalar,
+
     /// <summary>
     /// 
     /// </summary>

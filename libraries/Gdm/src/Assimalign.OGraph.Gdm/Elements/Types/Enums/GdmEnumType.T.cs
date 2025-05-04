@@ -11,7 +11,7 @@ public class GdmEnumType<TEnum> : GdmType<TEnum>
 {
     public GdmEnumType(GdmGraph graph)
     {
-        Graph = graph;
+       
         Values = GetEnumValues();
     }
 
@@ -54,7 +54,7 @@ public class GdmEnumType<TEnum> : GdmType<TEnum>
     public GdmEnumValue[] Values { get; }
     public override GdmTypeKind Kind => GdmTypeKind.Enum;
 
-    public override GdmGraph Graph { get => throw new NotImplementedException(); internal set => throw new NotImplementedException(); }
+   // public override GdmGraph Graph { get => throw new NotImplementedException(); internal set => throw new NotImplementedException(); }
 
     public override unsafe TEnum Read(ref Utf8JsonReader reader)
     {

@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Xml;
 using System.Text.Json;
+using System.Xml;
 
 namespace Assimalign.OGraph.Gdm;
 
@@ -14,6 +14,11 @@ namespace Assimalign.OGraph.Gdm;
 public interface IOGraphGdmType : IOGraphGdmNamedElement
 {
     /// <summary>
+    /// The underlying .NET Type. All types must have a RuntimeType, even if it is a custom type.
+    /// </summary>
+    Type RuntimeType { get; }
+
+    /// <summary>
     /// The identifier of the type.
     /// </summary>
     GdmTypeKind Kind { get; }
@@ -22,20 +27,6 @@ public interface IOGraphGdmType : IOGraphGdmNamedElement
     /// The Graph in which the type belongs to.
     /// </summary>
     IOGraphGdmGraph Graph { get; }
-
-    /// <summary>
-    /// The underlying .NET Type.
-    /// </summary>
-    /// <remarks>
-    /// All types must have a RuntimeType, even if it is a custom type.
-    /// </remarks>
-    Type RuntimeType { get; }
-
-    /// <summary>
-    /// Indicates whether the type is a primitive type specified by
-    /// the OGraph Specification.
-    /// </summary>
-    bool IsPrimitive { get; }
 
     /// <summary>
     /// Writes the provided <paramref name="value"/> to JSON.

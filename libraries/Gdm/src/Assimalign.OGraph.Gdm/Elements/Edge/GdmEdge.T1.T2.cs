@@ -23,13 +23,17 @@ public class GdmEdge<
     public GdmVertex<TTarget> Target { get; internal set; }
     public GdmVertex<TSource> Source { get; internal set; }
     public GdmGraph Graph { get; internal set; }
-    public GdmOperationCo
     public GdmMetadata Meta { get; } = new GdmMetadata();
     public GdmElementKind ElementKind => GdmElementKind.Edge;
 
     IOGraphGdmVertex IOGraphGdmEdge.Target => Target;
     IOGraphGdmVertex IOGraphGdmEdge.Source => Source;
     IOGraphGdmGraph IOGraphGdmEdge.Graph => Graph;
-    IOGraphGdmOperationCollection IOGraphGdmEdge.Operations => throw new NotImplementedException();
     IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
+
+    IOGraphGdmStepCollection IOGraphGdmEdge.Steps => throw new NotImplementedException();
+
+    GdmLabel IOGraphGdmLabeledElement.Label => throw new NotImplementedException();
+
+    GdmElementKind IOGraphGdmElement.ElementKind => throw new NotImplementedException();
 }

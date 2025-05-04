@@ -8,12 +8,9 @@ using Internal;
 
 public sealed class GdmStringType : GdmScalarType<string>
 {
-    public GdmStringType(GdmGraph graph)
-    {
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
-    }
+    public GdmStringType() { }
+    public GdmStringType(GdmGraph graph) : base(graph) { }
 
-    public override GdmGraph Graph { get; internal set; }
     public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.String;
     public override string Read(ref Utf8JsonReader reader)
     {

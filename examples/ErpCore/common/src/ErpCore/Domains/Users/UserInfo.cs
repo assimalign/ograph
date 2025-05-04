@@ -10,4 +10,5 @@ namespace ErpCore;
 [GdmComplexType]
 public class UserInfo
 {
+    public string? FirstName { get; set; }
 }

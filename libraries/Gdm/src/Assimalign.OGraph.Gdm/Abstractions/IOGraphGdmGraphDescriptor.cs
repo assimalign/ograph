@@ -2,13 +2,13 @@
 
 namespace Assimalign.OGraph.Gdm;
 
-public interface IOGraphGdmGraphDescriptor
+public interface IOGraphGdmGraphDescriptor : IOGraphGdmDescriptor<IOGraphGdmGraph>
 {
     IOGraphGdmGraphDescriptor AddType(IOGraphGdmType type);
-    IOGraphGdmGraphDescriptor AddType(Func<IOGraphGdmGraph, IOGraphGdmType> configure);
     IOGraphGdmGraphDescriptor AddVertex(IOGraphGdmVertex vertex);
-    IOGraphGdmGraphDescriptor AddVertex(Func<IOGraphGdmGraph, IOGraphGdmVertex> configure);
     IOGraphGdmGraphDescriptor AddEdge(IOGraphGdmEdge edge);
-    IOGraphGdmGraphDescriptor AddEdge(Func<IOGraphGdmGraph, IOGraphGdmEdge> configure);
     IOGraphGdmGraphDescriptor AddMeta(string key, string value);
+    //IOGraphGdmGraphDescriptor AddType(Func<IOGraphGdmGraph, IOGraphGdmType> configure);
+    //IOGraphGdmGraphDescriptor AddVertex(Func<IOGraphGdmGraph, IOGraphGdmVertex> configure);
+   // IOGraphGdmGraphDescriptor AddEdge(Func<IOGraphGdmGraph, IOGraphGdmEdge> configure);
 }

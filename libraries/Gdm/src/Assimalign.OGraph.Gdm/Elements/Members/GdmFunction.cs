@@ -1,11 +1,12 @@
 ﻿namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
+using System;
 
 public class GdmFunction : GdmMember, IOGraphGdmFunction
 {
-    public GdmFunction(
-        GdmLabel label,
+    internal GdmFunction(
+        GdmName label,
         GdmType returnType,
         GdmType declaringType)
         : base(label, declaringType)
@@ -15,9 +16,9 @@ public class GdmFunction : GdmMember, IOGraphGdmFunction
 
     public GdmType ReturnType { get; }
     public GdmParameterCollection Parameters { get; } = new GdmParameterCollection();
-    public override GdmElementKind ElementKind => GdmElementKind.Function;
+    public override GdmElementKind ElementKind => GdmElementKind.Member;
 
     IOGraphGdmType IOGraphGdmFunction.ReturnType => ReturnType;
-    IOGraphGdmParameterCollection IOGraphGdmFunction.Parameters => Parameters;
+    IOGraphGdmParameterCollection IOGraphGdmFunction.Parameters => throw new NotImplementedException();
 
 }

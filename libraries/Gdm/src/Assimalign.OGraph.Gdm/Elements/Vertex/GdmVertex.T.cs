@@ -8,47 +8,35 @@ namespace Assimalign.OGraph.Gdm.Elements;
 using Internal;
 
 [DebuggerDisplay("{Label} [Vertex]")]
-public class GdmVertex<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : 
-    IOGraphGdmVertex 
+public abstract class GdmVertex<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : GdmVertex
     where T : class, new()
 {
-    private readonly Action<IOGraphGdmVertexDescriptor<T>>? configure;
+    private readonly Action<GdmVertexDescriptor<T>>? _configure;
 
     #region Constructors
 
-    GdmVertex(Action<IOGraphGdmVertexDescriptor<T>> configure)
+    protected GdmVertex()
     {
-        this.configure = configure;
-        Configure(new GdmVertexDescriptor<T>(this));
+        _configure = Configure;
     }
 
-    public GdmVertex(GdmLabel label, GdmEntityType<T> type, GdmGraph graph) : this(descriptor =>
+    public GdmVertex(GdmLabel label, GdmEntityType<T> type, GdmGraph graph) 
+        : base(label, type, graph)
     {
-        descriptor.HasLabel(label);
-        descriptor.HasEntityType(type);
-    })
-    {
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+        _configure = Configure;
     }
 
     #endregion
 
-    #region Properties
+    //#region Properties
 
-    public GdmLabel Label { get; internal set; } = typeof(T).Name;
-    public GdmEntityType<T> Type { get; internal set; } = default!;
-    public GdmGraph Graph { get; internal set; } = default!;
-    public GdmEdgeCollection Edges { get; } = new GdmEdgeCollection();
-    public GdmVertexOperationCollection Operations { get; } = new GdmVertexOperationCollection();
-    public GdmMetadata Meta { get; } = new GdmMetadata();
-    public GdmElementKind ElementKind => GdmElementKind.Vertex;
-    IOGraphGdmType IOGraphGdmVertex.Type => Type;
-    IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
-    IOGraphGdmOperationCollection IOGraphGdmVertex.Operations => Operations;
-    IOGraphGdmEdgeCollection IOGraphGdmVertex.Edges => Edges;
-    IOGraphGdmGraph IOGraphGdmVertex.Graph => Graph;
+    //public GdmLabel Label { get; }
+    //public GdmGraph Graph { get; }
+    //public GdmEntityType<T> Type { get; }
+    //public GdmEdgeCollection Edges { get; } = new GdmEdgeCollection();
 
-    #endregion
+
+    //#endregion
 
     #region Methods
 
@@ -56,20 +44,7 @@ public class GdmVertex<[DynamicallyAccessedMembers(DynamicallyAccessedMemberType
     /// 
     /// </summary>
     /// <param name="descriptor"></param>
-    protected virtual void Configure(IOGraphGdmVertexDescriptor<T> descriptor)
-    {
-        configure?.Invoke(descriptor);
-    }
+    protected virtual void Configure(GdmVertexDescriptor<T> descriptor) { }
 
     #endregion
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="configure"></param>
-    /// <returns></returns>
-    public static GdmVertex<T> Create(Action<IOGraphGdmVertexDescriptor<T>> configure)
-    {
-        return new GdmVertex<T>(configure);
-    }
 }

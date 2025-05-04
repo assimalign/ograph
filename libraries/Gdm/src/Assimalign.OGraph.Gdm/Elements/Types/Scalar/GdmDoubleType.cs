@@ -8,11 +8,9 @@ using Internal;
 
 public sealed class GdmDoubleType : GdmScalarType<Double>
 {
-    public GdmDoubleType(GdmGraph graph)
-    {
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
-    }
-    public override GdmGraph Graph { get; internal set; }
+    public GdmDoubleType() { }
+    public GdmDoubleType(GdmGraph graph) : base(graph) { }
+
     public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Float;
     public override double Read(ref Utf8JsonReader reader)
     {

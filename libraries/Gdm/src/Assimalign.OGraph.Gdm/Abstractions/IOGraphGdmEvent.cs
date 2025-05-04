@@ -1,7 +1,7 @@
 ﻿//namespace Assimalign.OGraph.Gdm;
 
 
-//public enum GdmEventOccurence
+//public enum GdmEventOccurrence
 //{
 //    Before,
 //    On,
@@ -9,7 +9,7 @@
 //}
 //public interface IOGraphGdmEvent : IOGraphGdmBindableElement
 //{
-//    GdmEventOccurence Occurence { get; }
+//    GdmEventOccurrence Occurrence { get; }
 
 
 //}

@@ -8,12 +8,9 @@ using Internal;
 
 public sealed class GdmUriType : GdmScalarType<Uri>
 {
-    public GdmUriType(GdmGraph graph) 
-    {
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
-    }
-    public override GdmGraph Graph { get; internal set; }
-    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.String;
+    public GdmUriType() { }
+    public GdmUriType(GdmGraph graph) : base(graph) { }
+    public override GdmPrimitiveType PrimitiveType { get; } = GdmPrimitiveType.String;
     public override Uri Read(ref Utf8JsonReader reader)
     {
         if (reader.TokenType != JsonTokenType.String)

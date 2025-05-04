@@ -10,15 +10,15 @@ internal class GdmVertexInvalidTypeReferenceIsNullValidatorRule : GdmValidatorRu
 
         foreach (var vertex in vertices)
         {
-            if (vertex.Type is null || vertex.Type.Definition is null)
-            {
-                context.AddFailure(error =>
-                {
-                    error.Code = GdmErrorCode.GDM1002;
-                    error.Message = Resources.GDM1002;
-                    error.Source = vertex.Label;
-                });
-            }
+            //if (vertex.Type is null || vertex.Type.Definition is null)
+            //{
+            //    context.AddFailure(error =>
+            //    {
+            //        error.Code = GdmErrorCode.GDM1002;
+            //        error.Message = Resources.GDM1002;
+            //        error.Source = vertex.Label;
+            //    });
+            //}
         }
     }
 }

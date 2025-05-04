@@ -9,12 +9,10 @@ using Internal;
 
 public sealed class GdmUInt64Type : GdmScalarType<UInt64>
 {
-    public GdmUInt64Type(GdmGraph graph)
-    {
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
-    }
+    public GdmUInt64Type() { }
+    public GdmUInt64Type(GdmGraph graph) : base(graph) { }
 
-    public override GdmGraph Graph { get; internal set; }
+
     public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Int;
     public override ulong Read(ref Utf8JsonReader reader)
     {

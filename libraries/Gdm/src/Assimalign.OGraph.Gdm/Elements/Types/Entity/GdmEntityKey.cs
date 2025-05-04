@@ -2,17 +2,15 @@
 
 using Internal;
 
-public class GdmEntityKey : IOGraphGdmEntityKey
+public class GdmEntityKey : GdmElement, IOGraphGdmEntityKey
 {
     public GdmEntityKey(GdmProperty property)
     {
-        Property = ThrowHelper.ThrowIfNull(property, nameof(property));
+        Property = ThrowHelper.ThrowIfNull(property);
     }
 
     public GdmProperty Property { get; }
-    public GdmMetadata Meta { get; } = new GdmMetadata();
-    public GdmElementKind ElementKind => GdmElementKind.Key;
-
+    public override GdmElementKind ElementKind { get; }= GdmElementKind.Key;
     IOGraphGdmProperty IOGraphGdmEntityKey.Property => Property ;
     IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
 }

@@ -10,15 +10,15 @@ internal class GdmVertexInvalidTypeReferenceNotEntityTypeValidatorRule : GdmVali
 
         foreach (var vertex in vertices)
         {
-            if (vertex.Type is not null && vertex.Type.Definition is not null && vertex.Type.Definition is not IOGraphGdmEntityType)
-            {
-                context.AddFailure(error =>
-                {
-                    error.Code = GdmErrorCode.GDM1001;
-                    error.Message = Resources.GDM1001;
-                    error.Source = vertex.Label;
-                });
-            }
+            //if (vertex.Type is not null && vertex.Type.Definition is not null && vertex.Type.Definition is not IOGraphGdmEntityType)
+            //{
+            //    context.AddFailure(error =>
+            //    {
+            //        error.Code = GdmErrorCode.GDM1001;
+            //        error.Message = Resources.GDM1001;
+            //        error.Source = vertex.Label;
+            //    });
+            //}
         }
     }
 }

@@ -8,6 +8,11 @@ namespace Assimalign.OGraph.Gdm;
 public interface IOGraphGdmGraph : IOGraphGdmNamedElement
 {
     /// <summary>
+    /// The root model.
+    /// </summary>
+    IOGraphGdm Model { get; }
+
+    /// <summary>
     /// A collection of types defined within the graph.
     /// </summary>
     IOGraphGdmTypeCollection Types { get; }
@@ -21,9 +26,4 @@ public interface IOGraphGdmGraph : IOGraphGdmNamedElement
     /// A collection of vertices within the graph.
     /// </summary>
     IOGraphGdmVertexCollection Vertices { get; }
-
-    /// <summary>
-    /// The root model.
-    /// </summary>
-    IOGraphGdm Model { get; }
 }

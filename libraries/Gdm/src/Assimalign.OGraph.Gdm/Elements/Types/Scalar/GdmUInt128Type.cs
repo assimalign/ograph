@@ -10,12 +10,8 @@ using Internal;
 
 public sealed class GdmUInt128Type : GdmScalarType<UInt128>
 {
-    public GdmUInt128Type(GdmGraph graph)
-    {
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
-    }
-
-    public override GdmGraph Graph { get; internal set; }
+    public GdmUInt128Type() { }
+    public GdmUInt128Type(GdmGraph graph) : base(graph) { }
     public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Int;
     public override UInt128 Read(ref Utf8JsonReader reader)
     {

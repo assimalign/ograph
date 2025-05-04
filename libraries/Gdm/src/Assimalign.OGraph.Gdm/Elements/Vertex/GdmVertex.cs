@@ -6,27 +6,50 @@ namespace Assimalign.OGraph.Gdm.Elements;
 using Internal;
 
 [DebuggerDisplay("{Label} [Vertex]")]
-public class GdmVertex : IOGraphGdmVertex
+public class GdmVertex : GdmElement, IOGraphGdmVertex
 {
-    public GdmVertex(GdmName label, GdmType type, GdmGraph graph)
+    #region Constructors
+    internal GdmVertex()
     {
-        Label = label;
-        Type = type;
-        Graph = graph;
+        //var lazy = new Lazy<GdmType>(() =>
+        //{
+        //    return default;
+        //});
     }
 
-    public GdmName Label { get; internal set; }
-    public GdmType Type { get; internal set; }
-    public GdmGraph Graph { get; internal set; }
+    public GdmVertex(GdmLabel label, GdmEntityType type, GdmGraph graph) 
+    {
+        Label = label;
+        Type = ThrowHelper.ThrowIfNull(type);
+        Graph = ThrowHelper.ThrowIfNull(graph);
+    }
+
+    #endregion
+
+    #region Properties
+
+    public GdmLabel Label { get;  }
+    public GdmEntityType Type { get; } 
+    public GdmGraph Graph { get; } 
     public GdmEdgeCollection Edges { get; } = new GdmEdgeCollection();
-    public GdmVertexOperationCollection Operations { get; } = new GdmVertexOperationCollection();
-    public GdmMetadata Meta { get; } = new GdmMetadata();
-    public GdmElementKind ElementKind => GdmElementKind.Vertex;
+    public sealed override GdmElementKind ElementKind { get; } = GdmElementKind.Vertex;
     IOGraphGdmType IOGraphGdmVertex.Type => Type;
     IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
-    IOGraphGdmOperationCollection IOGraphGdmVertex.Operations => Operations;
     IOGraphGdmEdgeCollection IOGraphGdmVertex.Edges => Edges;
     IOGraphGdmGraph IOGraphGdmVertex.Graph => Graph;
+    IOGraphGdmPathCollection IOGraphGdmVertex.Paths => throw new NotImplementedException();
+
+    #endregion
+
+    #region Methods
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="descriptor"></param>
+   // protected virtual void Configure(GdmVertexDescriptor descriptor) { }
+
+    #endregion
 }
 
 

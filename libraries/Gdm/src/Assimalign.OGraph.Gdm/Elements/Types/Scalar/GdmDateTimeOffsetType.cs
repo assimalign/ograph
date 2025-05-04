@@ -8,13 +8,10 @@ using Internal;
 
 public sealed class GdmDateTimeOffsetType : GdmScalarType<DateTimeOffset>
 {
-    public GdmDateTimeOffsetType(GdmGraph graph)
-    {
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
-    }
+    public GdmDateTimeOffsetType() { }
+    public GdmDateTimeOffsetType(GdmGraph graph) : base(graph) { }
 
-    public override GdmGraph Graph { get; internal set; } = default!;
-    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.String;
+    public override GdmPrimitiveType PrimitiveType { get; } = GdmPrimitiveType.String;
     public override DateTimeOffset Read(ref Utf8JsonReader reader)
     {
         return reader.GetDateTimeOffset();

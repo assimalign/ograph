@@ -2,58 +2,95 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
+using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-public class GdmGraphCollection : IOGraphGdmGraphCollection
+[DebuggerDisplay("Count = {Count}")]
+public class GdmGraphCollection : IOGraphGdmGraphCollection, IEnumerable<GdmGraph>
 {
-    private readonly List<GdmGraph> items;
+    private bool _isReadOnly;
+    private readonly List<GdmGraph> _items;
 
     public GdmGraphCollection()
     {
-        items = new List<GdmGraph>();
+        _items = new List<GdmGraph>();
     }
 
-    public int Count => items.Count;
-    public bool IsReadOnly { get; }
+    public int Count => _items.Count;
+    public bool IsReadOnly => _isReadOnly;
+    public GdmGraph Find(GdmName name)
+    {
+        return _items.First(p => p.Name == name);
+    }
     public void Add(GdmGraph item)
     {
-        items.Add(ThrowHelper.ThrowIfNull(item, nameof(item)));
+        AssertIsReadOnly();
+
+        var graph = ThrowHelper.ThrowIfNull(item, nameof(item));
+
+        for (int i = 0; i < _items.Count; i++)
+        {
+            if (_items[i].Name == graph.Name)
+            {
+                ThrowHelper.ThrowInvalidOperationException($"The model already contains graph: {graph.Name}");
+            }
+        }
+
+        _items.Add(graph);
+    }
+    public void Remove(GdmGraph item)
+    {
+        AssertIsReadOnly();
+
+        var graph = ThrowHelper.ThrowIfNull(item, nameof(item));
+
+        bool isRemoved = _items.Remove(graph);
+
+        if (isRemoved)
+        {
+            return;
+        }
     }
     public void Clear()
     {
-        items.Clear();
+        AssertIsReadOnly();
+        _items.Clear();
+    }
+    public IEnumerator<GdmGraph> GetEnumerator()
+    {
+        return _items.GetEnumerator();
     }
 
-    void ICollection<IOGraphGdmGraph>.Add(IOGraphGdmGraph item)
+    private void AssertIsReadOnly()
     {
-        ThrowHelper.ThrowIfNull(item, nameof(item));
+        if (IsReadOnly)
+        {
+            ThrowHelper.ThrowInvalidOperationException("");
+        }
+    }
+
+
+    void IOGraphGdmGraphCollection.Remove(IOGraphGdmGraph item)
+    {
+        Remove(ThrowHelper.ThrowIfNotType<GdmGraph>(item));
+    }
+    void IOGraphGdmGraphCollection.Add(IOGraphGdmGraph item)
+    {
         Add(ThrowHelper.ThrowIfNotType<GdmGraph>(item));
     }
-    bool ICollection<IOGraphGdmGraph>.Contains(IOGraphGdmGraph item)
+    void IOGraphGdmGraphCollection.Clear()
     {
-        throw new NotImplementedException();
+        Clear();
     }
-    void ICollection<IOGraphGdmGraph>.CopyTo(IOGraphGdmGraph[] array, int arrayIndex)
-    {
-        throw new NotImplementedException();
-    }
-   
-    
     IEnumerator<IOGraphGdmGraph> IEnumerable<IOGraphGdmGraph>.GetEnumerator()
     {
-        throw new NotImplementedException();
+        return GetEnumerator();
     }
-
     IEnumerator IEnumerable.GetEnumerator()
     {
-        throw new NotImplementedException();
-    }
-
-    bool ICollection<IOGraphGdmGraph>.Remove(IOGraphGdmGraph item)
-    {
-        throw new NotImplementedException();
+        return GetEnumerator();
     }
 }

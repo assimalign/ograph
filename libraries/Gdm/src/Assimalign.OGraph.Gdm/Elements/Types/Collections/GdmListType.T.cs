@@ -9,20 +9,21 @@ using Assimalign.OGraph.Gdm.Internal;
 
 public class GdmListType<T> : GdmCollectionType<List<T>, T>
 {
-    public GdmListType(GdmType itemType, GdmGraph graph)
+    public GdmListType(GdmType itemType, GdmGraph graph) 
     {
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+        //Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
         ItemType = ThrowHelper.ThrowIfNull(itemType, nameof(itemType));
  
         if (GdmLabel.IsValid(ItemType!.RuntimeType!.Name))
         {
-            Label = ItemType!.RuntimeType!.Name + "List";
+            Name = ItemType!.RuntimeType!.Name + "List";
         }
     }
+
     #region Overloads
-    public override GdmLabel Label { get; internal set; } = "List";
+    public override GdmName Name { get; } = "List";
     public override GdmType ItemType { get; internal set; }
-    public override GdmGraph Graph { get; internal set; }
+
     public override List<T> Read(ref Utf8JsonReader reader)
     {
         var list = new List<T>();
@@ -45,7 +46,7 @@ public class GdmListType<T> : GdmCollectionType<List<T>, T>
         {
             // TODO: throw invalid exception
         }
-        if (reader.LocalName != Label)
+        if (reader.LocalName != Name)
         {
             // TODO: throw invalid exception
         }
@@ -61,7 +62,7 @@ public class GdmListType<T> : GdmCollectionType<List<T>, T>
             }
             list.Add(item);
 
-            if (reader.NodeType == XmlNodeType.EndElement && reader.LocalName == Label)
+            if (reader.NodeType == XmlNodeType.EndElement && reader.LocalName == Name)
             {
                 break;
             }
@@ -82,7 +83,7 @@ public class GdmListType<T> : GdmCollectionType<List<T>, T>
     }
     public override void Write(XmlWriter writer, List<T> value)
     {
-        writer.WriteStartElement(Label);
+        writer.WriteStartElement(Name);
 
         foreach (var item in value)
         {
@@ -94,13 +95,13 @@ public class GdmListType<T> : GdmCollectionType<List<T>, T>
     #endregion
 
     #region Static Members
-    public static GdmListType<T> Create<TGdmType>() where TGdmType : GdmScalarType<T>, new()
-    {
-        return new GdmListType<T>(new TGdmType());
-    }
-    public static GdmListType<T> Create(IOGraphGdmType type)
-    {
-        return new(type);
-    }
+    //public static GdmListType<T> Create<TGdmType>() where TGdmType : GdmScalarType<T>, new()
+    //{
+    //    return new GdmListType<T>(new TGdmType());
+    //}
+    //public static GdmListType<T> Create(IOGraphGdmType type)
+    //{
+    //    return new(type);
+    //}
     #endregion
 }

@@ -5,53 +5,9 @@
 		<IsTestProject>true</IsTestProject>
 	</PropertyGroup>
 	<ItemGroup>
-	  <Compile Include=".Elements\GdmBuilderUtility.Composable.cs" />
-	  <Compile Include=".Elements\GdmBuilderUtility.Fluent.cs" />
-	  <Compile Include=".Elements\GdmBuilderUtility.Mixed.cs" />
-	  <Compile Include=".Elements\GdmBuilderUtilityStrategy.cs" />
-	  <Compile Include=".Objects\Domains\Employees\Entities\Employee.cs" />
-	  <Compile Include=".Objects\Domains\Employees\Entities\EmployeeAddress.cs" />
-	  <Compile Include=".Objects\Domains\Employees\Entities\EmployeeAddressType.cs" />
-	  <Compile Include=".Objects\Domains\Employees\Entities\EmployeeBase.cs" />
-	  <Compile Include=".Objects\Domains\Employees\Entities\EmployeeJob.cs" />
-	  <Compile Include=".Objects\Domains\Employees\Entities\EmployeeTask.cs" />
-	  <Compile Include=".Objects\Domains\Employees\Entities\EmployeeTaxInfo.cs" />
-	  <Compile Include=".Objects\Domains\Employees\Entities\EmployeeWorkItem.cs" />
-	  <Compile Include=".Objects\Domains\Employees\Models\EmployeeCreateOrUpdate.cs" />
-	  <Compile Include=".Objects\Domains\Entity.cs" />
-	  <Compile Include=".Objects\Domains\Organization\Entities\Organization.cs" />
-	  <Compile Include=".Objects\Domains\Organization\ValueObjects\OrganizationId.cs" />
-	  <Compile Include=".Objects\Domains\Users\Entities\User.cs" />
-	  <Compile Include=".Objects\Domains\Users\Entities\UserProfile.cs" />
-	  <Compile Include=".Objects\Domains\Users\ValueObjects\UserId.cs" />
-	  <Compile Include=".Objects\Domains\Users\ValueObjects\UserInfo.cs" />
-	  <Compile Include=".Objects\ValueObjects\Address.cs" />
-	  <Compile Include=".Objects\ValueObjects\Audit.cs" />
-	  <Compile Include=".Objects\Domains\Employees\ValueObjects\EmployeeId.cs" />
-	  <Compile Include=".Objects\Domains\Employees\ValueObjects\EmployeeInfo.cs" />
-	  <Compile Include=".Objects\Domains\Employees\ValueObjects\EmployeeRole.cs" />
-	  <Compile Include=".Objects\Domains\Employees\ValueObjects\EmployeeType.cs" />
-	  <Compile Include=".Objects\Domains\Employees\ValueObjects\JobId.cs" />
-	  <Compile Include=".Objects\Domains\Employees\ValueObjects\TaskId.cs" />
-	  <Compile Include=".Objects\Domains\Employees\ValueObjects\WorkItemId.cs" />
-	  <Compile Include=".Elements\GdmBuilderUtility.cs" />
-	  <Compile Include=".Elements\Types\Complex\GdmAuditField.cs" />
-	  <Compile Include=".Elements\Types\Complex\GdmEmployeeCreate.cs" />
-	  <Compile Include=".Elements\Types\Entities\EmployeeAddressEntity.cs" />
-	  <Compile Include=".Elements\Types\Entities\EmployeeAddressTypeEntity.cs" />
-	  <Compile Include=".Elements\Types\Entities\EmployeeJobEntity.cs" />
-	  <Compile Include=".Elements\Types\Entities\EmployeeTaskEntity.cs" />
-	  <Compile Include=".Elements\Types\Entities\EmployeeTaxInfoEntity.cs" />
-	  <Compile Include=".Elements\Types\Entities\EmployeeWorkItemEntity.cs" />
-	  <Compile Include=".Elements\Types\Entities\GdmEmployeeEntity.cs" />
-	  <Compile Include=".Elements\Types\Primitives\GdmEmployeeId.cs" />
-	  <Compile Include=".Elements\Types\Primitives\GdmJobId.cs" />
-	  <Compile Include=".Elements\Types\Primitives\GdmTaskId.cs" />
-	  <Compile Include=".Elements\Types\Primitives\GdmWorkItemId.cs" />
-	  <Compile Include=".Elements\Vertices\EmployeeAddressTypeVertex.cs" />
-	  <Compile Include=".Elements\Vertices\EmployeeAddressVertex.cs" />
-	  <Compile Include=".Elements\Vertices\EmployeeJobVertex.cs" />
-	  <Compile Include=".Elements\Vertices\EmployeeVertex.cs" />
+	  <Compile Remove="Validation\**" />
+	  <EmbeddedResource Remove="Validation\**" />
+	  <None Remove="Validation\**" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -63,7 +19,6 @@
 		<ProjectReference Include="..\..\src\Assimalign.OGraph.Gdm\Assimalign.OGraph.Gdm.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<Folder Include="Descriptors\" />
-		<Folder Include="Validation\" />
+	  <Folder Include="Objects\Types\Collection\" />
 	</ItemGroup>
 </Project>

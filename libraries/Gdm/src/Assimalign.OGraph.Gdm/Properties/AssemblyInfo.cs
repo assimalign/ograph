@@ -1,3 +1,3 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("Assimalign.OGraph.Gdm.Tests")]
+//[assembly: InternalsVisibleTo("Assimalign.OGraph.Gdm.Tests")]

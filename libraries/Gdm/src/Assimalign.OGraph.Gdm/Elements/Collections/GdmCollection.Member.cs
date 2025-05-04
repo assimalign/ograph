@@ -2,34 +2,129 @@
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using Assimalign.OGraph.Gdm.Internal;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
-public class GdmMemberCollection : List<GdmMember>, IOGraphGdmMemberCollection
+public class GdmMemberCollection : IOGraphGdmMemberCollection, IEnumerable<GdmMember>
 {
-    public bool IsReadOnly => throw new NotImplementedException();
-    public GdmMember this[GdmLabel label] => (this as IEnumerable<GdmMember>).Find(label);
+    private readonly List<GdmMember> _items;
+    private bool _isReadOnly;
 
-    IOGraphGdmMember IOGraphGdmMemberCollection.this[GdmLabel label] => this[label];
-    void ICollection<IOGraphGdmMember>.Add(IOGraphGdmMember item)
+    public GdmMemberCollection()
     {
-        base.Add(AssertType(item));
+        _items = new List<GdmMember>();
     }
-    void ICollection<IOGraphGdmMember>.Clear()
+
+    public int Count => _items.Count;
+    public bool IsReadOnly => _isReadOnly;
+    public GdmMember this[GdmName name]
     {
-        base.Clear();
+        get
+        {
+            GdmMember? member = default;
+
+            for (int i = 0; i < _items.Count; i++)
+            {
+                if ((member = _items[i]).Name == name)
+                {
+                    return member;
+                }
+            }
+
+            throw new KeyNotFoundException();
+        }
     }
-    bool ICollection<IOGraphGdmMember>.Remove(IOGraphGdmMember item)
+    public void Add(GdmMember member)
     {
-        return base.Remove(AssertType(item));
+        switch (member)
+        {
+            case GdmProperty property:
+                Add(property);
+                break;
+
+            case GdmFunction function:
+                break;
+
+            default:
+                throw new ArgumentException("");
+        }
     }
-    bool ICollection<IOGraphGdmMember>.Contains(IOGraphGdmMember item)
+    public void Add(GdmProperty property)
     {
-        return base.Contains(AssertType(item));
+        ThrowHelper.ThrowIfNull(property);
+
+        for (int i = 0; i < _items.Count; i++)
+        {
+            var member = _items[i];
+
+            // 
+            if (object.ReferenceEquals(property, member))
+            {
+                return;
+            }
+
+            if (member is GdmProperty prop && prop.Name == property.Name)
+            {
+                Remove(prop);
+            }
+        }
+
+        _items.Add(property);
     }
-    void ICollection<IOGraphGdmMember>.CopyTo(IOGraphGdmMember[] array, int arrayIndex)
+    public void Remove(GdmMember member)
     {
-        base.CopyTo(array.Select(p=> AssertType(p)).ToArray(), arrayIndex);
+        switch (member)
+        {
+            case GdmProperty property:
+                Remove(property);
+                break;
+
+            case GdmFunction function:
+                Remove(function);
+                break;
+
+            default:
+                throw new ArgumentException("");
+        }
+    }
+    public void Remove(GdmProperty property)
+    {
+
+    }
+    public void Remove(GdmFunction function)
+    {
+
+    }
+    public void Clear()
+    {
+        _items.Clear();
+    }
+    public bool TryGetProperty(GdmName name, out GdmProperty property)
+    {
+        property = default;
+
+
+
+        return true;
+    }
+    public IEnumerator<GdmMember> GetEnumerator()
+    {
+        return _items.GetEnumerator();
+    }
+
+    IOGraphGdmMember IOGraphGdmMemberCollection.this[GdmName name] => this[name];
+    void IOGraphGdmMemberCollection.Add(IOGraphGdmMember member)
+    {
+        Add(ThrowHelper.ThrowIfNotType<GdmMember>(member));
+    }
+    void IOGraphGdmMemberCollection.Remove(IOGraphGdmMember member)
+    {
+        Remove(ThrowHelper.ThrowIfNotType<GdmMember>(member));
+    }
+    void IOGraphGdmMemberCollection.Clear()
+    {
+        Clear();
     }
     IEnumerator<IOGraphGdmMember> IEnumerable<IOGraphGdmMember>.GetEnumerator()
     {
@@ -38,13 +133,5 @@ public class GdmMemberCollection : List<GdmMember>, IOGraphGdmMemberCollection
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
-    }
-    private GdmMember AssertType(IOGraphGdmMember item)
-    {
-        if (item is not GdmMember member)
-        {
-            throw new ArgumentException("Item must be of type GdmMember");
-        }
-        return member;
     }
 }

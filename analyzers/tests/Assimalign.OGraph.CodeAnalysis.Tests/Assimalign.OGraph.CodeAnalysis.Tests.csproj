@@ -17,8 +17,7 @@
 		<ProjectReference Include="..\..\src\Assimalign.OGraph.CodeAnalysis\Assimalign.OGraph.CodeAnalysis.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<EmbeddedResource Include="..\..\..\libraries\Core\src\Assimalign.OGraph.Core\Decorators\*.cs" 
-						  Link="CodeGenAttributes\%(Filename)%(Extension)"/>
+		<EmbeddedResource Include="..\..\..\libraries\Gdm\src\Assimalign.OGraph.Gdm\Decorators\*.cs" Link="EmbeddedResources\%(Filename)%(Extension)" />
 	</ItemGroup>
 	<ItemGroup>
 		<Using Include="Xunit" />

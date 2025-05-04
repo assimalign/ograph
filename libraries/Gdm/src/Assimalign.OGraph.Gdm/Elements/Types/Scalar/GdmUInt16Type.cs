@@ -9,12 +9,8 @@ using Internal;
 
 public sealed class GdmUInt16Type : GdmScalarType<UInt16>
 {
-    public GdmUInt16Type(GdmGraph graph)
-    {
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
-    }
-
-    public override GdmGraph Graph { get; internal set; }
+    public GdmUInt16Type() { }
+    public GdmUInt16Type(GdmGraph graph) : base(graph) { }
     public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Int;
     public override ushort Read(ref Utf8JsonReader reader)
     {

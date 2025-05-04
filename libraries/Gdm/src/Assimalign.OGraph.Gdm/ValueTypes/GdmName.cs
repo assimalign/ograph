@@ -6,21 +6,25 @@ namespace Assimalign.OGraph.Gdm;
 
 using Internal;
 
-[DebuggerDisplay("{Value}")]
+/// <summary>
+/// 
+/// </summary>
+[DebuggerDisplay("{Value,nq}")]
 public readonly struct GdmName : IEquatable<GdmName>, IComparable<GdmName>
 {
     private const string pattern = "^[a-zA-Z0-9]+$";
+    private readonly string _value = string.Empty;
 
     public GdmName(string value)
     {
         ThrowHelper.ThrowIfNullOrEmpty(value);
-        
+
         if (Regex.IsMatch(value, pattern))
         {
             ThrowHelper.ThrowInvalidName(value);
         }
 
-        Value = value;
+        _value = value;
     }
 
     #region Properties
@@ -28,11 +32,17 @@ public readonly struct GdmName : IEquatable<GdmName>, IComparable<GdmName>
     /// <summary>
     /// The raw string value.
     /// </summary>
-    public string Value { get; }
+    public string Value => _value;
 
     #endregion
 
     #region Methods
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public ReadOnlySpan<char> AsSpan() => _value.AsSpan();
 
     /// <summary>
     /// Converts the string to pascal case.
@@ -40,7 +50,7 @@ public readonly struct GdmName : IEquatable<GdmName>, IComparable<GdmName>
     /// <returns></returns>
     public GdmName ToPascalCase()
     {
-        return AsPascalCase(Value);
+        return AsPascalCase(_value);
     }
 
     /// <summary>
@@ -49,7 +59,7 @@ public readonly struct GdmName : IEquatable<GdmName>, IComparable<GdmName>
     /// <returns></returns>
     public GdmName ToCamalCase()
     {
-        return AsCamalCase(Value);
+        return AsCamalCase(_value);
     }
 
     /// <summary>
@@ -109,24 +119,24 @@ public readonly struct GdmName : IEquatable<GdmName>, IComparable<GdmName>
     /// <inheritdoc cref="global::System.IEquatable{T}"/>
     public bool Equals(GdmName other)
     {
-        return (Value, other.Value) switch
+        return (_value, other._value) switch
         {
             (null, null) => true,
             (null, _) => false,
             (_, null) => false,
-            (_, _) => Value.Equals(other.Value, StringComparison.Ordinal),
+            (_, _) => _value.Equals(other._value, StringComparison.Ordinal),
         };
     }
 
     /// <inheritdoc cref="global::System.IComparable{TSelf}"/>
     public int CompareTo(GdmName other)
     {
-        return (Value, other.Value) switch
+        return (_value, other._value) switch
         {
             (null, null) => 0,
             (null, _) => -1,
             (_, null) => 1,
-            (_, _) => StringComparer.Ordinal.Compare(Value, other.Value),
+            (_, _) => StringComparer.Ordinal.Compare(_value, other._value),
         };
     }
 
@@ -141,9 +151,8 @@ public readonly struct GdmName : IEquatable<GdmName>, IComparable<GdmName>
 
     public override string ToString()
     {
-        return Value;
+        return _value;
     }
-
     public override bool Equals(object? obj)
     {
         return obj is GdmName name ? Equals(name) : false;
@@ -151,7 +160,7 @@ public readonly struct GdmName : IEquatable<GdmName>, IComparable<GdmName>
 
     public override int GetHashCode()
     {
-        return Value.GetHashCode();
+        return _value.GetHashCode();
     }
 
 
@@ -159,10 +168,9 @@ public readonly struct GdmName : IEquatable<GdmName>, IComparable<GdmName>
 
     #region Operators
 
-    public static implicit operator GdmName (string value) => new GdmName(value);
+    public static implicit operator GdmName(string value) => new GdmName(value);
 
-    public static implicit operator string(GdmName name) => name.Value;
-
+    public static implicit operator string(GdmName name) => name._value;
     public static bool operator ==(GdmName left, GdmName right) => left.Equals(right);
     public static bool operator !=(GdmName left, GdmName right) => !left.Equals(right);
 

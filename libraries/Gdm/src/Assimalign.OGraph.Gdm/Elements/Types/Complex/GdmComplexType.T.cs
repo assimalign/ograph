@@ -2,53 +2,81 @@
 using System.Xml;
 using System.Linq;
 using System.Text.Json;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-public class GdmComplexType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : GdmType<T>,
-    IOGraphGdmComplexType
+public abstract class GdmComplexType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : GdmComplexType
     where T : class, new()
 {
-    public GdmComplexType(GdmName label,  GdmGraph graph)
+    private readonly Action<GdmComplexTypeDescriptor<T>>? _configure;
+
+    #region Constructors
+
+    protected GdmComplexType()
     {
-        Label = label;
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+        _configure = Configure;
     }
 
-    public override GdmName Label { get; internal set; }
-    public override GdmGraph Graph { get; internal set; }
-    public GdmMemberCollection Members { get; internal set; } = new GdmMemberCollection();
-    public override Type RuntimeType { get; internal set; } = typeof(T);
-    public override GdmTypeKind Kind => GdmTypeKind.Complex;
-    IOGraphGdmMemberCollection IOGraphGdmComplexType.Members => Members;
-    IOGraphGdmGraph IOGraphGdmType.Graph => Graph;
-    IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
-
-    public override T Read(ref Utf8JsonReader reader)
+    public GdmComplexType(GdmGraph graph) : base(typeof(T), graph)
     {
-        throw new NotImplementedException();
+        _configure = Configure;
     }
-    public override T Read(XmlReader reader)
+    public GdmComplexType(GdmName name, GdmGraph graph) : base(name, typeof(T), graph)
     {
-        throw new NotImplementedException();
-    }
-    public override void Write(XmlWriter writer, T value)
-    {
-        throw new NotImplementedException();
-    }
-    public override void Write(Utf8JsonWriter writer, T value)
-    {
-        throw new NotImplementedException();
+        _configure = Configure;
     }
 
+    #endregion
 
 
+    #region Methods
+
+    protected abstract void Configure(GdmComplexTypeDescriptor<T> descriptor);
+
+    public virtual new T Read(ref Utf8JsonReader reader)
+    {
+        return ThrowHelper.ThrowIfNotType<T>(base.Read(ref reader));
+    }
+    public virtual new T Read(XmlReader reader)
+    {
+        return ThrowHelper.ThrowIfNotType<T>(base.Read(reader));
+    }
+    public virtual void Write(Utf8JsonWriter writer, T value)
+    {
+        base.Write(writer, value);
+    }
+    public virtual void Write(XmlWriter writer, T value)
+    {
+        base.Write(writer, value);
+    }
+    public sealed override void Write(Utf8JsonWriter writer, object value)
+    {
+        Write(writer, ThrowHelper.ThrowIfNotType<T>(value));
+    }
+    public sealed override void Write(XmlWriter writer, object value)
+    {
+        Write(writer, ThrowHelper.ThrowIfNotType<T>(value));
+    }
 
 
+    //public static GdmComplexType<T> Create()
+
+    #endregion
+
+    //internal override void Initialize()
+    //{
+    //    if (_configure is null)
+    //    {
+    //        return;
+    //    }
+
+    //    var descriptor = new GdmComplexTypeDescriptor<T>(this);
+
+    //    _configure.Invoke(descriptor);
+    //}
 
 
     //private readonly Action<IOGraphGdmComplexTypeDescriptor<T>> configure;

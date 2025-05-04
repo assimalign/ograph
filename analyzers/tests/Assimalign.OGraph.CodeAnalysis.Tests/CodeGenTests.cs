@@ -13,13 +13,85 @@ namespace Assimalign.OGraph.CodeAnalysis.Tests;
 public class CodeGenTests
 {
 
-    private string GetSource(string embeddedResourceName)
+    [Fact]
+    public void TestScalarGenerator()
+    {
+        // Arrange
+        var source = @"
+
+using Assimalign.OGraph.Gdm;
+
+namespace ErpCore;
+
+[GdmScalarType(ScalarUnderlyingType.Int, 
+    IncludeImplicitOperators = true)]
+public partial class UserId
+{
+    
+}";
+
+        var result = RunGenerator<GdmScalarTypeAttributeIncrementalGenerator>(
+            source,
+            "EmbeddedResources.GdmScalarTypeAttribute.cs");
+
+        // Assert
+        Assert.True(result.Diagnostics.IsEmpty);
+        Assert.True(result.GeneratedTrees.Length > 0);
+
+        // You can also verify the exact generated source if needed
+        var generatedSource = result.GeneratedTrees[0].ToString();
+        Assert.NotNull(generatedSource);
+
+    }
+
+
+    private static GeneratorDriverRunResult RunGenerator<TGenerator>(string sourceCode, string sourceAttrResource) where TGenerator : IIncrementalGenerator, new()
+    {
+        string? sourceAttrCode = GetSource(sourceAttrResource);
+
+        Assert.NotNull(sourceCode);
+        Assert.NotNull(sourceAttrCode);
+
+        IIncrementalGenerator generator = new TGenerator();
+
+        Compilation compilation = Compile(sourceCode, sourceAttrCode);
+
+        // Run generator
+        GeneratorDriver driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
+
+
+        driver = driver.RunGenerators(compilation);
+
+        // Use Microsoft.CodeAnalysis.Testing verification
+        return driver.GetRunResult();
+    }
+    private static Compilation Compile(string source, string attributeSource)
+    {
+        var syntaxTrees = new[]
+        {
+            CSharpSyntaxTree.ParseText(source),
+            CSharpSyntaxTree.ParseText(attributeSource)
+        };
+
+        var references = new[]
+        {
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute).Assembly.Location)
+        };
+
+        var compilationOptions = new CSharpCompilationOptions(
+            OutputKind.DynamicallyLinkedLibrary);
+
+        return CSharpCompilation.Create(
+            nameof(Assimalign.OGraph.CodeAnalysis.Tests),
+            syntaxTrees,
+            references,
+            compilationOptions);
+    }
+    private static string GetSource(string embeddedResourceName)
     {
         var assembly = Assembly.GetExecutingAssembly();
         var assemblyName = assembly.GetName();
-
-        // For debugging
-        // var manifestResourceNames = assembly.GetManifestResourceNames();
 
         using var stream = Assembly
             .GetExecutingAssembly()
@@ -36,56 +108,28 @@ public class CodeGenTests
     public void Test1()
     {
         // Arrange
-        var source = GetSource("CodeGenAttributes.Attribute.GdmScalarType.cs");
-        var attributeSource = @"
-namespace Assimalign.OGraph
+        var source = @"
+namespace TestNamespace
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false)]
-    public sealed class ScalarTypeAttribute : Attribute
+    [Assimalign.OGraph.ScalarType(ScalarUnderlyingType.Int, IncludeImplicitOperators = true)]
+    public partial struct TestStruct
     {
-        public ScalarTypeAttribute(ScalarUnderlyingType underlyingType)
-        {
-
-        }
-
-        /// <summary>
-        /// The underlying runtime type to use for the entity key.
-        /// </summary>
-        public ScalarUnderlyingType UnderlyingType { get; }
-
-        /// <summary>
-        /// Specifies whether to include an implicit operators that convert to and from 
-        /// the underlying runtime type.
-        /// </summary>
-        public bool IncludeImplicitOperators { get; set; }
-
-        /// <summary>
-        /// Write a partial bool method for 
-        /// </summary>
-        public bool IncludeIsValidMethod { get; set; }
-    }
-
-    public enum ScalarUnderlyingType
-    {
-        Int,
-        Short,
-        Long,
-        UInt,
-        UShort,
-        ULong,
-        String,
-        Guid
     }
 }";
+
+        var attributeSource = GetSource("CodeGenAttributes.Attribute.GdmScalarType.cs");
+
+        Assert.NotNull(source);
 
         // Create compilation
         var compilation = Compile(source, attributeSource);
 
-        var generator = new ScalarTypeAttributeIncrementalGenerator();
-
-        GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
+        var generator = new GdmScalarTypeAttributeIncrementalGenerator();
 
         // Run generator
+        GeneratorDriver driver = CSharpGeneratorDriver.Create(generator).RunGenerators(compilation);
+
+        
         driver = driver.RunGenerators(compilation);
 
         // Use Microsoft.CodeAnalysis.Testing verification
@@ -157,27 +201,5 @@ namespace Assimalign.OGraph
 
     }
 
-    private static Compilation Compile(string source, string attributeSource)
-    {
-        var syntaxTrees = new[]
-        {
-            CSharpSyntaxTree.ParseText(source),
-            CSharpSyntaxTree.ParseText(attributeSource)
-        };
-
-        var references = new[]
-        {
-            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-            MetadataReference.CreateFromFile(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute).Assembly.Location)
-        };
-
-        var compilationOptions = new CSharpCompilationOptions(
-            OutputKind.DynamicallyLinkedLibrary);
-
-        return CSharpCompilation.Create(
-            "test",
-            syntaxTrees,
-            references,
-            compilationOptions);
-    }
+    
 }

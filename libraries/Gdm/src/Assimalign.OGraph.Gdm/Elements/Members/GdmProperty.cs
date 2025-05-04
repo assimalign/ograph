@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reflection;
+using System.Linq.Expressions;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
@@ -6,38 +8,28 @@ using Internal;
 
 public class GdmProperty : GdmMember, IOGraphGdmProperty
 {
-    public GdmProperty(
-        GdmName label, 
-        GdmType type, 
-        GdmType declaringType,
-        bool isReadOnly = false,
-        bool isNullable = false) 
-        : base(label, declaringType)
-    {
-        Type = ThrowHelper.ThrowIfNull(type, nameof(type));
-        IsReadOnly = isReadOnly;
-        IsNullable = isNullable;
-    }
-
-    public GdmProperty(
-        GdmName label,
+    internal GdmProperty(
+        GdmName name,
         GdmType type,
         GdmType declaringType,
         GdmPropertyGetter getter,
         GdmPropertySetter setter,
         bool isReadOnly = false,
         bool isNullable = false) 
-        : this(label, type, declaringType, isReadOnly, isNullable)
+        : base(name, declaringType)
     {
-        Getter = ThrowHelper.ThrowIfNull(getter, nameof(getter)); 
-        Setter = ThrowHelper.ThrowIfNull(setter, nameof(setter));
+        Type = ThrowHelper.ThrowIfNull(type);
+        Getter = ThrowHelper.ThrowIfNull(getter); 
+        Setter = ThrowHelper.ThrowIfNull(setter);
+        IsReadOnly = isReadOnly;
+        IsNullable = isNullable;
     }
 
     public GdmType Type { get; }
-    public GdmPropertyGetter Getter { get; internal set; } = default!;
-    public GdmPropertySetter Setter { get; internal set; } = default!;
-    public bool IsReadOnly { get; internal set; }
-    public bool IsNullable { get; internal set; }
-    public override GdmElementKind ElementKind { get; } = GdmElementKind.Property;
+    public GdmPropertyGetter Getter { get; }
+    public GdmPropertySetter Setter { get; }
+    public bool IsReadOnly { get; }
+    public bool IsNullable { get;  }
+    public override GdmElementKind ElementKind { get; } = GdmElementKind.Member;
     IOGraphGdmType IOGraphGdmProperty.Type => Type;
 }

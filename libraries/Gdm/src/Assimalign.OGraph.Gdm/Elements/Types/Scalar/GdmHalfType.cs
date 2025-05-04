@@ -11,11 +11,9 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 public sealed class GdmHalfType : GdmScalarType<Half>
 {
-    public GdmHalfType(GdmGraph graph)
-    {
-        Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
-    }
-    public override GdmGraph Graph { get; internal set; }
+    public GdmHalfType() { }
+    public GdmHalfType(GdmGraph graph) : base(graph) { }
+
     public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Float;
 
     public override Half Read(ref Utf8JsonReader reader)
