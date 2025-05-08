@@ -6,14 +6,14 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-public sealed class GdmDecimalType : GdmScalarType<Decimal>
+public sealed class GdmDecimalType : GdmValueScalarType<Decimal>
 {
-    public GdmDecimalType() { }
     public GdmDecimalType(GdmGraph graph) : base(graph)
     {
-
+        Meta.Add("Size", "16 bytes (128 bits)");
+        Meta.Add("Precision", "Up to 28-29 significant digits");
     }
-    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Float;
+    public override GdmPrimitiveType PrimitiveType { get; } = GdmPrimitiveType.Float;
     public override decimal Read(ref Utf8JsonReader reader)
     {
         return reader.GetDecimal();

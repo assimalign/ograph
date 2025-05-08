@@ -7,13 +7,10 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-public sealed class GdmUInt64Type : GdmScalarType<UInt64>
+public sealed class GdmUInt64Type : GdmValueScalarType<UInt64>
 {
-    public GdmUInt64Type() { }
     public GdmUInt64Type(GdmGraph graph) : base(graph) { }
-
-
-    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Int;
+    public override GdmPrimitiveType PrimitiveType { get; } = GdmPrimitiveType.Int;
     public override ulong Read(ref Utf8JsonReader reader)
     {
         return reader.GetUInt64();

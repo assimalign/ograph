@@ -6,9 +6,16 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm.Tests;
 
+using Elements;
+using Objects;
+
 public class EmployeeAddressTypeEntity : GdmEntityType<EmployeeAddressType>
 {
-    protected override void Configure(IOGraphGdmEntityTypeDescriptor<EmployeeAddressType> descriptor)
+    public EmployeeAddressTypeEntity(GdmGraph graph) : base(graph)
+    {
+    }
+
+    protected override void Configure(GdmEntityTypeDescriptor<EmployeeAddressType> descriptor)
     {
         descriptor.HasName("employeeAddressType");
         descriptor.HasKey(p => p.TypeId);

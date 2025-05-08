@@ -7,15 +7,12 @@ namespace Assimalign.OGraph.Gdm.Elements;
 /// </summary>
 public abstract class GdmElement : IOGraphGdmElement
 {
-    internal GdmElement()
-    {
-         Meta = new GdmMetadata();
-    }
+    internal GdmElement() { }
 
     /// <summary>
     /// Metadata of the element.
     /// </summary>
-    public GdmMetadata Meta { get; }
+    public GdmMetadata Meta { get; } = new GdmMetadata();
 
     /// <summary>
     /// The element kind

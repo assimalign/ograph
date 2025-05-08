@@ -6,14 +6,9 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-public sealed class GdmDateType : GdmScalarType<DateOnly>
+public sealed class GdmDateType : GdmValueScalarType<DateOnly>
 {
-    public GdmDateType() { }
-    public GdmDateType(GdmGraph graph) : base(graph)
-    {
-
-    }
-    public override GdmName Name { get; internal set; } = "Date";
+    public GdmDateType(GdmGraph graph) : base("Date", graph) { }
     public override GdmPrimitiveType PrimitiveType { get; } = GdmPrimitiveType.String;
     public override DateOnly Read(ref Utf8JsonReader reader)
     {

@@ -6,12 +6,15 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-public sealed class GdmFloatType : GdmScalarType<Single>
+public sealed class GdmFloatType : GdmValueScalarType<Single>
 {
-    public GdmFloatType() { }
-    public GdmFloatType(GdmGraph graph) : base(graph) { }
+    public GdmFloatType(GdmGraph graph) : base(graph)
+    {
+        Meta.Add("Size", "4 bytes (32 bits)");
+        Meta.Add("Precision", "Approximately 7 decimal digits");
+    }
 
-    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Float;
+    public override GdmPrimitiveType PrimitiveType { get; } = GdmPrimitiveType.Float;
     public override float Read(ref Utf8JsonReader reader)
     {
         return reader.GetSingle();

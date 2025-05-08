@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 namespace Assimalign.OGraph.Gdm;
 
 using Internal;
+using System.Collections.Generic;
 
 /// <summary>
 /// 
@@ -19,7 +20,7 @@ public readonly struct GdmName : IEquatable<GdmName>, IComparable<GdmName>
     {
         ThrowHelper.ThrowIfNullOrEmpty(value);
 
-        if (Regex.IsMatch(value, pattern))
+        if (!Regex.IsMatch(value, pattern))
         {
             ThrowHelper.ThrowInvalidName(value);
         }
@@ -34,6 +35,11 @@ public readonly struct GdmName : IEquatable<GdmName>, IComparable<GdmName>
     /// </summary>
     public string Value => _value;
 
+    /// <summary>
+    /// Checks whether the name is empty.
+    /// </summary>
+    public bool IsEmpty => string.IsNullOrEmpty(_value);
+
     #endregion
 
     #region Methods
@@ -42,7 +48,10 @@ public readonly struct GdmName : IEquatable<GdmName>, IComparable<GdmName>
     /// 
     /// </summary>
     /// <returns></returns>
-    public ReadOnlySpan<char> AsSpan() => _value.AsSpan();
+    public ReadOnlySpan<char> AsSpan()
+    {
+        return _value.AsSpan();
+    }
 
     /// <summary>
     /// Converts the string to pascal case.
@@ -54,20 +63,20 @@ public readonly struct GdmName : IEquatable<GdmName>, IComparable<GdmName>
     }
 
     /// <summary>
-    /// Converts the name to camal case
+    /// Converts the name to Camel case
     /// </summary>
     /// <returns></returns>
-    public GdmName ToCamalCase()
+    public GdmName ToCamelCase()
     {
-        return AsCamalCase(_value);
+        return AsCamelCase(_value);
     }
 
     /// <summary>
-    /// Creates a name by converting the the string value to camal case.
+    /// Creates a name by converting the the string value to Camel case.
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    public static GdmName AsCamalCase(string value)
+    public static GdmName AsCamelCase(string value)
     {
         return string.Create(value.Length, value, (chars, name) =>
         {

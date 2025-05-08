@@ -11,11 +11,11 @@ using Internal;
 public abstract class GdmVertex<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : GdmVertex
     where T : class, new()
 {
-    private readonly Action<GdmVertexDescriptor<T>>? _configure;
+    private readonly Action<GdmVertexDescriptor<T>> _configure;
 
     #region Constructors
 
-    protected GdmVertex()
+    public GdmVertex(GdmGraph graph) : base(typeof(T).Name, new GdmEntityType(typeof(T), graph), graph)
     {
         _configure = Configure;
     }
@@ -27,6 +27,8 @@ public abstract class GdmVertex<[DynamicallyAccessedMembers(DynamicallyAccessedM
     }
 
     #endregion
+
+
 
     //#region Properties
 
@@ -47,4 +49,10 @@ public abstract class GdmVertex<[DynamicallyAccessedMembers(DynamicallyAccessedM
     protected virtual void Configure(GdmVertexDescriptor<T> descriptor) { }
 
     #endregion
+
+    internal override void Configure()
+    {
+        _configure.Invoke(new GdmVertexDescriptor<T>(this));
+    }
+
 }

@@ -1,21 +1,27 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
-using System.Collections.Concurrent;
-using System.Runtime.CompilerServices;
 
+[DebuggerDisplay("Count = {Count}")]
 public class GdmTypeCollection : IOGraphGdmTypeCollection, IEnumerable<GdmType>
 {
-    private readonly List<GdmType> _types;
     private bool _isReadOnly;
+    private readonly List<GdmType> _types;
 
     public GdmTypeCollection()
     {
         _types = new List<GdmType>();
+    }
+
+    internal GdmTypeCollection(List<GdmType> types)
+    {
+        _types = types;
+        _isReadOnly = true;
     }
 
     public GdmType this[GdmName name]
@@ -84,31 +90,41 @@ public class GdmTypeCollection : IOGraphGdmTypeCollection, IEnumerable<GdmType>
         return _types.GetEnumerator();
     }
 
-    public GdmType GetOrAdd(GdmName name, Type runtimeType, Func<GdmName, Type, GdmType> factory)
+    private void AssertType(GdmType type)
     {
-        GdmType? gdmType = default;
-
-        for (int i = 0; i < _types.Count; i++)
+        switch (type)
         {
-            gdmType = _types[i];
-
-            if (gdmType.IsOfType(runtimeType) && gdmType.Name == name)
-            {
-                return gdmType;
-            }
+            case GdmComplexType complex when complex.Members.Count == 0:
+                throw new ArgumentException("");
+            case GdmComplexType complex when complex.Graph is null:
+                throw new ArgumentException("");
         }
-
-        gdmType = factory.Invoke(name, runtimeType);
-
-        if (gdmType is null)
-        {
-            ThrowHelper.ThrowInvalidOperationException("The type cannot be null");
-        }
-
-        _types.Add(gdmType);
-
-        return gdmType;
     }
+    //public GdmType GetOrAdd(GdmName name, Type runtimeType, Func<GdmName, Type, GdmType> factory)
+    //{
+    //    GdmType? gdmType = default;
+
+    //    for (int i = 0; i < _types.Count; i++)
+    //    {
+    //        gdmType = _types[i];
+
+    //        if (gdmType.IsOfType(runtimeType) && gdmType.Name == name)
+    //        {
+    //            return gdmType;
+    //        }
+    //    }
+
+    //    gdmType = factory.Invoke(name, runtimeType);
+
+    //    if (gdmType is null)
+    //    {
+    //        ThrowHelper.ThrowInvalidOperationException("The type cannot be null");
+    //    }
+
+    //    _types.Add(gdmType);
+
+    //    return gdmType;
+    //}
 
 
     IOGraphGdmType IOGraphGdmTypeCollection.this[GdmName name] => this[name];

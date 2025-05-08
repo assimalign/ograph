@@ -18,7 +18,6 @@ public static partial class GdmBuilderUtility
         // /api/employees/$transactions
         // /api/employees/$model
 
-        v
 
 
 
@@ -138,7 +137,7 @@ public static partial class GdmBuilderUtility
     {
         return strategy switch
         {
-            GdmBuilderUtilityStrategy.Fluent => CreateFluentOnlyModel(),
+            GdmBuilderUtilityStrategy.Fluent => CreateFluentModel(),
             GdmBuilderUtilityStrategy.Composable => CreateComposableModel(),
             GdmBuilderUtilityStrategy.Mixed => CreateMixedModel(),
             _ => throw new NotSupportedException()

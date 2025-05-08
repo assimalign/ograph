@@ -13,31 +13,34 @@ using Internal;
 public class GdmEntityTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : IOGraphGdmEntityTypeDescriptor
     where T : class, new()
 {
-    private readonly GdmGraph graph;
-    private readonly List<Action<GdmEntityType<T>>> _actions;
+    private readonly GdmEntityType<T> _entityType;
 
-    private GdmName _name;
-
-    public GdmEntityTypeDescriptor(GdmGraph graph)
+    internal GdmEntityTypeDescriptor(GdmEntityType<T> entityType)
     {
-        Graph = graph;
+        _entityType = entityType;
     }
-
-    internal GdmGraph Graph { get; }
 
     public GdmEntityTypeDescriptor<T> HasName(GdmName name)
     {
+        _entityType.SetName(name);
         return this;
     }
     public GdmEntityTypeDescriptor<T> HasKey<TKey>(Expression<Func<T, TKey>> expression) where TKey : struct
     {
+        // Get Property Info from reflected type
+        var propertyInfo = AssertExpression(expression);
+
+
+
         return this;
     }
     public GdmEntityTypeDescriptor<T> HasKey<TKey>(Expression<Func<T, TKey?>> expression) where TKey : struct
     {
+        // Get Property Info from reflected type
+        var propertyInfo = AssertExpression(expression);
+
         return this;
     }
-
     public GdmEntityTypeDescriptor<T> HasProperty(GdmProperty property)
     {
         ThrowHelper.ThrowIfNull(property);
@@ -48,39 +51,33 @@ public class GdmEntityTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAcce
     public GdmPropertyDescriptor<T, TProperty?> HasProperty<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TProperty>(Expression<Func<T, TProperty?>> expression)
     {
         // Get Property Info from reflected type
-        var propertyInfo = AssertExpression(expression);
+        PropertyInfo propertyInfo = AssertExpression(expression);
+
+        // Check for existing property
+        GdmProperty? property = _entityType.Members
+            .OfType<GdmProperty>()
+            .FirstOrDefault(prop => prop.Name == "");
+
+        if (property is null)
+        {
+            property = new GdmProperty();
+            //property.SetMemberInfo(propertyInfo);
+            property.SetName(propertyInfo.Name);
+
+            _entityType.Members.Add(property);
+
+            return new GdmPropertyDescriptor<T, TProperty?>(property)
+                .UseGetter(expression.Compile())
+                .UseSetter((instance, value) => propertyInfo.SetValue(instance, value));
+        }
 
         // Build descriptor with default configuration
-        var descriptor = new GdmPropertyDescriptor<T, TProperty?>(Graph)
-            .UsePropertyName(propertyInfo.Name)
-            .UseGetter(propertyInfo.GetValue)
-            .UseSetter(propertyInfo.SetValue);
-
-        _actions.Add(entity =>
-        {
-            var property = (GdmProperty)(descriptor as IOGraphGdmPropertyDescriptor).Describe();
-
-            entity.Members.Add(property);
-        });
-
-        return descriptor;
+        return new GdmPropertyDescriptor<T, TProperty?>(property);
     }
     //public GdmFunctionDescriptor<TFunction?> HasFunction<TFunction>(Expression<Func<T, TFunction?>> expression)
     //{
 
     //}
-
-
-
-    IOGraphGdmEntityType IOGraphGdmDescriptor<IOGraphGdmEntityType>.Describe()
-    {
-        return default;
-    }
-
-    IOGraphGdmElement IOGraphGdmDescriptor.Describe()
-    {
-        return (this as IOGraphGdmDescriptor).Describe();
-    }
     IOGraphGdmEntityTypeDescriptor IOGraphGdmEntityTypeDescriptor.AddMeta(string key, string value)
     {
         throw new NotImplementedException();
@@ -89,23 +86,18 @@ public class GdmEntityTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAcce
     {
         throw new NotImplementedException();
     }
-
     IOGraphGdmEntityTypeDescriptor IOGraphGdmEntityTypeDescriptor.HasKey(IOGraphGdmEntityKey key)
     {
         throw new NotImplementedException();
     }
-
     IOGraphGdmEntityTypeDescriptor IOGraphGdmEntityTypeDescriptor.HasName(GdmName name)
     {
         throw new NotImplementedException();
     }
-
     IOGraphGdmEntityTypeDescriptor IOGraphGdmEntityTypeDescriptor.HasProperty(IOGraphGdmProperty property)
     {
         throw new NotImplementedException();
     }
-
-
 
 
     //public IOGraphGdmEntityTypeDescriptor<T> HasLabel(Label label)

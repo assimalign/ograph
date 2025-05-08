@@ -94,13 +94,19 @@ public sealed class GdmBuilder : IOGraphGdmBuilder
     }
 
     /// <summary>
-    /// 
+    /// Create a GDM Builder.
     /// </summary>
-    /// <param name="label">The label of the model.</param>
+    /// <param name="name">The label of the model.</param>
     /// <returns></returns>
-    public static GdmBuilder Create(GdmName label)
+    /// <exception cref="ArgumentException"></exception>
+    public static GdmBuilder Create(GdmName name)
     {
-        return new GdmBuilder(label);
+        if (name.IsEmpty)
+        {
+            ThrowHelper.ThrowArgumentException("The name cannot be empty");
+        }
+
+        return new GdmBuilder(name);
     }
 
     #region Impilict Impl
@@ -144,7 +150,6 @@ public sealed class GdmBuilder : IOGraphGdmBuilder
             action.Invoke(gdm);
         });
     }
-
     IOGraphGdmBuilder IOGraphGdmBuilder.AfterBuild(Action<IOGraphGdm> action)
     {
         ThrowHelper.ThrowIfNull(action);

@@ -10,10 +10,10 @@ namespace Assimalign.OGraph.Gdm;
 /// <summary>
 /// 
 /// </summary>
-public abstract class OGraphGdmSerializer
+public abstract class GdmSerializer
 {
 
-    protected OGraphGdmSerializer(OGraphGdmSerializerOptions options)
+    protected GdmSerializer(GdmSerializerOptions options)
     {
         Options = options;
     }
@@ -21,7 +21,7 @@ public abstract class OGraphGdmSerializer
     /// <summary>
     /// 
     /// </summary>
-    protected OGraphGdmSerializerOptions Options { get; }
+    protected GdmSerializerOptions Options { get; }
 
     /// <summary>
     /// 
@@ -46,7 +46,7 @@ public abstract class OGraphGdmSerializer
     /// <param name="stream"></param>
     /// <param name="options"></param>
     /// <returns></returns>
-    public static IOGraphGdm Deserialize(Stream stream, OGraphGdmSerializerOptions? options = default)
+    public static IOGraphGdm Deserialize(Stream stream, GdmSerializerOptions? options = default)
     {
         return DeserializeAsync(stream, options: options).GetAwaiter().GetResult();
     }
@@ -59,13 +59,13 @@ public abstract class OGraphGdmSerializer
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    public static Task<IOGraphGdm> DeserializeAsync(Stream stream, OGraphGdmSerializerOptions? options = default, CancellationToken cancellationToken = default)
+    public static Task<IOGraphGdm> DeserializeAsync(Stream stream, GdmSerializerOptions? options = default, CancellationToken cancellationToken = default)
     {
-        options ??= new OGraphGdmSerializerOptions();
+        options ??= new GdmSerializerOptions();
 
         var serializer = options.Version switch
         {
-            OGraphVersion.Version1 => new GdmVersion1Serializer(options),
+            GdmVersion.Version1 => new GdmVersion1Serializer(options),
 
             _ => throw new Exception("Invalid version")
         };
@@ -79,7 +79,7 @@ public abstract class OGraphGdmSerializer
     /// <param name="stream"></param>
     /// <param name="model"></param>
     /// <param name="options"></param>
-    public static void Serialize(Stream stream, IOGraphGdm model, OGraphGdmSerializerOptions? options = default)
+    public static void Serialize(Stream stream, IOGraphGdm model, GdmSerializerOptions? options = default)
     {
         SerializeAsync(stream, model, options: options).GetAwaiter().GetResult();
     }
@@ -93,13 +93,13 @@ public abstract class OGraphGdmSerializer
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    public static Task SerializeAsync(Stream stream, IOGraphGdm model, OGraphGdmSerializerOptions? options = default, CancellationToken cancellationToken = default)
+    public static Task SerializeAsync(Stream stream, IOGraphGdm model, GdmSerializerOptions? options = default, CancellationToken cancellationToken = default)
     {
-        options ??= new OGraphGdmSerializerOptions();
+        options ??= new GdmSerializerOptions();
 
         var serializer = options.Version switch
         {
-            OGraphVersion.Version1 => new GdmVersion1Serializer(options),
+            GdmVersion.Version1 => new GdmVersion1Serializer(options),
 
             _ => throw new Exception("Invalid version")
         };

@@ -23,22 +23,22 @@ public static class OGraphGdmExtensions
     /// <param name="elements"></param>
     /// <param name="label"></param>
     /// <returns></returns>
-    public static TElement Find<TElement>(
+    public static TElement? Find<TElement>(
         this IEnumerable<TElement> elements, 
         GdmLabel label) 
         where TElement : IOGraphGdmLabeledElement
     {
         AssertNull(elements, nameof(elements));
-        return elements.OfType<TElement>().First(p => p.Equals(label));
+        return elements.OfType<TElement>().FirstOrDefault(p => p.Equals(label));
     }
 
-    public static TElement Find<TElement>(
+    public static TElement? Find<TElement>(
         this IEnumerable<TElement> elements, 
         GdmName name)
         where TElement : IOGraphGdmNamedElement
     {
         AssertNull(elements, nameof(elements));
-        return elements.OfType<TElement>().First(p => p.Equals(name));
+        return elements.OfType<TElement>().FirstOrDefault(p => p.Equals(name));
     }
 
     /// <summary>
@@ -69,10 +69,10 @@ public static class OGraphGdmExtensions
     /// <param name="type"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public static bool TryGetType(this IOGraphGdmGraph graph, GdmLabel label, out IOGraphGdmType type)
-    {
-        throw new NotImplementedException();
-    }
+    //public static bool TryGetType(this IOGraphGdmGraph graph, GdmLabel label, out IOGraphGdmType type)
+    //{
+    //    throw new NotImplementedException();
+    //}
     /// <summary>
     /// 
     /// </summary>

@@ -94,16 +94,40 @@ internal static class ThrowHelper
         throw new ArgumentException(message);
 
     [DoesNotReturn]
-    public static void ThrowInvalidOperationException(string message) =>
+    public static void ThrowInvalidOperationException(string message)
+    {
         throw new InvalidOperationException(message);
+    }
 
     #endregion
 
     [DoesNotReturn]
-    public static void ThrowUnknownError() =>
+    internal static void ThrowUnknownError() =>
         throw new GdmUnknownException();
 
     #region Validation/Model Exceptions
+
+    internal static GdmName ThrowIfNameEmpty([NotNull] GdmName name,
+        [CallerArgumentExpression(nameof(name))] string? paramName = null)
+    {
+        if (name.IsEmpty)
+        {
+            ThrowArgumentException("");
+        }
+
+        return name;
+    }
+
+    internal static GdmLabel ThrowIfLabelEmpty([NotNull] GdmLabel label,
+       [CallerArgumentExpression(nameof(label))] string? paramName = null)
+    {
+        if (label.IsEmpty)
+        {
+            ThrowArgumentException("");
+        }
+
+        return label;
+    }
 
     [DoesNotReturn]
     public static void ThrowComplexTypeKeyDisallowed() =>

@@ -29,7 +29,7 @@ public class GdmGraphCollection : IOGraphGdmGraphCollection, IEnumerable<GdmGrap
     {
         AssertIsReadOnly();
 
-        var graph = ThrowHelper.ThrowIfNull(item, nameof(item));
+        var graph = ThrowHelper.ThrowIfNull(item);
 
         for (int i = 0; i < _items.Count; i++)
         {
@@ -52,6 +52,14 @@ public class GdmGraphCollection : IOGraphGdmGraphCollection, IEnumerable<GdmGrap
         if (isRemoved)
         {
             return;
+        }
+
+        for (int i = 0; i < _items.Count; i++)
+        {
+            if (_items[i].Name == graph.Name)
+            {
+                _items.RemoveAt(i);
+            }
         }
     }
     public void Clear()

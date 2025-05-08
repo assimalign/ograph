@@ -16,7 +16,7 @@
 	<!-- Target Frameworks -->
 	<PropertyGroup>
 		<TargetFrameworkLatest>net9.0</TargetFrameworkLatest>
-		<TargetFrameworkForLibraries>net8.0;$(TargetFrameworkLatest)</TargetFrameworkForLibraries>
+		<TargetFrameworkForLibraries>$(TargetFrameworkLatest)</TargetFrameworkForLibraries>
 		<TargetFrameworkForBenchmark>$(TargetFrameworkLatest)</TargetFrameworkForBenchmark>
 		<TargetFrameworkForCli>$(TargetFrameworkLatest)</TargetFrameworkForCli>
 		<TargetFrameworkForVisualizer>$(TargetFrameworkLatest)</TargetFrameworkForVisualizer>

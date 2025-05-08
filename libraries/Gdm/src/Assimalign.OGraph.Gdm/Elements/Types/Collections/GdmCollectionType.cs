@@ -1,30 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
-
-public class GdmCollectionType : GdmType, IOGraphGdmCollectionType
+public abstract class GdmCollectionType : GdmType, IOGraphGdmCollectionType
 {
-    private readonly Type _runtimeType;
-
-    public GdmCollectionType()
-    {
-        
-    }
-
-    public GdmType ItemType { get; }
-    public override GdmName Name => throw new NotImplementedException();
-    public override Type RuntimeType => _runtimeType;
+    internal GdmCollectionType(GdmName name, GdmGraph graph) : base(name, graph) { }
+    public abstract GdmType ItemType { get; }
     public sealed override GdmTypeKind Kind { get; } = GdmTypeKind.Collection;
-    IOGraphGdmType IOGraphGdmCollectionType.ItemType => ItemType;
-}
-
-public abstract class GdmCollectionType<TCollection, T> : GdmType<TCollection>, IOGraphGdmCollectionType
-    where TCollection : IEnumerable<T>
-{
-    public abstract GdmType ItemType { get; internal set; }
-    public override GdmTypeKind Kind => GdmTypeKind.Collection;
     IOGraphGdmType IOGraphGdmCollectionType.ItemType => ItemType;
 }

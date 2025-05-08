@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm.Tests;
 
+using Assimalign.OGraph.Gdm.Tests.Objects;
+using Elements;
+
 public class EmployeeAddressVertex : GdmVertex<EmployeeAddress>
 {
-    protected override void Configure(IOGraphGdmVertexDescriptor<EmployeeAddress> descriptor)
+    public EmployeeAddressVertex(GdmGraph graph) : base(graph)
     {
-        descriptor.HasLabel("address")
-            .HasType<EmployeeAddressEntity>();
+    }
+
+    protected override void Configure(GdmVertexDescriptor<EmployeeAddress> descriptor)
+    {
+        descriptor.HasLabel("address");
     }
 }

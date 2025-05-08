@@ -4,54 +4,56 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace Assimalign.OGraph.Gdm;
 
 using Elements;
 using Internal;
-using System.Reflection;
 
-public class GdmGraphDescriptor : IOGraphGdmGraphDescriptor
+public sealed class GdmGraphDescriptor : IOGraphGdmGraphDescriptor
 {
     private readonly GdmGraph _graph;
-    private readonly List<Action<GdmGraph>> _scalarTypes;
-    private readonly List<Action<GdmGraph>> _complexTypes;
-    private readonly List<Action<GdmGraph>> _entityTypes;
-    private readonly List<Action<GdmGraph>> _collectionTypes;
+
+    private readonly List<Action<GdmGraph>> _types;
     private readonly List<Action<GdmGraph>> _vertices;
     private readonly List<Action<GdmGraph>> _edges;
     private readonly List<Action<GdmGraph>> _after;
 
-    public GdmGraphDescriptor(GdmGraph graph)
+    internal GdmGraphDescriptor(GdmGraph graph)
     {
         _graph = graph;
-        _scalarTypes = new List<Action<GdmGraph>>();
-        _complexTypes = new List<Action<GdmGraph>>();
-        _entityTypes = new List<Action<GdmGraph>>();
-        _collectionTypes = new List<Action<GdmGraph>>();
+        _types = new List<Action<GdmGraph>>();
         _vertices = new List<Action<GdmGraph>>();
         _edges = new List<Action<GdmGraph>>();
         _after = new List<Action<GdmGraph>>();
     }
 
+
+
     #region Methods - Type Registration
 
-    //public GdmGraphDescriptor ConvertAllNamesToCamalCase(params GdmElementKind[] elements)
-    //{
-    //    _after.Add(graph =>
-    //    {
-    //        if (elements.Contains(GdmElementKind.Member))
-    //        {
-    //            foreach (var member in graph.GetElementsOfType<GdmMember>())
-    //            {
-    //                member.Name = member.Name.ToCamalCase();
-    //            }
-    //        }
-    //    });
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="func"></param>
+    /// <returns></returns>
+    public GdmGraphDescriptor AddType<T>(Func<GdmGraph, T> func) where T : GdmType
+    {
+        ThrowHelper.ThrowIfNull(func);
 
-    //    return this;
-    //}
+        _types.Add(graph =>
+        {
+            var type = func.Invoke(graph);
 
+            type.Configure();
+
+            graph.Types.Add(type);
+        });
+
+        return this;
+    }
 
     /// <summary>
     /// 
@@ -62,59 +64,11 @@ public class GdmGraphDescriptor : IOGraphGdmGraphDescriptor
     {
         ThrowHelper.ThrowIfNull(type);
 
-        if (type is IOGraphGdmScalarType scalarType)
+        return AddType(graph =>
         {
-            _scalarTypes.Add(graph =>
-            {
-                type.Initialize(graph);
-            });
-            return this;
-        }
-        if (type is IOGraphGdmEnumType enumType)
-        {
-
-            return this;
-        }
-        if (type is IOGraphGdmEntityType entityType)
-        {
-            _entityTypes.Add(graph =>
-            {
-
-            });
-            return this;
-        }
-        if (type is IOGraphGdmComplexType complexType)
-        {
-
-
-            return this;
-        }
-
-        return this;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="func"></param>
-    /// <returns></returns>
-    public GdmGraphDescriptor AddType<T>(Func<GdmGraph, T> func) where T : GdmType
-    {
-        var typeInfo = typeof(T);
-
-        _scalarTypes.Add(graph =>
-        {
-            var gdmType = ThrowHelper.ThrowIfNull(func).Invoke(graph);
-
-            if (gdmType is null)
-            {
-                ThrowHelper.ThrowArgumentException("");
-            }
-
-            gdmType.Initialize(graph);
+            type.SetGraph(graph);
+            return type;
         });
-
-        return this;
     }
 
     /// <summary>
@@ -123,37 +77,18 @@ public class GdmGraphDescriptor : IOGraphGdmGraphDescriptor
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public GdmGraphDescriptor AddType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>() where T : GdmType, new()
+    public GdmGraphDescriptor AddScalarType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
+        where T : GdmScalarType
     {
-        var typeInfo = typeof(T);
-
-        if (typeInfo.IsAssignableTo(typeof(IOGraphGdmEntityType)))
+        return AddType(graph =>
         {
-
-            return this;
-        }
-        else if (typeInfo.IsAssignableTo(typeof(IOGraphGdmComplexType)))
-        {
-            _complexTypes.Add(graph =>
+            if (Activator.CreateInstance(typeof(T), graph) is not GdmScalarType scalarType)
             {
-                var complexType = new T();
+                throw new ArgumentException("");
+            }
 
-                complexType.Initialize(graph);
-
-                // var descriptor = new GdmComplexTypeDescriptor<>
-            });
-        }
-        else if (typeInfo.IsAssignableTo(typeof(IOGraphGdmScalarType)))
-        {
-            _scalarTypes.Add(graph =>
-            {
-                var scalarType = new T();
-
-                graph.Types.Add(scalarType);
-            });
-        }
-
-        return this;
+            return scalarType;
+        });
     }
 
     /// <summary>
@@ -161,12 +96,40 @@ public class GdmGraphDescriptor : IOGraphGdmGraphDescriptor
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public GdmGraphDescriptor AddComplexType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>()
-        where T : class, new()
+    /// <exception cref="ArgumentException"></exception>
+    public GdmGraphDescriptor AddEnumType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
+        where T : GdmEntityType
     {
+        return AddType(graph =>
+        {
+            var instance = Activator.CreateInstance(typeof(T), graph);
 
+            if (instance is not GdmEnumType enumType)
+            {
+                throw new ArgumentException("");
+            }
 
-        return this;
+            return enumType;
+        });
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public GdmGraphDescriptor AddComplexType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
+        where T : GdmComplexType
+    {
+        return AddType(graph =>
+        {
+            if (Activator.CreateInstance(typeof(T), graph) is not GdmComplexType complexType)
+            {
+                throw new ArgumentException("");
+            }
+
+            return complexType;
+        });
     }
 
     /// <summary>
@@ -178,9 +141,7 @@ public class GdmGraphDescriptor : IOGraphGdmGraphDescriptor
     public GdmGraphDescriptor AddComplexType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>(Action<GdmComplexTypeDescriptor<T>> configure)
         where T : class, new()
     {
-
-
-        return this;
+        return AddType(graph => new GdmComplexTypeDefault<T>(graph, ThrowHelper.ThrowIfNull(configure)));
     }
 
     /// <summary>
@@ -189,36 +150,34 @@ public class GdmGraphDescriptor : IOGraphGdmGraphDescriptor
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     //[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "<Pending>")]
-    public GdmGraphDescriptor AddEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>()
+    //    public GdmGraphDescriptor AddEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>()
+    //        where T : class, new()
+    //    {
+    //        var assembly = Assembly.GetAssembly(typeof(T));
+
+    //        if (assembly is null)
+    //        {
+    //            return this;
+    //        }
+
+    //#pragma warning disable IL2026 // Dereference of a possibly null reference.
+    //        foreach (var type in assembly.GetTypes())
+    //        {
+    //            foreach (var attribute in type.GetCustomAttributes())
+    //            {
+
+    //            }
+    //        }
+    //#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
+    //        return this;
+    //    }
+
+
+    public GdmGraphDescriptor AddEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>(Action<GdmEntityTypeDescriptor<T>> configure)
         where T : class, new()
     {
-        var assembly = Assembly.GetAssembly(typeof(T));
-
-        if (assembly is null)
-        {
-            return this;
-        }
-
-#pragma warning disable IL2026 // Dereference of a possibly null reference.
-        foreach (var type in assembly.GetTypes())
-        {
-            foreach (var attribute in type.GetCustomAttributes())
-            {
-
-            }
-        }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-
-        return this;
-    }
-
-
-    public GdmGraphDescriptor AddEntityType<T>(Action<GdmEntityTypeDescriptor<T>> configure)
-        where T : class, new()
-    {
-
-
-        return this;
+        return AddType(graph => new GdmEntityTypeDefault<T>(graph, ThrowHelper.ThrowIfNull(configure)));
     }
 
 
@@ -234,70 +193,80 @@ public class GdmGraphDescriptor : IOGraphGdmGraphDescriptor
     //    return this;
     //}
 
+    public GdmGraphDescriptor AddVertex(Func<GdmGraph, GdmVertex> func)
+    {
+        ThrowHelper.ThrowIfNull(func);
+
+        _vertices.Add(graph =>
+        {
+            var vertex = ThrowHelper.ThrowIfNull(func.Invoke(graph));
+
+            vertex.Configure();
+
+            graph.Vertices.Add(vertex);
+        });
+
+        return this;
+    }
+
     public GdmGraphDescriptor AddVertex(GdmVertex vertex)
     {
 
 
         return this;
     }
-    public GdmGraphDescriptor AddVertex<T>() where T : GdmVertex, new()
+    public GdmGraphDescriptor AddVertex<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>() 
+        where T : GdmVertex
     {
+        return AddVertex(graph =>
+        {
+            if (Activator.CreateInstance(typeof(T), graph) is not GdmVertex vertex)
+            {
+                throw new ArgumentException("");
+            }
 
-        return this;
+            return vertex;
+        });
+
     }
     public GdmGraphDescriptor AddVertex<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>(Action<GdmVertexDescriptor<T>> configure)
         where T : class, new()
     {
-        ThrowHelper.ThrowIfNull(configure);
-
-        var descriptor = new GdmVertexDescriptor<T>(this);
-
-        configure.Invoke(descriptor);
-
-        _vertices.Add(graph =>
+        return AddVertex(graph =>
         {
-            var vertex = descriptor.GetVertex();
-
-            graph.Vertices.Add(vertex);
+            return new GdmVertexDefault<T>(graph, configure);
         });
-
-        //_vertices.Add(graph =>
-        //{
-
-        //});
-        //var vertex = GdmVertex<T>.Create(configure);
-
-        //vertex.Graph = _graph;
-
-        //_graph.Vertices.Add(vertex);
-
-
-        return this;
     }
     public GdmGraphDescriptor AddVertex<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>(GdmLabel label, Action<GdmEntityTypeDescriptor<T>> configure)
         where T : class, new()
     {
+        AddType(graph =>
+        {
+            return new GdmEntityTypeDefault<T>(graph, configure);
+        });
 
-        return this;
+        return AddVertex(graph =>
+        {
+            var entityType = graph.Types
+                .OfType<GdmEntityType>()
+                .FirstOrDefault(type => type.RuntimeType == typeof(T));
+
+            if (entityType is null)
+            {
+                throw new Exception();
+            }
+
+            return new GdmVertex(label, entityType, graph);
+        });
     }
 
     #endregion
 
-    public GdmGraph Build()
+
+    public GdmGraphDescriptor AddEdge(GdmEdge edge)
     {
-        OnBuild(_scalarTypes);
-        OnBuild(_complexTypes);
-        OnBuild(_entityTypes);
-        OnBuild(_collectionTypes);
-        OnBuild(_vertices);
-        OnBuild(_edges);
 
-        // Lock all collections
-
-
-
-
-        return _graph;
+        return this;
     }
 
     private void OnBuild(List<Action<GdmGraph>> actions)
@@ -310,32 +279,29 @@ public class GdmGraphDescriptor : IOGraphGdmGraphDescriptor
 
     IOGraphGdmGraphDescriptor IOGraphGdmGraphDescriptor.AddEdge(IOGraphGdmEdge edge)
     {
-        throw new NotImplementedException();
+        return AddEdge(ThrowHelper.ThrowIfNotType<GdmEdge>(edge));
     }
-
     IOGraphGdmGraphDescriptor IOGraphGdmGraphDescriptor.AddMeta(string key, string value)
     {
         throw new NotImplementedException();
     }
-
     IOGraphGdmGraphDescriptor IOGraphGdmGraphDescriptor.AddType(IOGraphGdmType type)
     {
         return AddType(ThrowHelper.ThrowIfNotType<GdmType>(type));
     }
-
     IOGraphGdmGraphDescriptor IOGraphGdmGraphDescriptor.AddVertex(IOGraphGdmVertex vertex)
     {
-        throw new NotImplementedException();
+        return AddVertex(ThrowHelper.ThrowIfNotType<GdmVertex>(vertex));
     }
 
-    IOGraphGdmGraph IOGraphGdmDescriptor<IOGraphGdmGraph>.Describe()
+    internal GdmGraph Describe()
     {
-        throw new NotImplementedException();
-    }
+        OnBuild(_types);
+        OnBuild(_vertices);
+        OnBuild(_edges);
 
-    IOGraphGdmElement IOGraphGdmDescriptor.Describe()
-    {
-        return (this as IOGraphGdmDescriptor).Describe();
+
+        return _graph;
     }
 
 

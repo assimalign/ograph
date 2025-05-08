@@ -6,13 +6,10 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-public sealed class GdmTimeSpanType : GdmScalarType<TimeSpan>
+public sealed class GdmTimeSpanType : GdmValueScalarType<TimeSpan>
 {
-    public GdmTimeSpanType() { }
-    public GdmTimeSpanType(GdmGraph graph) : base(graph) { }
-
-    public override GdmName Name { get; internal set; } = "TimeSpan";
-    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.String;
+    public GdmTimeSpanType(GdmGraph graph) : base("TimeSpan", graph) { }
+    public override GdmPrimitiveType PrimitiveType { get; } = GdmPrimitiveType.String;
     public override TimeSpan Read(ref Utf8JsonReader reader)
     {
         return TimeSpan.Parse(reader.GetString()!);

@@ -6,9 +6,8 @@ using System.Runtime.Serialization;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
-public sealed class GdmDateTimeType : GdmScalarType<DateTime>
+public sealed class GdmDateTimeType : GdmValueScalarType<DateTime>
 {
-    public GdmDateTimeType() { }
     public GdmDateTimeType(GdmGraph graph) : base(graph)
     {
        

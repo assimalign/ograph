@@ -12,33 +12,40 @@ using Internal;
 
 public class GdmPropertyDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T, TProperty> : IOGraphGdmPropertyDescriptor
 {
-    private GdmPropertyGetter? _getter;
-    private GdmPropertySetter? _setter;
-    private GdmType? _type;
-    private GdmName _name;
+    private readonly GdmProperty _property;
+    private readonly GdmDescriptorContext _context;
 
-    internal GdmPropertyDescriptor(GdmGraph graph)
+    internal GdmPropertyDescriptor(GdmProperty property)
     {
-        Graph = graph;
-
-        //_type = (graph.Types as IEnumerable<GdmType>).FirstOrDefault(p => p.IsAssignableTo(typeof(T), checkNullable: true)
+        _property = property;
     }
-
-    internal GdmGraph Graph { get; }
 
     public GdmPropertyDescriptor<T, TProperty> UsePropertyName(GdmName name)
     {
-        _name = name;
+        _property.SetName(ThrowHelper.ThrowIfNameEmpty(name));
         return this;
     }
-    public GdmPropertyDescriptor<T, TProperty> UseSetter(GdmPropertySetter setter)
+    public GdmPropertyDescriptor<T, TProperty> UseGetter(Func<T, TProperty> func)
     {
-        _setter = ThrowHelper.ThrowIfNull(setter);
+        ThrowHelper.ThrowIfNull(func);
+        _property.SetGetter((obj) =>
+        {
+            return func.Invoke(ThrowHelper.ThrowIfNotType<T>(obj));
+        });
+
         return this;
     }
-    public GdmPropertyDescriptor<T, TProperty> UseGetter(GdmPropertyGetter getter)
+    public GdmPropertyDescriptor<T, TProperty> UseSetter(Action<T, TProperty> action)
     {
-        _setter = ThrowHelper.ThrowIfNull(setter);
+        ThrowHelper.ThrowIfNull(action);
+
+        _property.SetSetter((obj, prop) =>
+        {
+            action.Invoke(
+                ThrowHelper.ThrowIfNotType<T>(obj),
+                ThrowHelper.ThrowIfNotType<TProperty>(prop));
+        });
+
         return this;
     }
     public GdmPropertyDescriptor<T, TProperty> UseType(GdmName typeName)
@@ -47,55 +54,23 @@ public class GdmPropertyDescriptor<[DynamicallyAccessedMembers(DynamicallyAccess
     }
     public GdmPropertyDescriptor<T, TProperty> UseType(GdmType type)
     {
-        _type = Graph.Types.GetOrAdd(type.Name, type.RuntimeType, (_, _) =>
-        {
-            type.Initialize(Graph);
+        ThrowHelper.ThrowIfNull(type);
 
-            return type;
-        });
 
         return this;
     }
-    
-    public GdmPropertyDescriptor<T, TProperty> UseType<TType>() where TType : GdmType, new()
+
+    public GdmPropertyDescriptor<T, TProperty> UseType<TType>(Func<GdmGraph, TType> func) where TType : GdmType
     {
-        return UseType(new TType());
+        ThrowHelper.ThrowIfNull(func);
+
+        _property.SetType(func(_property.DeclaringType.Graph));
+
+        return this;
     }
-
-    internal GdmProperty GetProperty(GdmType declaringType)
+    public GdmPropertyDescriptor<T, TProperty> UseType<TType>() where TType : GdmType
     {
-        if (_type is null)
-        {
-            var runtimeType = typeof(T);
-
-            _type = Graph.Types.GetOrAdd(runtimeType.Name, runtimeType, (name, runtimeType) =>
-            {
-
-            });
-        }
-
-        if(_getter is null)
-        {
-            throw new Exception();
-        }
-
-        if (_setter is null)
-        {
-            throw new Exception();
-        }
-
-
-        var gdmProperty = new GdmProperty(
-            _name,
-            _type,
-            declaringType,
-            _getter,
-            _setter);
-    }
-
-    internal GdmProperty Describe()
-    {
-        return default;
+        return this;
     }
 
     IOGraphGdmPropertyDescriptor IOGraphGdmPropertyDescriptor.UsePropertyName(GdmName name)
@@ -104,15 +79,15 @@ public class GdmPropertyDescriptor<[DynamicallyAccessedMembers(DynamicallyAccess
     }
     IOGraphGdmPropertyDescriptor IOGraphGdmPropertyDescriptor.UseType(IOGraphGdmType type)
     {
-        throw new NotImplementedException();
+        return UseType(ThrowHelper.ThrowIfNotType<GdmType>(type));
     }
     IOGraphGdmPropertyDescriptor IOGraphGdmPropertyDescriptor.UseGetter(GdmPropertyGetter getter)
     {
-        return UseGetter(getter);
+        return UseGetter((instance => (TProperty)getter(instance!)!));
     }
     IOGraphGdmPropertyDescriptor IOGraphGdmPropertyDescriptor.UseSetter(GdmPropertySetter setter)
     {
-        return UseSetter(setter);
+        return UseSetter((instance, value) => setter(instance!, value!));
     }
     IOGraphGdmPropertyDescriptor IOGraphGdmPropertyDescriptor.AddMeta(string key, string value)
     {
@@ -121,13 +96,5 @@ public class GdmPropertyDescriptor<[DynamicallyAccessedMembers(DynamicallyAccess
     IOGraphGdmPropertyDescriptor IOGraphGdmPropertyDescriptor.IsRequired()
     {
         throw new NotImplementedException();
-    }
-    IOGraphGdmProperty IOGraphGdmDescriptor<IOGraphGdmProperty>.Describe()
-    {
-        return Describe();
-    }
-    IOGraphGdmElement IOGraphGdmDescriptor.Describe()
-    {
-        return Describe();
     }
 }

@@ -6,47 +6,59 @@ namespace Assimalign.OGraph.Gdm;
 using Elements;
 using Internal;
 using System.Collections.Generic;
+using System.Linq;
 
 public class GdmVertexDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : IOGraphGdmVertexDescriptor
     where T : class, new()
 {
-    private readonly GdmGraph _graph;
+    private readonly GdmVertex<T> _vertex;
 
 
-    internal GdmVertexDescriptor(GdmGraphDescriptor parent)
+    internal GdmVertexDescriptor(GdmVertex<T> vertex)
     {
-        Parent = parent;
-        //_vertex = vertex;
+        _vertex = vertex;
     }
-
-    internal GdmGraphDescriptor Parent { get; }
 
 
    // public GdmVertex<T> Vertex { get; }
     public GdmVertexDescriptor<T> HasLabel(GdmLabel label)
     {
-       // Vertex.Label = label;
+        _vertex.SetLabel(label);
         return this;
     }
     
 
     public GdmVertexDescriptor<T> HasEntityType(GdmName entityName)
     {
+        _vertex.SetEntityType(_vertex.Graph.Types.OfType<GdmEntityType>().Find(entityName)!);
         return this;
     }
 
 
     public GdmVertexDescriptor<T> HasEntityType(GdmEntityType<T> entity)
     {
-        _parent.AddType(entity);
-       // _vertex.Type = ThrowHelper.ThrowIfNull(entity);
+        _vertex.SetEntityType(entity);
         return this;
     }
 
     public GdmVertexDescriptor<T> HasEntityType(Action<GdmEntityTypeDescriptor<T>> configure)
     {
-        _parent.AddEntityType(configure);
-        return this;
+        var entityType = _vertex.Graph.Types.OfType<GdmEntityType<T>>()
+            .FirstOrDefault();
+
+        if (entityType is null)
+        {
+            entityType = new GdmEntityTypeDefault<T>(_vertex.Graph, configure);
+            entityType.Configure();
+        }
+        else
+        {
+            var descriptor = new GdmEntityTypeDescriptor<T>(entityType);
+
+            configure.Invoke(descriptor);
+        }
+
+        return HasEntityType(entityType);
     }
 
 
@@ -65,16 +77,6 @@ public class GdmVertexDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessed
     }
 
     IOGraphGdmVertexDescriptor IOGraphGdmVertexDescriptor.AddMeta(string key, string value)
-    {
-        throw new NotImplementedException();
-    }
-
-    IOGraphGdmVertex IOGraphGdmDescriptor<IOGraphGdmVertex>.Describe()
-    {
-        throw new NotImplementedException();
-    }
-
-    IOGraphGdmElement IOGraphGdmDescriptor.Describe()
     {
         throw new NotImplementedException();
     }

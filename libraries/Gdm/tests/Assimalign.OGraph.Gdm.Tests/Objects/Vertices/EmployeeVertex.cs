@@ -11,13 +11,13 @@ using Objects;
 
 public class EmployeeVertex : GdmVertex<Employee>
 {
+    public EmployeeVertex(GdmGraph graph) : base(graph)
+    {
+    }
+
     protected override void Configure(GdmVertexDescriptor<Employee> descriptor)
     {
-        descriptor.HasLabel("employee")
-            .HasType<GdmEmployeeEntity>();
-
-        descriptor.HasEdge<EmployeeAddressVertex>("addresses");
-        descriptor.HasEdge<EmployeeAddressVertex>("primaryAddress");
-        descriptor.HasEdge<EmployeeJobVertex>("jobs");
+        descriptor.HasLabel("employee");
+        //descriptor.HasEntityType(default);
     }
 }

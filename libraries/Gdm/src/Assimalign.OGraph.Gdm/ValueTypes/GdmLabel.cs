@@ -55,6 +55,10 @@ public readonly struct GdmLabel :
     /// </summary>
     public readonly string Value { get; }
 
+    public bool IsEmpty => string.IsNullOrEmpty(Value);
+
+    #region Overloads
+
     /// <inheritdoc />
     public override string ToString()
     {
@@ -77,6 +81,8 @@ public readonly struct GdmLabel :
         // TODO: Need to revisit. Not sure if I want the HashCode for the name to be the same as the instance of the string.
         return Value.GetHashCode();
     }
+
+    #endregion
 
 
     #region Methods

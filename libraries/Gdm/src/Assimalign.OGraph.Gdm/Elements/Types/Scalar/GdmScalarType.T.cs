@@ -5,6 +5,7 @@ using System.Xml;
 namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
+using System.Diagnostics.CodeAnalysis;
 
 
 /// <summary>
@@ -13,22 +14,16 @@ using Internal;
 /// <typeparam name="T"></typeparam>
 public abstract class GdmScalarType<T> : GdmScalarType
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public GdmScalarType() : base()
+    public GdmScalarType(GdmGraph graph) : base(typeof(T).Name, graph)
     {
+
+    }
+    public GdmScalarType(GdmName name, GdmGraph graph) : base(name, graph)
+    {
+        
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="graph"></param>
-    public GdmScalarType(GdmGraph graph) : base(graph)
-    {
-    }
-
-    public override GdmName Name { get; } = typeof(T).Name;
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
     public sealed override Type RuntimeType { get; } = typeof(T);
     public abstract T Parse(string? value);
     public abstract bool TryParse(string? value, out T result);
@@ -58,10 +53,4 @@ public abstract class GdmScalarType<T> : GdmScalarType
         }
         return false;
     }
-
-    internal override bool IsOfType(Type type)
-    {
-        return typeof(T).IsAssignableTo(type) || typeof(T?).IsAssignableTo(type);
-    }
 }
-

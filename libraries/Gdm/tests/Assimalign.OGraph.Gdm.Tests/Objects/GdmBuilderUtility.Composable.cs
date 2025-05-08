@@ -13,24 +13,19 @@ public static partial class GdmBuilderUtility
 {
     private static IOGraphGdm CreateComposableModel()
     {
-        var gdm = new Gdm("ErpCore");
+        var model = new Gdm("ErpCore");
 
         // Employees Graph
-        var employees = new GdmGraph("Employees", gdm);
-        
-        employees.Types.Add(new GdmBooleanType());
+        var graph = new GdmGraph("Employees", model);
+        var employeeType = new GdmEntityType("Employee", graph);
 
-        var entity1 = GdmEntityType.Create<Employee>("EmployeeId", employees);
-        var entity = new GdmEntityType("EmployeeId", typeof(Employee), employees);
+        var booleanType = new GdmBooleanType(graph);
+        var stringType = new GdmStringType(graph);
+        var uuidType = new GdmUuidType(graph);
 
 
-        // Organization Graph
-        var organization = new GdmGraph("Organization", gdm);
-        
-        
-        gdm.Graphs.Add(employees);
-        gdm.Graphs.Add(organization);
+        model.Graphs.Add(graph);
 
-        return gdm;
+        return model;
     }
 }

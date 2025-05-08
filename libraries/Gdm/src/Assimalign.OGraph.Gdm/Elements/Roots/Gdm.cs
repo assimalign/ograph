@@ -1,20 +1,41 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
+/// <summary>
+/// 
+/// </summary>
 [DebuggerDisplay("{Name} [Model]")]
-public class Gdm : GdmElement, IOGraphGdm
+public sealed class Gdm : GdmNamedElement, IOGraphGdm
 {
-    public Gdm(GdmName name)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name"></param>
+    /// <exception cref="ArgumentException"></exception>
+    public Gdm(GdmName name) : base(name)
     {
-        Name = name;
     }
 
-    public GdmName Name { get; }
     public GdmGraphCollection Graphs { get; } = new GdmGraphCollection();
-    public override GdmElementKind ElementKind { get; } = GdmElementKind.Model;
-
+    public sealed override GdmElementKind ElementKind { get; } = GdmElementKind.Model;
     IOGraphGdmGraphCollection IOGraphGdm.Graphs => Graphs;
     IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
+    public sealed override IEnumerable<TElement> GetElements<TElement>()
+    {
+        if (this is TElement element)
+        {
+            yield return element;
+        }
+
+        foreach (var graph in Graphs)
+        {
+            foreach (var item in graph.GetElements<TElement>())
+            {
+                yield return item;
+            }
+        }
+    }
 }

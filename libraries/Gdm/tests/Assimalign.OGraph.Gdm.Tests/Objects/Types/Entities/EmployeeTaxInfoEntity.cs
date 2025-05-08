@@ -6,9 +6,16 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm.Tests;
 
+using Elements;
+using Objects;
+
 public class EmployeeTaxInfoEntity : GdmEntityType<EmployeeTaxInfo>
 {
-    protected override void Configure(IOGraphGdmEntityTypeDescriptor<EmployeeTaxInfo> descriptor)
+    public EmployeeTaxInfoEntity(GdmGraph graph) : base(graph)
+    {
+    }
+
+    protected override void Configure(GdmEntityTypeDescriptor<EmployeeTaxInfo> descriptor)
     {
 
 

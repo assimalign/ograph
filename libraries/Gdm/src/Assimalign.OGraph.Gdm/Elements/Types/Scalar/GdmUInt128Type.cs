@@ -8,11 +8,10 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-public sealed class GdmUInt128Type : GdmScalarType<UInt128>
+public sealed class GdmUInt128Type : GdmValueScalarType<UInt128>
 {
-    public GdmUInt128Type() { }
     public GdmUInt128Type(GdmGraph graph) : base(graph) { }
-    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Int;
+    public override GdmPrimitiveType PrimitiveType { get; } = GdmPrimitiveType.Int;
     public override UInt128 Read(ref Utf8JsonReader reader)
     {
         return UInt128.Parse(reader.ValueSpan,

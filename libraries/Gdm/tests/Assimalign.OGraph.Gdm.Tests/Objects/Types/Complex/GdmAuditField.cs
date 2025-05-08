@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm.Tests;
 
+using Elements;
+
 public class GdmAuditField : GdmComplexType<AuditField>
 {
-    protected override void Configure(IOGraphGdmComplexTypeDescriptor<AuditField> descriptor)
+    public GdmAuditField(GdmGraph graph) : base(graph)
+    {
+    }
+
+    protected override void Configure(GdmComplexTypeDescriptor<AuditField> descriptor)
     {
         descriptor.HasName("EmployeeAuditField");
         descriptor.HasProperty(p => p.UserId).UsePropertyName("userId");

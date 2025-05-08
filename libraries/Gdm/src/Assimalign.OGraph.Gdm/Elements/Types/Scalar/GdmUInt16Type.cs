@@ -7,11 +7,10 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-public sealed class GdmUInt16Type : GdmScalarType<UInt16>
+public sealed class GdmUInt16Type : GdmValueScalarType<UInt16>
 {
-    public GdmUInt16Type() { }
     public GdmUInt16Type(GdmGraph graph) : base(graph) { }
-    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.Int;
+    public override GdmPrimitiveType PrimitiveType { get; } = GdmPrimitiveType.Int;
     public override ushort Read(ref Utf8JsonReader reader)
     {
         return reader.GetUInt16();

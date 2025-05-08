@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Xml;
 
@@ -16,6 +17,7 @@ public interface IOGraphGdmType : IOGraphGdmNamedElement
     /// <summary>
     /// The underlying .NET Type. All types must have a RuntimeType, even if it is a custom type.
     /// </summary>
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
     Type RuntimeType { get; }
 
     /// <summary>

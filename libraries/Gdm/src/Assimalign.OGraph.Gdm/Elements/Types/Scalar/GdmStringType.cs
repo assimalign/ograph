@@ -8,10 +8,8 @@ using Internal;
 
 public sealed class GdmStringType : GdmScalarType<string>
 {
-    public GdmStringType() { }
     public GdmStringType(GdmGraph graph) : base(graph) { }
-
-    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.String;
+    public override GdmPrimitiveType PrimitiveType { get; } = GdmPrimitiveType.String;
     public override string Read(ref Utf8JsonReader reader)
     {
         return reader.GetString()!;

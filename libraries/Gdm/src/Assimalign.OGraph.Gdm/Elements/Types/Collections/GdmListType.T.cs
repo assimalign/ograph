@@ -9,20 +9,28 @@ using Assimalign.OGraph.Gdm.Internal;
 
 public class GdmListType<T> : GdmCollectionType<List<T>, T>
 {
-    public GdmListType(GdmType itemType, GdmGraph graph) 
+    private static GdmName CreateName<TType>()
     {
-        //Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
-        ItemType = ThrowHelper.ThrowIfNull(itemType, nameof(itemType));
+        return typeof(TType).Name + "List";
+    }
+
+    public GdmListType(GdmType itemType, GdmGraph graph)  : base(CreateName<T>(), itemType, graph)
+    {
+        ////Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
+        //ItemType = ThrowHelper.ThrowIfNull(itemType, nameof(itemType));
  
-        if (GdmLabel.IsValid(ItemType!.RuntimeType!.Name))
-        {
-            Name = ItemType!.RuntimeType!.Name + "List";
-        }
+        //if (GdmLabel.IsValid(ItemType!.RuntimeType!.Name))
+        //{
+        //    Name = ItemType!.RuntimeType!.Name + "List";
+        //}
+    }
+
+    public GdmListType(GdmName name, GdmType itemType, GdmGraph graph) : base(name, itemType, graph)
+    {
+
     }
 
     #region Overloads
-    public override GdmName Name { get; } = "List";
-    public override GdmType ItemType { get; internal set; }
 
     public override List<T> Read(ref Utf8JsonReader reader)
     {

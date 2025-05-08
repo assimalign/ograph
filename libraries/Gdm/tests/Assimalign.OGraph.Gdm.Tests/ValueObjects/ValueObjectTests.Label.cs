@@ -11,7 +11,7 @@ public partial class ValueObjectTests
     [Fact(DisplayName = "Value Object (Label): Invalid Character")]
     public void TestInvalidNameCharacter()
     {
-        Assert.Throws<GdmModelException>((Action)(() =>
+        Assert.Throws<GdmException>((Action)(() =>
         {
             GdmName name = "test property";
         }));
@@ -26,7 +26,7 @@ public partial class ValueObjectTests
     {
         GdmName name = "MyName";
 
-        Assert.Equal("myName", name.ToCamalCase());
+        Assert.Equal("myName", name.ToCamelCase());
     }
 
     [Fact(DisplayName = "Value Object (Label): To Pascal Case")]
@@ -43,7 +43,7 @@ public partial class ValueObjectTests
         GdmName name1 = "abc";
         GdmName name2 = "abd";
 
-        Assert.Equal(name1._value.CompareTo(name2._value), name1.CompareTo(name2));
+        Assert.Equal(name1.Value.CompareTo(name2.Value), name1.CompareTo(name2));
     }
 
     [Fact(DisplayName = "Value Object (Name): Equality")]

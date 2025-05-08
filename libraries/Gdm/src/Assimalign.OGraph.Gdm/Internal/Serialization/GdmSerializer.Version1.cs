@@ -6,9 +6,9 @@ using System.Xml;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
-internal class GdmVersion1Serializer : OGraphGdmSerializer
+internal class GdmVersion1Serializer : GdmSerializer
 {
-    public GdmVersion1Serializer(OGraphGdmSerializerOptions options) : base(options)
+    public GdmVersion1Serializer(GdmSerializerOptions options) : base(options)
     {
     }
 
@@ -16,12 +16,17 @@ internal class GdmVersion1Serializer : OGraphGdmSerializer
     {
         var reader = XmlReader.Create(stream, new XmlReaderSettings()
         {
-            IgnoreWhitespace = true
+            IgnoreWhitespace = true,
+            IgnoreComments = true,
+            Async = true,
+            
         });
 
 
         throw new NotImplementedException();
     }
+
+   // private async Task ReadGraphAsync(XmlReader reader, Gdm)
 
     public override async Task SerializeAsync(Stream stream, IOGraphGdm model, CancellationToken cancellationToken = default)
     {

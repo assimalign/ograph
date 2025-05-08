@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Xml;
-using System.Linq;
 using System.Text.Json;
 using System.Diagnostics.CodeAnalysis;
 
@@ -11,31 +10,20 @@ using Internal;
 public abstract class GdmComplexType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : GdmComplexType
     where T : class, new()
 {
-    private readonly Action<GdmComplexTypeDescriptor<T>>? _configure;
+    private readonly Action<GdmComplexTypeDescriptor<T>> _configure;
 
     #region Constructors
 
-    protected GdmComplexType()
-    {
-        _configure = Configure;
-    }
-
     public GdmComplexType(GdmGraph graph) : base(typeof(T), graph)
-    {
-        _configure = Configure;
-    }
-    public GdmComplexType(GdmName name, GdmGraph graph) : base(name, typeof(T), graph)
     {
         _configure = Configure;
     }
 
     #endregion
 
-
-    #region Methods
+    #region Methods - Public
 
     protected abstract void Configure(GdmComplexTypeDescriptor<T> descriptor);
-
     public virtual new T Read(ref Utf8JsonReader reader)
     {
         return ThrowHelper.ThrowIfNotType<T>(base.Read(ref reader));
@@ -61,8 +49,14 @@ public abstract class GdmComplexType<[DynamicallyAccessedMembers(DynamicallyAcce
         Write(writer, ThrowHelper.ThrowIfNotType<T>(value));
     }
 
+    #endregion
 
-    //public static GdmComplexType<T> Create()
+    #region Methods - Internal
+
+    internal override void Configure()
+    {
+        _configure.Invoke(new GdmComplexTypeDescriptor<T>(this));
+    }
 
     #endregion
 

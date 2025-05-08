@@ -6,9 +6,16 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm.Tests;
 
+using Elements;
+using Objects;
+
 public class EmployeeTaskEntity : GdmEntityType<EmployeeTask>
 {
-    protected override void Configure(IOGraphGdmEntityTypeDescriptor<EmployeeTask> descriptor)
+    public EmployeeTaskEntity(GdmGraph graph) : base(graph)
+    {
+    }
+
+    protected override void Configure(GdmEntityTypeDescriptor<EmployeeTask> descriptor)
     {
         descriptor.HasName("employeeJobTask");
         descriptor.HasKey(p => p.TaskId);

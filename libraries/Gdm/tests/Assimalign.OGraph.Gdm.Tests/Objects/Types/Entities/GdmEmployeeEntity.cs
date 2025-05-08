@@ -2,21 +2,26 @@
 
 namespace Assimalign.OGraph.Gdm.Tests;
 
+using Elements;
+using Objects;
+
 public class GdmEmployeeEntity : GdmEntityType<Employee>
 {
-    protected override void Configure(IOGraphGdmEntityTypeDescriptor<Employee> descriptor)
+    public GdmEmployeeEntity(GdmGraph graph) : base(graph)
+    {
+    }
+
+    protected override void Configure(GdmEntityTypeDescriptor<Employee> descriptor)
     {
         descriptor.HasName("Employee");
         descriptor.HasKey(p => p.EmployeeId);
 
         descriptor.HasProperty(p => p.EmployeeId)
             .UsePropertyName("employeeId")
-            .UseType<GdmGuidType>()
+            .UseType<GdmUuidType>()
             .UseSetter((instance, value) => (instance as Employee)!.EmployeeId = value switch // Value Object setter override due to implicit conversions
             {
                 EmployeeId id => id,
-                Guid guid => guid,
-                null => null,
                 _ => throw new Exception()
             });
 
@@ -31,9 +36,9 @@ public class GdmEmployeeEntity : GdmEntityType<Employee>
             });
 
         descriptor.HasProperty(p => p.Roles).UsePropertyName("roles")
-            .UseType("EmployeeRoleCollection", role =>
+            .UseType(role =>
             {
-                role.HasLabel("EmployeeRole");
+                role.HasName("EmployeeRole");
                 role.HasProperty(p => p.Id).UsePropertyName("id").UseType<GdmInt32Type>();
                 role.HasProperty(p => p.Name).UsePropertyName("name").UseType<GdmStringType>();
             });

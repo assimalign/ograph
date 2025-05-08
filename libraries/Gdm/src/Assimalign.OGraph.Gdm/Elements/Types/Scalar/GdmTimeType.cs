@@ -6,12 +6,10 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-public sealed class GdmTimeType : GdmScalarType<TimeOnly>
+public sealed class GdmTimeType : GdmValueScalarType<TimeOnly>
 {
-    public GdmTimeType() { }
-    public GdmTimeType(GdmGraph graph) : base(graph) { }
-    public override GdmName Name { get; internal set; } = "Time";
-    public override GdmPrimitiveType PrimitiveType => GdmPrimitiveType.String;
+    public GdmTimeType(GdmGraph graph) : base("Time", graph) { }
+    public override GdmPrimitiveType PrimitiveType { get; } = GdmPrimitiveType.String;
     public override TimeOnly Read(ref Utf8JsonReader reader)
     {
         return TimeOnly.Parse(reader.GetString()!);

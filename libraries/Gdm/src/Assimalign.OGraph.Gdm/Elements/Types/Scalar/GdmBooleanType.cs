@@ -8,12 +8,10 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-public class GdmBooleanType : GdmScalarType<bool>
+public sealed class GdmBooleanType : GdmValueScalarType<bool>
 {
-    public GdmBooleanType() { }
     public GdmBooleanType(GdmGraph graph) : base(graph) { }
     public override GdmPrimitiveType PrimitiveType { get; } = GdmPrimitiveType.Boolean;
-
     public override bool Read(ref Utf8JsonReader reader)
     {
         return reader.GetBoolean();

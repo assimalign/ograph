@@ -6,9 +6,8 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-public class GdmUuidType : GdmScalarType<Guid>
+public sealed class GdmUuidType : GdmValueScalarType<Guid>
 {
-    public GdmUuidType() { }
     public GdmUuidType(GdmGraph graph) : base(graph) { }
 
     public override GdmPrimitiveType PrimitiveType { get; } = GdmPrimitiveType.String;

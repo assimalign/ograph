@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
@@ -28,10 +29,28 @@ public static class OGraphGdmDescriptorExtensions
         ThrowHelper.ThrowIfNull(descriptor);
         ThrowHelper.ThrowIfNull(configure);
 
-        return descriptor.UseType(graph =>
+        descriptor.UseType<GdmComplexType>(graph =>
         {
-            
+            var typeInfo = typeof(TProperty);
+            var existing = graph.Types.OfType<GdmComplexType>().Where(p => p.Name == typeInfo.Name);
+
+            if (existing is null || existing is not GdmComplexType<TProperty> typed)
+            {
+                var complexType = new GdmComplexTypeDefault<TProperty>(graph, configure);
+                complexType.SetGraph(graph);
+                complexType.Configure();
+
+                return complexType;
+            }
+
+            var descriptor = new GdmComplexTypeDescriptor<TProperty>(typed);
+
+            configure.Invoke(descriptor);
+
+            return typed;
         });
+
+        return descriptor;
     }
 
     /// <summary>

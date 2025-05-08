@@ -1,14 +1,13 @@
 ﻿namespace Assimalign.OGraph.Gdm;
 
 /// <summary>
-/// The primitive types that must be suuported by GDM.
+/// The primitive types that must be supported by GDM.
 /// </summary>
 public enum GdmPrimitiveType
 {
+    None,
     String,
-    Int,
     Boolean,
-    Uuid,
-    Float,
-    Double
+    Int,
+    Float
 }

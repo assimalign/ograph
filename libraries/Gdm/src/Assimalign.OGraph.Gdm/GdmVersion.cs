@@ -1,6 +1,6 @@
 ﻿namespace Assimalign.OGraph.Gdm;
 
-public enum OGraphVersion
+public enum GdmVersion
 { 
     Version1,
 }

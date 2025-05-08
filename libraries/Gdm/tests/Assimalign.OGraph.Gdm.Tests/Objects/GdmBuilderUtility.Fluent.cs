@@ -15,27 +15,29 @@ public static partial class GdmBuilderUtility
     private static IOGraphGdm CreateFluentModel()
     {
         // Builder process 
-        return GdmBuilder.Create("ErpCore")
+        var builder = GdmBuilder.Create("ErpCore")
             .AddGraph("Hrm", graph =>
             {
+                graph.AddScalarType<GdmStringType>();
+
                 graph.AddVertex<Employee>(vertex =>
                 {
                     vertex.HasLabel("employees");
                     vertex.HasEntityType(entity =>
                     {
-                        entity.HasName("Employee");
+                        entity.HasName("employee");
                         entity.HasKey(p => p.EmployeeId);
 
                         entity.HasProperty(p => p.EmployeeId).UsePropertyName("id");
                         entity.HasProperty(p => p.Info)
-                            .UseType(info =>
+                            .UseType(complex =>
                             {
-                                info.HasProperty(p => p.FirstName);
-                                info.HasProperty(p => p.LastName);
+                                complex.HasName("employeeInfo");
+                                complex.HasProperty(p => p.FirstName);
+                                complex.HasProperty(p => p.LastName);
                             });
                     });
                 });
-
                 graph.AddVertex<EmployeeAddress>(vertex =>
                 {
                     vertex.HasLabel("employeeAddresses");
@@ -48,7 +50,7 @@ public static partial class GdmBuilderUtility
                         entity.HasName("Job");
                     });
                 });
-            })
+            });
             //.AddGraph("Organizations", descriptor =>
             //{
             //    //descriptor.ConvertAllNamesToCamalCase(GdmElementKind.Member, GdmElementKind.Type);
@@ -203,6 +205,6 @@ public static partial class GdmBuilderUtility
             //    });
 
             //})
-            .Build();
+            return builder.Build();
     }
 }

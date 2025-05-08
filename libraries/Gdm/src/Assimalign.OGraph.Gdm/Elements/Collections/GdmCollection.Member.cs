@@ -2,10 +2,13 @@
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using Assimalign.OGraph.Gdm.Internal;
+using System.Diagnostics;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
+using Internal;
+
+[DebuggerDisplay("Count = {Count}")]
 public class GdmMemberCollection : IOGraphGdmMemberCollection, IEnumerable<GdmMember>
 {
     private readonly List<GdmMember> _items;
@@ -14,6 +17,11 @@ public class GdmMemberCollection : IOGraphGdmMemberCollection, IEnumerable<GdmMe
     public GdmMemberCollection()
     {
         _items = new List<GdmMember>();
+    }
+
+    public GdmMemberCollection(bool isReadOnly) : this()
+    {
+        _isReadOnly = isReadOnly;
     }
 
     public int Count => _items.Count;
@@ -35,8 +43,31 @@ public class GdmMemberCollection : IOGraphGdmMemberCollection, IEnumerable<GdmMe
             throw new KeyNotFoundException();
         }
     }
+
+    public GdmProperty GetProperty(GdmName name)
+    {
+        if (this[name] is not GdmProperty property)
+        {
+            throw new KeyNotFoundException();
+        }
+
+        return property;
+    }
+
+    public GdmFunction GetFunction(GdmName name)
+    {
+        if (this[name] is not GdmFunction function)
+        {
+            throw new KeyNotFoundException();
+        }
+
+        return function;
+    }
+    
     public void Add(GdmMember member)
     {
+        AssertReadOnly();
+
         switch (member)
         {
             case GdmProperty property:
@@ -44,6 +75,7 @@ public class GdmMemberCollection : IOGraphGdmMemberCollection, IEnumerable<GdmMe
                 break;
 
             case GdmFunction function:
+                Add(function);
                 break;
 
             default:
@@ -53,6 +85,8 @@ public class GdmMemberCollection : IOGraphGdmMemberCollection, IEnumerable<GdmMe
     public void Add(GdmProperty property)
     {
         ThrowHelper.ThrowIfNull(property);
+
+        AssertReadOnly();
 
         for (int i = 0; i < _items.Count; i++)
         {
@@ -72,8 +106,14 @@ public class GdmMemberCollection : IOGraphGdmMemberCollection, IEnumerable<GdmMe
 
         _items.Add(property);
     }
+    public void Add(GdmFunction function)
+    {
+        AssertReadOnly();
+    }
     public void Remove(GdmMember member)
     {
+        AssertReadOnly();
+
         switch (member)
         {
             case GdmProperty property:
@@ -90,27 +130,27 @@ public class GdmMemberCollection : IOGraphGdmMemberCollection, IEnumerable<GdmMe
     }
     public void Remove(GdmProperty property)
     {
-
+        AssertReadOnly();
     }
     public void Remove(GdmFunction function)
     {
-
+        AssertReadOnly();
     }
     public void Clear()
     {
+        AssertReadOnly();
         _items.Clear();
-    }
-    public bool TryGetProperty(GdmName name, out GdmProperty property)
-    {
-        property = default;
-
-
-
-        return true;
     }
     public IEnumerator<GdmMember> GetEnumerator()
     {
         return _items.GetEnumerator();
+    }
+    private void AssertReadOnly()
+    {
+        if (_isReadOnly)
+        {
+            ThrowHelper.ThrowInvalidOperationException("The collection is readonly.");
+        }
     }
 
     IOGraphGdmMember IOGraphGdmMemberCollection.this[GdmName name] => this[name];

@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
 	</PropertyGroup>
-	<PropertyGroup Condition="$(TargetFramework) != 'net6.0'">
+	<PropertyGroup Condition="$(TargetFramework) != 'net6.0' and $(AssemblyName.EndsWith('Tests')) == false">
 		<IsAotCompatible>true</IsAotCompatible>
 		<StripSymbols>false</StripSymbols>
 	</PropertyGroup>

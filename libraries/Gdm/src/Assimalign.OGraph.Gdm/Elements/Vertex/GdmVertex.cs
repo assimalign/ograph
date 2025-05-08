@@ -6,48 +6,41 @@ namespace Assimalign.OGraph.Gdm.Elements;
 using Internal;
 
 [DebuggerDisplay("{Label} [Vertex]")]
-public class GdmVertex : GdmElement, IOGraphGdmVertex
+public class GdmVertex : GdmLabeledElement, IOGraphGdmVertex
 {
-    #region Constructors
-    internal GdmVertex()
-    {
-        //var lazy = new Lazy<GdmType>(() =>
-        //{
-        //    return default;
-        //});
-    }
+    private GdmGraph _graph = default!;
+    private GdmEntityType _type = default!;
 
-    public GdmVertex(GdmLabel label, GdmEntityType type, GdmGraph graph) 
+    #region Constructors
+
+    public GdmVertex(GdmLabel label, GdmEntityType type, GdmGraph graph)  : base(label)
     {
-        Label = label;
-        Type = ThrowHelper.ThrowIfNull(type);
-        Graph = ThrowHelper.ThrowIfNull(graph);
+        _type = ThrowHelper.ThrowIfNull(type);
+        _graph = ThrowHelper.ThrowIfNull(graph);
     }
 
     #endregion
 
     #region Properties
-
-    public GdmLabel Label { get;  }
-    public GdmEntityType Type { get; } 
-    public GdmGraph Graph { get; } 
+    public GdmGraph Graph => _graph;
+    public GdmEntityType Type => _type;
     public GdmEdgeCollection Edges { get; } = new GdmEdgeCollection();
     public sealed override GdmElementKind ElementKind { get; } = GdmElementKind.Vertex;
     IOGraphGdmType IOGraphGdmVertex.Type => Type;
-    IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
     IOGraphGdmEdgeCollection IOGraphGdmVertex.Edges => Edges;
     IOGraphGdmGraph IOGraphGdmVertex.Graph => Graph;
     IOGraphGdmPathCollection IOGraphGdmVertex.Paths => throw new NotImplementedException();
 
     #endregion
 
-    #region Methods
+    #region Methods - Internal
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="descriptor"></param>
-   // protected virtual void Configure(GdmVertexDescriptor descriptor) { }
+    internal void SetGraph(GdmGraph graph) => _graph = graph;
+    internal void SetEntityType(GdmEntityType type) => _type = type;
+    internal virtual void Configure()
+    {
+
+    }
 
     #endregion
 }

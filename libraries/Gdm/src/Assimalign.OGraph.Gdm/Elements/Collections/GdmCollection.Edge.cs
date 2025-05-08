@@ -11,8 +11,8 @@ using Internal;
 [DebuggerDisplay("Count = {Count}")]
 public class GdmEdgeCollection : IOGraphGdmEdgeCollection, IEnumerable<GdmEdge>
 {
-    private readonly List<GdmEdge> _items;
     private bool _isReadOnly;
+    private readonly List<GdmEdge> _items;
 
     public GdmEdgeCollection()
     {

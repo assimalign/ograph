@@ -6,11 +6,9 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-public sealed class GdmDateTimeOffsetType : GdmScalarType<DateTimeOffset>
+public sealed class GdmDateTimeOffsetType : GdmValueScalarType<DateTimeOffset>
 {
-    public GdmDateTimeOffsetType() { }
     public GdmDateTimeOffsetType(GdmGraph graph) : base(graph) { }
-
     public override GdmPrimitiveType PrimitiveType { get; } = GdmPrimitiveType.String;
     public override DateTimeOffset Read(ref Utf8JsonReader reader)
     {

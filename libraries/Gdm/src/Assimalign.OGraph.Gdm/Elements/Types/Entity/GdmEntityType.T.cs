@@ -7,7 +7,6 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-
 public abstract class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : GdmEntityType
     where T : class, new()
 {
@@ -15,32 +14,16 @@ public abstract class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAcces
 
     #region Constructors
 
-    protected GdmEntityType()
-    {
-        _configure = Configure;
-    }
-
-    public GdmEntityType(GdmName key, GdmGraph graph) 
-        : base(key, typeof(T), graph)
-    {
-        _configure = Configure;
-    }
-
-    public GdmEntityType(GdmName name, GdmName key, GdmGraph graph) 
-        : base(name, key, typeof(T), graph)
+    public GdmEntityType(GdmGraph graph) : base(typeof(T), graph)
     {
         _configure = Configure;
     }
 
     #endregion
 
+    #region Methods - Public/Protected
 
-    #region Methods
-
-    protected virtual void Configure(GdmEntityTypeDescriptor<T> descriptor)
-    {
-
-    }
+    protected virtual void Configure(GdmEntityTypeDescriptor<T> descriptor) { }
     public virtual new T Read(ref Utf8JsonReader reader)
     {
         return ThrowHelper.ThrowIfNotType<T>(base.Read(ref reader));
@@ -68,17 +51,14 @@ public abstract class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAcces
 
     #endregion
 
-    internal override void Initialize(GdmGraph graph)
+    #region Methods - Internal
+
+    internal override void Configure()
     {
-        var descriptor = new GdmEntityTypeDescriptor<T>(graph);
-
-        if (_configure is not null)
-        {
-            _configure.Invoke(descriptor);
-        }
-
-        base.Initialize(graph);
+        _configure.Invoke(new GdmEntityTypeDescriptor<T>(this));
     }
+
+    #endregion
 }
 
 

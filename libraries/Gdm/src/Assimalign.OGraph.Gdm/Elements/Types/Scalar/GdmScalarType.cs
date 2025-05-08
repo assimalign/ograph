@@ -2,8 +2,7 @@
 
 public abstract class GdmScalarType : GdmType, IOGraphGdmScalarType
 {
-    internal GdmScalarType() { }
-    internal GdmScalarType(GdmGraph graph) : base(graph) { }
+    internal GdmScalarType(GdmName name, GdmGraph graph) : base(name, graph) { }
     public virtual string?[]? Formats { get; } = [];
     public abstract GdmPrimitiveType PrimitiveType { get; }
     public sealed override GdmTypeKind Kind { get; } = GdmTypeKind.Scalar;

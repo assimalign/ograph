@@ -6,9 +6,8 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-public sealed class GdmInt64Type : GdmScalarType<Int64>
+public sealed class GdmInt64Type : GdmValueScalarType<Int64>
 {
-    public GdmInt64Type() { }
     public GdmInt64Type(GdmGraph graph) : base(graph) { }
     public override GdmPrimitiveType PrimitiveType { get; } = GdmPrimitiveType.Int;
     public override long Read(ref Utf8JsonReader reader)

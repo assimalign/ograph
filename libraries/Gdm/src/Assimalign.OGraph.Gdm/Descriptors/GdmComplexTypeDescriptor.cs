@@ -5,22 +5,22 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.OGraph.Gdm;
 
-using Assimalign.OGraph.Gdm.Elements;
-using System.Text;
+using Elements;
+using Internal;
 
 public class GdmComplexTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : IOGraphGdmComplexTypeDescriptor
     where T : class, new()
 {
     private readonly GdmComplexType<T> _complexType;
 
-    public GdmComplexTypeDescriptor(GdmComplexType<T> complexType)
+    internal GdmComplexTypeDescriptor(GdmComplexType<T> complexType)
     {
         _complexType = complexType;
     }
 
     public GdmComplexTypeDescriptor<T> HasName(GdmName name)
     {
-        _complexType.Name = name;
+        _complexType.SetName(name);
         return this;
     }
     public GdmComplexTypeDescriptor<T> HasProperty(GdmName name)
@@ -44,16 +44,23 @@ public class GdmComplexTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAcc
 
         GdmProperty? property = default;
 
-        var isExisting = _complexType.Members.TryGetProperty(propertyInfo.Name, out property);
+   //     var isExisting = _complexType.Members.TryGetProperty(propertyInfo.Name, out property);
 
-        property.Getter ??= propertyInfo.GetValue;
-        property.Setter ??= propertyInfo.SetValue;
+        //property.Getter ??= propertyInfo.GetValue;
+        //property.Setter ??= propertyInfo.SetValue;
 
         return this;
     }
-    public GdmPropertyDescriptor<TProperty> HasProperty<TProperty>(Expression<Func<T, TProperty>> expression)
+    public GdmComplexTypeDescriptor<T> HasProperty(GdmProperty property)
     {
-        //var propertyInfo = AssertExpression(expression)!;
+        property.SetDeclaringType(_complexType);
+        return this;
+    }
+    public GdmPropertyDescriptor<T, TProperty> HasProperty<TProperty>(Expression<Func<T, TProperty>> expression)
+    {
+        var propertyInfo = AssertExpression(expression)!;
+
+
         //var property = _complexType.GetProperty(propertyInfo);
         //var method = expression.Compile();
         //property.Getter ??= (instance) => method.Invoke((T)instance);
@@ -66,12 +73,26 @@ public class GdmComplexTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAcc
 
         return default;
     }
-
     public GdmComplexTypeDescriptor<T> AddMeta(string key, string value)
     {
         return this;
     }
-
+    IOGraphGdmComplexTypeDescriptor IOGraphGdmComplexTypeDescriptor.AddMeta(string key, string value)
+    {
+        return AddMeta(key, value);
+    }
+    IOGraphGdmComplexTypeDescriptor IOGraphGdmComplexTypeDescriptor.HasFunction(IOGraphGdmFunction function)
+    {
+        throw new NotImplementedException();
+    }
+    IOGraphGdmComplexTypeDescriptor IOGraphGdmComplexTypeDescriptor.HasName(GdmName name)
+    {
+        return HasName(name);
+    }
+    IOGraphGdmComplexTypeDescriptor IOGraphGdmComplexTypeDescriptor.HasProperty(IOGraphGdmProperty property)
+    {
+        return HasProperty(ThrowHelper.ThrowIfNotType<GdmProperty>(property));
+    }
 
     private PropertyInfo AssertExpression<TMember>(Expression<Func<T, TMember>> expression)
     {
@@ -94,35 +115,4 @@ public class GdmComplexTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAcc
         }
         return propertyInfo;
     }
-
-    IOGraphGdmComplexTypeDescriptor IOGraphGdmComplexTypeDescriptor.AddMeta(string key, string value)
-    {
-        throw new NotImplementedException();
-    }
-
-    IOGraphGdmComplexTypeDescriptor IOGraphGdmComplexTypeDescriptor.HasFunction(IOGraphGdmFunction function)
-    {
-        throw new NotImplementedException();
-    }
-
-    IOGraphGdmComplexTypeDescriptor IOGraphGdmComplexTypeDescriptor.HasName(GdmName name)
-    {
-        return HasName(name);
-    }
-
-    IOGraphGdmComplexTypeDescriptor IOGraphGdmComplexTypeDescriptor.HasProperty(IOGraphGdmProperty property)
-    {
-        throw new NotImplementedException();
-    }
-
-    //public IOGraphGdmFunctionDescriptor<TFunction> HasFunction<TFunction>(Expression<Func<T, TFunction>> expression)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //public IOGraphGdmComplexTypeDescriptor<T> HasLabel(GdmLabel label)
-    //{
-    //    complexType.label = label;
-    //    return this;
-    //}
 }

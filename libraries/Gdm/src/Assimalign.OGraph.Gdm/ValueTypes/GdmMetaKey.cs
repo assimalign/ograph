@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace Assimalign.OGraph.Gdm;
 
 [DebuggerDisplay("{ToString(), n}")]
-public readonly struct GdmMetaKey
+public readonly struct GdmMetaKey : IEquatable<GdmMetaKey>
 {
     /// <summary>
     /// 
@@ -29,7 +29,7 @@ public readonly struct GdmMetaKey
     #region Properties
 
     /// <summary>
-    /// 
+    /// The raw key value.
     /// </summary>
     public string Value { get; }
 
@@ -57,9 +57,19 @@ public readonly struct GdmMetaKey
 
     #region Methods
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public ReadOnlySpan<char> AsSpan()
+    {
+        return Value.AsSpan();
+    }
+
     public static GdmMetaKey Parse(string value)
     {
         var parts = value.Split('@');
+        
         if (parts.Length == 1)
         {
             return new GdmMetaKey(parts[0]);
@@ -74,11 +84,19 @@ public readonly struct GdmMetaKey
         }
     }
 
+    public bool Equals(GdmMetaKey other)
+    {
+        throw new NotImplementedException();
+    }
+
     #endregion
 
     #region Operators
 
-    public static implicit operator GdmMetaKey(string value) => Parse(value);
+    public static implicit operator GdmMetaKey(string value)
+    {
+        return Parse(value);
+    }
 
 
     #endregion

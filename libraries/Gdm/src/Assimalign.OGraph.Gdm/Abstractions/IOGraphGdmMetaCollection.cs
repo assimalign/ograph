@@ -6,13 +6,8 @@ namespace Assimalign.OGraph.Gdm;
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphGdmMetaCollection : IDictionary<GdmMetaKey, IOGraphGdmMetaValue>
+public interface IOGraphGdmMetaCollection : IDictionary<GdmMetaKey, object>
 {
     // TODO: Revisit a more robust metadata structure
     T GetValue<T>(GdmMetaKey key);
-}
-
-public interface IOGraphGdmMetaValue : IOGraphGdmElement
-{
-
 }

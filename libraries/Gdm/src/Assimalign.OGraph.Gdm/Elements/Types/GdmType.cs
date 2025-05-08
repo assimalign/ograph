@@ -11,7 +11,7 @@ using Internal;
 /// <summary>
 /// 
 /// </summary>
-public abstract class GdmType : GdmElement, IOGraphGdmType
+public abstract class GdmType : GdmNamedElement, IOGraphGdmType
 {
     private GdmGraph _graph = default!;
 
@@ -23,27 +23,24 @@ public abstract class GdmType : GdmElement, IOGraphGdmType
               at compile time. This will support AOT compiling
      */
     internal GdmType() { }
-    internal GdmType(GdmGraph graph)
+    internal GdmType(GdmName name, GdmGraph graph) : base(name)
     {
-        _graph = ThrowHelper.ThrowIfNull(graph);
+        SetGraph(ThrowHelper.ThrowIfNull(graph));
     }
 
     #endregion
 
     #region Properties
-    public abstract GdmName Name { get; }
+
     public GdmGraph Graph => _graph;
-    public abstract Type RuntimeType { get;  }
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+    public abstract Type RuntimeType { get; }
     public abstract GdmTypeKind Kind { get; }
+    public bool IsPrimitive => this is GdmStringType or GdmBooleanType or GdmFloatType or GdmInt32Type;
     public sealed override GdmElementKind ElementKind { get; } = GdmElementKind.Type;
-    public bool IsEntityType => Kind.Equals(GdmTypeKind.Entity);
-    public bool IsComplexType => Kind.Equals(GdmTypeKind.Complex);
-    public bool IsCollectionType => Kind.Equals(GdmTypeKind.Collection);
-    public bool IsScalarType => Kind.Equals(GdmTypeKind.Scalar);
-    public bool IsEnumType => Kind.Equals(GdmTypeKind.Enum);
     IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
     IOGraphGdmGraph IOGraphGdmType.Graph => Graph;
-   // public bool IsPrimitive => this is GdmBooleanType or GdmStringType or GdmInt32Type or GdmDoubleType or GdmUuidType;
+    // public bool IsPrimitive => this is GdmBooleanType or GdmStringType or GdmInt32Type or GdmDoubleType or GdmUuidType;
 
     #endregion
 
@@ -77,16 +74,18 @@ public abstract class GdmType : GdmElement, IOGraphGdmType
 
     #region Methods - Internal
 
-    internal virtual void Initialize(GdmGraph graph)
+    internal virtual bool IsOfType(Type type)
     {
-        _graph = graph;
-        _graph.Types.Add(this);
+        return RuntimeType == type;
     }
-    internal virtual bool IsOfType(Type runtimeType)
+    internal void SetGraph(GdmGraph graph)
     {
-        return RuntimeType == runtimeType;
+        if (_graph is null || !ReferenceEquals(_graph, graph))
+        {
+            _graph = graph;
+        }
     }
+    internal virtual void Configure() { }
 
     #endregion
-
 }

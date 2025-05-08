@@ -1,29 +1,43 @@
-﻿namespace Assimalign.OGraph.Gdm.Elements;
+﻿using System.Reflection;
+
+namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
 /// <summary>
 /// 
 /// </summary>
-public abstract class GdmMember : GdmElement, IOGraphGdmMember
+public abstract class GdmMember : GdmBindableElement, IOGraphGdmMember
 {
-    private GdmName _name;
-    private GdmType _declaringType;
+    private GdmType _declaringType = default!;
 
-    internal GdmMember(GdmName name, GdmType declaringType)
+    #region Constructors
+
+    internal GdmMember()
     {
-        ThrowHelper.ThrowIfNull(declaringType);
-        ThrowHelper.ThrowIfNotType<IOGraphGdmType, IOGraphGdmComplexType, IOGraphGdmEntityType>(declaringType);
 
-        _name = name;
-        _declaringType = declaringType;
+    }
+    internal GdmMember(GdmName name, GdmEntityType declaringType) : base(name)
+    {
+        _declaringType = ThrowHelper.ThrowIfNull(declaringType);
+    }
+    internal GdmMember(GdmName name, GdmComplexType declaringType) : base(name)
+    {
+        _declaringType = ThrowHelper.ThrowIfNull(declaringType);
     }
 
-    public virtual GdmName Name => _name;
-    public virtual GdmType DeclaringType => _declaringType;
-    public virtual bool IsBound { get; }
+    #endregion
+
+    #region Properties
+
+    public GdmType DeclaringType => _declaringType;
+    public sealed override GdmElementKind ElementKind { get; } = GdmElementKind.Member;
     IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
     IOGraphGdmType IOGraphGdmMember.DeclaringType => DeclaringType;
+
+    #endregion
+
+    #region Methods - Public
 
     public bool IsProperty(out GdmProperty property)
     {
@@ -68,6 +82,10 @@ public abstract class GdmMember : GdmElement, IOGraphGdmMember
         return function is not null;
     }
 
+    #endregion
 
+    #region Methods - Internal
+    internal void SetDeclaringType(GdmType declaringType) => _declaringType = declaringType;
 
+    #endregion
 }

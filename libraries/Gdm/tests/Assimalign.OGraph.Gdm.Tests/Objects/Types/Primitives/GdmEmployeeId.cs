@@ -4,9 +4,21 @@ using System.Xml;
 
 namespace Assimalign.OGraph.Gdm.Tests;
 
-public class GdmEmployeeId : GdmScalarType<EmployeeId>
+using Elements;
+using Objects;
+
+public class GdmEmployeeId : GdmValueScalarType<EmployeeId>
 {
-    public override GdmName Label => "EmployeeId";
+    public GdmEmployeeId(GdmGraph graph) : base(graph)
+    {
+    }
+
+    public override GdmPrimitiveType PrimitiveType => throw new NotImplementedException();
+
+    public override EmployeeId Parse(string? value)
+    {
+        throw new NotImplementedException();
+    }
 
     public override EmployeeId Read(ref Utf8JsonReader reader)
     {
@@ -14,6 +26,11 @@ public class GdmEmployeeId : GdmScalarType<EmployeeId>
     }
 
     public override EmployeeId Read(XmlReader reader)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override bool TryParse(string? value, out EmployeeId result)
     {
         throw new NotImplementedException();
     }

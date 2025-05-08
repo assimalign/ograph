@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assimalign.OGraph.Gdm.Tests.Objects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,9 +7,15 @@ using System.Threading.Tasks;
 
 namespace Assimalign.OGraph.Gdm.Tests;
 
+using Elements;
+
 public class EmployeeAddressEntity : GdmEntityType<EmployeeAddress>
 {
-    protected override void Configure(IOGraphGdmEntityTypeDescriptor<EmployeeAddress> descriptor)
+    public EmployeeAddressEntity(GdmGraph graph) : base(graph)
+    {
+    }
+
+    protected override void Configure(GdmEntityTypeDescriptor<EmployeeAddress> descriptor)
     {
         descriptor.HasName("employeeAddress");
         descriptor.HasKey(p => p.AddressId);
