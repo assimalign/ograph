@@ -7,38 +7,25 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-[DebuggerDisplay("{Label} [Vertex]")]
-public abstract class GdmVertex<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : GdmVertex
-    where T : class, new()
+[DebuggerDisplay("{Label} [Node]")]
+public abstract class GdmNode<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : GdmNode
 {
     private readonly Action<GdmVertexDescriptor<T>> _configure;
 
     #region Constructors
 
-    public GdmVertex(GdmGraph graph) : base(typeof(T).Name, new GdmEntityType(typeof(T), graph), graph)
+    public GdmNode(GdmGraph graph) : base(typeof(T).Name, new GdmEntityType(typeof(T), graph), graph)
     {
         _configure = Configure;
     }
 
-    public GdmVertex(GdmLabel label, GdmEntityType<T> type, GdmGraph graph) 
-        : base(label, type, graph)
+    public GdmNode(GdmName name, GdmEntityType<T> type, GdmGraph graph) 
+        : base(name, type, graph)
     {
         _configure = Configure;
     }
 
     #endregion
-
-
-
-    //#region Properties
-
-    //public GdmLabel Label { get; }
-    //public GdmGraph Graph { get; }
-    //public GdmEntityType<T> Type { get; }
-    //public GdmEdgeCollection Edges { get; } = new GdmEdgeCollection();
-
-
-    //#endregion
 
     #region Methods
 

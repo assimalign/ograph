@@ -8,7 +8,7 @@ public enum GdmTypeKind
     None,
 
     /// <summary>
-    /// 
+    /// Represents a complex type with an Identity.
     /// </summary>
     Entity,
 

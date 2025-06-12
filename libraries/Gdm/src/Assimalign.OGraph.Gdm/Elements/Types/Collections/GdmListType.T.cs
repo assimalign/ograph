@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Xml;
 using System.Text.Json;
 using System.Collections.Generic;
@@ -9,28 +10,19 @@ using Assimalign.OGraph.Gdm.Internal;
 
 public class GdmListType<T> : GdmCollectionType<List<T>, T>
 {
-    private static GdmName CreateName<TType>()
+    public GdmListType(GdmGraph graph) : this (CreateName<T>(), Find<T>(graph), graph)
     {
-        return typeof(TType).Name + "List";
     }
 
     public GdmListType(GdmType itemType, GdmGraph graph)  : base(CreateName<T>(), itemType, graph)
     {
-        ////Graph = ThrowHelper.ThrowIfNull(graph, nameof(graph));
-        //ItemType = ThrowHelper.ThrowIfNull(itemType, nameof(itemType));
- 
-        //if (GdmLabel.IsValid(ItemType!.RuntimeType!.Name))
-        //{
-        //    Name = ItemType!.RuntimeType!.Name + "List";
-        //}
     }
 
     public GdmListType(GdmName name, GdmType itemType, GdmGraph graph) : base(name, itemType, graph)
     {
-
     }
 
-    #region Overloads
+    #region Methods
 
     public override List<T> Read(ref Utf8JsonReader reader)
     {
@@ -100,16 +92,28 @@ public class GdmListType<T> : GdmCollectionType<List<T>, T>
 
         writer.WriteEndElement();
     }
+
     #endregion
 
-    #region Static Members
-    //public static GdmListType<T> Create<TGdmType>() where TGdmType : GdmScalarType<T>, new()
-    //{
-    //    return new GdmListType<T>(new TGdmType());
-    //}
-    //public static GdmListType<T> Create(IOGraphGdmType type)
-    //{
-    //    return new(type);
-    //}
-    #endregion
+    private static GdmName CreateName<TType>()
+    {
+        return typeof(TType).Name + "List";
+    }
+
+    private static GdmType Find<TType>(GdmGraph graph)
+    {
+        var types = (graph.Types as IEnumerable<GdmType>).Where(t => t.RuntimeType == typeof(TType));
+
+        if (types.Count() == 0)
+        {
+            throw new InvalidOperationException($"Type '{typeof(TType).Name}' not found in graph types.");
+        }
+
+        if (types.Count() > 1)
+        {
+            throw new InvalidOperationException($"Multiple types found for '{typeof(TType).Name}' in graph. Expected a single type.");
+        }
+
+        return types.First();
+    }
 }

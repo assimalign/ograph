@@ -4,7 +4,7 @@
 #    - /api/vertex('employees')
 # This endpoint represents the starting vertex or vertices
 Endpoint: https://endpoint.com/api/employees?query=
-Query: v(employees)
+Query: v(e:employees)
         .project(
             id
             employeeId
@@ -67,31 +67,7 @@ Query: v(employees)
             skip 20
             take 20
         )
-        .edge(./addresses)
-            .project(
-                id
-                address {
-                    streetOne
-                    streetTwo
-                    city
-                    state
-                }
-            )
-            .edge(./addresses, types)
-                .project(
-                    id
-                    name
-                )
-                .edge()
-        .edge(employees-[departments]->employeeDepartments)
-            .project(
-                id
-                departmentId
-                info: departmentInfo {
-                    name
-                }
-            )
-        .edge(employees-[addresses]->employeeAddresses)
+        .edge(e-[has]->a:addresses)
             .project(
                 id
                 addressId
@@ -114,10 +90,22 @@ Query: v(employees)
                     userId
                 }
             )
-            .edge(employeeAddresses-[/types]->employeeAddressTypes)
-        .edge(employees-[primaryAddresses]->employeeAddresses)
+            .edge(a-[has]->t:types)
+                .project(
+                    id
+                    name
+                )
+        .edge(e-[has]->d:departments)
+            .project(
+                id
+                departmentId
+                info: departmentInfo {
+                    name
+                }
+            )
+        .edge(e-[has]->p:primaryAddress)
         .edge(addresses: secondaryAddress, '01e2641c-81ce-4df5-81b3-d19ef18d30f5')
-        .edge(employees-[jobs]->employeeJobs)
+        .edge(e-[has]->j:jobs)
             .project(
                 id
                 jobId
@@ -127,11 +115,11 @@ Query: v(employees)
                 skip 0
                 take 20
             )
-            .edge(employeeJobs-[tasks]->employeesTasks)
+            .edge(j-[has]->t:tasks)
                 .project(
                     taskId
                 )
-                .edge(employeeTask-[/workItems]->employeeTaskWorkItem)
+                .edge(t-[has]->w:workItems)
                     .project(
                         id
                         workItemId

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Reflection;
 using System.Linq.Expressions;
+using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
-using System.Collections.Generic;
 
 public sealed class GdmProperty : GdmMember, IOGraphGdmProperty
 {

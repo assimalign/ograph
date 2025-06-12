@@ -13,7 +13,6 @@ using Internal;
 public class GdmPropertyDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T, TProperty> : IOGraphGdmPropertyDescriptor
 {
     private readonly GdmProperty _property;
-    private readonly GdmDescriptorContext _context;
 
     internal GdmPropertyDescriptor(GdmProperty property)
     {
@@ -48,14 +47,43 @@ public class GdmPropertyDescriptor<[DynamicallyAccessedMembers(DynamicallyAccess
 
         return this;
     }
+
+    /// <summary>
+    /// The name of the type to locate.
+    /// </summary>
+    /// <param name="typeName"></param>
+    /// <returns></returns>
     public GdmPropertyDescriptor<T, TProperty> UseType(GdmName typeName)
     {
+        ThrowHelper.ThrowIfNameEmpty(typeName);
+
+        var graph = _property.DeclaringType.Graph;
+        var types = graph.Types as IEnumerable<GdmType>;
+        var type = types.Find(typeName);
+
+        if (type is null)
+        {
+            ThrowHelper.ThrowArgumentException("The type could not be located");
+        }
+
+        _property.SetType(type);
+
         return this;
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
     public GdmPropertyDescriptor<T, TProperty> UseType(GdmType type)
     {
         ThrowHelper.ThrowIfNull(type);
+        
+        var graph = _property.DeclaringType.Graph;
 
+        type.SetGraph(graph);
+        type.Configure();
 
         return this;
     }
@@ -70,6 +98,18 @@ public class GdmPropertyDescriptor<[DynamicallyAccessedMembers(DynamicallyAccess
     }
     public GdmPropertyDescriptor<T, TProperty> UseType<TType>() where TType : GdmType
     {
+        return this;
+    }
+
+    public GdmPropertyDescriptor<T, TProperty> UseBinding(GdmPropertyBinding binding)
+    {
+        
+        return this;
+    }
+
+    public GdmPropertyDescriptor<T, TProperty> AddMeta(string key, object value)
+    {
+        _property.Meta.Add(key, value);
         return this;
     }
 
@@ -89,9 +129,9 @@ public class GdmPropertyDescriptor<[DynamicallyAccessedMembers(DynamicallyAccess
     {
         return UseSetter((instance, value) => setter(instance!, value!));
     }
-    IOGraphGdmPropertyDescriptor IOGraphGdmPropertyDescriptor.AddMeta(string key, string value)
+    IOGraphGdmPropertyDescriptor IOGraphGdmPropertyDescriptor.AddMeta(string key, object value)
     {
-        throw new NotImplementedException();
+        return AddMeta(key, value);
     }
     IOGraphGdmPropertyDescriptor IOGraphGdmPropertyDescriptor.IsRequired()
     {

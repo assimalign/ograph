@@ -11,14 +11,14 @@ public interface IOGraphGdmMember : IOGraphGdmBindableElement
     IOGraphGdmType DeclaringType { get; }
 
     /// <summary>
-    /// 
+    /// Checks whether the current instance is a function.
     /// </summary>
     /// <param name="function"></param>
     /// <returns></returns>
     bool IsFunction(out IOGraphGdmFunction function);
 
     /// <summary>
-    /// 
+    /// Checks whether the current instance is a property.
     /// </summary>
     /// <param name="property"></param>
     /// <returns></returns>

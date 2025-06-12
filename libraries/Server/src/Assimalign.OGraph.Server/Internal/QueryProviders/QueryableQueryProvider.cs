@@ -109,7 +109,7 @@ internal class QueryableQueryProvider : IOGraphQueryProvider
 
 
 
-    private IEnumerable<IOGraphGdmProperty> GetProperties(IOGraphGdmVertex vertex, VertexNode node)
+    private IEnumerable<IOGraphGdmProperty> GetProperties(IOGraphGdmNode vertex, VertexNode node)
     {
         foreach (var propertyNode in node.Nodes.OfType<ProjectNode>().First().Properties)
         {
@@ -142,7 +142,7 @@ internal class QueryableQueryProvider : IOGraphQueryProvider
     }
 
 
-    private IEnumerable<IOGraphGdmEdge> GetEdgeBindings(IOGraphGdmVertex vertex, VertexNode node)
+    private IEnumerable<IOGraphGdmEdge> GetEdgeBindings(IOGraphGdmNode vertex, VertexNode node)
     {
         foreach (var edgeNode in node.Nodes.OfType<EdgeNode>())
         {
@@ -192,7 +192,7 @@ internal class QueryableQueryProvider : IOGraphQueryProvider
 
 
 
-    private IOGraphGdmCollectionType ApplyProjections(ProjectNode node, IOGraphGdmVertex vertex)
+    private IOGraphGdmCollectionType ApplyProjections(ProjectNode node, IOGraphGdmNode vertex)
     {
         var collectionType = new GdmListType<GdmComplexType>();
         var complexType = new GdmComplexType();

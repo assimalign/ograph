@@ -9,11 +9,11 @@ namespace Assimalign.OGraph.Gdm.Internal;
 
 using Elements;
 
-internal class GdmVertexDefault<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : GdmVertex<T>
+internal class GdmNodeDefault<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : GdmNode<T>
     where T : class, new()
 {
     private readonly Action<GdmVertexDescriptor<T>> _configure;
-    public GdmVertexDefault(GdmGraph graph, Action<GdmVertexDescriptor<T>> configure) : base(graph)
+    public GdmNodeDefault(GdmGraph graph, Action<GdmVertexDescriptor<T>> configure) : base(graph)
     {
         _configure = configure;
     }

@@ -1,0 +1,261 @@
+<Gdmx Version="1.0">
+    <!-- <Graph Domainspace="Subscriptions">
+        <Vertex Name="Subscriptions" />
+        <Edge Name="ResourceGroups" Source="Subscriptions" Target="ResourceGroups.ResourceGroups" />
+    </Graph>
+    <Graph Domainspace="ResourceGroups">
+        <Vertex Name="ResourceGroups" />
+        <Edge Name="Providers" Source="ResourceGroups" Target="Microsoft.ServiceBus"/>
+        <Edge Name="Providers" Source="ResourceGroups" Target="Microsoft.Cosmos" />
+    </Graph>
+    <Graph Domainspace="Mgmt">
+        <Vertex Name="Subscriptions" />
+        <Vertex Name="ResourceGroups"/>
+        <Vertex Name="ResourceProviders">
+            <Parameter Name="" />
+        </Vertex>
+    </Graph>
+    <Graph Domainspace="Microsoft.ServiceBus">
+        <Vertex Name="ServiceBusNamespaces"/>
+        <Vertex Name="ServiceBusQueues" />
+        <Vertex Name="ServiceBusTopics" />
+        <Vertex Name="ServiceBusAuthorizationRules" />
+    </Graph>
+    Actions
+    - Lookup
+    - Query
+    - Create
+    - Update
+    - Patch
+    - Delete
+
+
+    Reserved Endpoints:
+
+    GET     /hrm/$meta
+    GET     /hrm/$query
+    POST    /hrm/$subscribe
+    POST    /hdm/$command
+    POST    /hrm/$transaction
+
+    -->
+
+    <!-- You can link a source and target once. Use node aliases to link a source and target more than once. -->
+    <Graph Domain="Hrm">
+        <Node Name="Employees" Type="Employee" />
+        <Node Name="Addresses" Type="EmployeeAddresses" />
+        <Node Name="Types" Type="EmployeeAddressType" />
+        <Node Name="Jobs" Type="EmployeeJob" />
+        <Node Name="TaxInfo" Type="EmployeeTaxInfo" />
+        <Node Name="Tasks" Type="EmployeeTask" />
+        <Node Name="WorkItems" Type="EmployeeWorkItem" />
+        <Edge Name="HasAddresses" Source="Employees" Target="Addresses" />
+        <!-- <Edge Name="HasPrimaryAddress" Source="Employees" Target="PrimaryAddress" /> -->
+        <Edge Name="HasUser" Source="Employees" Target="Users">
+            <Domain Name="Administration" />
+        </Edge>
+        <Edge Name="HasTaxInfo" Source="Employees" Target="TaxInfo" />
+        <Edge Name="HasJobs" Source="Employees" Target="Jobs" />
+        <Edge Name="HasTasks" Source="Employees" Target="Tasks" />
+        <Edge Name="HasTypes" Source="Addresses" Target="Types" />
+        <Edge Name="HasTasks" Source="Jobs" Target="Tasks" />
+        <Edge Name="HasWorkItems" Source="Tasks" Target="WorkItems" />
+        <Edge Name="IsOwnedBy" Source="EmployeesAddresses" Target="Employees" />
+        <Type Name="Employee" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="EmployeeId" IsReadOnly="false" IsNullable="false" />
+            <Property Name="UserId" Type="UserId" IsReadOnly="false" IsNullable="false" />
+            <Property Name="Info" Type="EmployeeInfo" IsReadOnly="false" IsNullable="false" />
+            <Property Name="Created" Type="AuditEntry" IsReadOnly="false" IsNullable="false" />
+            <Property Name="Updated" Type="AuditEntry" IsReadOnly="false" IsNullable="false" />
+        </Type>
+        <Type Name="EmployeeAddress" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="AddressId" IsReadOnly="false" IsNullable="false" />
+            <Property Name="Address" Type="Address" IsReadOnly="false" IsNullable="false" />
+            <Property Name="Created" Type="AuditEntry" IsReadOnly="false" IsNullable="false" />
+            <Property Name="Updated" Type="AuditEntry" IsReadOnly="false" IsNullable="false" />
+        </Type>
+        <Type Name="EmployeeAddressType" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="Int" IsReadOnly="false" IsNullable="false" />
+            <Property Name="Type" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Name="Created" Type="AuditEntry" IsReadOnly="false" IsNullable="false" />
+            <Property Name="Updated" Type="AuditEntry" IsReadOnly="false" IsNullable="false" />
+        </Type>
+        <Type Name="EmployeeWorkItem" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="WorkItemId" IsReadOnly="false" IsNullable="false" />
+            <Property Name="Created" Type="AuditEntry" IsReadOnly="false" IsNullable="false" />
+            <Property Name="Updated" Type="AuditEntry" IsReadOnly="false" IsNullable="false" />
+        </Type>
+        <Type Name="EmployeeTask" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="TaskId" IsReadOnly="false" IsNullable="false" />
+            <Property Name="Created" Type="AuditEntry" IsReadOnly="false" IsNullable="false" />
+            <Property Name="Updated" Type="AuditEntry" IsReadOnly="false" IsNullable="false" />
+        </Type>
+        <Type Name="EmployeeTaxInfo" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="Int" IsReadOnly="false" IsNullable="false" />
+        </Type>
+        <Type Name="EmployeeJob" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="JobId" IsReadOnly="false" IsNullable="false" />
+            <Property Name="Created" Type="AuditEntry" IsReadOnly="false" IsNullable="false" />
+            <Property Name="Updated" Type="AuditEntry" IsReadOnly="false" IsNullable="false" />
+        </Type>
+        <Type Name="Address" Kind="Complex">
+            <Property Name="StreetOne" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Name="StreetTwo" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Name="StreetThree" Type="String" IsReadOnly="false" IsNullable="true" />
+            <Property Name="StreetFour" Type="String" IsReadOnly="false" IsNullable="true" />
+            <Property Name="City" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Name="State" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Name="ZipCode" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Name="FullAddress" Type="String" IsReadOnly="true" IsNullable="false" />
+        </Type>
+        <Type Name="EmployeeInfo" Kind="Complex">
+            <Property Name="FirstName" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Name="LastName" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Name="MiddleName" Type="String" IsReadOnly="false" IsNullable="true" />
+            <Property Name="FullName" Type="String" IsReadOnly="true" IsNullable="true" />
+            <Property Name="Birthdate" Type="Date" />
+        </Type>
+        <Type Name="AuditEntry" Kind="Complex">
+            <Property Name="Timestamp" Type="DateTime" IsReadOnly="false" IsNullable="false" />
+            <Property Name="UserId" Type="Assimalign.ErpCore.Administration.UserId" IsReadOnly="false" IsNullable="false" />
+            <Property Name="User" Type="Assimalign.ErpCore.Administration.User" IsReadOnly="true" IsNullable="false">
+                <Meta>
+                    <Key>query-options@ograph</Key>
+                    <Value>
+                        <Option Key="filter" Value="false" />
+                        <Option Key="sort" Value="false" />
+                    </Value>
+                </Meta>
+            </Property>
+        </Type>
+        <Type Name="EmployeeDelta" Kind="Complex">
+            <Property Name="FirstName" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Name="LastName" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Name="MiddleName" Type="String" IsReadOnly="false" IsNullable="true" />
+        </Type>
+        <Type Name="EmployeeUpdateOrCreate" Kind="Complex">
+            <Property Name="Info" Type="EmployeeInfo" />
+        </Type>
+        <Type Name="EmployeeList" Kind="Collection">
+            <Item Type="Employee" />
+        </Type>
+        <Type Name="EmployeeAddressList" Kind="Collection">
+            <Item Type="EmployeeAddress" />
+        </Type>
+        <Type Name="EmployeeJobList" Kind="Collection">
+            <Item Type="EmployeeJob" />
+        </Type>
+        <Type Name="EmployeeTaskList" Kind="Collection">
+            <Item Type="EmployeeTask" />
+        </Type>
+        <Type Name="EmployeeKind" Kind="Enum">
+            <Member Name="FullTime" Value="1" />
+            <Member Name="PartTime" Value="2" />
+            <Member Name="Contractor" Value="3" />
+        </Type>
+        <Type Name="EmployeeId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="JobId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="TaskId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="WorkItemId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="AddressId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="Date" Kind="Scalar">
+            <PrimitiveType Type="String" />
+            <Format Pattern="YYYY-MM-DD" />
+            <Format Pattern="MM/DD/YYYY" />
+        </Type>
+        <Event Name="EmployeeCreated">
+            <Output Type="Employee" />
+        </Event>
+        <Event Name="EmployeeUpdated">
+            <Output Type="EmployeeDelta" />
+        </Event>
+        <Event Name="AddressCreated">
+            <Output Type="EmployeeAddress" />
+        </Event>
+        <Query Name="Query" Node="Employees">
+            <ReturnType Type="EmployeeList" />
+        </Query>
+        <Query Name="Lookup" Node="Employees">
+            <Parameter Name="EmployeeId" Type="EmployeeId" />
+            <ReturnType Type="Employee" />
+        </Query>
+        <Query Name="Query" Node="Addresses" On="HasAddresses">
+            <ReturnType Type="EmployeeAddressList" />
+        </Query>
+        <Command Name="Create" Node="Employees">
+            <Parameter Name="Info" Type="EmployeeInfo" />
+            <ReturnType Type="Employee" />
+        </Command>
+        <Command Name="Update" Node="Employees">
+            <Parameter Name="Info" Type="EmployeeInfo" />
+            <ReturnType Type="Employee" />
+        </Command>
+        <Command Name="Delete" Node="Employees">
+            <Parameter Name="EmployeeId" Type="EmployeeId" />
+        </Command>
+        <Command Name="Patch" Node="Employees">
+            <Parameter Name="EmployeeId" Type="EmployeeId" />
+            <ReturnType Type="Employee" />
+            <Meta>
+                <Key>OpenAPI@OGraph-Http</Key>
+                <Value>
+                    <Method>PATCH</Method>
+                    <Route>/employees/{paramName=employeeId}</Route>
+                </Value>
+            </Meta>
+        </Command>
+    </Graph>
+    <Graph Domain="Administration">
+        <Node Name="Users" />
+        <Node Name="Roles" />
+        <Node Name="Groups" />
+        <Subscriber Name="OnEmployeeCreated" On="Hdm#Event=EmployeeCreated">
+            <Domain Name="Hrm" />
+        </Subscriber>
+        <Type Name="User" />
+        <Type Name="Role" />
+        <Type Name="Group" />
+        <Type Name="Permission" />
+        <Type Name="Tenant" />
+        <Type Name="UserId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+    </Graph>
+    <Graph Domain="Payroll">
+        <Node Name="Paychecks" Type="Paycheck" />
+
+        <Query Name="GetPaychecks" Node="Paychecks">
+            <ReturnType Type="PaycheckList" />
+        </Query>
+    </Graph>
+    <Graph Domain="Inventory" />
+    <Graph Domain="Warehousing" />
+    <Graph Domain="Packaging" />
+    <Graph Domain="Shipping" />
+    <Graph Domain="Billing" />
+    <Graph Domain="Purchasing">
+        <Type Name="PurchaseOrder" />
+    </Graph>
+    <Graph Domain="Procurement" />
+    <Graph Domain="Vendors" />
+    <Graph Domain="Receiving" />
+    <Graph Domain="Scheduling" />
+    <Graph Domain="MasterDataManagement" />
+</Gdmx>

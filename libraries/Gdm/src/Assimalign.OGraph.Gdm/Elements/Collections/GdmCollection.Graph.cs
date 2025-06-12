@@ -21,9 +21,9 @@ public class GdmGraphCollection : IOGraphGdmGraphCollection, IEnumerable<GdmGrap
 
     public int Count => _items.Count;
     public bool IsReadOnly => _isReadOnly;
-    public GdmGraph Find(GdmName name)
+    public GdmGraph Find(GdmDomain domain)
     {
-        return _items.First(p => p.Name == name);
+        return _items.First(p => p.Domain == domain);
     }
     public void Add(GdmGraph item)
     {

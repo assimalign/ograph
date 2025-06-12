@@ -52,55 +52,6 @@ public class GdmEntityType : GdmType, IOGraphGdmEntityType
 
     #region Methods - Public
 
-    //public void AddKey(GdmName name, GdmType type)
-    //{
-
-    //}
-
-    //public void AddProperty(GdmName name)
-    //{
-    //    ThrowHelper.ThrowIfNameEmpty(name);
-
-    //    var propertyInfo = _runtimeType.GetProperty(name);
-
-    //    if (propertyInfo is null)
-    //    {
-    //        ThrowHelper.ThrowInvalidOperationException("");
-    //    }
-
-
-    //}
-
-    //public GdmProperty AddProperty(GdmName name, GdmType type)
-    //{
-    //    ThrowHelper.ThrowIfNameEmpty(name);
-    //    ThrowHelper.ThrowIfNull(type);
-
-    //    var property = new GdmProperty(name, type, this);
-
-    //    Members.Add(property);
-
-    //    return property;
-    //}
-
-
-    //public GdmProperty AddProperty(GdmName name, GdmType type, bool isNullable = false, bool isReadOnly = false)
-    //{
-    //    ThrowHelper.ThrowIfNameEmpty(name);
-    //    ThrowHelper.ThrowIfNull(type);
-
-    //    var property = new GdmProperty(
-    //        name,
-    //        type,
-    //        this,
-    //        isNullable,
-    //        isReadOnly);
-
-    //    Members.Add(property);
-
-    //    return property;
-    //}
-
     public override object Read(XmlReader reader)
     {
         if (reader.NodeType != XmlNodeType.Element)
@@ -183,15 +134,15 @@ public class GdmEntityType : GdmType, IOGraphGdmEntityType
     {
         ThrowHelper.ThrowIfNull(runtimeType);
 
-        // Check for a Public Parameterless Constructor
-        if (runtimeType.GetConstructor(BindingFlags.Public | BindingFlags.Instance, Type.EmptyTypes) is null)
-        {
-            ThrowHelper.ThrowArgumentException("The runtimeType must have a parameterless constructor.");
-        }
-        if (runtimeType.IsAbstract)
-        {
-            ThrowHelper.ThrowArgumentException("The runtimeType cannot be an abstract class.");
-        }
+        //// Check for a Public Parameterless Constructor
+        //if (runtimeType.GetConstructor(BindingFlags.Public | BindingFlags.Instance, Type.EmptyTypes) is null)
+        //{
+        //    ThrowHelper.ThrowArgumentException("The runtimeType must have a parameterless constructor.");
+        //}
+        //if (runtimeType.IsAbstract)
+        //{
+        //    ThrowHelper.ThrowArgumentException("The runtimeType cannot be an abstract class.");
+        //}
 
         return runtimeType;
     }

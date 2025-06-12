@@ -8,10 +8,21 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
+public abstract class GdmCollectionType<TCollection> : GdmCollectionType
+    where TCollection : GdmType
+{
+    internal GdmCollectionType(GdmName name, GdmGraph graph) : base(name, graph)
+    {
+        
+    }
+
+    public override GdmType ItemType => throw new NotImplementedException();
+}
+
 public abstract class GdmCollectionType<TCollection, T> : GdmCollectionType 
     where TCollection : class, IEnumerable<T>
 {
-    protected GdmCollectionType(GdmName name, GdmType itemType, GdmGraph graph) : base(name, graph)
+    public GdmCollectionType(GdmName name, GdmType itemType, GdmGraph graph) : base(name, graph)
     {
         ItemType = ThrowHelper.ThrowIfNull(itemType);
     }

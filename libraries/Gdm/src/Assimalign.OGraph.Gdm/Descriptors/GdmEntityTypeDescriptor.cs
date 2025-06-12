@@ -11,9 +11,9 @@ using Elements;
 using Internal;
 
 public class GdmEntityTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : IOGraphGdmEntityTypeDescriptor
-    where T : class, new()
 {
     private readonly GdmEntityType<T> _entityType;
+    private readonly GdmTypeResolver _typeResolver;
 
     internal GdmEntityTypeDescriptor(GdmEntityType<T> entityType)
     {
@@ -30,6 +30,9 @@ public class GdmEntityTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAcce
         // Get Property Info from reflected type
         var propertyInfo = AssertExpression(expression);
 
+
+        var property = new GdmProperty(
+            propertyInfo.Name,)
 
 
         return this;

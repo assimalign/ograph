@@ -9,7 +9,7 @@ using Internal;
 /// <summary>
 /// 
 /// </summary>
-public sealed class GdmGraph : GdmNamedElement, IOGraphGdmGraph
+public sealed class GdmGraph : GdmElement, IOGraphGdmGraph
 {
     #region Constructors
 
@@ -20,22 +20,23 @@ public sealed class GdmGraph : GdmNamedElement, IOGraphGdmGraph
     /// <param name="model"></param>
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="ArgumentNullException"></exception>
-    public GdmGraph(GdmName name, Gdm model) : base(name)
+    public GdmGraph(GdmDomain domain, Gdm model)
     {
+        Domain = domain;
         Model = ThrowHelper.ThrowIfNull(model);
     }
 
     #endregion
 
     #region Properties
-
+    public GdmDomain Domain { get; }
     public Gdm Model { get; }
     public GdmEdgeCollection Edges { get; } = new GdmEdgeCollection();
-    public GdmVertexCollection Vertices { get; } = new GdmVertexCollection();
+    public GdmNodeCollection Vertices { get; } = new GdmNodeCollection();
     public GdmTypeCollection Types { get; } = new GdmTypeCollection();
     public sealed override GdmElementKind ElementKind { get; } = GdmElementKind.Graph;
     IOGraphGdmEdgeCollection IOGraphGdmGraph.Edges => Edges;
-    IOGraphGdmVertexCollection IOGraphGdmGraph.Vertices => Vertices;
+    IOGraphGdmNodeCollection IOGraphGdmGraph.Nodes => Vertices;
     IOGraphGdmTypeCollection IOGraphGdmGraph.Types => Types;
     IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
     IOGraphGdm IOGraphGdmGraph.Model => Model;
@@ -54,7 +55,7 @@ public sealed class GdmGraph : GdmNamedElement, IOGraphGdmGraph
         {
             yield return type;
         }
-        foreach (var vertex in GetElements<TElement, GdmVertex>(Vertices))
+        foreach (var vertex in GetElements<TElement, GdmNode>(Vertices))
         {
             yield return vertex;
         }
@@ -69,9 +70,9 @@ public sealed class GdmGraph : GdmNamedElement, IOGraphGdmGraph
         return enumerable.SelectMany(p => p.GetElements<T>());
     }
 
-    public static GdmGraph Create(GdmName name, Gdm model, Action<GdmGraphDescriptor> configure)
+    public static GdmGraph Create(GdmDomain domain, Gdm model, Action<GdmGraphDescriptor> configure)
     {
-        var descriptor = new GdmGraphDescriptor(new GdmGraph(name, model));
+        var descriptor = new GdmGraphDescriptor(new GdmGraph(domain, model));
 
         ThrowHelper.ThrowIfNull(configure).Invoke(descriptor);
 

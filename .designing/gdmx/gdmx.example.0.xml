@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- <Gdmx Version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="gdmx.xsd"> -->
+<Gdmx Name="ErpCore" Version="1.0">
+    <!-- 
+            Build Process: [Add Types] ->  []
+
+            Vertex Entry Points:
+                GET /$root?query=v(employees).project().filter().page().sort().edge().edge().edge()
+                GET /employees?$query=v().project(id info { firstName lastName })
+                GET /employees/{vertexId}?$query=v().
+                GET /employeesAddresses
+                GET /employeesAddressTypes
+                GET /employeesJobs
+                GET /employeesTasks
+                GET /employeesTaxInfo
+                GET /employeesWorkItems
+                GET /employees/{employeeId}/jobs/{jobId}/tasks?$query=v().project()
+
+
+                
+
+                
+        -->
+
+    <!-- SPECS
+
+        Elements
+
+            Graph Structures:
+                
+                Vertices:
+                    1. Vertex elements labels MUST all be unique
+
+                Edges:
+                    1. Edge elements may have overlapping labels but the Target and Source Vertex MUSt be different.
+
+
+                Paths:
+                    1. Path elements expose the entry points into the graph vertices
+                    2. Path elements MUST be unique within the graph model. Example., two or more vertices cannot have the same path value
+                    3. Path elements MUST have at least one operation reference defined.
+                    4. Path elements MUST NOT have operations with same call signature.
+                    5. Path elements MUST end with the vertex they are under.
+                    6. Path elements MUST only have ONE query operation
+
+                    Kinds of Paths:
+                    - Disconnected
+                    - Trivial
+                    - Path
+                    - Walk
+                    - Cycle
+
+            Operations:
+                1. All operations names MUST be unique
+                2. If the return type of the operation does not match either collection or single instance of the 
+                   entity type bound to the vertex no edges can be resolved.
+
+                Queries:
+                    1. Query elements MUST have a Return Type
+                    2. Query elements return types MUST be the entity type of the vertex or a collection of the entity type.
+
+                Commands:
+                    1. Command elements MUST be categorized in the following: Insert, Delete, Update, Patch
+                    2. Command elements with multiple input parameters MUST return a schema where the parameter names are child properties
+
+            Types:
+                Gdm Types Control serialization and give metadata to the client regarding what is allowed within a OGraph query.
+
+                Primitives: 
+                    1. (Not represented as Element) - MUST be supported across all implementations
+
+                Scalars:
+
+                Enums:
+
+                Complex:
+
+                Entities:
+                    Key:
+                    Properties:
+                    Functions:
+
+                Collections:
+    -->
+    <Operation Name="GetEmployees" Path="Employees" Kind="Query" ReturnType="EmployeeList" />
+    <Operation Name="GetEmployeeById" Path="EmployeesById" Kind="Query" ReturnType="Employee" />
+    <Path Name="EmployeeAddressTypes" Vertex="Employees">
+        <Step Edge="Addresses" />
+        <Step Edge="Types" />
+    </Path>
+    <Path Name="EmployeePrimaryAddress" Vertex="Employees">
+        <Step Edge="PrimaryAddress" />
+    </Path>
+    <Path Name="Employees" Kind="Trivial"> <!-- Partitions are entry points into the model -->
+        <Step Vertex="Employees" Ordinal="0" />
+    </Path>
+    <Path Name="EmployeesById" Kind="Trivial"> <!-- Partitions are entry points into the model -->
+        <Step Vertex="Employees" Ordinal="0" Parameter="employeeId" />
+    </Path>
+    <Path Name="AddressesById" Kind="Directed">
+        <Step Vertex="Employees" Ordinal="0" Parameter="employeeId" />
+        <Step Vertex="EmployeesAddresses" Ordinal="1" Parameter="addressId" />
+    </Path>
+    <Path Name="">
+        <Step Vertex="Employees" Ordinal="0" Parameter="employeeId" />
+        <Step Vertex="EmployeeJobs" Ordinal="1" Parameter="jobId" />
+        <Step Vertex="EmployeesTasks" Ordinal="2" Parameter="taskId" />
+        <Step Vertex="EmployeesWorkItems" Ordinal="3" Parameter="workItemId" />
+    </Path>
+
+
+    <Graph Name="HumanResource">
+        <Vertex Label="Employees"/>
+        <Vertex Label="EmployeesAddresses"/>
+        <Vertex Label="EmployeesAddressesTypes" />
+        <Vertex Label="EmployeesJobs" />
+        <Vertex Label="EmployeesTasks" />
+        <Vertex Label="EmployeesWorkItems" />
+        <Vertex Label="EmployeesTaxInfo" />
+        <!-- Edges MUST be unique between two vertices -->
+        <Edge Label="Addresses" Source="Employees" Target="EmployeesAddresses" />
+        <Edge Label="PrimaryAddress" Source="Employees" Target="EmployeesAddresses" />
+        <Edge Label="Types" Source="EmployeesAddresses" Target="EmployeesAddressesTypes" />
+        <Edge Label="TaxInfo" Source="Employees" Target="EmployeesTaxInfo" />
+        <Edge Label="Jobs" Source="Employees" Target="EmployeesJobs" />
+        <Edge Label="Tasks" Source="EmployeesJobs" Target="EmployeesTasks" />
+        <Edge Label="Tasks" Source="Employees" Target="EmployeesTasks" />
+        <Edge Label="WorkItems" Source="EmployeesTasks" Target="EmployeesWorkItems" />
+        <Edge Label="Employee" Source="EmployeesAddresses" Target="Employees" />
+        <!-- Path - All edges AND vertices MUST be distinct -->
+
+        <Path Name="">
+            <Step Edge=""/>
+        </Path>
+
+        <Operation Name="GetEmployeeById" Kind="Query">
+            <Parameter Name="EmployeeId" Vertex="Employee" />
+            <ReturnType Type="Employee" />
+        </Operation>
+        <Operation Name="DeleteEmployee" Kind="Delete">
+            <Parameter Name="employeeId" Type="EmployeeId" />
+            <Parameter Name="hardDelete" Type="Boolean" />
+        </Operation>
+        <Operation Name="UpdateEmployee" Kind="Update">
+            <Parameter Name="employeeId" Type="EmployeeId" />
+            <ReturnType Type="Employee" />
+        </Operation>
+        <Operation Name="Patch" Kind="Merge">
+            <Parameter Name="employeeId" Type="EmployeeId" />
+            <ReturnType Type="Employee" />
+        </Operation>
+        <Operation Name="GetEmployee" Kind="Query">
+            <ReturnType Type="EmployeeList" />
+            <Meta>
+                <Key>Http@Http</Key>
+                <Value>
+                    <Method>GET</Method>
+                    <Route>/employees</Route>
+                    <Header IsRequired="true">Authorization</Header>
+                    <QueryParam />
+                </Value>
+            </Meta>
+        </Operation>
+        <Operation Name="CreateEmployee" Kind="Create">
+            <ReturnType Type="Employee" />
+            <Parameter Name="employee" Type="CreateOrUpdateEmployee" />
+        </Operation>
+        <Operation Name="GetEmployeeAddressById" Kind="Query">
+            <Parameter Name="employeeId" Type="EmployeeId" />
+            <Parameter Name="addressId" Type="AddressId" />
+            <ReturnType Type="EmployeeAddress" />
+        </Operation>
+        <Operation Name="UpdateEmployeeAddress" Kind="Update">
+            <Parameter Name="employeeId" Type="EmployeeId" />
+            <Parameter Name="addressId" Type="AddressId" />
+            <Parameter Name="employee" Type="EmployeeCreateOrUpdate" />
+            <ReturnType Name="Employee" />
+        </Operation>
+        <Operation Name="PatchEmployeeAddress" Kind="Patch">
+            <Parameter Name="employeeId" Type="EmployeeId" />
+            <Parameter Name="addressId" Type="AddressId" />
+            <Parameter Name="employee" Type="EmployeePatch" />
+            <ReturnType Name="Employee" />
+        </Operation>
+        <Operation Name="DeleteEmployeeAddress" Kind="Delete">
+            <Parameter Name="employeeId" Type="EmployeeId" />
+            <Parameter Name="addressId" Type="AddressId" />
+        </Operation>
+        <Event Name="" />
+        <Subscriber Name="" />
+        <EntityType Name="Employee">
+            <Key Property="id" />
+            <Property Name="id" Type="EmployeeId" />
+            <Property Name="userId" Type="UserId" />
+            <Property Name="info" Type="EmployeeInfo" />
+            <Property Name="created" Type="AuditEntry" />
+            <Property Name="updated" Type="AuditEntry" />
+        </EntityType>
+        <EntityType Name="EmployeeAddress">
+            <Key Property="id" />
+            <Property Name="id" Type="AddressId" />
+            <Property Name="address" Type="Address" />
+            <Property Name="created" Type="AuditEntry" />
+            <Property Name="updated" Type="AuditEntry" />
+        </EntityType>
+        <EntityType Name="EmployeeAddressType">
+            <Key Property="id" />
+            <Property Name="id" Type="Int" />
+        </EntityType>
+        <EntityType Name="EmployeeTaxInfo">
+            <Key Property="id" />
+            <Property Name="id" Type="Int" />
+        </EntityType>
+        <EntityType Name="EmployeeJob">
+            <Key Property="id" />
+            <Property Name="id" Type="JobId" />
+            <Property Name="created" Type="AuditEntry" />
+            <Property Name="updated" Type="AuditEntry" />
+        </EntityType>
+        <EntityType Name="EmployeeTask">
+            <Key Property="id" />
+            <Property Name="id" Type="TaskId" />
+            <Property Name="created" Type="AuditEntry" />
+            <Property Name="updated" Type="AuditEntry" />
+        </EntityType>
+        <EntityType Name="EmployeeWorkItem">
+            <Key Property="id" />
+            <Property Name="id" Type="WorkItemId" />
+            <Property Name="created" Type="AuditEntry" />
+            <Property Name="updated" Type="AuditEntry" />
+        </EntityType>
+        <ComplexType Name="Address">
+            <Property Name="streetOne" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Name="streetTwo" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Name="streetThree" Type="String" IsReadOnly="false" IsNullable="true" />
+            <Property Name="streetFour" Type="String" IsReadOnly="false" IsNullable="true" />
+            <Property Name="city" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Name="state" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Name="zipCode" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Name="fullAddress" Type="String" IsReadOnly="false" IsNullable="false" />
+        </ComplexType>
+        <ComplexType Name="EmployeeInfo">
+            <Property Name="firstName" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Name="lastName" Type="String" IsReadOnly="false" IsNullable="false" />
+            <Property Name="middleName" Type="String" IsReadOnly="false" IsNullable="true" />
+            <Property Name="fullName" Type="String" IsReadOnly="true" IsNullable="true" />
+            <Property Name="Birthdate" Type="Date" />
+        </ComplexType>
+        <ComplexType Name="AuditEntry">
+            <Property Name="userId" Type="UserId" IsReadOnly="false" IsNullable="false" />
+            <Property Name="timestamp" Type="DateTime" IsReadOnly="false" IsNullable="false" />
+            <Property Name="user" Type="User" IsReadOnly="true" IsNullable="false">
+                <Option Name="filter" Value="enabled" />
+            </Property>
+        </ComplexType>
+        <ComplexType Name="EmployeeUpdateOrCreate">
+            <Property Name="info" Type="EmployeeInfo" />
+        </ComplexType>
+        <CollectionType Name="EmployeeList">
+            <Item Type="Employee" />
+        </CollectionType>
+        <CollectionType Name="EmployeeAddressList">
+            <Item Type="EmployeeAddress" />
+        </CollectionType>
+        <CollectionType Name="EmployeeJobList">
+            <Item Type="EmployeeJob" />
+        </CollectionType>
+        <CollectionType Name="EmployeeTaskList">
+            <Item Type="EmployeeTask" />
+        </CollectionType>
+        <EnumType Name="EmployeeKind">
+            <Member Name="FullTime" Value="1" />
+            <Member Name="PartTime" Value="2" />
+            <Member Name="Contractor" Value="3" />
+        </EnumType>
+        <ScalarType Name="EmployeeId">
+            <PrimitiveType Type="String" />
+            <Format Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
+        </ScalarType>
+        <ScalarType Name="JobId">
+            <PrimitiveType Type="String" />
+            <Format Name="default" Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
+        </ScalarType>
+        <ScalarType Name="TaskId">
+            <PrimitiveType Type="String" />
+            <Format Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
+        </ScalarType>
+        <ScalarType Name="WorkItemId">
+            <PrimitiveType Type="String" />
+            <Format Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
+        </ScalarType>
+        <ScalarType Name="AddressId">
+            <PrimitiveType Type="String" />
+            <Format Pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$" />
+        </ScalarType>
+        <ScalarType Name="Date">
+            <PrimitiveType Type="String" />
+            <Format Pattern="YYYY-MM-DD" />
+            <Format Pattern="MM/DD/YYYY" />
+        </ScalarType>
+    </Graph>
+    <Graph Name="Organization">
+        <Vertex Label="Organizations" Type="Organization" />
+        <Vertex Label="OrganizationsLocations" Type="OrganizationLocation" />
+        <Edge Label="Employees" Source="Organizations" Target="Employees">
+            <Step Value="Organizations/[Employees]/Employees">
+                <Operation Name="" Kind="Query" />
+            </Step>
+        </Edge>
+        <EntityType Name="Organization">
+            <Key Property="id" />
+            <Property Name="id" Type="OrganizationId" />
+        </EntityType>
+        <EntityType Name="OrganizationLocation">
+            <Key Property="id" />
+            <Property Name="id" Type="LocationId" />
+        </EntityType>
+        <ScalarType Name="OrganizationId">
+            <PrimitiveType Type="Int" />
+        </ScalarType>
+        <ScalarType Name="LocationId">
+            <PrimitiveType Type="Int" />
+        </ScalarType>
+    </Graph>
+    <Graph Name="Administration">
+        <EntityType Name="User" />
+        <EntityType Name="Role" />
+        <EntityType Name="Group" />
+        <EntityType Name="Permission" />
+        <EntityType Name="Tenant" />
+    </Graph>
+    <Graph Name="Payroll" />
+    <Graph Name="Inventory" />
+    <Graph Name="Warehousing" />
+    <Graph Name="Packaging" />
+    <Graph Name="Shipping" />
+    <Graph Name="Billing" />
+    <Graph Name="Purchasing">
+        <EntityType Name="PurchaseOrder" />
+    </Graph>
+    <Graph Name="Procurement" />
+    <Graph Name="Vendors" />
+    <Graph Name="Receiving" />
+    <Graph Name="Scheduling" />
+    <Graph Name="MasterDataManagement" />
+</Gdmx>

@@ -8,13 +8,12 @@ using Internal;
 using System.Collections.Generic;
 using System.Linq;
 
-public class GdmVertexDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : IOGraphGdmVertexDescriptor
-    where T : class, new()
+public class GdmVertexDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : IOGraphGdmNodeDescriptor
 {
-    private readonly GdmVertex<T> _vertex;
+    private readonly GdmNode<T> _vertex;
 
 
-    internal GdmVertexDescriptor(GdmVertex<T> vertex)
+    internal GdmVertexDescriptor(GdmNode<T> vertex)
     {
         _vertex = vertex;
     }
@@ -63,20 +62,20 @@ public class GdmVertexDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessed
 
 
 
-    IOGraphGdmVertexDescriptor IOGraphGdmVertexDescriptor.HasLabel(GdmLabel label)
+    IOGraphGdmNodeDescriptor IOGraphGdmNodeDescriptor.HasLabel(GdmLabel label)
     {
         return HasLabel(label);
     }
-    IOGraphGdmVertexDescriptor IOGraphGdmVertexDescriptor.HasEntityType(IOGraphGdmEntityType type)
+    IOGraphGdmNodeDescriptor IOGraphGdmNodeDescriptor.HasEntityType(IOGraphGdmEntityType type)
     {
         return HasEntityType(ThrowHelper.ThrowIfNotType<GdmEntityType<T>>(type));
     }
-    IOGraphGdmVertexDescriptor IOGraphGdmVertexDescriptor.HasOperation(IOGraphGdmOperation operation)
+    IOGraphGdmNodeDescriptor IOGraphGdmNodeDescriptor.HasOperation(IOGraphGdmOperation operation)
     {
         throw new NotImplementedException();
     }
 
-    IOGraphGdmVertexDescriptor IOGraphGdmVertexDescriptor.AddMeta(string key, string value)
+    IOGraphGdmNodeDescriptor IOGraphGdmNodeDescriptor.AddMeta(string key, string value)
     {
         throw new NotImplementedException();
     }

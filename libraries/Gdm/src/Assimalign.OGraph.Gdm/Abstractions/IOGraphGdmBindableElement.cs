@@ -11,7 +11,7 @@
 public interface IOGraphGdmBindableElement : IOGraphGdmNamedElement
 {
     /// <summary>
-    /// Specifies whther the elemet has been bound.
+    /// Specifies whether the element has been bound.
     /// </summary>
     bool IsBound { get; }
 

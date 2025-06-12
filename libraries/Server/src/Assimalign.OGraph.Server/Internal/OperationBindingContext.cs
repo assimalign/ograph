@@ -14,7 +14,7 @@ using Assimalign.OGraph.Syntax;
 
 internal class OperationBindingContext : IOGraphOperationBindingContext
 {
-    public IOGraphGdmVertex Element { get; init; } = default!;
+    public IOGraphGdmNode Element { get; init; } = default!;
     public IOGraphExecutorRequest Request { get; init; } = default!;
     public IOGraphExecutorResponse Response { get; init; } = default!;
     public IOGraphGdmType RequestType { get; init; } = default!;

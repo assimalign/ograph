@@ -5,8 +5,13 @@ namespace Assimalign.OGraph.Gdm;
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphGdmGraph : IOGraphGdmNamedElement
+public interface IOGraphGdmGraph : IOGraphGdmElement
 {
+    /// <summary>
+    /// The domain of the graph.
+    /// </summary>
+    GdmDomain Domain { get; }
+
     /// <summary>
     /// The root model.
     /// </summary>
@@ -23,7 +28,17 @@ public interface IOGraphGdmGraph : IOGraphGdmNamedElement
     IOGraphGdmEdgeCollection Edges { get; }
 
     /// <summary>
-    /// A collection of vertices within the graph.
+    /// A collection of nodes within the graph.
     /// </summary>
-    IOGraphGdmVertexCollection Vertices { get; }
+    IOGraphGdmNodeCollection Nodes { get; }
+
+    /// <summary>
+    /// A collection of events within the graph.
+    /// </summary>
+    IOGraphGdmEventCollection Events { get; }
+
+    /// <summary>
+    /// A collection of event subscribers within the graph.
+    /// </summary>
+    IOGraphGdmSubscriberCollection Subscribers { get; }
 }

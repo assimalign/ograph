@@ -24,9 +24,9 @@ public sealed class GdmBuilder : IOGraphGdmBuilder
     private readonly List<Action<Gdm>> _before;
     private readonly List<Action<Gdm>> _after;
 
-    GdmBuilder(GdmName name)
+    GdmBuilder()
     {
-        _model = new Gdm(name);
+        _model = new Gdm();
         _before = new List<Action<Gdm>>();
         _actions = new List<Action<Gdm>>();
         _after = new List<Action<Gdm>>();
@@ -50,13 +50,13 @@ public sealed class GdmBuilder : IOGraphGdmBuilder
         });
         return this;
     }
-    public GdmBuilder AddGraph(GdmName name, Action<GdmGraphDescriptor> configure)
+    public GdmBuilder AddGraph(GdmDomain domain, Action<GdmGraphDescriptor> configure)
     {
         ThrowHelper.ThrowIfNull(configure);
 
         return AddGraph(gdm =>
         {
-            return GdmGraph.Create(name, gdm, configure);
+            return GdmGraph.Create(domain, gdm, configure);
         });
     }
 
@@ -99,14 +99,9 @@ public sealed class GdmBuilder : IOGraphGdmBuilder
     /// <param name="name">The label of the model.</param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public static GdmBuilder Create(GdmName name)
+    public static GdmBuilder Create()
     {
-        if (name.IsEmpty)
-        {
-            ThrowHelper.ThrowArgumentException("The name cannot be empty");
-        }
-
-        return new GdmBuilder(name);
+        return new GdmBuilder();
     }
 
     #region Impilict Impl

@@ -9,7 +9,7 @@ namespace Assimalign.OGraph.Gdm.Tests;
 using Assimalign.OGraph.Gdm.Tests.Objects;
 using Elements;
 
-public class EmployeeAddressTypeVertex : GdmVertex<EmployeeAddressType>
+public class EmployeeAddressTypeVertex : GdmNode<EmployeeAddressType>
 {
     public EmployeeAddressTypeVertex(GdmGraph graph) : base(graph)
     {

@@ -6,11 +6,42 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Assimalign.OGraph.Gdm;
 
-using Assimalign.OGraph.Gdm.Elements;
+using Elements;
 using Assimalign.OGraph.Gdm.Internal;
 
 public static class OGraphGdmTypeExtensions
 {
+    public static GdmProperty CreateProperty<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TGdmType>(this GdmEntityType type, GdmName name)
+        where TGdmType : GdmType
+    {
+        ThrowHelper.ThrowIfNull(type);
+
+        GdmType? instance = default;
+
+        switch ((instance = Activator.CreateInstance(typeof(TGdmType), type.Graph) as GdmType))
+        {
+            case GdmCollectionType collection when collection.ItemType is GdmEntityType:
+                throw new InvalidOperationException("");
+            case GdmEntityType entity:
+                throw new InvalidOperationException("");
+            case null:
+                throw new InvalidOperationException();
+        }
+
+        var existing = (type.Graph.Types as IEnumerable<GdmType>).FirstOrDefault(p => p.Name == instance.Name);
+
+        if (existing is null)
+        {
+            type.Graph.Types.Add(instance);
+
+            return new GdmProperty(name, instance, type);
+        }
+        else
+        {
+            return new GdmProperty(name, existing, type);
+        }
+    }
+
     ///// <summary>
     ///// 
     ///// </summary>

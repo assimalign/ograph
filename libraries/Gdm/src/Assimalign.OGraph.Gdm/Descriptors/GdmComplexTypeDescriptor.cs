@@ -9,7 +9,6 @@ using Elements;
 using Internal;
 
 public class GdmComplexTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : IOGraphGdmComplexTypeDescriptor
-    where T : class, new()
 {
     private readonly GdmComplexType<T> _complexType;
 
@@ -23,6 +22,7 @@ public class GdmComplexTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAcc
         _complexType.SetName(name);
         return this;
     }
+
     public GdmComplexTypeDescriptor<T> HasProperty(GdmName name)
     {
         var propertyInfo = typeof(T).GetProperty(name, BindingFlags.Instance | BindingFlags.Public);

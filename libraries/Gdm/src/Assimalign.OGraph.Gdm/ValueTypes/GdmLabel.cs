@@ -55,6 +55,9 @@ public readonly struct GdmLabel :
     /// </summary>
     public readonly string Value { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public bool IsEmpty => string.IsNullOrEmpty(Value);
 
     #region Overloads

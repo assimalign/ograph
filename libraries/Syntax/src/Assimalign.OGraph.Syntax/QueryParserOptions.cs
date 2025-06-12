@@ -8,11 +8,11 @@ using Assimalign.OGraph.Syntax.Internal;
 
 public sealed class QueryParserOptions
 {
-    private readonly IList<QueryAnalyzer> analyzers;
+    private readonly IList<QueryAnalyzer> _analyzers;
 
     public QueryParserOptions()
     {
-        this.analyzers = new List<QueryAnalyzer>()
+        _analyzers = new List<QueryAnalyzer>()
         {
             new InvalidNodeTypesInVertexAnalyzer()
         };
@@ -39,7 +39,7 @@ public sealed class QueryParserOptions
     /// </summary>
     public TimeSpan AnalyzerTimeout { get; set; } = TimeSpan.FromSeconds(5);
 
-    internal IEnumerable<QueryAnalyzer> Analyzers => this.analyzers;
+    internal IEnumerable<QueryAnalyzer> Analyzers => _analyzers;
 
 
     /// <summary>
@@ -54,7 +54,7 @@ public sealed class QueryParserOptions
             throw new ArgumentNullException(nameof(analyzer));
         }
 
-        analyzers.Add(analyzer);
+        _analyzers.Add(analyzer);
     }
     /// <summary>
     /// 

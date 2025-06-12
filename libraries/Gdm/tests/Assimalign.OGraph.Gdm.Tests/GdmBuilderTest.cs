@@ -7,11 +7,28 @@ using Xunit;
 
 namespace Assimalign.OGraph.Gdm.Tests;
 
+using Objects;
+
 public class GdmBuilderTest
 {
     [Fact]
     public void Test()
     {
-        var model = GdmBuilderUtility.Create(GdmBuilderUtilityStrategy.Fluent);
+        var builder = GdmBuilder.Create("ErpCore")
+            .AddGraph("Employees", descriptor =>
+            {
+
+                descriptor.AddNode<Employee>(vertex =>
+                {
+                    vertex.HasLabel("Employee");
+                    vertex.HasEntityType(entity =>
+                    {
+                        
+                    });
+                });
+
+            }).Build();
+
+
     }
 }

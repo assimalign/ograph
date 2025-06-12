@@ -8,7 +8,7 @@ public interface IOGraphGdmOperation : IOGraphGdmBindableElement
     /// <summary>
     /// Gets the operation type.
     /// </summary>
-    GdmOperationKind Kind { get; }
+    GdmOperationAction Kind { get; }
 
     /// <summary>
     /// Gets the input type, if any.

@@ -7,15 +7,15 @@ using System.Collections.Generic;
 
 namespace Assimalign.OGraph.Gdm;
 
-using Assimalign.OGraph.Gdm.Internal;
-using System.Xml.Linq;
-
+using Internal;
 
 /// <summary>
 /// Extensions for <see cref="IOGraphGdm"/>.
 /// </summary>
 public static class OGraphGdmExtensions
 {
+
+    
     /// <summary>
     /// Finds the first element in the collection
     /// </summary>
@@ -109,18 +109,18 @@ public static class OGraphGdmExtensions
     //    return element.Bindings.Any(p=>p.Label.Equals(label));
     //}
     /// <summary>
-    /// Returns all the <see cref="IOGraphGdmVertex"/> instances in the graph model.
+    /// Returns all the <see cref="IOGraphGdmNode"/> instances in the graph model.
     /// </summary>
     /// <param name="model">The graph data model.</param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static IEnumerable<IOGraphGdmVertex> GetGdmVertices(this IOGraphGdm model)
+    public static IEnumerable<IOGraphGdmNode> GetGdmVertices(this IOGraphGdm model)
     {
         if (model is null)
         {
             throw new ArgumentNullException(nameof(model));
         }
-        return model.Graphs.OfType<IOGraphGdmVertex>();
+        return model.Graphs.OfType<IOGraphGdmNode>();
     }
     /// <summary>
     /// Returns all the <see cref="IOGraphGdmEdge"/> instances in the graph model.

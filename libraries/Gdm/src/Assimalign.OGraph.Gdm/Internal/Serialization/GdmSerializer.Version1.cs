@@ -6,6 +6,8 @@ using System.Xml;
 
 namespace Assimalign.OGraph.Gdm.Internal;
 
+using Elements;
+
 internal class GdmVersion1Serializer : GdmSerializer
 {
     public GdmVersion1Serializer(GdmSerializerOptions options) : base(options)
@@ -19,14 +21,30 @@ internal class GdmVersion1Serializer : GdmSerializer
             IgnoreWhitespace = true,
             IgnoreComments = true,
             Async = true,
-            
         });
+
+        
 
 
         throw new NotImplementedException();
     }
+    private async Task<Gdm> DeserializeModelAsync(XmlReader reader)
+    {
+        var model = new Gdm();
 
-   // private async Task ReadGraphAsync(XmlReader reader, Gdm)
+        
+
+
+        return model;
+    }
+
+    private async Task DeserializeGraphAsync(XmlReader reader, Gdm gdm)
+    {
+
+    }
+
+
+    // private async Task ReadGraphAsync(XmlReader reader, Gdm)
 
     public override async Task SerializeAsync(Stream stream, IOGraphGdm model, CancellationToken cancellationToken = default)
     {
@@ -49,8 +67,6 @@ internal class GdmVersion1Serializer : GdmSerializer
     }
 
     #region Writes
-
-
     private async Task WriteGraphAsync(XmlWriter writer, IOGraphGdmGraph graph)
     {
         await writer.WriteStartElementAsync(null, localName: GdmElementKey.Graph, null);

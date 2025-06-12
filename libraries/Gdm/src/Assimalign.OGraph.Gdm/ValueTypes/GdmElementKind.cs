@@ -7,16 +7,15 @@ public enum GdmElementKind
 {
     Model,
     Graph,
-    Vertex,
+    Node,
     Edge,
     Type,
     Operation,
     Meta,
-    //Event,
+    Event,
+    Subscriber,
     Key,
     Member,
     Parameter,
-    Path,
-    Step
     //Directive
 }

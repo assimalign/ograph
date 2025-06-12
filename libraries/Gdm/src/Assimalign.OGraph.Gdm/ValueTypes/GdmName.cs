@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 namespace Assimalign.OGraph.Gdm;
 
 using Internal;
-using System.Collections.Generic;
 
 /// <summary>
 /// 
@@ -13,9 +12,14 @@ using System.Collections.Generic;
 [DebuggerDisplay("{Value,nq}")]
 public readonly struct GdmName : IEquatable<GdmName>, IComparable<GdmName>
 {
-    private const string pattern = "^[a-zA-Z0-9]+$";
+    private const string pattern = "^[a-zA-Z0-9_@.-]+$";
+
     private readonly string _value = string.Empty;
 
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    /// <param name="value"></param>
     public GdmName(string value)
     {
         ThrowHelper.ThrowIfNullOrEmpty(value);
@@ -54,15 +58,6 @@ public readonly struct GdmName : IEquatable<GdmName>, IComparable<GdmName>
     }
 
     /// <summary>
-    /// Converts the string to pascal case.
-    /// </summary>
-    /// <returns></returns>
-    public GdmName ToPascalCase()
-    {
-        return AsPascalCase(_value);
-    }
-
-    /// <summary>
     /// Converts the name to Camel case
     /// </summary>
     /// <returns></returns>
@@ -72,30 +67,42 @@ public readonly struct GdmName : IEquatable<GdmName>, IComparable<GdmName>
     }
 
     /// <summary>
+    /// Converts the string to pascal case.
+    /// </summary>
+    /// <returns></returns>
+    public GdmName ToPascalCase()
+    {
+        return AsPascalCase(_value);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="lowercase"></param>
+    /// <returns></returns>
+    public GdmName ToKebabCase(bool lowercase = true)
+    {
+        return AsKebabCase(_value, lowercase);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="lowercase"></param>
+    /// <returns></returns>
+    public GdmName ToSnakeCase(bool lowercase = true)
+    {
+        return AsSnakeCase(_value, lowercase);
+    }
+
+    /// <summary>
     /// Creates a name by converting the the string value to Camel case.
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
     public static GdmName AsCamelCase(string value)
     {
-        return string.Create(value.Length, value, (chars, name) =>
-        {
-            name.CopyTo(chars);
-
-            for (int i = 0; i < chars.Length && (i != 1 || char.IsUpper(chars[i])); i++)
-            {
-                bool flag = i + 1 < chars.Length;
-                if (i > 0 && flag && !char.IsUpper(chars[i + 1]))
-                {
-                    if (chars[i + 1] == ' ')
-                    {
-                        chars[i] = char.ToLowerInvariant(chars[i]);
-                    }
-                    break;
-                }
-                chars[i] = char.ToLowerInvariant(chars[i]);
-            }
-        });
+        return value.ConvertToCamelCase();
     }
 
     /// <summary>
@@ -105,47 +112,63 @@ public readonly struct GdmName : IEquatable<GdmName>, IComparable<GdmName>
     /// <returns></returns>
     public static GdmName AsPascalCase(string value)
     {
-        return string.Create(value.Length, value, (chars, name) =>
-        {
-            name.CopyTo(chars);
+        return value.ConvertToPascalCase();
+    }
 
-            for (int i = 0; i < chars.Length && (i != 1 || char.IsUpper(chars[i])); i++)
-            {
-                bool flag = i + 1 < chars.Length;
-                if (i > 0 && flag && !char.IsUpper(chars[i + 1]))
-                {
-                    if (chars[i + 1] == ' ')
-                    {
-                        chars[i] = char.ToUpperInvariant(chars[i]);
-                    }
-                    break;
-                }
-                chars[i] = char.ToUpperInvariant(chars[i]);
-            }
-        });
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="lowercase"></param>
+    /// <returns></returns>
+    public static GdmName AsKebabCase(string value, bool lowercase = true)
+    {
+        return value.ConvertToKebabCase(lowercase);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="lowercase"></param>
+    /// <returns></returns>
+    public static GdmName AsSnakeCase(string value, bool lowercase = true)
+    {
+        return value.ConvertToSnakeCase(lowercase);
     }
 
     /// <inheritdoc cref="global::System.IEquatable{T}"/>
     public bool Equals(GdmName other)
+    {
+        return Equals(other._value, StringComparison.Ordinal);
+    }
+
+    public bool Equals (GdmName other, StringComparison comparisonType)
     {
         return (_value, other._value) switch
         {
             (null, null) => true,
             (null, _) => false,
             (_, null) => false,
-            (_, _) => _value.Equals(other._value, StringComparison.Ordinal),
+            (_, _) => _value.Equals(other._value, comparisonType),
         };
     }
 
     /// <inheritdoc cref="global::System.IComparable{TSelf}"/>
     public int CompareTo(GdmName other)
     {
+        return CompareTo(other, StringComparison.Ordinal);
+        
+    }
+
+    public int CompareTo(GdmName other, StringComparison comparisonType)
+    {
         return (_value, other._value) switch
         {
             (null, null) => 0,
             (null, _) => -1,
             (_, null) => 1,
-            (_, _) => StringComparer.Ordinal.Compare(_value, other._value),
+            (_, _) => StringComparer.FromComparison(comparisonType).Compare(_value, other._value),
         };
     }
 
@@ -166,12 +189,10 @@ public readonly struct GdmName : IEquatable<GdmName>, IComparable<GdmName>
     {
         return obj is GdmName name ? Equals(name) : false;
     }
-
     public override int GetHashCode()
     {
         return _value.GetHashCode();
     }
-
 
     #endregion
 

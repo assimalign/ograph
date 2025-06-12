@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents an entire graph model.
 /// </summary>
-public interface IOGraphGdm : IOGraphGdmNamedElement
+public interface IOGraphGdm : IOGraphGdmElement
 {
     /// <summary>
     /// Get the collection of elements in the model.

@@ -8,7 +8,6 @@ namespace Assimalign.OGraph.Gdm.Elements;
 using Internal;
 
 public abstract class GdmComplexType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : GdmComplexType
-    where T : class, new()
 {
     private readonly Action<GdmComplexTypeDescriptor<T>> _configure;
 
@@ -23,7 +22,7 @@ public abstract class GdmComplexType<[DynamicallyAccessedMembers(DynamicallyAcce
 
     #region Methods - Public
 
-    protected abstract void Configure(GdmComplexTypeDescriptor<T> descriptor);
+    protected virtual void Configure(GdmComplexTypeDescriptor<T> descriptor) { }
     public virtual new T Read(ref Utf8JsonReader reader)
     {
         return ThrowHelper.ThrowIfNotType<T>(base.Read(ref reader));
@@ -34,11 +33,11 @@ public abstract class GdmComplexType<[DynamicallyAccessedMembers(DynamicallyAcce
     }
     public virtual void Write(Utf8JsonWriter writer, T value)
     {
-        base.Write(writer, value);
+        base.Write(writer, value!);
     }
     public virtual void Write(XmlWriter writer, T value)
     {
-        base.Write(writer, value);
+        base.Write(writer, value!);
     }
     public sealed override void Write(Utf8JsonWriter writer, object value)
     {

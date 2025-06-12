@@ -11,19 +11,19 @@ namespace Assimalign.OGraph.Gdm.Elements;
 using Internal;
 
 [DebuggerDisplay("Count = {Count}")]
-public class GdmVertexCollection : IOGraphGdmVertexCollection, IEnumerable<GdmVertex>
+public class GdmNodeCollection : IOGraphGdmNodeCollection, IEnumerable<GdmNode>
 {
     private bool _isReadOnly;
-    private readonly List<GdmVertex> _items;
+    private readonly List<GdmNode> _items;
 
-    public GdmVertexCollection()
+    public GdmNodeCollection()
     {
-        _items = new List<GdmVertex>();
+        _items = new List<GdmNode>();
     }
 
     public int Count => _items.Count;
     public bool IsReadOnly => _isReadOnly;
-    public GdmVertex this[GdmLabel label]
+    public GdmNode this[GdmName name]
     {
         get
         {
@@ -31,7 +31,7 @@ public class GdmVertexCollection : IOGraphGdmVertexCollection, IEnumerable<GdmVe
             {
                 var item = _items[i];
 
-                if (item.Label == label)
+                if (item.Label == name)
                 {
                     return item;
                 }
@@ -40,7 +40,7 @@ public class GdmVertexCollection : IOGraphGdmVertexCollection, IEnumerable<GdmVe
             throw new KeyNotFoundException();
         }
     }
-    public void Add(GdmVertex item)
+    public void Add(GdmNode item)
     {
         ThrowHelper.ThrowIfNull(item);
 
@@ -53,7 +53,7 @@ public class GdmVertexCollection : IOGraphGdmVertexCollection, IEnumerable<GdmVe
                 return;
             }
 
-            if (vertex.Label == item.Label)
+            if (vertex.Name == item.Name)
             {
                 _items.RemoveAt(i);
                 break;
@@ -62,7 +62,7 @@ public class GdmVertexCollection : IOGraphGdmVertexCollection, IEnumerable<GdmVe
 
         _items.Add(item);
     }
-    public void Remove(GdmVertex item)
+    public void Remove(GdmNode item)
     {
         ThrowHelper.ThrowIfNull(item);
 
@@ -72,7 +72,7 @@ public class GdmVertexCollection : IOGraphGdmVertexCollection, IEnumerable<GdmVe
         {
             for (int i = 0; i < _items.Count; i++)
             {
-                if (_items[i].Label == item.Label)
+                if (_items[i].Name == item.Name)
                 {
                     _items.RemoveAt(i);
                 }
@@ -83,20 +83,20 @@ public class GdmVertexCollection : IOGraphGdmVertexCollection, IEnumerable<GdmVe
     {
         _items.Clear();
     }
-    public IEnumerator<GdmVertex> GetEnumerator()
+    public IEnumerator<GdmNode> GetEnumerator()
     {
         return _items.GetEnumerator();
     }
-    IOGraphGdmVertex IOGraphGdmVertexCollection.this[GdmLabel label] => this[label];
-    void IOGraphGdmVertexCollection.Add(IOGraphGdmVertex vertex)
+    IOGraphGdmNode IOGraphGdmNodeCollection.this[GdmName name] => this[name];
+    void IOGraphGdmNodeCollection.Add(IOGraphGdmNode vertex)
     {
-        Add(ThrowHelper.ThrowIfNotType<GdmVertex>(vertex));
+        Add(ThrowHelper.ThrowIfNotType<GdmNode>(vertex));
     }
-    void IOGraphGdmVertexCollection.Remove(IOGraphGdmVertex vertex)
+    void IOGraphGdmNodeCollection.Remove(IOGraphGdmNode vertex)
     {
-        Remove(ThrowHelper.ThrowIfNotType<GdmVertex>(vertex));
+        Remove(ThrowHelper.ThrowIfNotType<GdmNode>(vertex));
     }
-    IEnumerator<IOGraphGdmVertex> IEnumerable<IOGraphGdmVertex>.GetEnumerator()
+    IEnumerator<IOGraphGdmNode> IEnumerable<IOGraphGdmNode>.GetEnumerator()
     {
         return GetEnumerator();
     }

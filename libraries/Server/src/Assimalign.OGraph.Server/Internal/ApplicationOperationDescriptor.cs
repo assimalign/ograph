@@ -10,9 +10,9 @@ using Assimalign.OGraph.Gdm;
 
 internal class ApplicationOperationDescriptor<T> : IOGraphApplicationOperationDescriptor<T> where T : class, new()
 {
-    private readonly IOGraphGdmVertex vertex;
+    private readonly IOGraphGdmNode vertex;
 
-    public ApplicationOperationDescriptor(IOGraphGdmVertex vertex)
+    public ApplicationOperationDescriptor(IOGraphGdmNode vertex)
     {
         this.vertex = vertex;
     }

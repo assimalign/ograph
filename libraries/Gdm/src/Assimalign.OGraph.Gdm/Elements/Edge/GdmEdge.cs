@@ -4,23 +4,20 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-public abstract class GdmEdge : GdmLabeledElement, IOGraphGdmEdge
+public abstract class GdmEdge : GdmBindableElement, IOGraphGdmEdge
 {
-    public GdmEdge(GdmLabel label, GdmVertex target, GdmVertex source, GdmGraph graph)
+    public GdmEdge(GdmName name, GdmNode target, GdmNode source, GdmGraph graph) : base(name)
     {
-        Label = ThrowHelper.ThrowIfLabelEmpty(label);
         Target = ThrowHelper.ThrowIfNull(target);
         Source = ThrowHelper.ThrowIfNull(source);
         Graph = ThrowHelper.ThrowIfNull(graph);
     }
 
-    public virtual GdmVertex Target { get; }
-    public virtual GdmVertex Source { get;  }
+    public GdmNode Target { get; }
+    public GdmNode Source { get;  }
     public GdmGraph Graph { get; }
-    public sealed override GdmLabel Label { get; }
     public sealed override GdmElementKind ElementKind { get; } = GdmElementKind.Edge;
-    IOGraphGdmVertex IOGraphGdmEdge.Target => Target;
-    IOGraphGdmVertex IOGraphGdmEdge.Source => Source;
-    IOGraphGdmStepCollection IOGraphGdmEdge.Steps => throw new NotImplementedException();
+    IOGraphGdmNode IOGraphGdmEdge.Target => Target;
+    IOGraphGdmNode IOGraphGdmEdge.Source => Source;
     IOGraphGdmGraph IOGraphGdmEdge.Graph => Graph;
 }

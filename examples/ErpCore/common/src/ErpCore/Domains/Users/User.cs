@@ -5,6 +5,7 @@ namespace ErpCore;
 
 [GdmEntityType]
 [GdmPickedComplexType("UserCreateInput", Include = ["Info", "Username"])]
+[GdmPickedComplexType("UserUpdateInput", Include = ["Info"])]
 public partial class User
 {
     public UserId Id { get; set; }

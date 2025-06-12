@@ -5,15 +5,15 @@ namespace Assimalign.OGraph.Gdm.Elements;
 
 using Internal;
 
-[DebuggerDisplay("{Label} [Vertex]")]
-public class GdmVertex : GdmLabeledElement, IOGraphGdmVertex
+[DebuggerDisplay("{Label} [Node]")]
+public class GdmNode : GdmNamedElement, IOGraphGdmNode
 {
     private GdmGraph _graph = default!;
     private GdmEntityType _type = default!;
 
     #region Constructors
 
-    public GdmVertex(GdmLabel label, GdmEntityType type, GdmGraph graph)  : base(label)
+    public GdmNode(GdmName name, GdmEntityType type, GdmGraph graph)  : base(name)
     {
         _type = ThrowHelper.ThrowIfNull(type);
         _graph = ThrowHelper.ThrowIfNull(graph);
@@ -24,12 +24,9 @@ public class GdmVertex : GdmLabeledElement, IOGraphGdmVertex
     #region Properties
     public GdmGraph Graph => _graph;
     public GdmEntityType Type => _type;
-    public GdmEdgeCollection Edges { get; } = new GdmEdgeCollection();
-    public sealed override GdmElementKind ElementKind { get; } = GdmElementKind.Vertex;
-    IOGraphGdmType IOGraphGdmVertex.Type => Type;
-    IOGraphGdmEdgeCollection IOGraphGdmVertex.Edges => Edges;
-    IOGraphGdmGraph IOGraphGdmVertex.Graph => Graph;
-    IOGraphGdmPathCollection IOGraphGdmVertex.Paths => throw new NotImplementedException();
+    public sealed override GdmElementKind ElementKind { get; } = GdmElementKind.Node;
+    IOGraphGdmType IOGraphGdmNode.Type => Type;
+    IOGraphGdmGraph IOGraphGdmNode.Graph => Graph;
 
     #endregion
 

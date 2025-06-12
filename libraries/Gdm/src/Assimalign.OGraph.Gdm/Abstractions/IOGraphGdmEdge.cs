@@ -6,24 +6,19 @@
 /// <remarks>
 /// <i>An edge is also referred to as a Link.</i>
 /// </remarks>
-public interface IOGraphGdmEdge : IOGraphGdmLabeledElement
+public interface IOGraphGdmEdge : IOGraphGdmBindableElement
 {
     //Label - ! The Edge Label must match a literal segment of on operation on the target vertex. Operation Methods must not be mismatched
 
     /// <summary>
-    /// The target vertex.
-    /// </summary>
-    IOGraphGdmVertex Target { get; }
-
-    /// <summary>
     /// The source vertex.
     /// </summary>
-    IOGraphGdmVertex Source { get; }
+    IOGraphGdmNode Source { get; }
 
     /// <summary>
-    /// A collection of operation mappings.
+    /// The target vertex.
     /// </summary>
-    IOGraphGdmStepCollection Steps { get; }
+    IOGraphGdmNode Target { get; }
 
     /// <summary>
     /// The graph in which the vertex belongs to.

@@ -6,22 +6,12 @@
 /// <remarks>
 /// A Node is also referred to as a Vertex.
 /// </remarks>
-public interface IOGraphGdmVertex : IOGraphGdmLabeledElement
+public interface IOGraphGdmNode : IOGraphGdmNamedElement
 {
     /// <summary>
     /// The type bound to this vertex.
     /// </summary>
     IOGraphGdmType Type { get; }
-
-    /// <summary>
-    /// A collection of edges that are connected to this node.
-    /// </summary>
-    IOGraphGdmEdgeCollection Edges { get; }
-
-    /// <summary>
-    /// A collection of operations defined for the vertex
-    /// </summary>
-    IOGraphGdmPathCollection Paths { get; }
 
     /// <summary>
     /// The graph in which the vertex belongs to.

@@ -14,18 +14,29 @@ public static partial class GdmBuilderUtility
 {
     private static IOGraphGdm CreateFluentModel()
     {
+        // Hrm#Node=Employees
         // Builder process 
-        var builder = GdmBuilder.Create("ErpCore")
+        var builder = GdmBuilder.Create()
             .AddGraph("Hrm", graph =>
             {
                 graph.AddScalarType<GdmStringType>();
-
-                graph.AddVertex<Employee>(vertex =>
+                graph.AddScalarType<GdmInt32Type>();
+                graph.AddComplexType<Employee>(complex =>
                 {
-                    vertex.HasLabel("employees");
-                    vertex.HasEntityType(entity =>
+
+                });
+                graph.AddEntityType<Employee>(entity =>
+                {
+
+                });
+                graph.AddCollectionType<GdmListType<Employee>>("EmployeeList");
+
+                graph.AddNode<Employee>(node =>
+                {
+                    node.HasLabel("Employees");
+                    node.HasEntityType(entity =>
                     {
-                        entity.HasName("employee");
+                        entity.HasName("Employee");
                         entity.HasKey(p => p.EmployeeId);
 
                         entity.HasProperty(p => p.EmployeeId).UsePropertyName("id");
@@ -38,18 +49,22 @@ public static partial class GdmBuilderUtility
                             });
                     });
                 });
-                graph.AddVertex<EmployeeAddress>(vertex =>
+                graph.AddNode<EmployeeAddress>(vertex =>
                 {
-                    vertex.HasLabel("employeeAddresses");
+                    vertex.HasLabel("Addresses");
                 });
-                graph.AddVertex<EmployeeJob>(vertex =>
+                graph.AddNode<EmployeeJob>(vertex =>
                 {
-                    vertex.HasLabel("employeeJobs");
+                    vertex.HasLabel("Jobs");
                     vertex.HasEntityType(entity =>
                     {
-                        entity.HasName("Job");
+                        entity.HasName("EmployeeJob");
                     });
                 });
+            })
+            .AddGraph("Organization", graph =>
+            {
+
             });
             //.AddGraph("Organizations", descriptor =>
             //{

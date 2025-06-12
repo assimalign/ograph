@@ -26,7 +26,7 @@ public interface IOGraphOperationBindingContext //: IOGraphGdmBindingContext
     /// <summary>
     /// 
     /// </summary>
-    new IOGraphGdmVertex Element { get; }
+    new IOGraphGdmNode Element { get; }
     /// <summary>
     /// 
     /// </summary>

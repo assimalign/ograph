@@ -1,0 +1,89 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<!-- A graph model of a ERP System offered as a SASS product -->
+<!-- Elements are broken into:
+        - Structural
+        - Functional
+
+        /erpcore/admin/
+
+ -->
+<Gdmx Name="ErpCore" Version="1.0">
+    <Graph Name="Organizations">
+        <Vertex Name="Organizations" />
+        <EntityType Name="Organization" />
+    </Graph>
+    <Graph Name="Admin">
+        <Vertex Name="Users" Type="User" />
+        <Vertex Name="UsersRoles" Type="Role" />
+        <Vertex Name="UsersGroups" Type="Group" />
+        <Edge Name="Roles" Source="Users" Target="UsersRoles" />
+        <Subscriber Name="OnEmployeeUpdated" Event="Hrm.EmployeeUpdated" />
+        <Query Name="">
+            <Parameter Name="Id" Type="UserId" />
+        </Query>
+        <Operation Name="" Kind="">
+            <Parameter Name="" Type="" />
+        </Operation>
+        <EntityType Name="User">
+            <Key Property="Id" />
+            <Property Name="Id" Type="UserId" />
+            <Property Name="Info" Type="UserInfo" />
+        </EntityType>
+        <EntityType Name="Role">
+            <Key Property="Id" />
+            <Property Name="Id" Type="String" />
+        </EntityType>
+        <EntityType Name="Group">
+            <Key Property="Id" />
+            <Property Name="Id" Type="String" />
+        </EntityType>
+        <EntityType Name="Permission">
+            <Key Property="Id" />
+            <Property Name="Id" Type="String" />
+        </EntityType>
+        <EntityType Name="Tenant">
+            <Key Property="Id" />
+            <Property Name="Id" Type="String" />
+        </EntityType>
+        <ComplexType Name="UserInfo">
+            <Property Name="FirstName" Type="String" />
+            <Property Name="LastName" Type="String" />
+            <Property Name="MiddleName" Type="String" />
+        </ComplexType>
+        <ScalarType Name="UserId">
+            <PrimitiveType Type="String" />
+        </ScalarType>
+    </Graph>
+    <Graph Name="Hrm">
+
+        <Vertex Name="Employees" Type="Employee" />
+        <Vertex Name="EmployeesAddresses" Type="Address" />
+        <Event Name="EmployeeUpdated" On="UpdateEmployee">
+            <Output Type="Employee" />
+        </Event>
+        <Subscriber Name="" On="Administration.UserUpdated" />
+        <Operation Name="UpdateEmployee">
+            <Parameter Name="EmployeeId" Vertex="" Type="EmployeeId" />
+        </Operation>
+        <EntityType Name="Employee">
+            <Key Property="Id" />
+            <Property Name="Id" Type="EmployeeId" />
+            <Property Name="UserId" Type="ErpCore.Organizations.Administration.UserId" />
+        </EntityType>
+        <EntityType Name="Address" />
+        <ScalarType Name="EmployeeId">
+            <PrimitiveType Type="String" />
+        </ScalarType>
+    </Graph>
+    <Graph Name="Payroll" />
+    <Graph Name="Inventory" />
+    <Graph Name="Warehousing">
+        <Vertex Name="Warehouses" />
+    </Graph>
+    <Graph Name="Packaging" />
+    <Graph Name="Shipping" />
+    <Graph Name="Billing" />
+    <Graph Name="Mdms">
+        <Vertex Name="items" />
+    </Graph>
+</Gdmx>

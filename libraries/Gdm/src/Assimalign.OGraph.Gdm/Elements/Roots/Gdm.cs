@@ -8,14 +8,14 @@ namespace Assimalign.OGraph.Gdm.Elements;
 /// 
 /// </summary>
 [DebuggerDisplay("{Name} [Model]")]
-public sealed class Gdm : GdmNamedElement, IOGraphGdm
+public sealed class Gdm : GdmElement, IOGraphGdm
 {
     /// <summary>
     /// 
     /// </summary>
     /// <param name="name"></param>
     /// <exception cref="ArgumentException"></exception>
-    public Gdm(GdmName name) : base(name)
+    public Gdm()
     {
     }
 

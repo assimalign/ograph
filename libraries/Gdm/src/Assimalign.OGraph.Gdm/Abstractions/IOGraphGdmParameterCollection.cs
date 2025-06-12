@@ -6,12 +6,11 @@ namespace Assimalign.OGraph.Gdm;
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphGdmParameterCollection : ICollection<IOGraphGdmParameter>
+public interface IOGraphGdmParameterCollection : IEnumerable<IOGraphGdmParameter>
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="label"></param>
-    /// <returns></returns>
-    IOGraphGdmParameter this[GdmLabel label] { get; }
+    int Count { get; }
+    bool IsReadOnly { get; }
+    void Add(IOGraphGdmParameter item);
+    void Remove(IOGraphGdmParameter item);
+    void Clear();
 }

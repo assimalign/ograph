@@ -9,7 +9,7 @@ namespace Assimalign.OGraph.Gdm.Tests;
 using Elements;
 using Objects;
 
-public class EmployeeJobVertex : GdmVertex<EmployeeJob>
+public class EmployeeJobVertex : GdmNode<EmployeeJob>
 {
     public EmployeeJobVertex(GdmGraph graph) : base(graph)
     {
@@ -18,6 +18,7 @@ public class EmployeeJobVertex : GdmVertex<EmployeeJob>
     protected override void Configure(GdmVertexDescriptor<EmployeeJob> descriptor)
     {
         descriptor.HasLabel("employeeJob");
+        descriptor.HasEntityType("")
         //descriptor.HasType<EmployeeJobEntity>();
     }
 }

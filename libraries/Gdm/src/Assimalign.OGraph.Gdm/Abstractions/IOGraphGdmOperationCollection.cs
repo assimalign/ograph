@@ -5,12 +5,11 @@ namespace Assimalign.OGraph.Gdm;
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphGdmOperationCollection : ICollection<IOGraphGdmOperation>
+public interface IOGraphGdmOperationCollection : IEnumerable<IOGraphGdmOperation>
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    IOGraphGdmOperation this[GdmName name] { get; }
+    int Count { get; }
+    bool IsReadOnly { get; }
+    void Add(IOGraphGdmOperation item);
+    void Remove(IOGraphGdmOperation item);
+    void Clear();
 }

@@ -1,15 +1,17 @@
-﻿//namespace Assimalign.OGraph.Gdm;
+﻿namespace Assimalign.OGraph.Gdm;
 
+/// <summary>
+/// 
+/// </summary>
+public interface IOGraphGdmEvent : IOGraphGdmBindableElement
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    IOGraphGdmType? OutputType { get; }
 
-//public enum GdmEventOccurrence
-//{
-//    Before,
-//    On,
-//    After
-//}
-//public interface IOGraphGdmEvent : IOGraphGdmBindableElement
-//{
-//    GdmEventOccurrence Occurrence { get; }
-
-
-//}
+    /// <summary>
+    /// The graph in which the event is emitted from.
+    /// </summary>
+    IOGraphGdmGraph Graph { get; }
+}

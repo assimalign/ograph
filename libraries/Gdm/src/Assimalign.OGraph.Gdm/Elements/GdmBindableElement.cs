@@ -11,6 +11,9 @@ public abstract class GdmBindableElement : GdmNamedElement, IOGraphGdmBindableEl
     internal GdmBindableElement() { }
     internal GdmBindableElement(GdmName name) : base(name) { }
     public bool IsBound { get; }
+    
+    
+    
     public override IEnumerable<TElement> GetElements<TElement>()
     {
         if (this is TElement element)

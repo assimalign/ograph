@@ -3,7 +3,7 @@
 		<RootNamespace>Assimalign.OGraph</RootNamespace>
 		<TargetFrameworks>$(TargetFrameworkForLibraries)</TargetFrameworks>
 	</PropertyGroup>
-	<ItemGroup>
+	<!--<ItemGroup>
 	  <Compile Remove="Exceptions\**" />
 	  <Compile Remove="Extensions\**" />
 	  <Compile Remove="Internal\QueryProviders\**" />
@@ -43,7 +43,7 @@
 	  <Compile Remove="Internal\PropertyBindingResolver.cs" />
 	  <Compile Remove="OGraphExecutorBuilder.cs" />
 	  <Compile Remove="OGraphHeaderCollection.cs" />
-	</ItemGroup>
+	</ItemGroup>-->
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\Core\src\Assimalign.OGraph.Core\Assimalign.OGraph.Core.csproj" />
 	</ItemGroup>

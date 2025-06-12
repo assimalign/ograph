@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-
-namespace Assimalign.OGraph.Gdm.Elements;
+﻿namespace Assimalign.OGraph.Gdm.Elements;
 
 public abstract class GdmCollectionType : GdmType, IOGraphGdmCollectionType
 {

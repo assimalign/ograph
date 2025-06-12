@@ -5,7 +5,7 @@ namespace Assimalign.OGraph.Gdm;
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphGdmVertexCollection : IEnumerable<IOGraphGdmVertex>
+public interface IOGraphGdmNodeCollection : IEnumerable<IOGraphGdmNode>
 {
     /// <summary>
     /// 
@@ -20,21 +20,21 @@ public interface IOGraphGdmVertexCollection : IEnumerable<IOGraphGdmVertex>
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="label"></param>
+    /// <param name="name"></param>
     /// <returns></returns>
-    IOGraphGdmVertex this[GdmLabel label] { get; }
+    IOGraphGdmNode this[GdmName name] { get; }
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="vertex"></param>
-    void Add(IOGraphGdmVertex vertex);
+    void Add(IOGraphGdmNode vertex);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="vertex"></param>
-    void Remove(IOGraphGdmVertex vertex);
+    void Remove(IOGraphGdmNode vertex);
 
     /// <summary>
     /// 

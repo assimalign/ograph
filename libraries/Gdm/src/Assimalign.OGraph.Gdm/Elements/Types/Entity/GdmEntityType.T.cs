@@ -8,7 +8,6 @@ namespace Assimalign.OGraph.Gdm.Elements;
 using Internal;
 
 public abstract class GdmEntityType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> : GdmEntityType
-    where T : class, new()
 {
     private readonly Action<GdmEntityTypeDescriptor<T>> _configure;
 
