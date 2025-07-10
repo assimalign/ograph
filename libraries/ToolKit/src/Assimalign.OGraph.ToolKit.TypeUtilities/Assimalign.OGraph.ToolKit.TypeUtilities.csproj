@@ -1,0 +1,6 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<RootNamespace>Assimalign.OGraph.ToolKit</RootNamespace>
+		<TargetFrameworks>$(TargetFrameworkForLibraries)</TargetFrameworks>
+	</PropertyGroup>
+</Project>

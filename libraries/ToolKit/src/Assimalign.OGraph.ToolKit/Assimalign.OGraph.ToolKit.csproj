@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<RootNamespace>Assimalign.OGraph.ToolKit</RootNamespace>
+		<TargetFramework>$(TargetFrameworkForLibraries)</TargetFramework>
+	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Assimalign.OGraph.ToolKit.TypeUtilities\Assimalign.OGraph.ToolKit.TypeUtilities.csproj" />
+	</ItemGroup>
+	
+	<!--<ItemGroup>
+		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		<None Include="$(OutputPath)\Assimalign.OGraph.ToolKit.Gdm.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		<None Include="$(OutputPath)\Assimalign.OGraph.ToolKit.Gdm.dll" Pack="true" PackagePath="lib\netstandard2.0" Visible="true" />
+		<None Include="$(OutputPath)\Assimalign.OGraph.ToolKit.TypeUtilities.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		<None Include="$(OutputPath)\Assimalign.OGraph.ToolKit.TypeUtilities.dll" Pack="true" PackagePath="lib\netstandard2.0" Visible="true" />
+	</ItemGroup>-->
+</Project>

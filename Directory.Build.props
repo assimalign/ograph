@@ -21,10 +21,11 @@
 		<TargetFrameworkForCli>$(TargetFrameworkLatest)</TargetFrameworkForCli>
 		<TargetFrameworkForVisualizer>$(TargetFrameworkLatest)</TargetFrameworkForVisualizer>
 		<TargetFrameworkForSdk>$(TargetFrameworkLatest)</TargetFrameworkForSdk>
+		<TargetFrameworkForAnalyzers>netstandard2.0</TargetFrameworkForAnalyzers>
 	</PropertyGroup>
 	<!-- Cohesion Build Properties -->
 	<PropertyGroup>
-		<OGraphVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)</OGraphVersion>
+		<Version>$(MajorVersion).$(MinorVersion).$(PatchVersion)</Version>
 		<OGraphRepositoryDirectory>$(MSBuildThisFileDirectory)</OGraphRepositoryDirectory>
 	</PropertyGroup>
 </Project>

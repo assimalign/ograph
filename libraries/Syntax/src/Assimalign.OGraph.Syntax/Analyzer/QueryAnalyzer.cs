@@ -11,8 +11,8 @@ public abstract class QueryAnalyzer
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="document"></param>
+    /// <param name="context"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public abstract Task AnalyzeAsync(QueryDocument document, CancellationToken cancellationToken = default);
+    public abstract Task AnalyzeAsync(QueryAnalyzerContext context, CancellationToken cancellationToken = default);
 }

@@ -3,9 +3,9 @@
 		<PackageReference Update="BenchmarkDotNet" Version="0.14.0" />
 		<PackageReference Update="Sharprompt" Version="3.0.0" />
 	</ItemGroup>
-	
+
 	<!-- Analyzer Build Dependencies -->
-    <ItemGroup>
+	<ItemGroup>
 		<PackageReference Update="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" PrivateAssets="all" />
 		<PackageReference Update="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" PrivateAssets="all" />
 		<PackageReference Update="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.12.0" PrivateAssets="all" />

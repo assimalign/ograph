@@ -2,6 +2,8 @@
 	<Import Project="../Directory.Build.props"/>
 	<PropertyGroup>
 		<GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 	<PropertyGroup Condition="$(TargetFramework) != 'net6.0' and $(AssemblyName.EndsWith('Tests')) == false">
 		<IsAotCompatible>true</IsAotCompatible>

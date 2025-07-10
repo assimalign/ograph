@@ -4,13 +4,13 @@
 #    - /api/vertex('employees')
 # This endpoint represents the starting vertex or vertices
 Endpoint: https://endpoint.com/api/employees?query=
-Query: v(e:employees)
+Query: v(e:)
         .project(
             id
-            employeeId
+            employeeId @authorize('')
             employeeType
             # Object
-            employeeInfo: info {
+            employeeInfo: info @authorize('') {
                 firstName
                 lastName
                 middleName

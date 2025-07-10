@@ -1,3 +1,25 @@
 <Project>
 	<Import Project="../Directory.Build.targets"/>
+	<ItemGroup Condition="Exists('..\..\..\..\analyzers\src\$(PackageId).Analyzers\bin\$(Configuration)\$(TargetFrameworkForAnalyzers)\$(PackageId).Analyzers.dll')">
+		<None Include="..\..\..\..\analyzers\src\$(PackageId).Analyzers\bin\$(Configuration)\$(TargetFrameworkForAnalyzers)\$(PackageId).Analyzers.dll"
+			Pack="true"
+			PackagePath="analyzers/dotnet/cs"
+			Visible="false"
+		/>
+	</ItemGroup>
+	<Target Name="BuildAnalyzers" BeforeTargets="Pack" Condition="'$(Configuration)' == 'Debug' and Exists('..\..\..\..\analyzers\src\$(PackageId).Analyzers\$(PackageId).Analyzers.csproj')">
+		<ItemGroup>
+			<AnalyzerProjects Include="..\..\..\..\analyzers\src\$(PackageId).Analyzers\$(PackageId).Analyzers.csproj" />
+		</ItemGroup>
+		<Message Text="Building Analyzers @(AnalyzerProjects)"/>
+		<Exec Command="dotnet build @(AnalyzerProjects) --configuration $(Configuration)"  />
+	</Target>
+	<Target Name="PushToLocalFeed" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
+		<ItemGroup>
+			<NugetPackages Include="$(MSBuildProjectDirectory)\**\*.nupkg" />
+			<ExistingPackages Include="@(NugetPackages->'C:\Source\nuget-local-feed\%(Filename).nupkg')" />
+		</ItemGroup>
+		<Delete Files="@(ExistingPackages)" />
+		<Exec Command="dotnet nuget push @(NugetPackages) -s C:\Source\nuget-local-feed" />
+	</Target>
 </Project>

@@ -22,25 +22,21 @@ public sealed class QueryParserOptions
     /// Throws an exception when there is a Diagnostic Error. The default is 'false'.
     /// </summary>
     public bool ThrowExceptionOnDiagnosticError { get; set; }
+
     /// <summary>
     /// Gets or sets the encoding for the query parser. The default is UTF8.
     /// </summary>
     public Encoding Encoding { get; set; } = Encoding.UTF8;
-    /// <summary>
-    /// The allowed maximum depth of the query. The default is '5'.
-    /// </summary>
-    public int MaxEdgeDepth { get; set; } = 5;
-    /// <summary>
-    /// 
-    /// </summary>
-    public string? StartingVertexName { get; set; }
+
     /// <summary>
     /// Specify the timeout for query analysis. Default is 5 seconds.
     /// </summary>
     public TimeSpan AnalyzerTimeout { get; set; } = TimeSpan.FromSeconds(5);
 
-    internal IEnumerable<QueryAnalyzer> Analyzers => _analyzers;
-
+    /// <summary>
+    /// 
+    /// </summary>
+    public IReadOnlyCollection<QueryAnalyzer> Analyzers => _analyzers.AsReadOnly();
 
     /// <summary>
     /// 
@@ -56,6 +52,7 @@ public sealed class QueryParserOptions
 
         _analyzers.Add(analyzer);
     }
+
     /// <summary>
     /// 
     /// </summary>

@@ -54,11 +54,11 @@ public sealed partial class QueryParser
                 node!,
                 context.Diagnostics);
 
-            Analyze(document, options.AnalyzerTimeout);
+            Analyze(new QueryAnalyzerContext(document), options.AnalyzerTimeout);
 
             return document;
         }
-        catch (OperationCanceledException exception)
+        catch (OperationCanceledException)
         {
             throw;
         }
@@ -68,7 +68,7 @@ public sealed partial class QueryParser
         }
     }
 
-    private void Analyze(QueryDocument document, TimeSpan timeout)
+    private void Analyze(QueryAnalyzerContext context, TimeSpan timeout)
     {
         using var cancellationTokenSource = new CancellationTokenSource(timeout); // Max 10 seconds for analysis
 #if !DEBUG
@@ -78,7 +78,7 @@ public sealed partial class QueryParser
 
         foreach (var analyzer in options.Analyzers)
         {
-            analyzers.Add(analyzer.AnalyzeAsync(document, cancellationTokenSource.Token));
+            analyzers.Add(analyzer.AnalyzeAsync(context, cancellationTokenSource.Token));
         }
         while (analyzers.Any())
         {
