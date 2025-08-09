@@ -9,13 +9,13 @@ namespace Assimalign.OGraph.Syntax.Internal;
 
 internal class InvalidPageConstantsAnalyzer : QueryAnalyzer
 {
-    public override Task AnalyzeAsync(QueryDocument document, CancellationToken cancellationToken = default)
+    public override Task AnalyzeAsync(QueryAnalyzerContext context, CancellationToken cancellationToken = default)
     {
         return Task.Run(() =>
         {
-            if (document.Root is not null)
+            if (context.Document.Root is not null)
             {
-                foreach (var node in document.Root.GetNodesOfType<PageNode>())
+                foreach (var node in context.Document.Root.GetNodesOfType<PageNode>())
                 {
                     //node.Take.
                 }

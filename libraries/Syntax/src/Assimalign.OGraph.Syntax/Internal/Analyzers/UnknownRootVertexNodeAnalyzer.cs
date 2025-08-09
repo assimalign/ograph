@@ -11,7 +11,7 @@ namespace Assimalign.OGraph.Syntax.Internal;
 
 internal class UnknownRootVertexNodeAnalyzer : QueryAnalyzer
 {
-    public override Task AnalyzeAsync(QueryDocument document, CancellationToken cancellationToken = default)
+    public override Task AnalyzeAsync(QueryAnalyzerContext context, CancellationToken cancellationToken = default)
     {
         return Task.Run(() =>
         {

@@ -27,7 +27,9 @@ internal static class TypeHelper
         // Try get name from assembly name
 
         fullName = string.Join(".", assembly.GetName().FullName, name);
-        type = assembly.GetType(fullName);
+
+        
+        type = Type.GetType(fullName);
 
         // Last option, try to find type by name only
         if (type is null)

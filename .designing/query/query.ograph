@@ -14,7 +14,7 @@ Query: v(e:)
                 firstName
                 lastName
                 middleName
-                fullName
+                fullName(FullNameFormat.FLM)
             }
             # Array of Objects
             roles {
@@ -27,7 +27,6 @@ Query: v(e:)
                 timestamp
                 userId
                 user {
-                    id
                     info {
                         firstName
                         lastName
@@ -129,6 +128,51 @@ Query: v(e:)
                         }
                     )
 
+
+r(u:users)
+    .where(
+        contains(info.firstName, '$variable') or 
+        contains(info.lastName, '$variable') or 
+        contains(info.email, '$variable') or 
+        any(roles, {
+            
+        })
+    )
+    .sort(
+        info {
+            firstName 
+            lastName desc
+        }
+    )
+    .page(
+        skip $variable
+        take 20
+    )
+    .project(
+        id 
+        info { 
+            firstName 
+            lastName 
+            middleName 
+            email 
+        }
+        created {
+            timestamp 
+            userId
+            user {
+                info {
+                    firstName
+                    lastName
+                    email
+                }
+            }
+        }
+    )
+    .edge(u-[has]->t:tenants)
+        .page(0, 20).project(id info { name })
+    .edge(u-[has]->ur:roles).page(0, 20).project(id info { name })
+    .edge(u-[has]->g:groups).page(0, 20).project(id info { name })
+        .edge(g-[has]->gr:roles)
 
 v(providers)
     .project(

@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net472</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="coverlet.collector" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" />
+		<PackageReference Include="xunit" />
+		<PackageReference Include="xunit.runner.visualstudio" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="..\..\..\libraries\ToolKit\src\Assimalign.OGraph.ToolKit.TypeUtilities\Decorators\*.cs" Link="EmbeddedResources\%(Filename)%(Extension)" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Remove="DiagnosticAnalyzerTests\**" />
+	  <EmbeddedResource Remove="DiagnosticAnalyzerTests\**" />
+	  <None Remove="DiagnosticAnalyzerTests\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\src\Assimalign.OGraph.ToolKit.TypeUtilities.SourceGeneration\Assimalign.OGraph.ToolKit.TypeUtilities.SourceGeneration.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Using Include="Xunit" />
+	</ItemGroup>
+</Project>

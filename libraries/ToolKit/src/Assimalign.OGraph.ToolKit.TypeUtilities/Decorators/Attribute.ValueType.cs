@@ -4,17 +4,51 @@ using System.Text;
 
 namespace System;
 
-public enum ValueUnderlyingType
+/// <summary>
+/// 
+/// </summary>
+public enum UnderlyingType
 {
+    /// <summary>
+    /// 
+    /// </summary>
     Int,
+    /// <summary>
+    /// 
+    /// </summary>
     Short,
+    /// <summary>
+    /// 
+    /// </summary>
     Long,
+    /// <summary>
+    /// 
+    /// </summary>
     UInt,
+    /// <summary>
+    /// 
+    /// </summary>
     UShort,
+    /// <summary>
+    /// 
+    /// </summary>
     ULong,
+    /// <summary>
+    /// 
+    /// </summary>
+    Double,
+    /// <summary>
+    /// 
+    /// </summary>
+    Decimal,
+    /// <summary>
+    /// 
+    /// </summary>
     String,
+    /// <summary>
+    /// 
+    /// </summary>
     Guid,
-    Ulid
 }
 
 /// <summary>
@@ -27,26 +61,24 @@ public sealed class ValueTypeAttribute : Attribute
     /// The default constructor of
     /// </summary>
     /// <param name="type"></param>
-    public ValueTypeAttribute(ValueUnderlyingType type)
+    public ValueTypeAttribute(UnderlyingType type)
     {
-        Type = type;
+        UnderlyingType = type;
     }
 
     /// <summary>
-    /// 
+    /// The underlying type of the value type.
     /// </summary>
-    public ValueUnderlyingType Type { get; }
+    public UnderlyingType UnderlyingType { get; }
 
     /// <summary>
     /// Write a partial bool method that is called on instantiation.
     /// </summary>
-    public bool IncludeIsValidMethod { get; set; }
+    public bool IncludeIsValidMethod { get; init; }
 
     /// <summary>
     /// Specifies whether to include an implicit operators that convert to and from 
     /// the underlying runtime type.
     /// </summary>
-    public bool IncludeImplicitOperators { get; set; }
-
-
+    public bool IncludeImplicitOperators { get; init; }
 }

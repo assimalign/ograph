@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Assimalign.OGraph.Syntax;
 
+/// <summary>
+/// 
+/// </summary>
 public sealed class QueryAnalyzerContext
 {
     internal QueryAnalyzerContext(QueryDocument document)

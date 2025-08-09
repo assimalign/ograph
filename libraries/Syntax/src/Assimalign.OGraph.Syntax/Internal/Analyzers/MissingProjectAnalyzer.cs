@@ -9,13 +9,13 @@ namespace Assimalign.OGraph.Syntax.Internal;
 
 internal class MissingProjectAnalyzer : QueryAnalyzer
 {
-    public override Task AnalyzeAsync(QueryDocument document, CancellationToken cancellationToken = default)
+    public override Task AnalyzeAsync(QueryAnalyzerContext context, CancellationToken cancellationToken = default)
     {
         return Task.Run(() =>
         {
-            if (document.Root is not null)
+            if (context.Document.Root is not null)
             {
-                var vertices = document.Root.GetNodesOfType<VertexNode>();
+                var vertices = context.Document.Root.GetNodesOfType<VertexNode>();
 
                 foreach (var vertex in vertices)
                 {

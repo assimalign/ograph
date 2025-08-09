@@ -1,25 +1,46 @@
 <Project>
 	<Import Project="../Directory.Build.targets"/>
-	<ItemGroup Condition="Exists('..\..\..\..\analyzers\src\$(PackageId).Analyzers\bin\$(Configuration)\$(TargetFrameworkForAnalyzers)\$(PackageId).Analyzers.dll')">
-		<None Include="..\..\..\..\analyzers\src\$(PackageId).Analyzers\bin\$(Configuration)\$(TargetFrameworkForAnalyzers)\$(PackageId).Analyzers.dll"
+	
+	<!-- Package Analyzer -->
+	<ItemGroup Condition="Exists('..\..\..\..\analyzers\src\$(PackageId).SourceGeneration\bin\$(Configuration)\$(TargetFrameworkForAnalyzers)\$(PackageId).SourceGeneration.dll')">
+		<None Include="..\..\..\..\analyzers\src\$(PackageId).SourceGeneration\bin\$(Configuration)\$(TargetFrameworkForAnalyzers)\$(PackageId).SourceGeneration.dll"
 			Pack="true"
 			PackagePath="analyzers/dotnet/cs"
 			Visible="false"
 		/>
 	</ItemGroup>
-	<Target Name="BuildAnalyzers" BeforeTargets="Pack" Condition="'$(Configuration)' == 'Debug' and Exists('..\..\..\..\analyzers\src\$(PackageId).Analyzers\$(PackageId).Analyzers.csproj')">
+	<ItemGroup Condition="Exists('..\..\..\..\analyzers\src\$(PackageId).CodeFixes\bin\$(Configuration)\$(TargetFrameworkForAnalyzers)\$(PackageId).CodeFixes.dll')">
+		<None Include="..\..\..\..\analyzers\src\$(PackageId).CodeFixes\bin\$(Configuration)\$(TargetFrameworkForAnalyzers)\$(PackageId).CodeFixes.dll"
+			Pack="true"
+			PackagePath="analyzers/dotnet/cs"
+			Visible="false"
+		/>
+	</ItemGroup>
+	
+	<!-- Local Developmen-->
+	<!-- -->
+	<Target Name="BuildSourceGenerators" BeforeTargets="Pack" Condition="'$(Configuration)' == 'Debug' and Exists('..\..\..\..\analyzers\src\$(PackageId).SourceGeneration\$(PackageId).SourceGeneration.csproj')">
 		<ItemGroup>
-			<AnalyzerProjects Include="..\..\..\..\analyzers\src\$(PackageId).Analyzers\$(PackageId).Analyzers.csproj" />
+			<AnalyzerProjects1 Include="..\..\..\..\analyzers\src\$(PackageId).SourceGeneration\$(PackageId).SourceGeneration.csproj" />
 		</ItemGroup>
-		<Message Text="Building Analyzers @(AnalyzerProjects)"/>
-		<Exec Command="dotnet build @(AnalyzerProjects) --configuration $(Configuration)"  />
+		<Message Text="Building Analyzers @(AnalyzerProjects1)" Importance="high"/>
+		<Exec Command="dotnet build @(AnalyzerProjects1) --configuration $(Configuration)"  />
+	</Target>
+	<Target Name="BuildCodeFixes" BeforeTargets="Pack" Condition="'$(Configuration)' == 'Debug' and Exists('..\..\..\..\analyzers\src\$(PackageId).CodeFixes\$(PackageId).CodeFixes.csproj')">
+		<ItemGroup>
+			<AnalyzerProjects2 Include="..\..\..\..\analyzers\src\$(PackageId).CodeFixes\$(PackageId).CodeFixes.csproj" />
+		</ItemGroup>
+		<Message Text="Building Analyzers @(AnalyzerProjects2)" Importance="high"/>
+		<Exec Command="dotnet build @(AnalyzerProjects2) --configuration $(Configuration)"  />
 	</Target>
 	<Target Name="PushToLocalFeed" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug'">
 		<ItemGroup>
 			<NugetPackages Include="$(MSBuildProjectDirectory)\**\*.nupkg" />
 			<ExistingPackages Include="@(NugetPackages->'C:\Source\nuget-local-feed\%(Filename).nupkg')" />
+			<UserNugetCache Include="@(NugetPackages->'$([System.Environment]::GetFolderPath(SpecialFolder.UserProfile))\.nuget\packages\$([System.String]::Copy('%(NugetPackages.Filename)').Replace('.$(Version)', ''))')" />
 		</ItemGroup>
 		<Delete Files="@(ExistingPackages)" />
+		<RemoveDir Directories="@(UserNugetCache)" />
 		<Exec Command="dotnet nuget push @(NugetPackages) -s C:\Source\nuget-local-feed" />
 	</Target>
 </Project>

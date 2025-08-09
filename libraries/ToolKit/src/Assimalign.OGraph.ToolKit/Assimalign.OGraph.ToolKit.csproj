@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<RootNamespace>Assimalign.OGraph.ToolKit</RootNamespace>
-		<TargetFramework>$(TargetFrameworkForLibraries)</TargetFramework>
+		<TargetFrameworks>$(TargetFrameworkForLibraries)</TargetFrameworks>
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Assimalign.OGraph.ToolKit.TypeUtilities\Assimalign.OGraph.ToolKit.TypeUtilities.csproj" />

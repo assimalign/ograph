@@ -38,19 +38,21 @@
     POST    /hrm/$command
     POST    /hrm/$transaction
 
+
+    <Node Name="Employees" Type="Employee">
+        <Map Action="Query" Operation="GetEmployees" />
+        <Map Action="Lookup" Operation="GetEmployeeById" />
+        <Map Action="Create" Operation="CreateEmployee" />
+        <Map Action="Update" Operation="UpdateEmployee" />
+        <Map Action="Delete" Operation="DeleteEmployee" />
+        <Map Action="Patch" Operation="PatchEmployee" />
+    </Node>
+
     -->
 
-    <!-- You can link a source and target once. Use node aliases to link a source and target more than once. -->
-    <Graph Domain="Hrm">
-        <Node Name="Employees" Type="Employee">
-            <Map Action="Query" Operation="GetEmployees" />
-            <Map Action="Lookup" Operation="GetEmployeeById" />
-            <Map Action="Create" Operation="CreateEmployee" />
-            <Map Action="Update" Operation="UpdateEmployee" />
-            <Map Action="Delete" Operation="DeleteEmployee" />
-            <Map Action="Patch" Operation="PatchEmployee" />
-        </Node>
-        <Node Name="Addresses" Type="EmployeeAddresses" />
+    <Graph Domain="Hrm" Alias="Employees">
+        <Node Name="Employees" Type="Employee" />
+        <Node Name="Addresses" Type="EmployeeAddress" />
         <Node Name="Types" Type="EmployeeAddressType" />
         <Node Name="Jobs" Type="EmployeeJob" />
         <Node Name="TaxInfo" Type="EmployeeTaxInfo" />
@@ -64,7 +66,9 @@
         <Edge Name="HasJobs" Source="Employees" Target="Jobs" />
         <Edge Name="HasTasks" Source="Employees" Target="Tasks" />
         <Edge Name="HasAddressType" Source="Addresses" Target="Types" />
-        <Edge Name="HasTasks" Source="Jobs" Target="Tasks" />
+        <Edge Name="HasTasks" Source="Jobs" Target="Tasks">
+            <Query Name="GetEmployeeJobTasks" Path="Employees/Jobs/Tasks" />
+        </Edge>
         <Edge Name="HasWorkItems" Source="Tasks" Target="WorkItems" />
         <Edge Name="IsOwnedBy" Source="Addresses" Target="Employees" />
         <Type Name="Employee" Kind="Entity">
@@ -125,24 +129,19 @@
             <Property Name="FirstName" Type="String" />
             <Property Name="LastName" Type="String" />
             <Property Name="MiddleName" Type="String" IsNullable="true" />
-            <Property Name="FullName" Type="String" IsReadOnly="true" IsNullable="true" />
+            <Property Name="FullName" Type="String" IsReadOnly="true" IsNullable="true">
+                <Meta Key="Filtering@OGraph" Value="disabled" />
+                <Meta Key="Sorting@OGraph" Value="disabled" />
+            </Property>
             <Property Name="Birthdate" Type="Date" />
         </Type>
         <Type Name="AuditEntry" Kind="Complex">
             <Property Name="Timestamp" Type="DateTime" />
             <Property Name="UserId" Type="Assimalign.ErpCore.Administration.UserId" />
-            <Property Name="User" Type="Assimalign.ErpCore.Administration.User" IsReadOnly="true" IsNullable="false">
-                <Meta>
-                    <Key>QuerySettings@OGraph</Key>
-                    <Value>
-                        <Sorting>Enabled</Sorting>
-                        <Filtering>Enabled</Filtering>
-                    </Value>
-                </Meta>
-                <Meta>
-                    <Key>Description@ograph</Key>
-                    <Value>The user object associated with the employee object.</Value>
-                </Meta>
+            <Property Name="User" Type="Assimalign.ErpCore.Administration.User" IsReadOnly="true">
+                <Meta Key="Filtering@ograph" Value="disabled" />
+                <Meta Key="Sorting@ograph" Value="disabled" />
+                <Meta Key="Annotation@ograph" Value="The user object associated with the employee object." />
             </Property>
         </Type>
         <Type Name="EmployeeDelta" Kind="Complex">
@@ -254,40 +253,226 @@
             <Parameter Name="Roles" Type="String[]" />
         </Directive>
     </Graph>
-    <Graph Domain="Administration">
+
+    
+    <Graph Domain="Assimalign.Hrm">
+        <Node Name="Employees" />
+        <Node Name="Addresses" />
+        <Node Name="AddressTypes" />
+        <Node Name="Jobs" />
+        <Node Name="Tasks" />
+        <Node Name="WorkItems" />
+        <Node Name="Departments" />
+        <Edge Name="Has" Source="Employees" Target="Addresses" />
+        <Edge Name="WorksIn" Source="Employees" Target="Departments" />
+        <Edge Name="Has" Source="Employees" Target="Jobs" />
+        <Edge Name="Has" Source="Jobs" Target="WorkItems" />
+        <Edge Name="Has" Source="Employees" Target="WorkItems" />
+        <Action Name="GetWorkItem" Kind="Query" Path="Employees/Jobs/WorkItems">
+            <Parameter Name="EmployeeId" Type="EmployeeId" Kind="Path">
+                <ParameterBinding Node="Employees" />
+            </Parameter>
+            <Parameter Name="JobId" Type="JobId" Kind="Path">
+                <ParameterBinding Node="Jobs" />
+            </Parameter>
+            <Parameter Name="WorkItemId" Type="WorkItemId" Kind="Path">
+                <ParameterBinding Node="WorkItems" />
+            </Parameter>
+            <Parameter Name="$.Query" Type="String" Kind="Query">
+
+            </Parameter>
+            <ReturnType Type="WorkItem" />
+        </Action>
+    </Graph>
+    <Graph Domain="Assimalign.AdminManagement">
+        <Node Name="Tenants" />
         <Node Name="Users" />
+        <Node Name="Administrators" />
         <Node Name="Roles" />
         <Node Name="Groups" />
+        <Node Name="Permissions" />
+        <Edge Name="Has" Source="Tenants" Target="Administrators" />
+        <Edge Name="Has" Source="Users" Target="Tenants" />
+        <Edge Name="Has" Source="Tenants" Target="Users" />
+        <Edge Name="Has" Source="Users" Target="Roles" />
+        <Edge Name="Has" Source="Users" Target="Groups" />
+        <Edge Name="Has" Source="Roles" Target="Permissions" />
+        <Edge Name="AssignedTo" Source="Roles" Target="Groups" />
+        <Edge Name="AssignedTo" Source="Roles" Target="Users" />
+        <Action Name="GetUsers" Kind="Query" Path="Users">
+            <!-- 
+                context.GetQueryArgument<T>(GdmName name)
+                context.GetPathArgument<T>(GdmName name)
+                context.GetInputArgument<T>(GdmName name)
+            -->
+            <Parameter Name="$.Project" Type="User" Kind="Query" />
+            <Parameter Name="$.Filter" Type="UserFilterInput" />
+            <Parameter Name="$.Sort" Type="UserSortInput" />
+            <Parameter Name="$.Page" Type="" />
+            <ReturnType Type="User[]" />
+        </Action>
+        <Action Name="GetUser" Kind="Query" Path="Users">
+            <Parameter Name="UserId" Type="UserId" Kind="Path">
+                <ParameterBinding Node="Users" />
+            </Parameter>
+            <ReturnType Type="User" />
+        </Action>
+        <Action Name="CreateUser" Kind="Create" Path="Users">
+            <Parameter Name="User" Type="UserCreateInput" Kind="Input" />
+            <Parameter Name="$.Query" Type="String" Kind="Query" />
+            <ReturnType Type="User" />
+        </Action>
+        <Action Name="GetUserRoles" Kind="Query" Path="Users/Roles">
+            <ReturnType Type="Role[]" />
+        </Action>
+        <Event Name="OnUserCreated" On="CreateUser" />
+        <Type Name="Tenant" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="TenantId" />
+            <Property Name="Info" Type="TenantInfo" />
+            <Property Name="Created" Type="AuditEntry" />
+            <Property Name="Updated" Type="AuditEntry" />
+        </Type>
+        <Type Name="User" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="UserId" />
+            <Property Name="Username" Type="Username" />
+            <Property Name="Info" Type="UserInfo" />
+            <Property Name="Created" Type="AuditEntry" />
+            <Property Name="Updated" Type="AuditEntry" />
+        </Type>
+        <Type Name="UserFilterInput" Kind="Complex">
+            <Property Name="Id" Type="UserId" />
+            <Property Name="Username" Type="Username" />
+            <Property Name="Info" Type="UserInfo" />
+            <Property Name="Created" Type="AuditEntry" />
+            <Property Name="Updated" Type="AuditEntry" />
+            <Property Name="Groups" Type="Group[]" />
+            <Property Name="Roles" Type="Role[]" />
+        </Type>
+        <Type Name="UserSortInput" Kind="Complex">
+            <Property Name="Username" Type="Username" />
+            <Property Name="Info" Type="UserInfo" />
+            <Property Name="Created" Type="AuditEntry" />
+            <Property Name="Updated" Type="AuditEntry" />
+        </Type>
+        <Type Name="UserCreateInput" Kind="Complex">
+            <Property Name="Username" Type="Username" />
+            <Property Name="Info" Type="UserInfo" />
+        </Type>
+        <Type Name="Role" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="RoleId" />
+            <Property Name="Name" Type="String" />
+            <Property Name="Value" Type="String" />
+            <Property Name="Created" Type="AuditEntry" />
+            <Property Name="Updated" Type="AuditEntry" />
+        </Type>
+        <Type Name="Group" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="GroupId" />
+            <Property Name="Info" Type="GroupInfo" />
+            <Property Name="Created" Type="AuditEntry" />
+            <Property Name="Updated" Type="AuditEntry" />
+        </Type>
+        <Type Name="Permission" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="PermissionId" />
+        </Type>
+        <Type Name="GroupInfo" Kind="Complex">
+            <Property Name="Name" Type="String" />
+        </Type>
+        <Type Name="TenantInfo" Kind="Complex">
+            <Property Name="Name" Type="String" />
+        </Type>
+        <Type Name="UserCreateInput" Kind="Complex">
+            <Property Name="Info" Type="UserInfo" />
+        </Type>
+        <Type Name="AuditEntry" Kind="Complex">
+            <Property Name="Timestamp" Type="DateTime" />
+            <Property Name="UserId" Type="UserId" />
+            <Property Name="User" Type="AuditEntryUserReference" />
+        </Type>
+        <Type Name="AuditEntryUserReference" Kind="Complex">
+            <Property Name="Username" Type="Username" />
+            <Property Name="Info" Type="UserInfo" />
+        </Type>
+        <Type Name="UserId" Kind="Scalar">
+            <Regex Pattern="" />
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="UserInfo" Kind="Complex">
+            <Property Name="FirstName" Type="String" />
+            <Property Name="LastName" Type="String" />
+            <Property Name="MiddleName" Type="String" />
+            <Function Name="FullName">
+                <Parameter Name="Format" Type="FullNameFormat" />
+                <ReturnType Type="String" />
+            </Function>
+        </Type>
+        <Type Name="FullNameFormat" Type="Enum">
+            <Member Name="" Value="" />
+        </Type>
         <Subscriber Name="OnEmployeeCreated" On="Hdm#Event=EmployeeCreated">
             <Domain Name="Hrm" />
         </Subscriber>
-        <Type Name="User" />
-        <Type Name="Role" />
-        <Type Name="Group" />
-        <Type Name="Permission" />
-        <Type Name="Tenant" />
-        <Type Name="UserId" Kind="Scalar">
-            <PrimitiveType Type="String" />
-        </Type>
+        <Directive Name="Authorize" On="Property">
+            <Parameter Name="Role" Type="String[]" />
+        </Directive>
+        <Action Kind="Query" Path="Users" />
+        <!-- /Users/Roles/Permissions -->
+        <Action Kind="Query" Path="Users/Roles/Permissions">
+            <ReturnType Type="Permission[]" />
+        </Action>
+        <!-- /Users(userId)/Roles(roleId)/Permissions -->
+        <Action Kind="Query" Path="Users/Roles/Permissions">
+            <Input Name="UserId" Type="UserId" Kind="Path">
+                <InputBinding Node="Users" />
+            </Input>
+            <Input Name="RoleId" Type="RoleId" Kind="Path">
+                <InputBinding Node="Roles" />
+            </Input>
+            <Input Name="$.query" Type="String" Kind="Query">
+                
+            </Input>
+            <ReturnType Type="Permission[]" />
+        </Action>
+        <Action Kind="Create" Path="Users">
+            <Parameter Name="User" Type="UserCreateInput" Kind="Input" />
+            <ReturnType Type="User" />
+        </Action>
     </Graph>
-    <Graph Domain="Payroll">
-        <Node Name="Paychecks" Type="Paycheck" />
+    <Graph Domain="Assimalign.Payroll">
+        <Node Name="PayStubs" />
 
-        <Query Name="GetPaychecks" Node="Paychecks">
-            <ReturnType Type="PaycheckList" />
+
+        <Type Name="PayStub" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="Int" />
+            <Property Name="Amount" Type="Money" />
+        </Type>
+        <Type Name="PayStubCollection" Kind="Collection">
+            <Item Type="PayStub" />
+        </Type>
+        <Type Name="Money" Kind="Scalar">
+            <PrimitiveType Type="Float" />
+        </Type>
+        <Query Name="GetPayStubs" Node="PayStubs">
+            <ReturnType Type="PayStubCollection" />
         </Query>
+        <Command Name="" />
     </Graph>
-    <Graph Domain="Inventory" />
-    <Graph Domain="Warehousing" />
-    <Graph Domain="Packaging" />
-    <Graph Domain="Shipping" />
-    <Graph Domain="Billing" />
-    <Graph Domain="Purchasing">
+    <Graph Domain="Assimalign.Inventory" />
+    <Graph Domain="Assimalign.Warehousing" />
+    <Graph Domain="Assimalign.Packaging" />
+    <Graph Domain="Assimalign.Shipping" />
+    <Graph Domain="Assimalign.Billing" />
+    <Graph Domain="Assimalign.Purchasing">
         <Type Name="PurchaseOrder" />
     </Graph>
-    <Graph Domain="Procurement" />
-    <Graph Domain="Vendors" />
-    <Graph Domain="Receiving" />
-    <Graph Domain="Scheduling" />
-    <Graph Domain="MasterDataManagement" />
+    <Graph Domain="Assimalign.Procurement" />
+    <Graph Domain="Assimalign.Vendors" />
+    <Graph Domain="Assimalign.Receiving" />
+    <Graph Domain="Assimalign.Scheduling" />
+    <Graph Domain="Assimalign.MasterDataManagement" />
 </Gdmx>
