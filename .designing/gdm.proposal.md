@@ -1,5 +1,13 @@
 # OGraph GDM Proposal
 
+> **Status: RATIFIED (2026-07-16)** as design decision D1 of
+> [docs/DELIVERY_ROADMAP.md](../docs/DELIVERY_ROADMAP.md). The reconciled, authoritative
+> specification is [docs/specification.md](../docs/specification.md); its **Appendix B** records
+> every delta from this proposal (adopted: semantic parameter roles; deferred: split
+> `gcapx`/`gbindx` formats, multi-entity Node bindings, Command `Action` taxonomy, edge-payload
+> exposure on resolver results; not adopted: field capability facets — replaced by policies).
+> This document is retained as design rationale.
+
 ## Why this proposal exists
 
 The repository currently has three competing concerns that are partially mixed together:
