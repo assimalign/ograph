@@ -33,9 +33,9 @@ public class GdmGraphCollection : IOGraphGdmGraphCollection, IEnumerable<GdmGrap
 
         for (int i = 0; i < _items.Count; i++)
         {
-            if (_items[i].Name == graph.Name)
+            if (_items[i].Domain == graph.Domain)
             {
-                ThrowHelper.ThrowInvalidOperationException($"The model already contains graph: {graph.Name}");
+                ThrowHelper.ThrowInvalidOperationException($"The model already contains graph: {graph.Domain}");
             }
         }
 
@@ -56,7 +56,7 @@ public class GdmGraphCollection : IOGraphGdmGraphCollection, IEnumerable<GdmGrap
 
         for (int i = 0; i < _items.Count; i++)
         {
-            if (_items[i].Name == graph.Name)
+            if (_items[i].Domain == graph.Domain)
             {
                 _items.RemoveAt(i);
             }

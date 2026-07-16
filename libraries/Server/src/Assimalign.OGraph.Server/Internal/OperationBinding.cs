@@ -85,7 +85,8 @@ internal partial class OperationBinding : IOGraphOperationBinding
                     // The user requested an Unsupported media type. - 406 (Not Acceptable)
                     else
                     {
-                        return ProcessErrorResultAsJsonAsync(new OGraph)
+                        // TODO: [O01.01.xx] operation binding execution
+                        throw new NotImplementedException();
                     }
                 }
                 else
@@ -100,10 +101,12 @@ internal partial class OperationBinding : IOGraphOperationBinding
                     {
                         IOGraphErrorResult error => ProcessErrorResultAsync(error, ctx),
                         IOGraphQueryResult query => Task.CompletedTask,
-                        IOGraphObjectResult value => Task.CompletedTask
+                        IOGraphObjectResult value => Task.CompletedTask,
+                        _ => Task.CompletedTask
                     };
 
-                    return task;
+                    await task;
+                    return;
                 }
             }
             catch (Exception exception)

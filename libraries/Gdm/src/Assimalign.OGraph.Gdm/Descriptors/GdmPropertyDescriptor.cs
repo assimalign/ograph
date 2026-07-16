@@ -137,4 +137,9 @@ public class GdmPropertyDescriptor<[DynamicallyAccessedMembers(DynamicallyAccess
     {
         throw new NotImplementedException();
     }
+    IOGraphGdmPropertyDescriptor IOGraphGdmPropertyDescriptor.UseDirective(IOGraphGdmDirective directive)
+    {
+        // TODO: [O01.01.02.02] type-system runtime
+        throw new NotImplementedException();
+    }
 }

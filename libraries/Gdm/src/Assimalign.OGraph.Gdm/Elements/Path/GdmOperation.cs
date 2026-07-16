@@ -21,9 +21,8 @@ public class GdmOperation : GdmBindableElement, IOGraphGdmOperation
     IOGraphGdmType? IOGraphGdmOperation.ReturnType => ReturnType;
     IOGraphGdmParameterCollection IOGraphGdmOperation.Parameters => Parameters;
 
-    //GdmOperationAction IOGraphGdmOperation.Kind => throw new NotImplementedException();
-
-
+    // TODO: [O01.01.02.02] type-system runtime
+    GdmOperationAction IOGraphGdmOperation.Kind => throw new NotImplementedException();
 
     bool IOGraphGdmBindableElement.IsBound => throw new NotImplementedException();
 

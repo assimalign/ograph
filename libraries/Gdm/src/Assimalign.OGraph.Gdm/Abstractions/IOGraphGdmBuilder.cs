@@ -38,7 +38,15 @@ public interface IOGraphGdmBuilder
     //IOGraphGdmBuilder AddRemoteGraph()
 
     /// <summary>
-    /// 
+    ///
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    IOGraphGdmBuilder AddMeta(string key, string value);
+
+    /// <summary>
+    ///
     /// </summary>
     /// <returns></returns>
     IOGraphGdm Build();

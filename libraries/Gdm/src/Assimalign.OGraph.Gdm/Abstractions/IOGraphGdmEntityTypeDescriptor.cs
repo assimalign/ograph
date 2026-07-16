@@ -8,4 +8,5 @@ public interface IOGraphGdmEntityTypeDescriptor
     IOGraphGdmEntityTypeDescriptor HasKey(IOGraphGdmEntityKey key);
     IOGraphGdmEntityTypeDescriptor HasProperty(IOGraphGdmProperty property);
     IOGraphGdmEntityTypeDescriptor HasFunction(IOGraphGdmFunction function);
+    IOGraphGdmEntityTypeDescriptor AddMeta(string key, string value);
 }

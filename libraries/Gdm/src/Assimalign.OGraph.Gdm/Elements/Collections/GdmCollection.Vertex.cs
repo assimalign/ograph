@@ -31,7 +31,7 @@ public class GdmNodeCollection : IOGraphGdmNodeCollection, IEnumerable<GdmNode>
             {
                 var item = _items[i];
 
-                if (item.Label == name)
+                if (item.Name == name)
                 {
                     return item;
                 }

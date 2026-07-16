@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Assimalign.OGraph.ToolKit.TypeUtilities.SourceGeneration;
 
 namespace Assimalign.OGraph.ToolKit.Tests;
 
