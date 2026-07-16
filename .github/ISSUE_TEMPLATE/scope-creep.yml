@@ -1,0 +1,45 @@
+name: Scope creep (discovered work)
+description: Out-of-scope work discovered while implementing something else. Prefer New-OGraphWorkItem.ps1, which tags Origin and links the sub-issue.
+title: "[O01.01.NN.MM(.PP)] "
+labels: [scope-creep]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Capture work that falls **outside** the item you are currently building, so a PR can close
+        it alongside the original. **Prefer the script**: `New-OGraphWorkItem.ps1 -As task|feature ...`
+        auto-tags Origin, applies the `scope-creep` label, and links the sub-issue.
+  - type: input
+    id: discovered-while
+    attributes:
+      label: Discovered while implementing
+      description: The feature/branch you were working on when this surfaced.
+      placeholder: "[O01.01.05.01] (#nnn)"
+    validations:
+      required: true
+  - type: dropdown
+    id: classification
+    attributes:
+      label: Classification
+      description: Where does this belong relative to the feature you were building?
+      options:
+        - "DiscoveredTask — in-feature: a separable task under the current feature"
+        - "DiscoveredFeature — out-of-feature: a new sibling feature under the area epic (signals the feature was under-scoped)"
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What and why; note it was captured as out-of-scope work.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      value: |
+        - <observable, testable outcome>
+        - Tests cover the new behavior.
+    validations:
+      required: true

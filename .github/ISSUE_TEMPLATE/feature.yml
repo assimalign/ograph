@@ -1,0 +1,45 @@
+name: Feature (WBS)
+description: A feature under an area epic. Prefer New-OGraphWorkItem.ps1, which computes the WBS code and links the sub-issue automatically.
+title: "[O01.01.NN.MM] "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Prefer the script** (`New-OGraphWorkItem.ps1 -As feature ...`) so the WBS code, the
+        native sub-issue link, and the Project #8 fields (Kind=Feature, Area, Origin, Status) are
+        set for you. Use this form only as a fallback — then replace `NN.MM` in the title with the
+        next free code, set the parent area epic, and set the Project fields manually.
+  - type: input
+    id: parent
+    attributes:
+      label: Parent area epic
+      description: The area epic this feature belongs under.
+      placeholder: "#nnn [O01.01.05] OGraph - Server"
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What and why (one or two sentences).
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      value: |
+        - <observable, testable outcome>
+        - Tests cover the new behavior.
+        - The implementation remains NativeAOT-safe and trimming-safe.
+    validations:
+      required: true
+  - type: textarea
+    id: standards
+    attributes:
+      label: Standards and Compliance
+      value: |
+        - Conforms to the OGraph specification section it implements (cite it; RFC 10008 / RFC 9110 / RFC 8941 where protocol-related), or notes that it is a runtime-contract concern.
+    validations:
+      required: false
