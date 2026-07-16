@@ -91,7 +91,9 @@ Key options: `-Search "<keywords>"` (find existing items, then exit), `-As task|
 The script also: **searches for duplicates** and blocks on a likely match (Step 1); **validates placement**
 (refuses a parent that isn't an area epic or feature, and refuses to infer off a non-feature branch); sets
 **Kind / Area / Origin** project fields, the **`scope-creep`** label on discovered items, and the
-**`enhancement`** label on features automatically; stamps discovered items with a
+**`enhancement`** label on features automatically; stamps the native GitHub **issue type**
+(feature → `Feature`, task → `Task`) so the item gets a title badge and can be grouped by the built-in
+**Type** field; stamps discovered items with a
 `> Discovered while implementing [<feature>] (#N)` provenance line; records each item (with its Origin)
 in a per-branch manifest under `.git/ograph/`; and **backs off and retries on GitHub rate limits**
 (honoring `Retry-After` / the reset, else exponential backoff).

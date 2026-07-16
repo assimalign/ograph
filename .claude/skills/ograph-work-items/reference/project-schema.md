@@ -88,6 +88,35 @@ gh issue list --repo assimalign/ograph --label scope-creep --state all --json nu
 # By field on the board: filter or group Project #8 by Origin (DiscoveredTask / DiscoveredFeature).
 ```
 
+## Native issue types
+
+In addition to the custom **Kind** field above, every work item carries a native GitHub **issue
+type** (org-level, `assimalign`). The type renders as a badge on the issue title and gives Project #8
+a built-in **"Type"** field to group/filter by. Three org types are used:
+
+| Issue type | Color | Applies to (WBS level) | Kind ↔ type |
+| --- | --- | --- | --- |
+| **Epic** | pink | Program root (`.00`, #5) + area epics (`O01.01.NN`, #6–#17) | Kind Program / Area Epic → **Epic** |
+| **Feature** | blue | Features (`O01.01.NN.MM`) | Kind Feature → **Feature** |
+| **Task** | yellow | Tasks (`O01.01.NN.MM.PP`) | Kind Task → **Task** |
+
+`New-OGraphWorkItem.ps1` stamps the native type automatically (feature → `Feature`, task → `Task`);
+the issue-form templates (`feature.yml`, `task.yml`, `scope-creep.yml`) carry a top-level `type:` key
+that assigns it on submission. Set/change it manually via REST (the `type` param takes the type
+**name**):
+
+```bash
+gh api -X PATCH repos/assimalign/ograph/issues/43 -f type=Feature   # or Epic / Task
+# List / verify org types:  gh api orgs/assimalign/issue-types
+# Verify per issue (GraphQL — the issues CLI has no issueType field):
+gh api graphql -f query='{ repository(owner:"assimalign",name:"ograph"){ issue(number:43){ issueType { name } } } }'
+```
+
+> Grouping a Project #8 view by **Kind** (custom field) or by the built-in **Type** (native issue
+> type) is a **view-level UI setting** — configured per view under *Group by* in the project, not via
+> the API. The native type is set on the issue (above); how any given board view groups by it is
+> chosen in the UI.
+
 ## Body template (de-facto standard across issues)
 
 ```markdown

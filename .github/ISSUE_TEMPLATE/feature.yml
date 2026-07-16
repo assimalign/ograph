@@ -2,6 +2,7 @@ name: Feature (WBS)
 description: A feature under an area epic. Prefer New-OGraphWorkItem.ps1, which computes the WBS code and links the sub-issue automatically.
 title: "[O01.01.NN.MM] "
 labels: [enhancement]
+type: Feature
 body:
   - type: markdown
     attributes:

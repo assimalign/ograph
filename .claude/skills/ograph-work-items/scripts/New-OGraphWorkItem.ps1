@@ -504,11 +504,12 @@ foreach ($lbl in $labels) { $createArgs += @('--label', $lbl) }
 if ($DryRun) {
     Write-Host "DRYRUN gh $($createArgs -join ' ')" -ForegroundColor DarkYellow
     Write-Host "DRYRUN body:`n$body" -ForegroundColor DarkGray
+    Write-Host "DRYRUN gh api -X PATCH repos/$Repo/issues/<new#> -f type=$kindOpt  (stamp native issue type)" -ForegroundColor DarkYellow
     Remove-Item $tmp -Force
     $extra = @("Status=$Status", "Kind=$kindOpt", "Area=$areaName", "Origin=$Origin")
     if ($Priority) { $extra += "Priority=$Priority" }
     if ($Wave)     { $extra += "Wave=$Wave" }
-    Write-Host "DRYRUN would: add to Project #$ProjectNum, set $($extra -join ', '); labels [$($labels -join ', ')]; link as sub-issue of #$($parentIssue.number); record in branch manifest." -ForegroundColor DarkYellow
+    Write-Host "DRYRUN would: add to Project #$ProjectNum, set $($extra -join ', '); stamp native issue type=$kindOpt; labels [$($labels -join ', ')]; link as sub-issue of #$($parentIssue.number); record in branch manifest." -ForegroundColor DarkYellow
     return
 }
 
@@ -520,6 +521,16 @@ if (-not $issueUrl) { throw "Issue creation failed or no issue URL returned:`n$c
 $issueUrl  = $issueUrl.Matches[0].Value
 $newNumber = [int]($issueUrl -split '/')[-1]
 Write-Host "Created #$newNumber -> $issueUrl" -ForegroundColor Green
+
+# 5b. Stamp the native GitHub issue type (title badge + project group-by "Type"): feature -> Feature, task -> Task.
+#     Routed through Invoke-Gh so rate-limit/DryRun handling applies. Non-fatal: the item is already
+#     created and will be linked, so a failure warns rather than aborts.
+try {
+    Invoke-Gh api -X PATCH "repos/$Repo/issues/$newNumber" -f "type=$kindOpt" | Out-Null
+    Write-Host "Set native issue type = $kindOpt" -ForegroundColor Green
+} catch {
+    Write-Warning "Could not set native issue type '$kindOpt' on #$newNumber; set it manually: gh api -X PATCH repos/$Repo/issues/$newNumber -f type=$kindOpt`n$_"
+}
 
 # 6. Add to project and set fields
 $projectId = (Invoke-GhRetry -GhArgs @('project','view',"$ProjectNum",'--owner',$Owner,'--format','json') | ConvertFrom-Json).id

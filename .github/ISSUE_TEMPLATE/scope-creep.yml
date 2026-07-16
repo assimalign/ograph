@@ -2,6 +2,7 @@ name: Scope creep (discovered work)
 description: Out-of-scope work discovered while implementing something else. Prefer New-OGraphWorkItem.ps1, which tags Origin and links the sub-issue.
 title: "[O01.01.NN.MM(.PP)] "
 labels: [scope-creep]
+type: Task
 body:
   - type: markdown
     attributes:

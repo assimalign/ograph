@@ -2,6 +2,7 @@ name: Task (WBS)
 description: A task under a feature. Prefer New-OGraphWorkItem.ps1, which computes the WBS code and links the sub-issue automatically.
 title: "[O01.01.NN.MM.PP] "
 labels: []
+type: Task
 body:
   - type: markdown
     attributes:
