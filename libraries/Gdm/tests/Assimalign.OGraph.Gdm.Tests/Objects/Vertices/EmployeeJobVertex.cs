@@ -18,7 +18,7 @@ public class EmployeeJobVertex : GdmNode<EmployeeJob>
     protected override void Configure(GdmVertexDescriptor<EmployeeJob> descriptor)
     {
         descriptor.HasLabel("employeeJob");
-        descriptor.HasEntityType("")
+        descriptor.HasEntityType("");
         //descriptor.HasType<EmployeeJobEntity>();
     }
 }

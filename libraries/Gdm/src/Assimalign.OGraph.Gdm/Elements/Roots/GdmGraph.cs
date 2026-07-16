@@ -40,6 +40,10 @@ public sealed class GdmGraph : GdmElement, IOGraphGdmGraph
     IOGraphGdmTypeCollection IOGraphGdmGraph.Types => Types;
     IOGraphGdmMetaCollection IOGraphGdmElement.Meta => Meta;
     IOGraphGdm IOGraphGdmGraph.Model => Model;
+    // TODO: [O01.01.02.02] type-system runtime
+    IOGraphGdmEventCollection IOGraphGdmGraph.Events => throw new NotImplementedException();
+    // TODO: [O01.01.02.02] type-system runtime
+    IOGraphGdmSubscriberCollection IOGraphGdmGraph.Subscribers => throw new NotImplementedException();
 
     #endregion
 

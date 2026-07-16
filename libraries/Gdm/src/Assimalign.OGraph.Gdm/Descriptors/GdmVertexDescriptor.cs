@@ -22,7 +22,7 @@ public class GdmVertexDescriptor<[DynamicallyAccessedMembers(DynamicallyAccessed
    // public GdmVertex<T> Vertex { get; }
     public GdmVertexDescriptor<T> HasLabel(GdmLabel label)
     {
-        _vertex.SetLabel(label);
+        _vertex.SetName(label.Value);
         return this;
     }
     

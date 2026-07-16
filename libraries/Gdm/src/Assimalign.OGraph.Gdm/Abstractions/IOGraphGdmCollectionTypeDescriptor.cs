@@ -10,4 +10,5 @@ public interface IOGraphGdmCollectionTypeDescriptor
 {
     IOGraphGdmCollectionTypeDescriptor HasName(GdmName name);
     IOGraphGdmCollectionTypeDescriptor HasItemType(IOGraphGdmType type);
+    IOGraphGdmCollectionTypeDescriptor AddMeta(string key, object value);
 }

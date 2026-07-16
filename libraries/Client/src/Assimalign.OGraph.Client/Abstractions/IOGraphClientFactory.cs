@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Assimalign.OGraph.Gdm;
+
 namespace Assimalign.OGraph.Client;
 
 /// <summary>

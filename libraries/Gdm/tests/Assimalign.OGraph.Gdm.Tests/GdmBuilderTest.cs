@@ -14,7 +14,7 @@ public class GdmBuilderTest
     [Fact]
     public void Test()
     {
-        var builder = GdmBuilder.Create("ErpCore")
+        var builder = GdmBuilder.Create()
             .AddGraph("Employees", descriptor =>
             {
 

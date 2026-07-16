@@ -143,19 +143,15 @@ public sealed class GdmGraphDescriptor : IOGraphGdmGraphDescriptor
     public GdmGraphDescriptor AddCollectionType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
         where T : GdmCollectionType
     {
-        return AddType(graph =>
-        {
-
-        });
+        // TODO: [O01.01.02.02] type-system runtime
+        throw new NotImplementedException();
     }
 
     public GdmGraphDescriptor AddCollectionType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(GdmName itemTypeName)
         where T : GdmCollectionType
     {
-        return AddType(graph =>
-        {
-
-        });
+        // TODO: [O01.01.02.02] type-system runtime
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -269,7 +265,7 @@ public sealed class GdmGraphDescriptor : IOGraphGdmGraphDescriptor
                 throw new Exception();
             }
 
-            return new GdmNode(label, entityType, graph);
+            return new GdmNode(label.Value, entityType, graph);
         });
     }
 

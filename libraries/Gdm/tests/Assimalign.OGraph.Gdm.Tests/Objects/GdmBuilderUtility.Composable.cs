@@ -13,7 +13,7 @@ public static partial class GdmBuilderUtility
 {
     private static IOGraphGdm CreateComposableModel()
     {
-        var model = new Gdm("ErpCore");
+        var model = new Gdm();
 
         // Employees Graph
         var graph = new GdmGraph("Employees", model);

@@ -30,12 +30,8 @@ public class GdmEntityTypeDescriptor<[DynamicallyAccessedMembers(DynamicallyAcce
         // Get Property Info from reflected type
         var propertyInfo = AssertExpression(expression);
 
-
-        var property = new GdmProperty(
-            propertyInfo.Name,)
-
-
-        return this;
+        // TODO: [O01.01.02.02] type-system runtime
+        throw new NotImplementedException();
     }
     public GdmEntityTypeDescriptor<T> HasKey<TKey>(Expression<Func<T, TKey?>> expression) where TKey : struct
     {

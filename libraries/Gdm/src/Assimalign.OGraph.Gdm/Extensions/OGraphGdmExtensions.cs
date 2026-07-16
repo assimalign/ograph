@@ -50,7 +50,8 @@ public static class OGraphGdmExtensions
     public static IOGraphGdmGraph GetGraph(this IOGraphGdm model, GdmName name)
     {
         AssertNull(model, nameof(model));
-        return model.Graphs.Find<IOGraphGdmGraph>(name);
+        // TODO: [O01.01.02.02] type-system runtime — graphs are keyed by GdmDomain, not GdmName.
+        throw new NotImplementedException();
     }
 
     private static void AssertNull(object value, string paramName)

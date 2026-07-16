@@ -98,15 +98,7 @@ internal class OperationBindingContext : IOGraphOperationBindingContext
 
     public T GetRouteValue<T>(string paramName)
     {
-        var routeSegments = Binding.Route.Segments;
-        var pathSegments = Request.Path.Segments;
-
-        for (int i = 0; i < pathSegments.Length; i++)
-        {
-            var rs = routeSegments[i];
-            var ps = pathSegments[i];
-
-            if (rs.SegmentType == RouteSegmentType.Parameter && r) 
-        }
+        // TODO: [O01.01.xx] request route-value binding
+        throw new NotImplementedException();
     }
 }

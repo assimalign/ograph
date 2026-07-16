@@ -10,4 +10,5 @@ public interface IOGraphGdmPropertyDescriptor
     IOGraphGdmPropertyDescriptor UseGetter(GdmPropertyGetter getter);
     IOGraphGdmPropertyDescriptor UseSetter(GdmPropertySetter setter);
     IOGraphGdmPropertyDescriptor IsRequired();
+    IOGraphGdmPropertyDescriptor AddMeta(string key, object value);
 }
