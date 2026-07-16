@@ -1,0 +1,45 @@
+name: Task (WBS)
+description: A task under a feature. Prefer New-OGraphWorkItem.ps1, which computes the WBS code and links the sub-issue automatically.
+title: "[O01.01.NN.MM.PP] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Prefer the script** (`New-OGraphWorkItem.ps1 -As task ...`) so the WBS code, the native
+        sub-issue link, and the Project #8 fields (Kind=Task, Area, Origin, Status) are set for you.
+        Use this form only as a fallback — then replace `NN.MM.PP` in the title with the next free
+        code, set the parent feature, and set the Project fields manually.
+  - type: input
+    id: parent
+    attributes:
+      label: Parent feature
+      description: The feature this task belongs under.
+      placeholder: "#nnn [O01.01.05.01] Implement HTTP QUERY method binding"
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What and why (one or two sentences).
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      value: |
+        - <observable, testable outcome>
+        - Tests cover the new behavior.
+        - The implementation remains NativeAOT-safe and trimming-safe.
+    validations:
+      required: true
+  - type: textarea
+    id: standards
+    attributes:
+      label: Standards and Compliance
+      value: |
+        - Conforms to the OGraph specification section it implements (cite it; RFC 10008 where protocol-related), or notes that it is a runtime-contract concern.
+    validations:
+      required: false

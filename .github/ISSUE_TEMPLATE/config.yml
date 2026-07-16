@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: OGraph work-item helper (preferred)
+    url: https://github.com/assimalign/ograph/blob/main/.claude/skills/ograph-work-items/SKILL.md
+    about: >-
+      Prefer New-OGraphWorkItem.ps1 — it computes the next WBS code, links the native
+      sub-issue, adds the item to Project #8, and tags its Origin. Use the forms below only
+      when the script isn't available.
