@@ -9,9 +9,4 @@ public interface IOGraphGdmElement
     /// Gets the GDM element type.
     /// </summary>
     GdmElementKind ElementKind { get; }
-
-    /// <summary>
-    /// Element Metadata.
-    /// </summary>
-    IOGraphGdmMetaCollection Meta { get; }
 }

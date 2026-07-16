@@ -3,7 +3,7 @@
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphGdmComplexType : IOGraphGdmType
+public interface IOGraphGdmComplexType : IOGraphGdmSerializableType
 {
     /// <summary>
     /// Gets the collection of members.

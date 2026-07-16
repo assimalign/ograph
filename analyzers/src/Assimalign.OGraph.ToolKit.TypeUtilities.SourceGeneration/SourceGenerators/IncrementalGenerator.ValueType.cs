@@ -249,7 +249,6 @@ public sealed class ValueTypeIncrementalGenerator : IIncrementalGenerator
 
         builder.AppendLine();
     }
-
     private static string GetNormalizedName(UnderlyingType? underlyingType)
     {
         return underlyingType!.Value switch
@@ -258,6 +257,4 @@ public sealed class ValueTypeIncrementalGenerator : IIncrementalGenerator
             _ => underlyingType.Value.ToString().ToLower()
         };
     }
-
-
 }

@@ -4,7 +4,28 @@
 #    - /api/vertex('employees')
 # This endpoint represents the starting vertex or vertices
 Endpoint: https://endpoint.com/api/employees?query=
-Query: v(e:)
+Query: node(:e).filter(
+            # Array Functions
+            any(roles, (startsWith(name, 'c'))) eq false and
+            all(roles, {type eq 1
+            }) and
+            contains(statuses, '') and (length(roles) gt 5 or length(roles) lt 5) and 
+
+            # String Functions
+            length(employeeInfo.firstName) lt 5 and
+            startsWith(employeeInfo.firstName, 'c') and (
+                endsWith(employeeInfo.lastName, 'e') or
+                endsWith(employeeInfo.lastName, 'd')
+            ) and employeeType eq 1
+        )
+        .sort(
+            info.firstName
+            info.lastName desc
+        )
+        .page(
+            skip 20
+            take 20
+        )
         .project(
             id
             employeeId @authorize('')
@@ -38,35 +59,7 @@ Query: v(e:)
                 userId
             }
         )
-        .filter(
-            # Array Functions
-            any(roles, (
-                startsWith(name, 'c')
-            )) eq false and
-            all(roles, {
-                type eq 1
-            }) and 
-            contains(statuses, '') and (
-                length(roles) gt 5 or 
-                length(roles) < 5
-            ) and 
-
-            # String Functions
-            length(employeeInfo.firstName) > 5 and
-            startsWith(employeeInfo.firstName, 'c') and (
-                endsWith(employeeInfo.lastName, 'e') or
-                endsWith(employeeInfo.lastName, 'd')
-            ) and employeeType eq 1
-        )
-        .sort(
-            info.firstName
-            info.lastName desc
-        )
-        .page(
-            skip 20
-            take 20
-        )
-        .edge(e-[has]->a:addresses)
+        .edge(e-[has]->addresses:a)
             .project(
                 id
                 addressId
@@ -94,7 +87,7 @@ Query: v(e:)
                     id
                     name
                 )
-        .edge(e-[has]->d:departments)
+        .edge(e-[has]->departments:d)
             .project(
                 id
                 departmentId
@@ -130,17 +123,17 @@ Query: v(e:)
 
 
 r(u:users)
-    .where(
-        contains(info.firstName, '$variable') or 
-        contains(info.lastName, '$variable') or 
-        contains(info.email, '$variable') or 
+    .filter(
+        contains(info.firstName, '$variable') or
+        contains(info.lastName, '$variable') or
+        contains(info.email, '$variable') or
         any(roles, {
-            
+
         })
     )
     .sort(
         info {
-            firstName 
+            firstName
             lastName desc
         }
     )
@@ -149,15 +142,15 @@ r(u:users)
         take 20
     )
     .project(
-        id 
-        info { 
-            firstName 
-            lastName 
-            middleName 
-            email 
+        id
+        info {
+            firstName
+            lastName
+            middleName
+            email
         }
         created {
-            timestamp 
+            timestamp
             userId
             user {
                 info {

@@ -1,0 +1,134 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<Gdmx Name="ErpCore" Version="1.0">
+    <Graph Name="Employees">
+        <Node Name="Employees" Type="Employee" />
+        <Node Name="Addresses" Type="EmployeeAddress" />
+        <Node Name="Types" Type="EmployeeAddressType" />
+        <Node Name="Jobs" Type="EmployeeJob" />
+        <Node Name="TaxInfo" Type="EmployeeTaxInfo" />
+        <Node Name="Tasks" Type="EmployeeTask" />
+        <Node Name="WorkItems" Type="EmployeeWorkItem" />
+        <Edge Name="HasAddresses" Source="Employees" Target="Addresses" />
+        <Edge Name="LivesAtAddress" Source="Employees" Target="Addresses" />
+        <Edge Name="LivedAtAddresses" Source="Employees" Target="Addresses" />
+        <Edge Name="IsUser" Source="Employees" Target="/#Domain=Admin/#Node=Users" />
+        <Edge Name="HasTaxInfo" Source="Employees" Target="TaxInfo" />
+        <Edge Name="HasJobs" Source="Employees" Target="Jobs" />
+        <Edge Name="HasTasks" Source="Employees" Target="Tasks" />
+        <Edge Name="HasAddressType" Source="Addresses" Target="Types" />
+        <Edge Name="HasTasks" Source="Jobs" Target="Tasks"/>
+        <Edge Name="HasWorkItems" Source="Tasks" Target="WorkItems" />
+        <Edge Name="IsOwnedBy" Source="Addresses" Target="Employees" />
+        <Type Name="Employee" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="EmployeeId" />
+            <Property Name="UserId" Type="UserId" />
+            <Property Name="Info" Type="EmployeeInfo" />
+            <Property Name="Created" Type="AuditEntry" />
+            <Property Name="Updated" Type="AuditEntry" />
+        </Type>
+        <Type Name="EmployeeAddress" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="AddressId" />
+            <Property Name="Address" Type="Address" />
+            <Property Name="Created" Type="AuditEntry" />
+            <Property Name="Updated" Type="AuditEntry" />
+        </Type>
+        <Type Name="EmployeeAddressType" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="Int" />
+            <Property Name="Type" Type="String" />
+            <Property Name="Created" Type="AuditEntry" />
+            <Property Name="Updated" Type="AuditEntry" />
+        </Type>
+        <Type Name="EmployeeWorkItem" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="WorkItemId" />
+            <Property Name="Created" Type="AuditEntry" />
+            <Property Name="Updated" Type="AuditEntry" />
+        </Type>
+        <Type Name="EmployeeTask" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="TaskId" />
+            <Property Name="Created" Type="AuditEntry" />
+            <Property Name="Updated" Type="AuditEntry" />
+        </Type>
+        <Type Name="EmployeeTaxInfo" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="Int" />
+        </Type>
+        <Type Name="EmployeeJob" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="JobId" />
+            <Property Name="Created" Type="AuditEntry" />
+            <Property Name="Updated" Type="AuditEntry" />
+        </Type>
+        <Type Name="Address" Kind="Complex">
+            <Property Name="StreetOne" Type="String" />
+            <Property Name="StreetTwo" Type="String" />
+            <Property Name="StreetThree" Type="String" IsNullable="true" />
+            <Property Name="StreetFour" Type="String" IsNullable="true" />
+            <Property Name="City" Type="String" />
+            <Property Name="State" Type="String" />
+            <Property Name="ZipCode" Type="String" />
+            <Property Name="FullAddress" Type="String" IsReadOnly="true" />
+        </Type>
+        <Type Name="EmployeeInfo" Kind="Complex">
+            <Property Name="FirstName" Type="String" />
+            <Property Name="LastName" Type="String" />
+            <Property Name="MiddleName" Type="String" IsNullable="true" />
+            <Property Name="FullName" Type="String" IsReadOnly="true" IsNullable="true"/>
+            <Property Name="Birthdate" Type="Date" />
+        </Type>
+        <Type Name="AuditEntry" Kind="Complex">
+            <Property Name="Timestamp" Type="DateTime" />
+            <Property Name="UserId" Type="Assimalign.ErpCore.Administration.UserId" />
+            <Property Name="User" Type="Assimalign.ErpCore.Administration.User" IsReadOnly="true"/>
+        </Type>
+        <Type Name="EmployeeDelta" Kind="Complex">
+            <Property Name="FirstName" Type="String" />
+            <Property Name="LastName" Type="String" />
+            <Property Name="MiddleName" Type="String" IsNullable="true" />
+        </Type>
+        <Type Name="EmployeeUpdateOrCreate" Kind="Complex">
+            <Property Name="Info" Type="EmployeeInfo" />
+        </Type>
+        <Type Name="EmployeeList" Kind="Collection">
+            <Item Type="Employee" />
+        </Type>
+        <Type Name="EmployeeAddressList" Kind="Collection">
+            <Item Type="EmployeeAddress" />
+        </Type>
+        <Type Name="EmployeeJobList" Kind="Collection">
+            <Item Type="EmployeeJob" />
+        </Type>
+        <Type Name="EmployeeTaskList" Kind="Collection">
+            <Item Type="EmployeeTask" />
+        </Type>
+        <Type Name="EmployeeKind" Kind="Enum">
+            <Member Name="FullTime" Value="1" />
+            <Member Name="PartTime" Value="2" />
+            <Member Name="Contractor" Value="3" />
+        </Type>
+        <Type Name="EmployeeId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="JobId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="TaskId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="WorkItemId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="AddressId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="Date" Kind="Scalar">
+            <PrimitiveType Type="String" />
+            <Format Pattern="YYYY-MM-DD" />
+            <Format Pattern="MM/DD/YYYY" />
+        </Type>
+    </Graph>
+</Gdmx>

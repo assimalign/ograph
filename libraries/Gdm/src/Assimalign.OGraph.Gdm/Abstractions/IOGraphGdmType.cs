@@ -15,12 +15,6 @@ namespace Assimalign.OGraph.Gdm;
 public interface IOGraphGdmType : IOGraphGdmNamedElement
 {
     /// <summary>
-    /// The underlying .NET Type. All types must have a RuntimeType, even if it is a custom type.
-    /// </summary>
-    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
-    Type RuntimeType { get; }
-
-    /// <summary>
     /// The identifier of the type.
     /// </summary>
     GdmTypeKind Kind { get; }
@@ -29,32 +23,4 @@ public interface IOGraphGdmType : IOGraphGdmNamedElement
     /// The Graph in which the type belongs to.
     /// </summary>
     IOGraphGdmGraph Graph { get; }
-
-    /// <summary>
-    /// Writes the provided <paramref name="value"/> to JSON.
-    /// </summary>
-    /// <param name="writer"></param>
-    /// <param name="value"></param>
-    void Write(Utf8JsonWriter writer, object value);
-
-    /// <summary>
-    /// Writes the provided <paramref name="value"/> to XML.
-    /// </summary>
-    /// <param name="writer"></param>
-    /// <param name="value"></param>
-    void Write(XmlWriter writer, object value);
-
-    /// <summary>
-    /// Reads an object from JSON.
-    /// </summary>
-    /// <param name="reader"></param>
-    /// <returns></returns>
-    object Read(ref Utf8JsonReader reader);
-
-    /// <summary>
-    /// Reads an object from XML.
-    /// </summary>
-    /// <param name="reader"></param>
-    /// <returns></returns>
-    object Read(XmlReader reader);
 }

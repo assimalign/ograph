@@ -1,0 +1,545 @@
+<Gdmx Version="1.0" xmlns="https://">
+    <Graph Domain="Hrm">
+        <Node Name="Employees" Type="Employee">
+            <Operation Name="QueryEmployees" Kind="Query">
+                <Parameter Name="$.query" Type="String">
+                    <Directive Type="$.filter">
+                        <Assign Property="Contract" Value="EmployeeFilter" />
+                    </Directive>
+                </Parameter>
+                <ReturnType Type="Employee[]" />
+            </Operation>
+            <Operation Name="CreateEmployee" Kind="Command">
+                <Parameter Name="$.query" Type="String">
+                    <Directive Type="$.project">
+                        <Assign Property="Contract" Type="EmployeeProjection" />
+                    </Directive>
+                </Parameter>
+                <Parameter Name="Info" Type="EmployeeInfo" IsRequired="true" />
+                <ReturnType Type="Employee" />
+            </Operation>
+            <Event Name="CreateEmployee" On="CreateEmployee">
+                <Output Type="Employee" />
+            </Event>
+        </Node>
+        <Node Name="Addresses" Type="EmployeeAddress">
+            <Operation Name="QueryAddresses" Kind="Query">
+                <ReturnType Type="EmployeeAddress[]" />
+            </Operation>
+        </Node>
+        <Node Name="Types" Type="EmployeeAddressType" />
+        <Node Name="Jobs" Type="EmployeeJob" />
+        <Node Name="TaxInfo" Type="EmployeeTaxInfo" />
+        <Node Name="Tasks" Type="EmployeeTask" />
+        <Node Name="WorkItems" Type="EmployeeWorkItem" />
+
+        <Edge Name="HasAddresses" Source="Employees" Target="Addresses" />
+        <Edge Name="LivesAt" Source="Employees" Target="Addresses" />
+        <Edge Name="LivedAt" Source="Employees" Target="Addresses" />
+        <Edge Name="HasPrimaryAddresses" Source="Employees" Target="Addresses" />
+        <Edge Name="IsUser" Source="Employees" Target="/#Domain=Administration/#Node=Users" />
+        <Edge Name="HasTaxInfo" Source="Employees" Target="TaxInfo" />
+        <Edge Name="HasJobs" Source="Employees" Target="Jobs" />
+        <Edge Name="HasEmployeeTasks" Source="Employees" Target="Tasks" />
+        <Edge Name="HasAddressType" Source="Addresses" Target="Types" />
+        <Edge Name="HasJobTasks" Source="Jobs" Target="Tasks" />
+        <Edge Name="HasWorkItems" Source="Tasks" Target="WorkItems" />
+        <Edge Name="IsOwnedBy" Source="Addresses" Target="Employees" />
+        <Type Name="Authorize" Kind="Directive">
+            <Usage On="Property|Function"/>
+            <Property Name="Roles" />
+        </Type>
+        <Type Name="Description" Kind="Directive">
+            <Targets On="Property" />
+            <Property Name="Value" Type="String" />
+        </Type>
+        <Type Name="$.filter" Kind="Directive">
+            <Usage On="Property|Function|Parameter" />
+            <Property Name="Contract" Type="String" IsNullable="true" />
+            <Property Name="Operators" Type="GdmOperator[]" IsNullable="true" />
+            <Property Name="Functions" Type="GdmFunction[]" IsNullable="true" />
+        </Type>
+        <Type Name="GdmOperator" Kind="Enum">
+            <Member Name="Eq" Value="0" />
+            <Member Name="Ne" Value="0" />
+        </Type>
+        <Type Name="GdmFunction" Kind="Enum">
+            <Member Name="StartsWith" Value="0" />
+        </Type>
+        <Type Name="Employee" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="EmployeeId">
+                <Directive Name="Description">
+                    <Assign Property="Value" Value="The unique ID of an Employee"/>
+                </Directive>
+            </Property>
+            <Property Name="UserId" Type="UserId">
+                <Directive Name="$.filter">
+                    <Assign Property="Operators" Value="Eq" />
+                    <Assign Property="Operators" Value="Ne" />
+                    <Assign Property="Functions" Value="StartsWith" />
+                </Directive>
+            </Property>
+            <Property Name="Info" Type="EmployeeInfo">
+                <Directive Name="Description">
+                    <Assign Property="Value" Value="The employee info."/>
+                </Directive>
+            </Property>
+            <Property Name="Created" Type="AuditEntry" />
+            <Property Name="Updated" Type="AuditEntry" />
+        </Type>
+        <Type Name="EmployeeAddress" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="AddressId" />
+            <Property Name="Address" Type="Address" />
+            <Property Name="Created" Type="AuditEntry" />
+            <Property Name="Updated" Type="AuditEntry" />
+        </Type>
+        <Type Name="EmployeeAddressType" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="Int" />
+            <Property Name="Type" Type="String" />
+            <Property Name="Created" Type="AuditEntry" />
+            <Property Name="Updated" Type="AuditEntry" />
+        </Type>
+        <Type Name="EmployeeWorkItem" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="WorkItemId" />
+            <Property Name="Created" Type="AuditEntry" />
+            <Property Name="Updated" Type="AuditEntry" />
+        </Type>
+        <Type Name="EmployeeTask" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="TaskId" />
+            <Property Name="Created" Type="AuditEntry" />
+            <Property Name="Updated" Type="AuditEntry" />
+        </Type>
+        <Type Name="EmployeeTaxInfo" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="Int" />
+        </Type>
+        <Type Name="EmployeeJob" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="JobId" />
+            <Property Name="Created" Type="AuditEntry" />
+            <Property Name="Updated" Type="AuditEntry" />
+        </Type>
+
+        <Type Name="Address" Kind="Complex">
+            <Property Name="StreetOne" Type="String" />
+            <Property Name="StreetTwo" Type="String" IsNullable="true" />
+            <Property Name="StreetThree" Type="String" IsNullable="true" />
+            <Property Name="StreetFour" Type="String" IsNullable="true" />
+            <Property Name="City" Type="String">
+                <Policy Name="$.filter">
+                    <Operator Name="eq" />
+                    <Operator Name="ne" />
+                    <Function Name="startsWith" />
+                    <Function Name="contains" />
+                </Policy>
+                <Policy Name="$.sort">
+                    <Option Name="Direction" Value="Asc|Desc" />
+                </Policy>
+                <Policy Name="$.project" />
+            </Property>
+            <Property Name="State" Type="String" />
+            <Property Name="ZipCode" Type="String" />
+            <Property Name="FullAddress" Type="String" IsReadOnly="true">
+                <Policy Name="$.project" />
+            </Property>
+        </Type>
+        <Type Name="EmployeeInfo" Kind="Complex">
+            <Property Name="FirstName" Type="String">
+                <Policy Name="$.filter">
+                    <Operator Name="eq" />
+                    <Operator Name="ne" />
+                    <Function Name="startsWith" />
+                    <Function Name="contains" />
+                </Policy>
+                <Policy Name="$.sort">
+                    <Option Name="Direction" Value="Asc|Desc" />
+                </Policy>
+                <Policy Name="$.project" />
+            </Property>
+            <Property Name="LastName" Type="String">
+                <Policy Name="$.filter">
+                    <Operator Name="eq" />
+                    <Operator Name="ne" />
+                    <Function Name="startsWith" />
+                    <Function Name="contains" />
+                </Policy>
+                <Policy Name="$.sort">
+                    <Option Name="Direction" Value="Asc|Desc" />
+                </Policy>
+                <Policy Name="$.project" />
+            </Property>
+            <Property Name="MiddleName" Type="String" IsNullable="true" />
+            <Property Name="FullName" Type="String" IsReadOnly="true" IsNullable="true">
+                <Policy Name="$.project" />
+            </Property>
+            <Property Name="Birthdate" Type="Date" />
+        </Type>
+        <Type Name="AuditEntry" Kind="Complex">
+            <Property Name="Timestamp" Type="DateTime" />
+            <Property Name="UserId" Type="UserId" />
+        </Type>
+        <Type Name="EmployeeDelta" Kind="Complex">
+            <Property Name="FirstName" Type="String" />
+            <Property Name="LastName" Type="String" />
+            <Property Name="MiddleName" Type="String" IsNullable="true" />
+        </Type>
+        <Type Name="EmployeeUpdateOrCreate" Kind="Complex">
+            <Property Name="Info" Type="EmployeeInfo" />
+        </Type>
+
+        <Type Name="EmployeeList" Kind="Collection">
+            <Item Type="Employee" />
+        </Type>
+        <Type Name="EmployeeAddressList" Kind="Collection">
+            <Item Type="EmployeeAddress" />
+        </Type>
+        <Type Name="EmployeeJobList" Kind="Collection">
+            <Item Type="EmployeeJob" />
+        </Type>
+        <Type Name="EmployeeTaskList" Kind="Collection">
+            <Item Type="EmployeeTask" />
+        </Type>
+
+        <Type Name="EmployeeKind" Kind="Enum">
+            <Member Name="FullTime" Value="1" />
+            <Member Name="PartTime" Value="2" />
+            <Member Name="Contractor" Value="3" />
+        </Type>
+        <Type Name="SortDirection" Kind="Enum">
+            <Member Name="Asc" Value="1" />
+            <Member Name="Desc" Value="2" />
+        </Type>
+
+        <Type Name="EmployeeId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="JobId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="TaskId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="WorkItemId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="AddressId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="UserId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="Date" Kind="Scalar">
+            <PrimitiveType Type="String" />
+            <Format Pattern="YYYY-MM-DD" />
+            <Format Pattern="MM/DD/YYYY" />
+        </Type>
+
+        <Type Name="PagePolicy" Kind="Complex">
+            <Property Name="Skip" Type="Int" IsNullable="true" />
+            <Property Name="Take" Type="Int" IsNullable="true" />
+            <Property Name="After" Type="String" IsNullable="true" />
+            <Property Name="Before" Type="String" IsNullable="true" />
+        </Type>
+
+        <Type Name="EmployeeInfoFilter" Kind="Complex">
+            <Property Name="FirstName" Type="String" />
+            <Property Name="LastName" Type="String" />
+            <Property Name="MiddleName" Type="String" IsNullable="true" />
+            <Property Name="Birthdate" Type="Date" />
+        </Type>
+        <Type Name="AuditEntryFilter" Kind="Complex">
+            <Property Name="Timestamp" Type="DateTime" />
+            <Property Name="UserId" Type="UserId" />
+        </Type>
+        <Type Name="AddressFilter" Kind="Complex">
+            <Property Name="StreetOne" Type="String" />
+            <Property Name="StreetTwo" Type="String" />
+            <Property Name="StreetThree" Type="String" IsNullable="true" />
+            <Property Name="StreetFour" Type="String" IsNullable="true" />
+            <Property Name="City" Type="String" />
+            <Property Name="State" Type="String" />
+            <Property Name="ZipCode" Type="String" />
+        </Type>
+        <Type Name="EmployeeAddressTypeFilter" Kind="Complex">
+            <Property Name="Id" Type="Int" />
+            <Property Name="Type" Type="String" />
+        </Type>
+        <Type Name="EmployeeAddressFilter" Kind="Complex">
+            <Property Name="Id" Type="AddressId" />
+            <Property Name="Address" Type="AddressFilter" />
+            <Property Name="Created" Type="AuditEntryFilter" />
+            <Property Name="Updated" Type="AuditEntryFilter" />
+            <Property Name="Types" Type="EmployeeAddressTypeFilter" />
+        </Type>
+        <Type Name="EmployeeTaxInfoFilter" Kind="Complex">
+            <Property Name="Id" Type="Int" />
+        </Type>
+        <Type Name="EmployeeWorkItemFilter" Kind="Complex">
+            <Property Name="Id" Type="WorkItemId" />
+            <Property Name="Created" Type="AuditEntryFilter" />
+            <Property Name="Updated" Type="AuditEntryFilter" />
+        </Type>
+        <Type Name="EmployeeTaskFilter" Kind="Complex">
+            <Property Name="Id" Type="TaskId" />
+            <Property Name="Created" Type="AuditEntryFilter" />
+            <Property Name="Updated" Type="AuditEntryFilter" />
+            <Property Name="WorkItems" Type="EmployeeWorkItemFilter" />
+        </Type>
+        <Type Name="EmployeeJobFilter" Kind="Complex">
+            <Property Name="Id" Type="JobId" />
+            <Property Name="Created" Type="AuditEntryFilter" />
+            <Property Name="Updated" Type="AuditEntryFilter" />
+            <Property Name="Tasks" Type="EmployeeTaskFilter" />
+        </Type>
+        <Type Name="EmployeeFilter" Kind="Complex">
+            <Property Name="Id" Type="EmployeeId" />
+            <Property Name="UserId" Type="UserId" />
+            <Property Name="Info" Type="EmployeeInfoFilter" />
+            <Property Name="Created" Type="AuditEntryFilter" />
+            <Property Name="Updated" Type="AuditEntryFilter" />
+            <Property Name="Addresses" Type="EmployeeAddressFilter" />
+            <Property Name="Jobs" Type="EmployeeJobFilter" />
+            <Property Name="Tasks" Type="EmployeeTaskFilter" />
+            <Property Name="TaxInfo" Type="EmployeeTaxInfoFilter" />
+        </Type>
+
+        <Type Name="EmployeeInfoSort" Kind="Complex">
+            <Property Name="FirstName" Type="SortDirection" />
+            <Property Name="LastName" Type="SortDirection" />
+            <Property Name="MiddleName" Type="SortDirection" />
+            <Property Name="Birthdate" Type="SortDirection" />
+        </Type>
+        <Type Name="AuditEntrySort" Kind="Complex">
+            <Property Name="Timestamp" Type="SortDirection" />
+            <Property Name="UserId" Type="SortDirection" />
+        </Type>
+        <Type Name="AddressSort" Kind="Complex">
+            <Property Name="StreetOne" Type="SortDirection" />
+            <Property Name="StreetTwo" Type="SortDirection" />
+            <Property Name="StreetThree" Type="SortDirection" />
+            <Property Name="StreetFour" Type="SortDirection" />
+            <Property Name="City" Type="SortDirection" />
+            <Property Name="State" Type="SortDirection" />
+            <Property Name="ZipCode" Type="SortDirection" />
+        </Type>
+        <Type Name="EmployeeAddressSort" Kind="Complex">
+            <Property Name="Id" Type="SortDirection" />
+            <Property Name="Address" Type="AddressSort" />
+            <Property Name="Created" Type="AuditEntrySort" />
+            <Property Name="Updated" Type="AuditEntrySort" />
+        </Type>
+        <Type Name="EmployeeTaxInfoSort" Kind="Complex">
+            <Property Name="Id" Type="SortDirection" />
+        </Type>
+        <Type Name="EmployeeWorkItemSort" Kind="Complex">
+            <Property Name="Id" Type="SortDirection" />
+            <Property Name="Created" Type="AuditEntrySort" />
+            <Property Name="Updated" Type="AuditEntrySort" />
+        </Type>
+        <Type Name="EmployeeTaskSort" Kind="Complex">
+            <Property Name="Id" Type="SortDirection" />
+            <Property Name="Created" Type="AuditEntrySort" />
+            <Property Name="Updated" Type="AuditEntrySort" />
+        </Type>
+        <Type Name="EmployeeJobSort" Kind="Complex">
+            <Property Name="Id" Type="SortDirection" />
+            <Property Name="Created" Type="AuditEntrySort" />
+            <Property Name="Updated" Type="AuditEntrySort" />
+        </Type>
+        <Type Name="EmployeeSort" Kind="Complex">
+            <Property Name="Id" Type="SortDirection" />
+            <Property Name="UserId" Type="SortDirection" />
+            <Property Name="Info" Type="EmployeeInfoSort" />
+            <Property Name="Created" Type="AuditEntrySort" />
+            <Property Name="Updated" Type="AuditEntrySort" />
+        </Type>
+
+        <Type Name="EmployeeInfoProjection" Kind="Complex">
+            <Property Name="FirstName" Type="String" />
+            <Property Name="LastName" Type="String" />
+            <Property Name="MiddleName" Type="String" IsNullable="true" />
+            <Property Name="FullName" Type="String" IsReadOnly="true" IsNullable="true" />
+            <Property Name="Birthdate" Type="Date" />
+        </Type>
+        <Type Name="AuditEntryProjection" Kind="Complex">
+            <Property Name="Timestamp" Type="DateTime" />
+            <Property Name="UserId" Type="UserId" />
+        </Type>
+        <Type Name="AddressProjection" Kind="Complex">
+            <Property Name="StreetOne" Type="String" />
+            <Property Name="StreetTwo" Type="String" />
+            <Property Name="StreetThree" Type="String" IsNullable="true" />
+            <Property Name="StreetFour" Type="String" IsNullable="true" />
+            <Property Name="City" Type="String" />
+            <Property Name="State" Type="String" />
+            <Property Name="ZipCode" Type="String" />
+            <Property Name="FullAddress" Type="String" IsReadOnly="true" />
+        </Type>
+        <Type Name="EmployeeAddressTypeProjection" Kind="Complex">
+            <Property Name="Id" Type="Int" />
+            <Property Name="Type" Type="String" />
+            <Property Name="Created" Type="AuditEntryProjection" />
+            <Property Name="Updated" Type="AuditEntryProjection" />
+        </Type>
+        <Type Name="EmployeeAddressProjection" Kind="Complex">
+            <Property Name="Id" Type="AddressId" />
+            <Property Name="Address" Type="AddressProjection" />
+            <Property Name="Created" Type="AuditEntryProjection" />
+            <Property Name="Updated" Type="AuditEntryProjection" />
+        </Type>
+        <Type Name="EmployeeTaxInfoProjection" Kind="Complex">
+            <Property Name="Id" Type="Int" />
+        </Type>
+        <Type Name="EmployeeWorkItemProjection" Kind="Complex">
+            <Property Name="Id" Type="WorkItemId" />
+            <Property Name="Created" Type="AuditEntryProjection" />
+            <Property Name="Updated" Type="AuditEntryProjection" />
+        </Type>
+        <Type Name="EmployeeTaskProjection" Kind="Complex">
+            <Property Name="Id" Type="TaskId" />
+            <Property Name="Created" Type="AuditEntryProjection" />
+            <Property Name="Updated" Type="AuditEntryProjection" />
+        </Type>
+        <Type Name="EmployeeJobProjection" Kind="Complex">
+            <Property Name="Id" Type="JobId" />
+            <Property Name="Created" Type="AuditEntryProjection" />
+            <Property Name="Updated" Type="AuditEntryProjection" />
+        </Type>
+        <Type Name="EmployeeProjection" Kind="Complex">
+            <Property Name="Id" Type="EmployeeId" />
+            <Property Name="UserId" Type="UserId" />
+            <Property Name="Info" Type="EmployeeInfoProjection" />
+            <Property Name="Created" Type="AuditEntryProjection" />
+            <Property Name="Updated" Type="AuditEntryProjection" />
+        </Type>
+
+        <Query Name="GetEmployees" Node="Employees">
+            <Parameter Name="$.query" Type="String">
+                <Policy Name="$.filter" Type="EmployeeFilter" />
+                <Policy Name="$.sort" Type="EmployeeSort" />
+                <Policy Name="$.project" Type="EmployeeProjection" />
+                <Policy Name="$.page" Type="PagePolicy" />
+            </Parameter>
+            <ReturnType Type="EmployeeList" />
+        </Query>
+        <Query Name="GetEmployeeById" Node="Employees">
+            <Parameter Name="EmployeeId" Type="EmployeeId" IsRequired="true" />
+            <Parameter Name="$.query" Type="String">
+                <Policy Name="$.project" Type="EmployeeProjection" />
+            </Parameter>
+            <ReturnType Type="Employee" />
+        </Query>
+        <Command Name="CreateEmployee" Node="Employees">
+            <Parameter Name="Info" Type="EmployeeInfo" IsRequired="true" />
+            <Parameter Name="$.query" Type="String">
+                <Policy Name="$.project" Type="EmployeeProjection" />
+            </Parameter>
+            <ReturnType Type="Employee" />
+        </Command>
+
+        <Query Name="GetAddresses" Node="Addresses">
+            <Parameter Name="EmployeeId" Type="EmployeeId" />
+            <Parameter Name="$.query" Type="String">
+                <Policy Name="$.filter" Type="EmployeeAddressFilter" />
+                <Policy Name="$.sort" Type="EmployeeAddressSort" />
+                <Policy Name="$.project" Type="EmployeeAddressProjection" />
+                <Policy Name="$.page" Type="PagePolicy" />
+            </Parameter>
+            <ReturnType Type="EmployeeAddressList" />
+        </Query>
+        <Query Name="GetAddressById" Node="Addresses">
+            <Parameter Name="EmployeeId" Type="EmployeeId" />
+            <Parameter Name="AddressId" Type="AddressId" />
+            <Parameter Name="$.query" Type="String">
+                <Policy Name="$.project" Type="EmployeeAddressProjection" />
+            </Parameter>
+            <ReturnType Type="EmployeeAddress" />
+        </Query>
+        <Query Name="ResolveAddresses" Edge="HasAddresses">
+            <Parameter Name="$.query" Type="String">
+                <Policy Name="$.filter" Type="EmployeeAddressFilter" />
+                <Policy Name="$.sort" Type="EmployeeAddressSort" />
+                <Policy Name="$.project" Type="EmployeeAddressProjection" />
+                <Policy Name="$.page" Type="PagePolicy" />
+            </Parameter>
+            <ReturnType Type="EmployeeAddressList" />
+        </Query>
+
+        <Event Name="EmployeeCreated" Operation="CreateEmployee">
+            <Output Type="Employee" />
+        </Event>
+        <Event Name="EmployeeUpdated" Operation="UpdateEmployee">
+            <Output Type="EmployeeDelta" />
+        </Event>
+        <Event Name="AddressCreated">
+            <Output Type="EmployeeAddress" />
+        </Event>
+    </Graph>
+
+    <Graph Domain="Administration">
+        <Node Name="Tenants" Type="Tenant" />
+        <Node Name="Users" Type="User" />
+        <Node Name="Administrators" Type="Administrator" />
+        <Node Name="Roles" Type="Role" />
+        <Node Name="Groups" Type="Group" />
+        <Node Name="Permissions" Type="Permission" />
+
+        <Edge Name="Has" Source="Tenants" Target="Administrators" />
+        <Edge Name="Has" Source="Users" Target="Tenants" />
+        <Edge Name="Has" Source="Tenants" Target="Users" />
+        <Edge Name="Has" Source="Users" Target="Roles" />
+        <Edge Name="Has" Source="Users" Target="Groups" />
+        <Edge Name="Has" Source="Roles" Target="Permissions" />
+        <Edge Name="AssignedTo" Source="Roles" Target="Groups" />
+        <Edge Name="AssignedTo" Source="Roles" Target="Users" />
+
+        <Type Name="Tenant" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="TenantId" />
+        </Type>
+        <Type Name="User" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="UserId" />
+        </Type>
+        <Type Name="Administrator" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="AdministratorId" />
+        </Type>
+        <Type Name="Role" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="RoleId" />
+        </Type>
+        <Type Name="Group" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="GroupId" />
+        </Type>
+        <Type Name="Permission" Kind="Entity">
+            <Key Property="Id" />
+            <Property Name="Id" Type="PermissionId" />
+        </Type>
+
+        <Type Name="TenantId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="UserId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="AdministratorId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="RoleId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="GroupId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+        <Type Name="PermissionId" Kind="Scalar">
+            <PrimitiveType Type="String" />
+        </Type>
+    </Graph>
+</Gdmx>

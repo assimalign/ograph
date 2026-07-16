@@ -3,7 +3,7 @@
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphGdmEnumType : IOGraphGdmType
+public interface IOGraphGdmEnumType : IOGraphGdmSerializableType
 {
     /// <summary>
     /// The accepted enum values.

@@ -5,6 +5,9 @@
 /// </summary>
 public enum GdmTypeKind
 {
+    /// <summary>
+    /// 
+    /// </summary>
     None,
 
     /// <summary>
@@ -30,5 +33,10 @@ public enum GdmTypeKind
     /// <summary>
     /// 
     /// </summary>
-    Enum
+    Enum,
+
+    /// <summary>
+    /// 
+    /// </summary>
+    Directive,
 }

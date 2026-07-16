@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<Gcapx Name="ErpCore" Version="1.0">
+    <Capabilities Graph="Employees" Version="1.0">
+        <Query Name="GetEmployees" Scope="Root" Subject="Employees">
+            <Result Type="Employee" Node="Employees" Cardinality="Many" />
+        </Query>
+        <Query Name="GetEmployeeById" Scope="Root" Subject="Employees">
+            <Parameter Name="EmployeeId" Type="EmployeeId" Role="Key" />
+            <Result Type="Employee" Node="Employees" Cardinality="One" />
+        </Query>
+        <Command Name="CreateEmployee" Action="Create" Subject="Employees">
+            <Parameter Name="Input" Type="EmployeeCreate" Role="Input" />
+            <Result Type="Employee" Node="Employees" Cardinality="One" />
+        </Command>
+        <Filter Name="" 
+    </Capabilities>
+</Gcapx>

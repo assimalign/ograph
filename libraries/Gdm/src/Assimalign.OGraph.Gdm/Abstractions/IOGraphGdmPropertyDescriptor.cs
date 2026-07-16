@@ -6,8 +6,8 @@ public interface IOGraphGdmPropertyDescriptor
 {
     IOGraphGdmPropertyDescriptor UsePropertyName(GdmName name);
     IOGraphGdmPropertyDescriptor UseType(IOGraphGdmType type);
+    IOGraphGdmPropertyDescriptor UseDirective(IOGraphGdmDirective directive);
     IOGraphGdmPropertyDescriptor UseGetter(GdmPropertyGetter getter);
     IOGraphGdmPropertyDescriptor UseSetter(GdmPropertySetter setter);
-    IOGraphGdmPropertyDescriptor AddMeta(string key, object value);
     IOGraphGdmPropertyDescriptor IsRequired();
 }

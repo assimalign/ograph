@@ -3,7 +3,7 @@
 /// <summary>
 /// 
 /// </summary>
-public interface IOGraphGdmScalarType : IOGraphGdmType
+public interface IOGraphGdmScalarType : IOGraphGdmSerializableType
 {
     /// <summary>
     /// An array of Regex patterns that are acceptable formats.

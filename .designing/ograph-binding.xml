@@ -1,0 +1,11 @@
+<Gdmxb>
+    <GraphBindings Graph="Hrm">
+        <Binding Operation="GetEmployees">
+            <Method Value="GET" />
+            <Route Value="/employees/{employeeId}/addresses/{addressId}">
+                <Map Parameter=""  Segment="" />
+            </Route>
+            <Payload Parameter="" />
+        </Binding>
+    </GraphBindings>
+</Gdmxb>

@@ -7,7 +7,7 @@ namespace Assimalign.OGraph.Gdm;
 /// <summary>
 /// Represents collection types such as Arrays, Lists, etc.,
 /// </summary>
-public interface IOGraphGdmCollectionType : IOGraphGdmType
+public interface IOGraphGdmCollectionType : IOGraphGdmSerializableType
 {
     /// <summary>
     /// Represents the item type that is contained inside the collection.

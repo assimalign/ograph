@@ -6,5 +6,4 @@ public interface IOGraphGdmNodeDescriptor
 {
     IOGraphGdmNodeDescriptor HasLabel(GdmLabel label);
     IOGraphGdmNodeDescriptor HasEntityType(IOGraphGdmEntityType type);
-    IOGraphGdmNodeDescriptor AddMeta(string key, string value);
 }

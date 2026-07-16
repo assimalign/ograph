@@ -15,7 +15,7 @@ public static partial class GdmBuilderUtility
     private static IOGraphGdm CreateFluentModel()
     {
         // Hrm#Node=Employees
-        // Builder process 
+        // Builder process
         var builder = GdmBuilder.Create()
             .AddGraph("Hrm", graph =>
             {
