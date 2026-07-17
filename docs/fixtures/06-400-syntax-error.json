@@ -28,7 +28,7 @@
           "message": "Expected an operand after operator 'eq'.",
           "severity": "error",
           "target": ".filter",
-          "position": { "line": 1, "column": 22, "offset": 40, "length": 1 }
+          "position": { "line": 1, "column": 24, "offset": 40, "length": 1 }
         }
       ],
       "$nodes": null

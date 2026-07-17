@@ -28,7 +28,7 @@
           "message": "Member 'salary' is not exposed to .sort() by the GetEmployees operation policy.",
           "severity": "error",
           "target": ".sort(salary)",
-          "position": { "line": 2, "column": 8, "offset": 24, "length": 6 }
+          "position": { "line": 1, "column": 8, "offset": 24, "length": 6 }
         }
       ],
       "$nodes": null

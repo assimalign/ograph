@@ -29,25 +29,25 @@ Each fixture is a self-contained JSON document with this shape:
 ## Validation
 
 A fixture is conformant when (a) its `response.envelope`, if non-null, validates against the
-response-envelope schema, and (b) a server under test, given `request`, produces `response`
-(status, the asserted headers, and an envelope equal modulo server-assigned identity such as
-absolute URIs and validator opaque strings). Validate the envelopes with any draft 2020-12
-validator, e.g.:
+response-envelope schema, (b) every diagnostic `position` block is internally consistent — its
+zero-based `line`/`column` equal the line/column recomputed from its own `offset` against the
+exact `request.body` (positions are asserted, deterministic fields, not server-assigned
+identity), and (c) a server under test, given `request`, produces `response` (status, the
+asserted headers, and an envelope equal modulo server-assigned identity such as absolute URIs
+and validator opaque strings).
 
-```python
-import json, glob
-from jsonschema import Draft202012Validator
-schema = json.load(open("docs/schemas/ograph-response.schema.json", encoding="utf-8"))
-Draft202012Validator.check_schema(schema)
-v = Draft202012Validator(schema)
-for fp in sorted(glob.glob("docs/fixtures/*.json")):
-    env = json.load(open(fp, encoding="utf-8"))["response"]["envelope"]
-    if env is not None:
-        v.validate(env)
+Run both the schema and position-consistency checks with the committed validator:
+
+```console
+$ python docs/fixtures/validate_fixtures.py
 ```
 
+The script validates every envelope against `../schemas/ograph-response.schema.json` (draft
+2020-12) and cross-checks each `position` against the request body; it exits non-zero on any
+failure, so it can be wired into CI.
+
 Last validated run: **schema valid (draft 2020-12); 10 envelope-bearing fixtures pass, 2
-body-less fixtures skipped, 0 failures.**
+body-less fixtures skipped, position checks pass, 0 failures.**
 
 ## Manifest
 
