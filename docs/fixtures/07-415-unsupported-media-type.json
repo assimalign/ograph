@@ -1,0 +1,36 @@
+{
+  "name": "415-unsupported-media-type",
+  "title": "415 Unsupported Media Type — unsupported query media type",
+  "description": "The request declares a Content-Type the resource does not accept as a query media type. Per the D2 taxonomy this is a 415; the response advertises the accepted query media types via Accept-Query so the client can retry (§4.4, §4.5, §4.6).",
+  "spec": ["§4.4", "§4.5", "§4.6"],
+  "conformance": ["V-02", "V-04"],
+  "request": {
+    "method": "QUERY",
+    "route": "/hrm/employees",
+    "headers": {
+      "Content-Type": "text/plain; charset=utf-8",
+      "Accept": "application/vnd.ograph+json"
+    },
+    "body": "node(employees) .project(id)"
+  },
+  "response": {
+    "status": 415,
+    "headers": {
+      "Content-Type": "application/vnd.ograph+json",
+      "Accept-Query": "\"application/vnd.ograph.query\"",
+      "Cache-Control": "no-store"
+    },
+    "envelope": {
+      "$status": 415,
+      "$errors": [
+        {
+          "code": "UnsupportedQueryMediaType",
+          "message": "Content-Type 'text/plain' is not an accepted query media type. See Accept-Query.",
+          "severity": "error",
+          "target": "Content-Type"
+        }
+      ],
+      "$nodes": null
+    }
+  }
+}

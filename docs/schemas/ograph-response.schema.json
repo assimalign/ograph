@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec.ograph.org/schemas/ograph-response.schema.json",
+  "title": "OGraph response envelope",
+  "description": "Structural contract for the media type application/vnd.ograph+json (OGraph specification §6). A response is a result: a single result, a collection result, or an error-only result. Results nest recursively through per-node $edges, each of which is itself a result carrying its own $status/$errors (per-edge partial-failure semantics, §6.4).",
+  "$ref": "#/$defs/result",
+  "$defs": {
+    "result": {
+      "type": "object",
+      "description": "An OGraph result: an outcome-bearing envelope for one operation or one resolved edge.",
+      "required": ["$status"],
+      "properties": {
+        "$status": {
+          "$ref": "#/$defs/status",
+          "description": "HTTP-aligned status for THIS result scope (§6.4). The root result mirrors the transport response status; a nested edge result carries its own status independent of its parent."
+        },
+        "$uri": {
+          "type": "string",
+          "format": "uri-reference",
+          "description": "Optional self / re-fetch reference for this result scope. When present on a 2xx result it echoes the value a server would emit in Content-Location, letting a client GET this exact representation without resending the query body (§4.8, §6.5)."
+        },
+        "$errors": {
+          "type": "array",
+          "description": "Diagnostics scoped to THIS result. Empty or absent on an unqualified success; populated on 4xx/5xx and on partial success where this scope failed while an ancestor succeeded (§6.4).",
+          "items": { "$ref": "#/$defs/error" }
+        },
+        "$count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Collection results only: the number of nodes present in THIS page of $nodes (§6.6)."
+        },
+        "$total": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "description": "Collection results only: the total number of nodes across all pages when the server can compute it; null when the total is unknown or intentionally withheld (§6.6)."
+        },
+        "$cursor": {
+          "$ref": "#/$defs/cursor",
+          "description": "Collection results only: opaque continuation tokens for cursor-mode paging (§6.6). Placeholder members are reserved even while offset paging is the only fully specified mode."
+        },
+        "$nodes": {
+          "description": "The payload for this result scope: an object for a single-cardinality result, an array for a collection result, or null when no representation is available (error results, or a failed edge) (§6.2, §6.4).",
+          "oneOf": [
+            { "$ref": "#/$defs/node" },
+            { "type": "array", "items": { "$ref": "#/$defs/node" } },
+            { "type": "null" }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "$comment": "A collection result ($nodes is an array) MUST carry a page count.",
+          "if": {
+            "required": ["$nodes"],
+            "properties": { "$nodes": { "type": "array" } }
+          },
+          "then": { "required": ["$count"] }
+        },
+        {
+          "$comment": "$count / $total / $cursor are collection-only paging metadata; they MUST NOT appear on a single-cardinality result whose $nodes is an object.",
+          "if": {
+            "required": ["$nodes"],
+            "properties": { "$nodes": { "type": "object" } }
+          },
+          "then": {
+            "properties": {
+              "$count": false,
+              "$total": false,
+              "$cursor": false
+            }
+          }
+        }
+      ]
+    },
+    "node": {
+      "type": "object",
+      "description": "A projected node. Non-reserved members are the projected data (§6.2); reserved $-members carry graph metadata. Additional projected members are permitted.",
+      "properties": {
+        "$uri": {
+          "type": "string",
+          "format": "uri-reference",
+          "description": "Optional stable identity/self reference for this individual node."
+        },
+        "$edges": { "$ref": "#/$defs/edges" }
+      },
+      "additionalProperties": true
+    },
+    "edges": {
+      "type": "object",
+      "description": "Resolved edges keyed by edge name (§6.3). Each value is a nested result with its own status and errors (§6.4).",
+      "propertyNames": { "pattern": "^[A-Za-z_][A-Za-z0-9_.@-]*$" },
+      "additionalProperties": { "$ref": "#/$defs/result" }
+    },
+    "cursor": {
+      "type": "object",
+      "description": "Cursor-mode paging continuation tokens (§6.6). Reserved for the cursor paging mode; offset paging leaves these null.",
+      "properties": {
+        "next": {
+          "type": ["string", "null"],
+          "description": "Opaque token that, when supplied to the same operation, yields the following page; null when this is the last page."
+        },
+        "prev": {
+          "type": ["string", "null"],
+          "description": "Opaque token that yields the preceding page; null when this is the first page."
+        }
+      },
+      "additionalProperties": false
+    },
+    "error": {
+      "type": "object",
+      "description": "One diagnostic. code/message are required; the remaining members refine location and nesting. Query-syntax diagnostics reuse the OGraph G-code vocabulary (§6.4).",
+      "required": ["code", "message"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Stable machine-readable identifier (e.g. a G-code such as \"G0002\", or a semantic/policy code)."
+        },
+        "message": {
+          "type": "string",
+          "description": "Human-readable description of the diagnostic."
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["info", "warning", "error"],
+          "description": "Diagnostic severity; defaults to \"error\" when omitted."
+        },
+        "target": {
+          "type": "string",
+          "description": "The offending member, keyword, or clause (a query path or JSON pointer)."
+        },
+        "position": {
+          "type": "object",
+          "description": "Zero-based source position within the query text, for editor and syntax diagnostics.",
+          "properties": {
+            "line": { "type": "integer", "minimum": 0 },
+            "column": { "type": "integer", "minimum": 0 },
+            "offset": { "type": "integer", "minimum": 0 },
+            "length": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "details": {
+          "type": "array",
+          "description": "Nested diagnostics that elaborate on this one.",
+          "items": { "$ref": "#/$defs/error" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "status": {
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 599,
+      "description": "An HTTP status code (RFC 9110 §15)."
+    }
+  }
+}

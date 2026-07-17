@@ -1,0 +1,37 @@
+{
+  "name": "400-syntax-error",
+  "title": "400 Bad Request — query syntax error",
+  "description": "The request media type is supported and consistent, but the query body does not parse. Per the D2 taxonomy a malformed body is a 400 (not a 422); the envelope carries the parse diagnostic with a G-code and source position (§4.5, §6.4).",
+  "spec": ["§4.5", "§6.4"],
+  "conformance": ["V-02", "V-03"],
+  "request": {
+    "method": "QUERY",
+    "route": "/hrm/employees",
+    "headers": {
+      "Content-Type": "application/vnd.ograph.query",
+      "Accept": "application/vnd.ograph+json"
+    },
+    "body": "node(employees)\n  .filter(department eq )"
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/vnd.ograph+json",
+      "Accept-Query": "\"application/vnd.ograph.query\"",
+      "Cache-Control": "no-store"
+    },
+    "envelope": {
+      "$status": 400,
+      "$errors": [
+        {
+          "code": "G0004",
+          "message": "Expected an operand after operator 'eq'.",
+          "severity": "error",
+          "target": ".filter",
+          "position": { "line": 1, "column": 22, "offset": 40, "length": 1 }
+        }
+      ],
+      "$nodes": null
+    }
+  }
+}

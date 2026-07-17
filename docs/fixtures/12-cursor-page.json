@@ -1,0 +1,47 @@
+{
+  "name": "cursor-page",
+  "title": "Cursor-mode paging metadata",
+  "description": "A collection result under cursor-mode paging: $cursor.next carries an opaque continuation token and $total is null because the total is not computed for cursor traversal. Exercises the reserved cursor placeholders (§6.6). Cursor paging syntax is owned by S-03; this fixture pins only the envelope metadata shape.",
+  "spec": ["§6.6"],
+  "conformance": ["V-05"],
+  "request": {
+    "method": "QUERY",
+    "route": "/hrm/employees",
+    "headers": {
+      "Content-Type": "application/vnd.ograph.query",
+      "Accept": "application/vnd.ograph+json"
+    },
+    "body": "node(employees)\n  .sort(id asc)\n  .page(take: 2)\n  .project(id info { firstName lastName })"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/vnd.ograph+json",
+      "Accept-Query": "\"application/vnd.ograph.query\"",
+      "Cache-Control": "max-age=30",
+      "ETag": "\"7c2a-cursor-p0\""
+    },
+    "envelope": {
+      "$status": 200,
+      "$errors": [],
+      "$count": 2,
+      "$total": null,
+      "$cursor": {
+        "next": "eyJhZnRlciI6IjJmOWQ0YTEwIn0",
+        "prev": null
+      },
+      "$nodes": [
+        {
+          "$uri": "/hrm/employees/2f9d4a10-6c2e-4b0a-9d21-7c1f0a2b8e44",
+          "id": "2f9d4a10-6c2e-4b0a-9d21-7c1f0a2b8e44",
+          "info": { "firstName": "Ada", "lastName": "Vance" }
+        },
+        {
+          "$uri": "/hrm/employees/6b1e2c77-0a44-4e9c-bf5a-11a2d3c4e5f6",
+          "id": "6b1e2c77-0a44-4e9c-bf5a-11a2d3c4e5f6",
+          "info": { "firstName": "Rowan", "lastName": "Ng" }
+        }
+      ]
+    }
+  }
+}

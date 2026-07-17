@@ -1,0 +1,44 @@
+{
+  "name": "get-fallback",
+  "title": "OPTIONAL GET ?query= fallback profile",
+  "description": "The compatibility binding: the same read expressed as GET with the URL-encoded query in the ?query= parameter, for clients that cannot issue QUERY (browsers, CORS-preflight-averse clients, QUERY-unaware intermediaries). The response envelope is identical to the QUERY binding (§4.10). Conformance treats this as an OPTIONAL profile.",
+  "spec": ["§4.10"],
+  "conformance": ["V-01", "N-03/optional-get-fallback"],
+  "request": {
+    "method": "GET",
+    "route": "/hrm/employees?query=node(employees).project(id%20info%20%7B%20firstName%20lastName%20%7D)",
+    "headers": {
+      "Accept": "application/vnd.ograph+json"
+    },
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/vnd.ograph+json",
+      "Accept-Query": "\"application/vnd.ograph.query\"",
+      "Cache-Control": "max-age=60",
+      "ETag": "\"c3b1-basic\"",
+      "Vary": "Accept"
+    },
+    "envelope": {
+      "$status": 200,
+      "$uri": "/hrm/employees?query=node(employees).project(id%20info%20%7B%20firstName%20lastName%20%7D)",
+      "$errors": [],
+      "$count": 2,
+      "$total": 2,
+      "$nodes": [
+        {
+          "$uri": "/hrm/employees/81c34648-7543-4fdd-8e8e-90fcfbbb97a8",
+          "id": "81c34648-7543-4fdd-8e8e-90fcfbbb97a8",
+          "info": { "firstName": "Jim", "lastName": "Boe" }
+        },
+        {
+          "$uri": "/hrm/employees/2f9d4a10-6c2e-4b0a-9d21-7c1f0a2b8e44",
+          "id": "2f9d4a10-6c2e-4b0a-9d21-7c1f0a2b8e44",
+          "info": { "firstName": "Ada", "lastName": "Vance" }
+        }
+      ]
+    }
+  }
+}

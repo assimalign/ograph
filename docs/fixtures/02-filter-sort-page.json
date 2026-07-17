@@ -1,0 +1,48 @@
+{
+  "name": "filter-sort-page",
+  "title": "Filter, sort, and offset paging",
+  "description": "A QUERY read combining .filter(), .sort(), and offset .page(). The result page reports $count (this page) and $total (whole result set); cursor tokens are null because offset paging is in use (§5.2, §6.6).",
+  "spec": ["§4.3", "§5.1", "§5.2", "§6.6"],
+  "conformance": ["V-01", "V-05"],
+  "request": {
+    "method": "QUERY",
+    "route": "/hrm/employees",
+    "headers": {
+      "Content-Type": "application/vnd.ograph.query",
+      "Accept": "application/vnd.ograph+json"
+    },
+    "body": "node(employees)\n  .filter(department eq \"Engineering\")\n  .sort(hireDate desc)\n  .page(skip: 0 take: 2)\n  .project(id info { firstName lastName } department)"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/vnd.ograph+json",
+      "Accept-Query": "\"application/vnd.ograph.query\"",
+      "Cache-Control": "max-age=30",
+      "ETag": "\"9a72-eng-p0\"",
+      "Content-Location": "/hrm/employees/~q/9a72-eng-p0"
+    },
+    "envelope": {
+      "$status": 200,
+      "$uri": "/hrm/employees/~q/9a72-eng-p0",
+      "$errors": [],
+      "$count": 2,
+      "$total": 57,
+      "$cursor": { "next": null, "prev": null },
+      "$nodes": [
+        {
+          "$uri": "/hrm/employees/6b1e2c77-0a44-4e9c-bf5a-11a2d3c4e5f6",
+          "id": "6b1e2c77-0a44-4e9c-bf5a-11a2d3c4e5f6",
+          "info": { "firstName": "Rowan", "lastName": "Ng" },
+          "department": "Engineering"
+        },
+        {
+          "$uri": "/hrm/employees/0d9c8b7a-6f5e-4d3c-2b1a-0f9e8d7c6b5a",
+          "id": "0d9c8b7a-6f5e-4d3c-2b1a-0f9e8d7c6b5a",
+          "info": { "firstName": "Mara", "lastName": "Oyelaran" },
+          "department": "Engineering"
+        }
+      ]
+    }
+  }
+}

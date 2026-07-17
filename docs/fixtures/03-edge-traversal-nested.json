@@ -1,0 +1,66 @@
+{
+  "name": "edge-traversal-nested",
+  "title": "Edge traversal with nested projection",
+  "description": "A QUERY read that traverses two edges: employees -> addresses (a collection edge) and each address -> type (a single-cardinality edge). Demonstrates recursive $edges composition, per-edge $status/$count/$total, and nested single-cardinality results (§6.3, §6.4).",
+  "spec": ["§4.3", "§6.2", "§6.3", "§6.4"],
+  "conformance": ["V-05", "V-06"],
+  "request": {
+    "method": "QUERY",
+    "route": "/hrm/employees",
+    "headers": {
+      "Content-Type": "application/vnd.ograph.query",
+      "Accept": "application/vnd.ograph+json"
+    },
+    "body": "node(employees)\n  .filter(id eq \"81c34648-7543-4fdd-8e8e-90fcfbbb97a8\")\n  .project(id info { firstName lastName })\n  .edge(addresses)\n    .project(id streetOne city state)\n    .page(skip: 0 take: 25)\n    .edge(type)\n      .project(id value)"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/vnd.ograph+json",
+      "Accept-Query": "\"application/vnd.ograph.query\"",
+      "Cache-Control": "max-age=30",
+      "ETag": "\"f10c-emp81-tree\"",
+      "Content-Location": "/hrm/employees/~q/f10c-emp81-tree"
+    },
+    "envelope": {
+      "$status": 200,
+      "$uri": "/hrm/employees/~q/f10c-emp81-tree",
+      "$errors": [],
+      "$count": 1,
+      "$total": 1,
+      "$nodes": [
+        {
+          "$uri": "/hrm/employees/81c34648-7543-4fdd-8e8e-90fcfbbb97a8",
+          "id": "81c34648-7543-4fdd-8e8e-90fcfbbb97a8",
+          "info": { "firstName": "Jim", "lastName": "Boe" },
+          "$edges": {
+            "addresses": {
+              "$status": 200,
+              "$uri": "/hrm/employees/81c34648-7543-4fdd-8e8e-90fcfbbb97a8/addresses",
+              "$errors": [],
+              "$count": 1,
+              "$total": 1,
+              "$nodes": [
+                {
+                  "$uri": "/hrm/employees/81c34648-7543-4fdd-8e8e-90fcfbbb97a8/addresses/8bf0f11a-2b9a-4760-b1b6-ad2adb7cb44b",
+                  "id": "8bf0f11a-2b9a-4760-b1b6-ad2adb7cb44b",
+                  "streetOne": "1234 Somewhere Ave",
+                  "city": "Charlotte",
+                  "state": "North Carolina",
+                  "$edges": {
+                    "type": {
+                      "$status": 200,
+                      "$uri": "/hrm/employees/81c34648-7543-4fdd-8e8e-90fcfbbb97a8/addresses/8bf0f11a-2b9a-4760-b1b6-ad2adb7cb44b/type/5",
+                      "$errors": [],
+                      "$nodes": { "id": 5, "value": "Primary" }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

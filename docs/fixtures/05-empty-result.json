@@ -1,0 +1,33 @@
+{
+  "name": "empty-result",
+  "title": "Empty collection result",
+  "description": "A well-formed, authorized query that matches no nodes. The result is a successful (200) collection with an empty $nodes array and $count/$total of 0 — an empty result is not an error (§6.2, §6.6).",
+  "spec": ["§6.2", "§6.6"],
+  "conformance": ["V-05"],
+  "request": {
+    "method": "QUERY",
+    "route": "/hrm/employees",
+    "headers": {
+      "Content-Type": "application/vnd.ograph.query",
+      "Accept": "application/vnd.ograph+json"
+    },
+    "body": "node(employees)\n  .filter(department eq \"Archaeology\")\n  .project(id info { firstName lastName })"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/vnd.ograph+json",
+      "Accept-Query": "\"application/vnd.ograph.query\"",
+      "ETag": "\"0000-empty\"",
+      "Cache-Control": "max-age=60"
+    },
+    "envelope": {
+      "$status": 200,
+      "$errors": [],
+      "$count": 0,
+      "$total": 0,
+      "$cursor": { "next": null, "prev": null },
+      "$nodes": []
+    }
+  }
+}

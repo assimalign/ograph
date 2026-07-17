@@ -1,0 +1,45 @@
+{
+  "name": "basic-project",
+  "title": "Basic collection query with projection",
+  "description": "A QUERY read against a Root Operation returning a collection with a simple .project(). Exercises the primary QUERY binding (§4.3), the request/response media types (§4.4), and single-page collection composition with $count/$total (§6.2, §6.6).",
+  "spec": ["§4.3", "§4.4", "§6.2", "§6.6"],
+  "conformance": ["V-01", "V-02", "V-05"],
+  "request": {
+    "method": "QUERY",
+    "route": "/hrm/employees",
+    "headers": {
+      "Content-Type": "application/vnd.ograph.query",
+      "Accept": "application/vnd.ograph+json"
+    },
+    "body": "node(employees)\n  .project(id info { firstName lastName })"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/vnd.ograph+json",
+      "Accept-Query": "\"application/vnd.ograph.query\"",
+      "Cache-Control": "max-age=60",
+      "ETag": "\"c3b1-basic\"",
+      "Content-Location": "/hrm/employees/~q/c3b1-basic"
+    },
+    "envelope": {
+      "$status": 200,
+      "$uri": "/hrm/employees/~q/c3b1-basic",
+      "$errors": [],
+      "$count": 2,
+      "$total": 2,
+      "$nodes": [
+        {
+          "$uri": "/hrm/employees/81c34648-7543-4fdd-8e8e-90fcfbbb97a8",
+          "id": "81c34648-7543-4fdd-8e8e-90fcfbbb97a8",
+          "info": { "firstName": "Jim", "lastName": "Boe" }
+        },
+        {
+          "$uri": "/hrm/employees/2f9d4a10-6c2e-4b0a-9d21-7c1f0a2b8e44",
+          "id": "2f9d4a10-6c2e-4b0a-9d21-7c1f0a2b8e44",
+          "info": { "firstName": "Ada", "lastName": "Vance" }
+        }
+      ]
+    }
+  }
+}
