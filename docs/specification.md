@@ -229,6 +229,14 @@ A Scalar's runtime contract is fixed by a single `<PrimitiveType>` and refined b
 3. The primitive root fixes the Scalar's underlying value space and equality semantics. Two
    Scalars sharing a root are still distinct Types and MUST NOT be treated as interchangeable
    (§2.3.4 rule 2).
+4. The four primitive roots are also **implicit built-in Scalar Types**, referenceable by name
+   (`Integer`, `Float`, `String`, `Boolean`) wherever a Type is consumed (§2.3.1) — e.g.
+   `<Property Name="City" Type="String"/>`, `<Key ... Type="String"/>`, or a `Function`/`Parameter`
+   return/argument type. These built-ins are always in scope, need not be declared, and MUST NOT be
+   redeclared as a model `<Type>` (a model `<Type Name="String">` is invalid). Referencing a bare
+   root is equivalent to referencing an unrefined Scalar of that primitive; a named Scalar (such as
+   `EmployeeId`) refines a built-in root with `<Format>`/`<Constraint>` and remains a distinct Type
+   (rule 3).
 
 **`<Format>`**
 
@@ -244,17 +252,30 @@ A `<Format>` narrows the lexical representations a Scalar accepts.
 
 | Attribute | Values | Meaning |
 | --- | --- | --- |
-| `Pattern` | a format token | one acceptable lexical form of the value |
+| `Pattern` | a format token (token vocabulary implementation-defined this revision — see rule 2) | one acceptable lexical form of the value |
 
 **Rules**
 1. A Scalar MAY declare zero or more `<Format>` children. A Scalar with no `<Format>` accepts the
    canonical lexical form of its primitive root.
-2. When one or more `<Format>` children are declared, a value MUST match at least one declared
-   `Pattern` to be valid; a value matching none MUST be rejected.
-3. The first declared `<Format>` is the **canonical serialization form**: a runtime that emits the
-   value MUST render it using the first `Pattern`, even when the input matched a later one.
+2. The `Pattern` **token vocabulary** — what tokens such as `YYYY`, `MM`, or `DD` denote, and
+   whether a `Pattern` is a date DSL, a regular expression, or another notation — is **not defined
+   in this revision** (Deferred, below). `<Format>` is therefore a documented but opaque hint whose
+   matching semantics are implementation-defined: a runtime that interprets the `Pattern` vocabulary
+   MUST reject a value matching none of the declared `Pattern`s, but this revision states no
+   portable match semantics over the undefined token language, so the rule is testable only relative
+   to a given implementation.
+3. Where a runtime interprets `Pattern`s, the first declared `<Format>` is the **canonical
+   serialization form**: on emit the value SHOULD be rendered using the first `Pattern`, even when
+   the input matched a later one. This revision fixes no token vocabulary against which the rendered
+   form is testable.
 4. `<Format>` is meaningful only on a `String`-rooted Scalar; a `<Format>` on any other primitive
    root MUST be rejected.
+
+> *Deferred:* the `<Format>` `Pattern` token vocabulary — the concrete token language and its
+> portable match/serialize semantics (e.g. a date DSL, ICU/Unicode patterns, RFC 3339, or a
+> regular-expression dialect) — is **not** specified in this revision and is owned by a follow-up
+> specification feature under O01.01.01. Until it is defined, `<Format>` remains an opaque,
+> implementation-defined hint and rules 2–3 carry no revision-portable testable semantics.
 
 **`<Constraint>`**
 
@@ -353,7 +374,8 @@ value objects for nested payloads, policy contracts, and other non-entity struct
 1. A Complex Type is composed of zero or more `<Property>` members (§2.3.5) and zero or more
    `<Function>` members. Member names — properties and functions together — MUST be unique within
    the Type.
-2. A Complex Type MUST NOT declare a `<Key>`; identity is exclusive to Entity Types (§2.3.4.5).
+2. A non-Entity Complex Type MUST NOT declare a `<Key>`; identity is exclusive to Entity Types
+   (§2.3.4.5), which override this prohibition (§2.3.4.5 rule 1).
 3. A Complex Type carries no graph identity and MUST NOT be bound to a Node (§2.3.2 rule 1). It
    MAY be referenced wherever a type is consumed (§2.3.1) — as a `Property`/`Item`/`Value` type,
    a `Parameter`/`Result` type, or a `$.query` policy type (§3.3.2).
@@ -476,9 +498,9 @@ the only Type kind a Node may bind to.
 | `Property` | a Property name in the same Entity | a member that participates in the entity's identity |
 
 **Rules**
-1. An Entity Type is a Complex Type — all §2.3.4.3 rules apply, including `<Function>` members —
-   that additionally declares identity. It is the only Type kind a `Node` may bind to
-   (§2.3.2 rule 1).
+1. An Entity Type is a Complex Type — all §2.3.4.3 rules apply, including `<Function>` members,
+   **except the `<Key>` prohibition (§2.3.4.3 rule 2), which Entity overrides** — that additionally
+   declares identity. It is the only Type kind a `Node` may bind to (§2.3.2 rule 1).
 2. An Entity MUST declare at least one `<Key>`. Each `<Key Property="...">` MUST name a
    `<Property>` declared in the same Entity; a `<Key>` naming an absent property is invalid.
 3. No two `<Key>` elements MUST reference the same Property.
@@ -632,8 +654,10 @@ concern is the default for its Type kind:
 1. "Equality" and "ordering" name capability **classes**; the concrete operator and function
    tokens that realize them are the S-03 vocabulary (§2.3.6). A member whose class is "equality"
    admits that vocabulary's equality operators, and no others, by default.
-2. Every Type kind is projectable by default; no kind is in a state where a reserved concern
-   cannot address it without an explicit policy.
+2. Every Type kind is projectable by default. `$.filter` and `$.sort` on a structured kind
+   (`Complex`, `Collection`, `Entity`) are reached through its members, never the kind as a whole:
+   for such a kind the table marks the concern "none directly"/"not sortable", and — because a
+   Property policy only narrows (rule 5) — no policy can grant filter or sort to the kind itself.
 3. `IsReadOnly="true"` does not remove read capability: a read-only member keeps its type-default
    filter, sort, and project capability. `IsNullable="true"` does not change a member's capability
    class; the `$.sort` `Nulls` Option (§2.3.6) tunes null ordering.
