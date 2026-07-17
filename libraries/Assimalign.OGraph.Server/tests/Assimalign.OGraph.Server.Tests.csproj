@@ -4,10 +4,10 @@
 		<IsTestProject>true</IsTestProject>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" />
+		<OGraphPackageReference Include="Microsoft.NET.Test.Sdk" />
 		<PackageReference Include="xunit" Version="2.4.2" />
-		<PackageReference Include="xunit.runner.visualstudio" />
-		<PackageReference Include="coverlet.collector" />
+		<OGraphPackageReference Include="xunit.runner.visualstudio" />
+		<OGraphPackageReference Include="coverlet.collector" />
 	</ItemGroup>
 	<ItemGroup>
 		<OGraphProjectReference Include="Assimalign.OGraph.Server" />

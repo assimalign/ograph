@@ -4924,4 +4924,8 @@
 	<Folder Name="/ograph/tooling/Cli/src/Assimalign.OGraph.Cli/">
 		<Project Path="tooling/Cli/Assimalign.OGraph.Cli/src/Assimalign.OGraph.Cli.csproj" />
 	</Folder>
+	<Folder Name="/ograph/tooling/Cli/tests/" />
+	<Folder Name="/ograph/tooling/Cli/tests/Assimalign.OGraph.Cli.Tests/">
+		<Project Path="tooling/Cli/Assimalign.OGraph.Cli/tests/Assimalign.OGraph.Cli.Tests.csproj" />
+	</Folder>
 </Solution>

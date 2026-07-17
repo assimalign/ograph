@@ -38,8 +38,8 @@
                                             run time.
     -->
     <ItemGroup>
-        <!-- Index code projects ONCE. -->
-        <_OGraphProject Include="$(OGraphRepositoryDirectory)libraries\**\*.csproj;$(OGraphRepositoryDirectory)resources\**\*.csproj" />
+        <!-- Index code projects ONCE. tooling\ is included so tooling tests can reference their src by name (e.g. Assimalign.OGraph.Cli). -->
+        <_OGraphProject Include="$(OGraphRepositoryDirectory)libraries\**\*.csproj;$(OGraphRepositoryDirectory)resources\**\*.csproj;$(OGraphRepositoryDirectory)tooling\**\*.csproj" />
         <_OGraphProject Update="@(_OGraphProject)" ProjectId="%(_OGraphProject.Filename)" ProjectPath="%(_OGraphProject.Identity)" />
 
         <!-- Public refs -->

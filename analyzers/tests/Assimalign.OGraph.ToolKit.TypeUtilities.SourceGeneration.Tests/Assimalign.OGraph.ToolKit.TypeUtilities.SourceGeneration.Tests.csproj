@@ -6,13 +6,13 @@
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="coverlet.collector" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" />
-		<PackageReference Include="xunit" />
-		<PackageReference Include="xunit.runner.visualstudio" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
+		<OGraphPackageReference Include="coverlet.collector" />
+		<OGraphPackageReference Include="Microsoft.NET.Test.Sdk" />
+		<OGraphPackageReference Include="xunit" />
+		<OGraphPackageReference Include="xunit.runner.visualstudio" />
+		<OGraphPackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing" />
+		<OGraphPackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing" />
+		<OGraphPackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
 	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="..\..\..\libraries\ToolKit\src\Assimalign.OGraph.ToolKit.TypeUtilities\Decorators\*.cs" Link="EmbeddedResources\%(Filename)%(Extension)" />

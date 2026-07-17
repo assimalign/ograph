@@ -11,7 +11,7 @@
 	  <Compile Remove="SourceGenerators\IncrementalGenerator.GdmEntityTypeAttribute.cs" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
-		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
+		<OGraphPackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
+		<OGraphPackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
 	</ItemGroup>
 </Project>
