@@ -680,8 +680,10 @@ size).
 ```
 
 **Cursor mode** continues from an opaque continuation token. `token` carries the cursor; it MAY be
-combined with `take` to bound the page size, and MUST NOT be combined with `skip` (offset and
-cursor continuation are mutually exclusive within one `page` clause).
+combined with `take` to bound the page size and MAY be combined with `skip` to apply an additional
+starting offset relative to the cursor position. The grammar's `page-set` admits `skip`, `take`,
+and `token` in any combination within one `page` clause, and the golden parser test
+(`CompleteParseSuccessful`) exercises `page({ skip 0 take 25 token '' })` accordingly.
 
 ```ograph
 .page({
@@ -727,26 +729,33 @@ the surface mapping.
 - **`edge-selector`** is `edge-path [ as alias ]`, where `edge-path` is one or more identifiers
   separated by `/` (`edge`, or `scope/edge`, or `scope/edge/edge`).
 - **`alias`** (`as name`) names the **target scope** the traversal produces, so deeper clauses can
-  re-anchor to it. When omitted, the target scope's implicit alias is the final `edge-path`
-  segment (the Edge name).
+  re-anchor to it. The target scope **always** carries an **implicit alias** — the final
+  `edge-path` segment (the Edge name) — whether or not an explicit `as` alias is given; when an `as`
+  alias is present it is an additional name for the same scope. Either name may head a qualified
+  path (§5.6.3 rule 2).
 - **`argument`** is an optional single-entity key applied to the traversal target (Role = `Key`,
   §3.2 rule 5).
 
 ### 5.6.3 — Scope resolution
 
 Every query has a **scope stack**. The entry keyword establishes the **root scope**, bound to the
-entry Node; its alias, if any, is its `as` name. Each `.edge(...)` resolves against the scope stack
-and pushes a **child scope** bound to the resolved Edge's `Target` Node.
+entry Node; the entry Node's `Name` is the root scope's **implicit alias**, and an explicit `as`
+name, when present, is an additional alias for the same scope. Each `.edge(...)` resolves against
+the scope stack and pushes a **child scope** bound to the resolved Edge's `Target` Node.
 
 **Rules**
 1. **Single-segment selector.** `.edge(name)` resolves `name` as an Edge available from the
    **current (innermost)** scope's Node (a Resolver Operation, §3.1); the Edge's `Target` becomes
    the new innermost scope.
-2. **Qualified path.** `.edge(a/b/c)` resolves left-to-right: `a` MUST name an **in-scope vertex** —
-   the root alias or the alias of an enclosing edge's target scope — and each following segment is
-   an Edge `Name` walked from the prior segment's target. The final segment's `Target` becomes the
-   new innermost scope. A qualified path is how a clause **re-anchors** to an outer scope rather
-   than the innermost one.
+2. **Qualified path.** `.edge(a/b/c)` resolves left-to-right: `a` MUST name an **in-scope scope** —
+   matched against that scope's **implicit alias** (the entry Node's `Name` for the root scope, or
+   the Edge `Name` that produced an enclosing edge scope per §5.6.2) or its explicit `as` alias —
+   and each following segment is an Edge `Name` walked from the prior segment's target. The final
+   segment's `Target` becomes the new innermost scope. A qualified path is how a clause
+   **re-anchors** to an outer scope rather than the innermost one. Thus `.edge(companies as
+   employeeCompanies)` followed by `.edge(companies/addresses)` re-anchors via the Edge-name
+   implicit alias `companies`, and an unaliased root `v(providers)` re-anchors via its Node-name
+   implicit alias in `.edge(providers/languages)`.
 3. **Scope binding of chained clauses.** `.filter()`, `.sort()`, `.page()`, `.project()`, and a
    further `.edge()` that follow an `.edge(...)` bind to that edge's **target scope** (the innermost
    scope) until a subsequent `.edge(...)` re-anchors or pushes a new scope. Textual indentation is

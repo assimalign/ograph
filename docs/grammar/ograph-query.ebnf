@@ -25,6 +25,15 @@
          Internal/Lexer/TokenType.cs, Internal/Lexer/TokenSpans.cs,
          SyntaxNodes/Enums/BinaryOperatorType.cs,
          SyntaxNodes/Enums/FunctionType.cs.
+     - Forward-looking exceptions (normative here, not yet in the sources
+       above): the "length" scalar function is not present in
+       FunctionType.cs (which has no "Length" member), and the "$" variable
+       sigil is not present in the lexer (TokenSpans.Separators has no "$",
+       and the sole parameter lexer test tags "@take" — see R5). Both are
+       specified for the conformance/implementation work that realizes them —
+       complete filter functions (X-01), query variables "$var" (X-02), and
+       the semantic analyzer (X-03) in docs/DELIVERY_ROADMAP.md §5 — rather
+       than being grounded in the current executable artifacts.
 
    Notation (ISO/IEC 14977 EBNF):
      =        definition            ;        rule terminator
@@ -239,8 +248,10 @@ member-function     = identifier , "(" , [ argument-list ] , ")" ;
 
    edge-path is resolved left-to-right against the current scope (see
    specification.md §5.6 for scoping). A single segment names an Edge in
-   the current scope; a "/"-separated path re-anchors to a named
-   in-scope vertex and then walks Edge names. "as" names the target scope.
+   the current scope; a "/"-separated path re-anchors to a named in-scope
+   scope — matched by its implicit alias (the entry Node name for the root
+   scope, or an edge's Edge-name per §5.6.2) or its explicit "as" alias —
+   and then walks Edge names from it. "as" names the target scope.
    The optional trailing argument addresses a single edge target (Key).
    --------------------------------------------------------------------- *)
 
@@ -376,4 +387,19 @@ character           = ? any Unicode character ? ;
        projection selection (matching the sketch's @authorize('')). The
        page value @take in the parameter lexer test is read canonically as
        $take.
+
+   R6. Trailing fourth root query  .v(employees).project().
+       Sketch : the query-3 tail (.designing/query.ograph lines 247-248) is a
+                ".v(employees)" with a leading dot, followed by ".project()".
+       Not derivable / folded: "query" admits at most one "entry", and "entry"
+                has no leading-dot form, so a second entry-shaped construct
+                mid-document is not derivable by the productions above. It is
+                read as a fourth, SEPARATE root query — "v(employees)
+                .project({})" — where the leading dot is a stray sketch
+                artifact (the sketch indents the line as if it continued query
+                3, but a new entry keyword begins a new root query) and the
+                brace-less "project()" body is supplied per R1. The "three
+                worked queries" framing counts the three fully-elaborated
+                roots; this trailing fragment is the dropped fourth, recorded
+                here so the completeness invariant holds over the whole sketch.
    ===================================================================== *)
