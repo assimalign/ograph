@@ -212,33 +212,313 @@ A Scalar represents a single, indivisible value derived from a primitive type
 </Type>
 ```
 
-*[Owned by S-02 [O01.01.01.02]: full scalar rules — `<PrimitiveType>`/`<Format>` contracts,
-constraints, coercion, and the default query capability of each scalar kind (§2.3.6.2).]*
+A Scalar's runtime contract is fixed by a single `<PrimitiveType>` and refined by optional
+`<Format>` and `<Constraint>` children.
+
+**`<PrimitiveType>`**
+
+| Attribute | Values | Meaning |
+| --- | --- | --- |
+| `Type` | `Integer` \| `Float` \| `String` \| `Boolean` | the primitive root the Scalar derives from |
+
+**Rules**
+1. A Scalar Type MUST declare exactly one `<PrimitiveType>` child.
+2. `PrimitiveType.Type` MUST be one of the four primitive roots `Integer`, `Float`, `String`,
+   `Boolean`. This revision defines no other primitive roots; named value domains such as dates
+   are Scalars that refine `String` with a `<Format>` (below), not new primitives.
+3. The primitive root fixes the Scalar's underlying value space and equality semantics. Two
+   Scalars sharing a root are still distinct Types and MUST NOT be treated as interchangeable
+   (§2.3.4 rule 2).
+4. The four primitive roots are also **implicit built-in Scalar Types**, referenceable by name
+   (`Integer`, `Float`, `String`, `Boolean`) wherever a Type is consumed (§2.3.1) — e.g.
+   `<Property Name="City" Type="String"/>`, `<Key ... Type="String"/>`, or a `Function`/`Parameter`
+   return/argument type. These built-ins are always in scope, need not be declared, and MUST NOT be
+   redeclared as a model `<Type>` (a model `<Type Name="String">` is invalid). Referencing a bare
+   root is equivalent to referencing an unrefined Scalar of that primitive; a named Scalar (such as
+   `EmployeeId`) refines a built-in root with `<Format>`/`<Constraint>` and remains a distinct Type
+   (rule 3).
+
+**`<Format>`**
+
+A `<Format>` narrows the lexical representations a Scalar accepts.
+
+```xml
+<Type Name="Date" Kind="Scalar">
+  <PrimitiveType Type="String" />
+  <Format Pattern="YYYY-MM-DD" />
+  <Format Pattern="MM/DD/YYYY" />
+</Type>
+```
+
+| Attribute | Values | Meaning |
+| --- | --- | --- |
+| `Pattern` | a format token (token vocabulary implementation-defined this revision — see rule 2) | one acceptable lexical form of the value |
+
+**Rules**
+1. A Scalar MAY declare zero or more `<Format>` children. A Scalar with no `<Format>` accepts the
+   canonical lexical form of its primitive root.
+2. The `Pattern` **token vocabulary** — what tokens such as `YYYY`, `MM`, or `DD` denote, and
+   whether a `Pattern` is a date DSL, a regular expression, or another notation — is **not defined
+   in this revision** (Deferred, below). `<Format>` is therefore a documented but opaque hint whose
+   matching semantics are implementation-defined: a runtime that interprets the `Pattern` vocabulary
+   MUST reject a value matching none of the declared `Pattern`s, but this revision states no
+   portable match semantics over the undefined token language, so the rule is testable only relative
+   to a given implementation.
+3. Where a runtime interprets `Pattern`s, the first declared `<Format>` is the **canonical
+   serialization form**: on emit the value SHOULD be rendered using the first `Pattern`, even when
+   the input matched a later one. This revision fixes no token vocabulary against which the rendered
+   form is testable.
+4. `<Format>` is meaningful only on a `String`-rooted Scalar; a `<Format>` on any other primitive
+   root MUST be rejected.
+
+> *Deferred:* the `<Format>` `Pattern` token vocabulary — the concrete token language and its
+> portable match/serialize semantics (e.g. a date DSL, ICU/Unicode patterns, RFC 3339, or a
+> regular-expression dialect) — is **not** specified in this revision and is owned by a follow-up
+> specification feature under O01.01.01. Until it is defined, `<Format>` remains an opaque,
+> implementation-defined hint and rules 2–3 carry no revision-portable testable semantics.
+
+**`<Constraint>`**
+
+Constraints bound the value domain beyond what the primitive root and formats express. They are
+portable, source-agnostic facets (mirroring `<Option>`, §2.3.6).
+
+```xml
+<Type Name="EmployeeId" Kind="Scalar">
+  <PrimitiveType Type="String" />
+  <Constraint Name="MinLength" Value="1" />
+  <Constraint Name="MaxLength" Value="64" />
+</Type>
+```
+
+| Facet | Applies to | `Value` | Meaning |
+| --- | --- | --- | --- |
+| `MinLength` / `MaxLength` | `String` | non-negative integer | inclusive character-length bounds |
+| `MinValue` / `MaxValue` | `Integer`, `Float` | numeric literal | inclusive value bounds |
+
+**Rules**
+1. A Scalar MAY declare zero or more `<Constraint>` children; each `Name` MUST be from the facet
+   vocabulary above and MUST apply to the Scalar's primitive root.
+2. A facet `Name` MUST NOT repeat within a Scalar; a repeated facet MUST be rejected.
+3. `MinLength` MUST NOT exceed `MaxLength`, and `MinValue` MUST NOT exceed `MaxValue`; a Scalar
+   that declares an unsatisfiable range is invalid.
+4. A value that satisfies the primitive root and every declared `<Format>` but violates a
+   `<Constraint>` MUST be rejected.
+5. This revision defines exactly the facet vocabulary above; an unknown facet name is invalid.
+
+**Coercion and null semantics**
+
+**Rules**
+1. A value supplied for a Scalar MUST be a lexical representation valid for its primitive root
+   (and, when Formats are declared, matching a declared `Pattern`). The runtime MUST NOT silently
+   coerce across primitive roots — an `Integer` literal is not a valid `String` Scalar value, and
+   the reverse is likewise rejected.
+2. A `Boolean` Scalar accepts exactly the literals `true` and `false`; no numeric or string value
+   coerces to a Boolean.
+3. A `null` value is admissible for a Scalar-typed position only where the consuming reference
+   declares `IsNullable="true"` (§2.3.1). Where `IsNullable="false"` (the default), absence or
+   `null` MUST be rejected; a Scalar carries no implicit default that substitutes for a missing
+   value.
+4. Coercion is validation, not transformation: a Scalar MUST reject an out-of-domain value rather
+   than clamp, pad, or truncate it.
+5. The default query capability of a Scalar member is determined by its primitive root in the
+   type-default table (§2.3.6.2).
 
 #### 2.3.4.2 — Enum Type
 
-*[Owned by S-02 [O01.01.01.02]: `<Member Name Value>` rules.]*
+An Enum Type defines a closed, named set of members over an integer underlying value space.
+
+```xml
+<Type Name="EmployeeKind" Kind="Enum">
+  <Member Name="FullTime" Value="1" />
+  <Member Name="PartTime" Value="2" />
+  <Member Name="Contractor" Value="3" />
+</Type>
+```
+
+**`<Member>`**
+
+| Attribute | Values | Meaning |
+| --- | --- | --- |
+| `Name` | identifier | the canonical, serialization-facing name of the member |
+| `Value` *(optional)* | integer literal | the underlying value the member maps to |
+
+**Rules**
+1. An Enum Type MUST declare at least one `<Member>`.
+2. Member `Name` MUST be unique within the Enum.
+3. `Value`, when declared, MUST be an integer literal and MUST be unique within the Enum; two
+   members MUST NOT share an underlying value.
+4. When `Value` is omitted, the member's underlying value is assigned by declaration order,
+   starting at `0` and incrementing by one, skipping any value already claimed by an explicit
+   `Value`. A model MAY declare all, some, or none of its members' values.
+5. An Enum serializes by member `Name` by default; a runtime MAY additionally accept a member's
+   underlying `Value` on input, but MUST reject any name or value the Enum does not declare.
+6. This revision defines integer-backed Enums only; string-backed underlying values are not
+   adopted here.
+7. The default query capability of an Enum member is defined in the type-default table
+   (§2.3.6.2).
 
 #### 2.3.4.3 — Complex Type
 
 A Complex Type is a structured runtime contract composed of properties and functions: reusable
 value objects for nested payloads, policy contracts, and other non-entity structures.
 
-*[Owned by S-02 [O01.01.01.02]: completion of Complex rules and `<Function>` signatures.]*
+```xml
+<Type Name="Address" Kind="Complex">
+  <Property Name="City" Type="String" />
+  <Property Name="State" Type="String" />
+  <Function Name="FullAddress" Type="String" />
+</Type>
+```
+
+**Rules**
+1. A Complex Type is composed of zero or more `<Property>` members (§2.3.5) and zero or more
+   `<Function>` members. Member names — properties and functions together — MUST be unique within
+   the Type.
+2. A non-Entity Complex Type MUST NOT declare a `<Key>`; identity is exclusive to Entity Types
+   (§2.3.4.5), which override this prohibition (§2.3.4.5 rule 1).
+3. A Complex Type carries no graph identity and MUST NOT be bound to a Node (§2.3.2 rule 1). It
+   MAY be referenced wherever a type is consumed (§2.3.1) — as a `Property`/`Item`/`Value` type,
+   a `Parameter`/`Result` type, or a `$.query` policy type (§3.3.2).
+4. Complex Types MAY nest: a Property or Function MAY reference another Complex (or Entity) Type. A
+   model MUST NOT declare a containment cycle of required (`IsNullable="false"`, `Cardinality="One"`)
+   members that no finite instance can satisfy.
+
+**Read-only and nullable members**
+
+5. A member declared `IsReadOnly="true"` is server-owned: it MUST NOT be accepted in a write
+   position (a Command `Input` payload, §3.2 rule 5) and MUST be ignored or rejected if supplied
+   there. It MAY be read, filtered, sorted, and projected subject to its type default (§2.3.6.2).
+6. A member reference declared `IsNullable="false"` (the default, §2.3.1) MUST be present and
+   non-null in every valid instance; `IsNullable="true"` permits absence. Nullability constrains
+   the value, not the member's query capability.
+
+**`<Function>` — computed members**
+
+A Function is a derived, read-only member whose value the runtime computes rather than stores.
+
+```xml
+<Function Name="FullName" Type="String" IsNullable="true">
+  <Parameter Name="Culture" Type="String" IsRequired="false" />
+</Function>
+```
+
+| Attribute | Values | Meaning |
+| --- | --- | --- |
+| `Name` | identifier | member name, unique among the Type's properties and functions |
+| `Type` | type reference (§2.3.1) | the return contract; `Cardinality` and `IsNullable` apply |
+
+**Rules**
+7. A `<Function>` MUST declare `Name` and a return type via the §2.3.1 triple (`Type`, optional
+   `Cardinality`, optional `IsNullable`). The return type MUST resolve within the declaring Graph.
+8. A `<Function>` MAY declare ordered `<Parameter>` children describing its arguments. A
+   function-signature `<Parameter>` uses the §2.3.1 triple plus optional `IsRequired`
+   (default `false`); it is governed here, **not** by the operation-`Parameter` rules of §3.2 (it
+   declares no `Role` and no reserved `$.`-name). Parameter names MUST be unique within the
+   function, and required parameters MUST precede optional ones.
+9. A Function is intrinsically read-only: it MUST NOT be declared `IsReadOnly="false"` and MUST NOT
+   appear in a write position.
+10. A Function participates in query capability only when a corresponding member is exposed by an
+    operation policy Type (§3.3.3); its default capability follows its return type's kind
+    (§2.3.6.2). A Directive whose `Usage` targets `Function` (§2.3.4.6) MAY annotate it.
 
 #### 2.3.4.4 — Collection Type
 
 Collection types exist for **implementation-significant container shapes** (list, set, map,
 keyed collections) — never as a stand-in for result multiplicity (§2.3.1).
 
-*[Owned by S-02 [O01.01.01.02]: `<Item>`/`<Key>`/`<Value>` rules and container semantics.]*
+```xml
+<Type Name="EmployeeList" Kind="Collection" Container="List">
+  <Item Type="Employee" />
+</Type>
+
+<Type Name="EmployeesByDept" Kind="Collection" Container="Dictionary">
+  <Key Type="String" />
+  <Value Type="Employee" />
+</Type>
+```
+
+**Container kinds**
+
+| `Container` | Ordering | Duplicates | Element declaration |
+| --- | --- | --- | --- |
+| `List` (default) | ordered, index-addressable | permitted | one `<Item>` |
+| `Set` | unordered | forbidden (by value equality) | one `<Item>` |
+| `Dictionary` | unordered | keys forbidden to repeat | one `<Key>` + one `<Value>` |
+
+**Rules**
+1. A Collection Type MAY declare `Container`; when omitted it defaults to `List`.
+2. A `List` or `Set` MUST declare exactly one `<Item>` and MUST NOT declare `<Key>` or `<Value>`.
+3. A `Dictionary` MUST declare exactly one `<Key>` and exactly one `<Value>` and MUST NOT declare
+   `<Item>`.
+4. `<Item>`, `<Key>`, and `<Value>` each reference a type using the §2.3.1 triple. Their
+   `Cardinality` MUST be `One` (the default); a nested `Many` belongs to a named inner Collection
+   Type, not to a bare element `Cardinality` (§2.3.1 rule 2).
+5. A `Dictionary` `<Key>` type MUST be a `Scalar` or `Enum` — a comparable, hashable value — and
+   MUST NOT be nullable.
+6. **Duplicate semantics.** A `List` MAY contain equal elements. A `Set` MUST reject an element
+   equal (by its Item type's underlying value) to one already present. A `Dictionary` MUST reject
+   an entry whose key equals an existing key.
+7. **Ordering semantics.** `List` order is significant and preserved (insertion/declaration order,
+   index-addressable). `Set` and `Dictionary` order is **not** significant; a consumer MUST NOT
+   depend on iteration order even where an implementation happens to preserve it.
+8. A Collection Type describes container shape only. A `Property`, `Parameter`, or `Result` MUST
+   NOT use a Collection Type merely to express result multiplicity — use `Cardinality="Many"`
+   (§2.3.1 rule 2, §3.1.3 rule 2). A Collection Type is appropriate only where the container shape
+   itself is part of the contract (e.g. a keyed `Dictionary`).
+9. An `<Item>`/`<Value>` element MAY reference any Type kind; a `Set` element type SHOULD be a
+   value type (`Scalar`, `Enum`, or a `Complex` with defined value equality) so duplicate
+   detection is well-defined.
+10. The default query capability of a Collection member is defined in the type-default table
+    (§2.3.6.2).
 
 #### 2.3.4.5 — Entity Type
 
 An Entity Type is a Complex Type with identity: it declares one or more `<Key>` members and is
 the only Type kind a Node may bind to.
 
-*[Owned by S-02 [O01.01.01.02]: `<Key>` rules, composite keys, key immutability.]*
+```xml
+<Type Name="Employee" Kind="Entity">
+  <Key Property="Id" />
+  <Property Name="Id" Type="EmployeeId" />
+  <Property Name="Info" Type="EmployeeInfo" />
+</Type>
+
+<Type Name="Enrollment" Kind="Entity">
+  <Key Property="StudentId" />
+  <Key Property="CourseId" />
+  <Property Name="StudentId" Type="StudentId" />
+  <Property Name="CourseId" Type="CourseId" />
+</Type>
+```
+
+**`<Key>`**
+
+| Attribute | Values | Meaning |
+| --- | --- | --- |
+| `Property` | a Property name in the same Entity | a member that participates in the entity's identity |
+
+**Rules**
+1. An Entity Type is a Complex Type — all §2.3.4.3 rules apply, including `<Function>` members,
+   **except the `<Key>` prohibition (§2.3.4.3 rule 2), which Entity overrides** — that additionally
+   declares identity. It is the only Type kind a `Node` may bind to (§2.3.2 rule 1).
+2. An Entity MUST declare at least one `<Key>`. Each `<Key Property="...">` MUST name a
+   `<Property>` declared in the same Entity; a `<Key>` naming an absent property is invalid.
+3. No two `<Key>` elements MUST reference the same Property.
+4. A key Property's Type MUST be a `Scalar` or `Enum` — a comparable identity value; it MUST NOT
+   be `Complex`, `Collection`, or `Entity`.
+5. A key Property MUST NOT be nullable (`IsNullable="false"`); a null key value is invalid.
+6. A key Property MUST NOT declare `Cardinality="Many"`; each key member is single-valued.
+7. **Composite keys.** When an Entity declares more than one `<Key>`, the ordered tuple of key
+   members (in declaration order) forms the composite identity. Two instances denote the same
+   entity iff their full key tuples are equal; the tuple MUST be unique across instances.
+8. **Key immutability.** Key members are immutable for the lifetime of an instance: a runtime MUST
+   reject any operation that changes a key member's value on an existing instance, independent of
+   that member's `IsReadOnly` attribute. `IsReadOnly` governs client-supplied writes in general; a
+   key MAY be assigned when an instance is created but MUST NOT change thereafter.
+9. An Entity Type MUST NOT serve as a `Directive` Type (§2.3.4.6) and MUST NOT be used as a
+   `Dictionary` `<Key>` type (§2.3.4.4 rule 5).
+10. The default query capability of an Entity member is defined in the type-default table
+    (§2.3.6.2); an Entity is filtered and sorted through its individual members, not as a whole.
 
 #### 2.3.4.6 — Directive Type
 
@@ -310,8 +590,29 @@ member, regardless of which operation exposes it.
    children.
 4. Property policies MUST remain data-source agnostic and describe only portable query behavior.
 
-*[Owned by S-03 [O01.01.01.03]: the operator and function name vocabularies. Owned by
-S-02 [O01.01.01.02]: `Option` names and per-type defaults.]*
+*[Owned by S-03 [O01.01.01.03]: the operator and function name vocabularies.]*
+
+**`<Option>` vocabulary**
+
+An `<Option Name="..." Value="..." />` tunes how a reserved concern applies to a member. This
+revision defines the following closed Option vocabulary:
+
+| Option | Valid under | `Value` domain | Meaning |
+| --- | --- | --- | --- |
+| `Direction` | `$.sort` | `\|`-separated subset of `Asc`, `Desc` | the sort directions the member permits |
+| `Nulls` | `$.sort` | `First` \| `Last` | where null values order relative to non-null |
+| `Case` | `$.filter` | `Sensitive` \| `Insensitive` | case sensitivity of `String` comparison |
+
+**Rules**
+1. An `<Option>` `Name` MUST be drawn from the vocabulary above, or be a vendor-prefixed custom
+   option (§3.3.2 rule 5); an unknown, unprefixed Option name is invalid.
+2. An `<Option>` MUST appear only beneath a policy it is valid under; e.g. `Direction` beneath any
+   policy other than `$.sort` is invalid.
+3. `Value` MUST fall within the Option's domain. A `|`-separated `Value` (e.g. `Asc|Desc`)
+   enumerates the permitted choices; an empty selection is invalid.
+4. An Option `Name` MUST NOT repeat within a single Policy.
+5. Operators and functions inside a Policy are governed by the S-03 vocabulary; an `<Option>`
+   never grants an operator or function, it only tunes one the policy already permits.
 
 #### 2.3.6.1 — Reserved Property Policies
 
@@ -331,11 +632,41 @@ The **effective capability** of a member for a reserved concern (`$.filter`, `$.
 `$.project`) is:
 
 - the Property-hosted policy for that concern, when declared; otherwise
-- the **default capability of the member's Type** (defaults per type kind are pinned by S-02;
-  until then they are implementation-defined).
+- the **default capability of the member's Type**, per the type-default table below.
 
 A Property-hosted policy therefore *narrows* — its absence does **not** make the member
 unusable; keyword availability is gated exclusively at the operation level (§3.3.3).
+
+**Type-default effective capability**
+
+Where no Property-hosted policy narrows a member, its effective capability for each reserved
+concern is the default for its Type kind:
+
+| Type kind | `$.filter` (default) | `$.sort` (default) | `$.project` (default) |
+| --- | --- | --- | --- |
+| `Scalar` | equality; plus ordering for `Integer`/`Float` roots | sortable | projectable |
+| `Enum` | equality | sortable (by underlying value) | projectable |
+| `Complex` | none directly — filter through its members | not sortable | projectable (members recurse) |
+| `Collection` | none directly | not sortable | projectable |
+| `Entity` | none directly — filter through its members/key | not sortable | projectable |
+
+**Rules**
+1. "Equality" and "ordering" name capability **classes**; the concrete operator and function
+   tokens that realize them are the S-03 vocabulary (§2.3.6). A member whose class is "equality"
+   admits that vocabulary's equality operators, and no others, by default.
+2. Every Type kind is projectable by default. `$.filter` and `$.sort` on a structured kind
+   (`Complex`, `Collection`, `Entity`) are reached through its members, never the kind as a whole:
+   for such a kind the table marks the concern "none directly"/"not sortable", and — because a
+   Property policy only narrows (rule 5) — no policy can grant filter or sort to the kind itself.
+3. `IsReadOnly="true"` does not remove read capability: a read-only member keeps its type-default
+   filter, sort, and project capability. `IsNullable="true"` does not change a member's capability
+   class; the `$.sort` `Nulls` Option (§2.3.6) tunes null ordering.
+4. A `String`-rooted Scalar is equality-only for `$.filter` by default; range/relational filtering
+   on strings is opt-in through an explicit `$.filter` Property policy. (`$.sort` remains
+   available — a `String` Scalar is sortable by default.)
+5. These defaults are the **maximum** a member offers absent a Property policy; a Property policy
+   only narrows (§2.3.6.1 rule 4), and an operation policy may expose only a subset (§3.3.3
+   rule 4).
 
 # 3.0 — Capability Model
 
