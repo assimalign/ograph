@@ -88,9 +88,12 @@ Binding changes:
 `IsAotCompatible=true` already enables the trim/AOT analyzers (IL3050 warnings fire in Syntax
 today). The work is therefore: **burn down the existing warning backlog, promote `IL*` warnings to
 errors (W02), and land a `PublishAot` smoke host in CI (W04)**. Gdm's reflection-based descriptor
-path is displaced by ToolKit source-generated model metadata — and to avoid building the engine
-twice, the source-generated construction path is developed *alongside* the Gdm runtime in W02
-(T-02), not after it.
+path is displaced by AOT-safe source-generated model metadata; the concrete construction mechanism
+is decided and specified by the Gdm feature **[O01.01.02.09]** (#85) — the ToolKit source-generator
+epic is deferred and its libraries are parked in `_out-of-scope/`, so reviving that toolkit is only
+one candidate alongside fresh incremental generators, interceptors, or hand-written metadata. To
+avoid building the engine twice, that construction path is developed *alongside* the Gdm runtime in
+W02, not after it.
 
 ### D4 — Replicate the Cohesion work-item system
 WBS-coded issues, native sub-issue hierarchy, scope-creep capture with Origin classification, and
@@ -177,8 +180,9 @@ Twelve area epics under the program root. Features listed with target Wave/Prior
 | G-04 | Gdmx serialization: read/write the single-file XML model document with versioning (`GdmSerializer.Version1` completion, incl. Capabilities + Bindings sections) | W03 | P002 |
 | G-05 | Model validation engine (all MUST rules from the spec: uniqueness, reference resolution, policy narrowing `operation ⊆ property`) | W02 | P002 |
 | G-06 | Protocol-binding model (HttpBinding: method/route/parameter-source/media types) — precedes the Server binding surface per D1 layering | W02 | P002 |
-| G-07 | Displace/delete the reflection descriptor path: consume ToolKit source-generated metadata (from T-02); annotate or remove remaining reflection (D3) | W04 | P001 |
+| G-07 | Displace/delete the reflection descriptor path: consume the source-generated metadata from the mechanism selected in G-09 ([O01.01.02.09]); annotate or remove remaining reflection (D3) | W04 | P001 |
 | G-08 | Directive/annotation model (`Authorize`, `Description`, custom directives with usage targets) | W04 | P003 |
+| G-09 | Select and specify the AOT-safe model-construction mechanism ([O01.01.02.09] / #85): decide the replacement for the deferred ToolKit source-gen path — fresh incremental generators, interceptors, hand-written metadata, or reviving the parked toolkit; G-01/G-02 code against it and G-07 displaces the reflection descriptors onto it | W02 | P001 |
 
 ### O01.01.03 — OGraph - Syntax
 | # | Feature | Wave | Pri |
@@ -222,14 +226,14 @@ Twelve area epics under the program root. Features listed with target Wave/Prior
 ### O01.01.07 — OGraph - ToolKit
 | # | Feature | Wave | Pri |
 | --- | --- | --- | --- |
-| T-01 | Finish TypeUtilities generators (re-enable excluded `EntityKeyAttribute` generator; complete Omit/Pick) | W02 | P002 |
-| T-02 | **GDM compile-time model generation** from CLR types — the AOT keystone; walking-skeleton lands in W02 alongside G-01/G-02 so the Gdm runtime is built against the source-gen path, not the reflection path | W02 | P001 |
-| T-03 | Change-tracking polish + docs (`ToolKit.Gdm`) | W05 | P004 |
+| T-01 | Finish TypeUtilities generators (re-enable excluded `EntityKeyAttribute` generator; complete Omit/Pick) (deferred — utilities may not remain in this project) | W06 | P006 |
+| T-02 | **GDM compile-time model generation** from CLR types — reviving this generator is one candidate for the AOT-safe construction mechanism now decided by [O01.01.02.09] (deferred — utilities may not remain in this project) | W06 | P006 |
+| T-03 | Change-tracking polish + docs (`ToolKit.Gdm`) (deferred — utilities may not remain in this project) | W06 | P006 |
 
 ### O01.01.08 — OGraph - Analyzers
 | # | Feature | Wave | Pri |
 | --- | --- | --- | --- |
-| A-01 | Diagnostic/code-fix coverage for all ToolKit attributes (mixing rules, ctor requirements) | W04 | P003 |
+| A-01 | Diagnostic/code-fix coverage for all ToolKit attributes (mixing rules, ctor requirements) | W06 | P006 |
 | A-02 | AOT-misuse analyzers (flag reflection-dependent Gdm APIs when consumer targets AOT) | W05 | P004 |
 
 ### O01.01.09 — OGraph - Sdk
@@ -264,7 +268,7 @@ Twelve area epics under the program root. Features listed with target Wave/Prior
 | N-08 | **Baseline: restore a compiling tree on net10.0** (fix `GdmEntityTypeDescriptor.cs` syntax errors and any remaining hard breaks; the 22-project slnx builds) | W01 | P001 |
 | N-09 | OpenAPI 3.2 description of OGraph bindings (QUERY method describability) | W06 | P006 |
 
-**Scale:** 1 program root + 12 area epics + 63 features = **76 issues** at initial population.
+**Scale:** 1 program root + 12 area epics + 64 features = **77 issues**.
 
 ## 6. GitHub Project #8 configuration
 
@@ -309,20 +313,20 @@ W01  N-08 ──► N-01          N-04
 W02  S-02/S-03 ──► X-01/X-02 ──► X-03 ◄── G-03
      S-01 ──► G-01 ──► G-02 / G-03 / G-05 / G-06
      S-05 ──► V-01/V-02      G-06 ──► V-01/V-02
-     T-01 ──► T-02 (skeleton)      V-03, C-01, N-02, S-07
+     G-09 ──► G-07 (W04)      V-03, C-01, N-02, S-07
 
 W03  X-03/X-04 ──► V-06      S-06/C-01 ──► V-05      V-05/V-06 ──► V-07 ──► L-01/L-02
      S-07 ──► V-11           S-05/S-06 ──► N-03      G-04, V-04, X-05, X-06, C-02, S-08
 
-W04  T-02 ──► G-07 ──► N-05      S-08 ──► V-10      L-03, V-08, G-08, A-01
+W04  G-07 ──► N-05      S-08 ──► V-10      L-03, V-08, G-08
 
-W05  K-01/K-02, I-01/I-02, L-04, T-03, A-02, N-07, S-09
+W05  K-01/K-02, I-01/I-02, L-04, A-02, N-07, S-09
 
-W06  S-09 ──► V-09      E-01/E-02/E-03, N-06, N-09, S-10/S-11
+W06  S-09 ──► V-09      E-01/E-02/E-03, N-06, N-09, S-10/S-11, T-01/T-02/T-03, A-01
 ```
 
 **Edges that become native GitHub issue dependencies at population time** (true execution blockers
-only, per the Cohesion rule): N-08→N-01, G-03→X-03, G-06→V-01, S-07→V-11, S-08→V-10, T-02→G-07,
+only, per the Cohesion rule): N-08→N-01, G-03→X-03, G-06→V-01, S-07→V-11, S-08→V-10, G-09→G-07,
 G-07→N-05, S-09→V-09, V-07→L-01. Everything else is expressed by Wave/Priority only.
 
 ## 9. Execution notes
