@@ -1,0 +1,35 @@
+<Project>
+
+    <!-- OGraph Specific Build Flags for all all projects in the repository -->
+	<PropertyGroup>
+		<OGraphRepositoryDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))\</OGraphRepositoryDirectory>
+		<OGraphOutputPath>$(OGraphRepositoryDirectory)_out</OGraphOutputPath>
+		<OGraphOutputPathForSdk>$(OGraphOutputPath)\dotnet\sdk</OGraphOutputPathForSdk>
+		<OGraphOutputPathForCli>$(OGraphOutputPath)\dotnet</OGraphOutputPathForCli>
+		<OGraphOutputPathForPacks>$(OGraphOutputPath)\dotnet\packs</OGraphOutputPathForPacks>
+		<OGraphOutputPathForLibraries>$(OGraphOutputPath)\packages</OGraphOutputPathForLibraries>
+		<OGraphOutputPathForDevScripts>$(OGraphRepositoryDirectory)scripts\modules</OGraphOutputPathForDevScripts>
+	</PropertyGroup>
+
+	<!-- TODO: Need to verify if this is the correct way for generating the Intermediate path  -->
+	<PropertyGroup>
+        <_OGraphIntermediateOutputPath Condition=" '$(PlatformName)' == 'AnyCPU' ">$(MSBuildProjectDirectory)\obj$(IntermediateOutputPath)$(Configuration)\</_OGraphIntermediateOutputPath>
+        <_OGraphIntermediateOutputPath Condition=" '$(PlatformName)' != 'AnyCPU' ">$(MSBuildProjectDirectory)\obj$(IntermediateOutputPath)$(PlatformName)\$(Configuration)\</_OGraphIntermediateOutputPath>
+    </PropertyGroup>
+
+    <!-- Language specific Configuration -->
+	<PropertyGroup>
+		<Nullable>enable</Nullable>
+		<LangVersion>preview</LangVersion>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+	</PropertyGroup>
+
+	<!-- OGraph Build Properties -->
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<DebugType>none</DebugType>
+	</PropertyGroup>
+	
+	<ItemGroup Condition="Exists('$(OGraphRepositoryDirectory).editorconfig')">
+		<AdditionalFiles Include="$(OGraphRepositoryDirectory).editorconfig" />
+	</ItemGroup>
+</Project>

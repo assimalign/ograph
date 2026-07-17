@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<RootNamespace>Assimalign.OGraph</RootNamespace>
+	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="ValueObjects\**" />
+	  <EmbeddedResource Remove="ValueObjects\**" />
+	  <None Remove="ValueObjects\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<OGraphProjectReference Include="Assimalign.OGraph.Gdm" />
+		<OGraphProjectReference Include="Assimalign.OGraph.Syntax" />
+	</ItemGroup>
+</Project>

@@ -1,0 +1,57 @@
+<Project>
+    <!--
+        Project Reference By Name Only.
+
+        Lets a library/resource/analyzer csproj reference another by its
+        assembly name instead of by relative csproj path. Resolution walks
+        libraries/ + resources/ (for code refs) and analyzers/ (for analyzer
+        refs) once, matches each item's Include to the csproj whose filename
+        matches, and emits a regular <ProjectReference Include="<resolved-path>" />
+        with the appropriate per-flavor metadata.
+
+        Three flavours:
+
+          OGraphProjectReference        - PUBLIC code reference. Resulting
+                                            <ProjectReference> has default
+                                            semantics: compiled against,
+                                            CopyLocal'd into bin/, AND appears
+                                            as a <dependency> in this library's
+                                            .nupkg .nuspec (flows to consumers).
+
+          OGraphPrivateProjectReference - PRIVATE code reference. Same compile
+                                            + CopyLocal behaviour, but the
+                                            resulting <ProjectReference> carries
+                                            PrivateAssets="all", which suppresses
+                                            the <dependency> entry in the .nuspec.
+                                            Consumers of this library's .nupkg
+                                            never learn about the target.
+
+                                            Use for "this library needs X as an
+                                            internal implementation detail but
+                                            should not expose X to its consumers".
+                                            Pair with a matching
+                                            <OGraphFrameworkPrivateAssembly>
+                                            entry in
+                                            frameworks/Assimalign.OGraph.App.props
+                                            so the containing framework's
+                                            Runtime pack still ships X.dll at
+                                            run time.
+    -->
+    <ItemGroup>
+        <!-- Index code projects ONCE. -->
+        <_OGraphProject Include="$(OGraphRepositoryDirectory)libraries\**\*.csproj;$(OGraphRepositoryDirectory)resources\**\*.csproj" />
+        <_OGraphProject Update="@(_OGraphProject)" ProjectId="%(_OGraphProject.Filename)" ProjectPath="%(_OGraphProject.Identity)" />
+
+        <!-- Public refs -->
+        <OGraphProjectReference Update="@(_OGraphProject->'%(ProjectId)')" ProjectPath="%(_OGraphProject.ProjectPath)" />
+        <ProjectReference Include="@(OGraphProjectReference->'%(ProjectPath)')" />
+        <OGraphProjectReference Remove="@(OGraphProjectReference->HasMetadata('ProjectPath'))" />
+
+        <!-- Private refs: PrivateAssets='all' suppresses .nuspec <dependency> flow. -->
+        <OGraphPrivateProjectReference Update="@(_OGraphProject->'%(ProjectId)')" ProjectPath="%(_OGraphProject.ProjectPath)" />
+        <ProjectReference Include="@(OGraphPrivateProjectReference->'%(ProjectPath)')" PrivateAssets="all" />
+        <OGraphPrivateProjectReference Remove="@(OGraphPrivateProjectReference->HasMetadata('ProjectPath'))" />
+
+        <_OGraphProject Remove="@(_OGraphProject)" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,6 @@
+<Project>
+	<!--Metadata Reference: https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata?view=vs-2022-->
+	<Import Project="Targets\Build.References.Packages.targets" />
+	<Import Project="Targets\Build.References.Projects.targets" />
+	<Import Project="Targets\Build.References.Analyzers.targets" />
+</Project>

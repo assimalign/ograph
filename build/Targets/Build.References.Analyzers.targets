@@ -1,0 +1,83 @@
+<Project>
+    <!-- Analyzer Reference By Name Only
+
+        OGraphAnalyzerReference       - ROSLYN ANALYZER / SOURCE GENERATOR
+                                            reference. Resolves against
+                                            analyzers/**/*.csproj. Emits a
+                                            <ProjectReference> with
+                                            OutputItemType="Analyzer" +
+                                            ReferenceOutputAssembly="false" so
+                                            the analyzer activates at compile
+                                            time (dogfood); AND adds the built
+                                            analyzer DLL to the consuming
+                                            library's nupkg under
+                                            analyzers/dotnet/cs/ so external
+                                            consumers pick it up automatically
+                                            via <PackageReference>.
+    -->
+    <ItemGroup>
+        <!-- Index analyzer projects ONCE. -->
+        <_OGraphAnalyzerProject Include="$(OGraphRepositoryDirectory)analyzers\**\*.csproj" />
+        <_OGraphAnalyzerProject Update="@(_OGraphAnalyzerProject)" ProjectId="%(_OGraphAnalyzerProject.Filename)" ProjectPath="%(_OGraphAnalyzerProject.Identity)" />
+
+        <!--
+            Analyzer refs. OutputItemType=Analyzer + ReferenceOutputAssembly=false
+            tells the .NET SDK to load the project's output as a Roslyn analyzer
+            (instead of a normal assembly reference) when the consumer builds.
+            PrivateAssets=all keeps the analyzer csproj from leaking as a NuGet
+            dependency of the consuming library.
+        -->
+        <OGraphAnalyzerReference Update="@(_OGraphAnalyzerProject->'%(ProjectId)')" ProjectPath="%(_OGraphAnalyzerProject.ProjectPath)" />
+        <ProjectReference Include="@(OGraphAnalyzerReference->'%(ProjectPath)')"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false"
+                          PrivateAssets="all" />
+
+        <!--
+            Capture the resolved analyzer csproj paths for the pack hook below.
+            We can't reuse @(OGraphAnalyzerReference) directly because it gets
+            consumed (Remove'd) immediately so MSBuild's incremental graph
+            cleanup is happy.
+        -->
+        <_OGraphAnalyzerResolved Include="@(OGraphAnalyzerReference->'%(ProjectPath)')" />
+        <OGraphAnalyzerReference Remove="@(OGraphAnalyzerReference->HasMetadata('ProjectPath'))" />
+
+        <_OGraphAnalyzerProject Remove="@(_OGraphAnalyzerProject)" />
+    </ItemGroup>
+
+    <!--
+        Pack each referenced analyzer DLL into the consuming library's nupkg at
+        analyzers/dotnet/cs/<Name>.dll. NuGet's built-in analyzer convention
+        picks them up automatically on every consumer that adds a
+        <PackageReference> to the library, so no extra wiring is needed on the
+        consumer side.
+
+        We hook TargetsForTfmSpecificContentInPackage (same extension point the
+        SDK pack uses) and look up each analyzer's GetTargetPath at pack time -
+        that yields the actual DLL path including the analyzer's own TFM
+        (netstandard2.0), without us having to hardcode it.
+    -->
+    <!--
+        Top-level PropertyGroup Conditions can't reference @(items) (MSB4099),
+        so extend the hook unconditionally; the target's own Condition gates
+        execution to projects that actually declared an analyzer reference.
+    -->
+    <PropertyGroup>
+        <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_CollectOGraphAnalyzersForPack</TargetsForTfmSpecificContentInPackage>
+    </PropertyGroup>
+
+    <Target Name="_CollectOGraphAnalyzersForPack"
+            Condition="'@(_OGraphAnalyzerResolved)' != ''">
+        <MSBuild Projects="@(_OGraphAnalyzerResolved)"
+                 Targets="GetTargetPath"
+                 Properties="Configuration=$(Configuration)"
+                 RemoveProperties="OutDir;OutputPath;IntermediateOutputPath;TargetFramework;TargetFrameworks;RuntimeIdentifier">
+            <Output TaskParameter="TargetOutputs" ItemName="_OGraphAnalyzerDll" />
+        </MSBuild>
+        <ItemGroup>
+            <TfmSpecificPackageFile Include="@(_OGraphAnalyzerDll)">
+                <PackagePath>analyzers/dotnet/cs</PackagePath>
+            </TfmSpecificPackageFile>
+        </ItemGroup>
+    </Target>
+</Project>

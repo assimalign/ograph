@@ -1,6 +1,7 @@
 <Project>
 	<Import Project="../Directory.Build.props" />
 	<PropertyGroup>
+		<TargetFrameworks>$(TargetFrameworkForLibraries)</TargetFrameworks>
 		<GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>

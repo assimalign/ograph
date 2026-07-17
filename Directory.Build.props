@@ -1,31 +1,3 @@
 <Project>
-	<PropertyGroup>
-		<Authors>Chase Crawford</Authors>
-		<RepositoryType>git</RepositoryType>
-		<Company>Assimalign</Company>
-		<Copyright>© Assimalign $([System.DateTime]::Now.ToString(`yyyy`))</Copyright>
-		<LangVersion>preview</LangVersion>
-		<Nullable>enable</Nullable>
-	</PropertyGroup>
-	<!-- Fixed Version Info -->
-	<PropertyGroup>
-		<MajorVersion>1</MajorVersion>
-		<MinorVersion>0</MinorVersion>
-		<PatchVersion>0</PatchVersion>
-	</PropertyGroup>
-	<!-- Target Frameworks -->
-	<PropertyGroup>
-		<TargetFrameworkLatest>net10.0</TargetFrameworkLatest>
-		<TargetFrameworkForLibraries>$(TargetFrameworkLatest)</TargetFrameworkForLibraries>
-		<TargetFrameworkForBenchmark>$(TargetFrameworkLatest)</TargetFrameworkForBenchmark>
-		<TargetFrameworkForCli>$(TargetFrameworkLatest)</TargetFrameworkForCli>
-		<TargetFrameworkForVisualizer>$(TargetFrameworkLatest)</TargetFrameworkForVisualizer>
-		<TargetFrameworkForSdk>$(TargetFrameworkLatest)</TargetFrameworkForSdk>
-		<TargetFrameworkForAnalyzers>netstandard2.0</TargetFrameworkForAnalyzers>
-	</PropertyGroup>
-	<!-- Cohesion Build Properties -->
-	<PropertyGroup>
-		<Version>$(MajorVersion).$(MinorVersion).$(PatchVersion)</Version>
-		<OGraphRepositoryDirectory>$(MSBuildThisFileDirectory)</OGraphRepositoryDirectory>
-	</PropertyGroup>
+	<Import Project="build\Build.props" />
 </Project>

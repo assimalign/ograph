@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<Description>This library contains the OGrpah query language parser and base analyzers.</Description>
+	</PropertyGroup>
+	<ItemGroup>
+		<Compile Remove="Internal\Parsers\**" />
+		<EmbeddedResource Remove="Internal\Parsers\**" />
+		<None Remove="Internal\Parsers\**" />
+	</ItemGroup>
+	<!--<ItemGroup>
+	  <Compile Remove="Internal\Parsers\**" />
+	  <EmbeddedResource Remove="Internal\Parsers\**" />
+	  <None Remove="Internal\Parsers\**" />
+	</ItemGroup>-->
+</Project>

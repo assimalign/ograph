@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<IsPackable>false</IsPackable>
+		<IsTestProject>true</IsTestProject>
+	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="Validation\**" />
+	  <EmbeddedResource Remove="Validation\**" />
+	  <None Remove="Validation\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<OGraphPackageReference Include="Microsoft.NET.Test.Sdk" />
+		<OGraphPackageReference Include="xunit" />
+		<OGraphPackageReference Include="xunit.runner.visualstudio" />
+		<OGraphPackageReference Include="coverlet.collector" />
+	</ItemGroup>
+	<ItemGroup>
+		<OGraphProjectReference Include="Assimalign.OGraph.Gdm" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Objects\Types\Collection\" />
+	</ItemGroup>
+</Project>

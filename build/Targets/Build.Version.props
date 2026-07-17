@@ -1,0 +1,53 @@
+<Project>
+    <PropertyGroup>
+        <!-- Major version tracks the targeted .NET runtime release for simpler release management. -->
+        <OGraphMajorVersion>$([System.Version]::Parse('$(TargetFrameworkLatest.TrimStart('net'))').Major)</OGraphMajorVersion>
+        <OGraphMinorVersion>0</OGraphMinorVersion>
+        <!--
+            Patch may carry an optional semver prerelease tag after a single '-',
+            e.g. "0", "2", "2-preview.1", "5-rc.3". Splitting it here lets the
+            tag flow through to PackageVersion / InformationalVersion (where
+            semver is welcome) while the numeric core feeds AssemblyVersion /
+            FileVersion (where the C# compiler enforces numeric-only via CS7034).
+        -->
+        <OGraphPatchVersion>1-preview.2</OGraphPatchVersion>
+
+        <!-- Numeric core. Suitable for AssemblyVersion / FileVersion. -->
+        <_OGraphPatchCore>$(OGraphPatchVersion.Split('-')[0])</_OGraphPatchCore>
+        <OGraphVersionPrefix>$(OGraphMajorVersion).$(OGraphMinorVersion).$(_OGraphPatchCore)</OGraphVersionPrefix>
+
+        <!--
+            Optional semver suffix. Single split on the first '-' matches semver
+            convention (the suffix may contain dots, e.g. "preview.1", but not a
+            second '-'). Empty for stable releases.
+        -->
+        <OGraphVersionSuffix Condition="$(OGraphPatchVersion.Contains('-'))">$(OGraphPatchVersion.Split('-')[1])</OGraphVersionSuffix>
+
+        <!--
+            Full semver. "X.Y.Z" stable, "X.Y.Z-suffix" prerelease.
+            This is the canonical "the version this build produces" string,
+            consumed by Install-Local.ps1, the framework workflow's read-version
+            step, and the .nupkg filenames.
+        -->
+        <OGraphVersion Condition="'$(OGraphVersionSuffix)' != ''">$(OGraphVersionPrefix)-$(OGraphVersionSuffix)</OGraphVersion>
+        <OGraphVersion Condition="'$(OGraphVersionSuffix)' == ''">$(OGraphVersionPrefix)</OGraphVersion>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(IsPackable)' != 'false'">
+        <!--
+            Use VersionPrefix + VersionSuffix instead of setting <Version> directly.
+            The .NET SDK then derives:
+              Version              = $(VersionPrefix)[-$(VersionSuffix)]
+              AssemblyVersion      = $(VersionPrefix)          (numeric only)
+              FileVersion          = $(VersionPrefix)          (numeric only)
+              InformationalVersion = $(Version)
+              PackageVersion       = $(Version)                (when not set)
+            Setting <Version> directly to a semver string causes CS7034 because
+            the value is fed straight to [assembly: AssemblyVersion], which
+            rejects the prerelease suffix.
+        -->
+        <VersionPrefix Condition="'$(VersionPrefix)' == '' or '$(VersionPrefix)' == '1.0.0'">$(OGraphVersionPrefix)</VersionPrefix>
+        <VersionSuffix Condition="'$(VersionSuffix)' == '' and '$(OGraphVersionSuffix)' != ''">$(OGraphVersionSuffix)</VersionSuffix>
+        <PackageOutputPath Condition="'$(PackageOutputPath)' == ''">$(OGraphOutputPathForLibraries)</PackageOutputPath>
+    </PropertyGroup>
+</Project>

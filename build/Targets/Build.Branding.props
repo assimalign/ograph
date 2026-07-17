@@ -1,0 +1,8 @@
+<Project>
+    <PropertyGroup>
+        <Company>Assimalign</Company>
+        <Copyright>© Assimalign $([System.DateTime]::Now.ToString(`yyyy`))</Copyright>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/assimalign/ograph</RepositoryUrl>
+    </PropertyGroup>
+</Project>

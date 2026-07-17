@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<IsPackable>false</IsPackable>
+		<IsTestProject>true</IsTestProject>
+	</PropertyGroup>
+	<ItemGroup>
+		<OGraphPackageReference Include="Microsoft.NET.Test.Sdk" />
+		<OGraphPackageReference Include="xunit" Version="2.4.2" />
+		<OGraphPackageReference Include="xunit.runner.visualstudio" />
+		<OGraphPackageReference Include="coverlet.collector" />
+	</ItemGroup>
+</Project>

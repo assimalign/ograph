@@ -1,0 +1,27 @@
+<Project>
+    <PropertyGroup>
+        <TargetFrameworkLatest>net10.0</TargetFrameworkLatest>
+        <TargetFrameworkForAnalyzers>netstandard2.0</TargetFrameworkForAnalyzers>
+        <TargetFrameworkForLibraries>$(TargetFrameworkLatest)</TargetFrameworkForLibraries>
+        <TargetFrameworkForSdks>$(TargetFrameworkLatest)</TargetFrameworkForSdks>
+        <TargetFrameworkForTooling>$(TargetFrameworkLatest)</TargetFrameworkForTooling>
+        <!--
+            Alias consumed by framework Ref/Runtime targets (frameworks\Assimalign.Cohesion.App.targets)
+            in path construction. Kept derived from TargetFramework so bumping the TFM here continues to
+            drive everything from one place.
+        -->
+        <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+		<RollForward>LatestPatch</RollForward>
+    </PropertyGroup>
+    <PropertyGroup>
+        <LangVersion>Preview</LangVersion>
+        <!--
+            Repo-wide opt-in to runtime preview APIs (emits [assembly: RequiresPreviewFeatures]).
+            This is the documented default (see .claude/rules/general-rules.md). It must live here because the attribute
+            is viral: any assembly that requires preview features forces every consumer to opt in,
+            so a single central switch is the only coherent place for it. Projects that must target
+            the stable surface (source generators, build tasks) override this with <EnablePreviewFeatures>false</EnablePreviewFeatures>.
+        -->
+        <EnablePreviewFeatures>true</EnablePreviewFeatures>
+    </PropertyGroup>
+</Project>

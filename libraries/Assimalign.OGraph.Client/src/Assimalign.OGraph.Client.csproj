@@ -1,0 +1,5 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<ItemGroup>
+		<OGraphProjectReference Include="Assimalign.OGraph.Core" />
+	</ItemGroup>
+</Project>

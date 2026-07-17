@@ -1,0 +1,6 @@
+<Project>
+	<Import Project="Targets\Build.Global.props" />
+	<Import Project="Targets\Build.TargetFramework.props" />
+	<Import Project="Targets\Build.Branding.props" />
+	<Import Project="Targets\Build.Version.props" />
+</Project>
