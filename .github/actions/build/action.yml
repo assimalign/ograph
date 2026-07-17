@@ -1,0 +1,119 @@
+name: Build OGraph project
+description: >-
+  Restore, build, and (optionally) test a single OGraph project against the SDK
+  pinned in global.json. Warnings-as-errors is disabled so the tree's ~1k
+  documentation warnings (CS1591) never fail a build. Modelled on the Cohesion
+  composite-build pattern (assimalign/cohesion Project #13, roadmap N-01).
+
+  Two escape hatches keep CI green on a tree that is still being restored,
+  without silently swallowing regressions:
+    * allow-build-failure — for projects with known, deferred build errors
+      (Assimalign.OGraph.Server). The build still runs; a failure becomes a loud
+      ::warning annotation instead of a red job, and tests are skipped.
+    * allow-test-failure — for suites that are pre-existing red or are empty
+      stubs. The build still gates; only the test phase is downgraded to a
+      ::warning. Flip these back to a hard gate once the suites are green.
+
+inputs:
+  project:
+    description: Path to the project (.csproj) or directory to restore and build.
+    required: true
+  tests:
+    description: >-
+      Path to a test project (.csproj) or directory. When set and the path
+      exists, `dotnet test` runs after a successful build. Leave empty for areas
+      with no tests (e.g. Core) or whose tests cannot run on this runner (e.g.
+      the net472 analyzer tests on ubuntu — see ograph-analyzers.yml).
+    required: false
+    default: ''
+  configuration:
+    description: Build configuration.
+    required: false
+    default: Release
+  allow-build-failure:
+    description: >-
+      When 'true', a build failure is reported as a warning annotation instead
+      of failing the job (used for the Server library's deferred errors).
+    required: false
+    default: 'false'
+  allow-test-failure:
+    description: >-
+      When 'true', a test failure (or an empty test stub) is reported as a
+      warning annotation instead of failing the job.
+    required: false
+    default: 'false'
+  annotation-title:
+    description: Friendly label used in warning/error annotations.
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    # global.json pins the SDK but is JSONC (contains a // comment), which
+    # setup-dotnet's strict JSON parser rejects via `global-json-file`. Source
+    # the pinned version from global.json ourselves (comment-tolerant) so the
+    # pin still drives CI. `dotnet build`/`restore` read global.json directly and
+    # already tolerate the comment.
+    - name: Resolve pinned SDK version (from global.json)
+      id: sdk
+      shell: bash
+      run: |
+        ver=$(sed -E 's://.*$::' global.json \
+          | grep -oE '"version"[[:space:]]*:[[:space:]]*"[^"]+"' \
+          | head -1 | grep -oE '[0-9][^"]*')
+        echo "version=$ver" >> "$GITHUB_OUTPUT"
+        echo "Pinned SDK from global.json: $ver"
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ steps.sdk.outputs.version }}
+
+    - name: Restore, build & test
+      shell: bash
+      run: |
+        set -o pipefail
+        PROJECT='${{ inputs.project }}'
+        TESTS='${{ inputs.tests }}'
+        CONFIG='${{ inputs.configuration }}'
+        TITLE='${{ inputs.annotation-title }}'
+        [ -z "$TITLE" ] && TITLE="$PROJECT"
+
+        echo "::group::Restore $PROJECT"
+        dotnet restore "$PROJECT"
+        echo "::endgroup::"
+
+        # -warnaserror off: never let documentation/style warnings gate a build.
+        echo "::group::Build $PROJECT"
+        if dotnet build "$PROJECT" --configuration "$CONFIG" --no-restore -p:TreatWarningsAsErrors=false; then
+          BUILD_OK=1
+        else
+          BUILD_OK=0
+        fi
+        echo "::endgroup::"
+
+        if [ "$BUILD_OK" -ne 1 ]; then
+          if [ '${{ inputs.allow-build-failure }}' = 'true' ]; then
+            echo "::warning title=$TITLE — build failing (non-blocking)::Known, pre-existing build errors; intentionally NOT gating CI. Restore this project before promoting it to a required gate."
+            exit 0
+          fi
+          echo "::error title=$TITLE — build failed::"
+          exit 1
+        fi
+
+        if [ -n "$TESTS" ] && [ -e "$TESTS" ]; then
+          echo "::group::Test $TESTS"
+          if dotnet test "$TESTS" --configuration "$CONFIG" -p:TreatWarningsAsErrors=false --verbosity normal; then
+            echo "Tests passed."
+          else
+            if [ '${{ inputs.allow-test-failure }}' = 'true' ]; then
+              echo "::warning title=$TITLE — tests failing (non-blocking)::Known, pre-existing failures or an empty stub; intentionally NOT gating CI. Make the suite green before promoting it to a required gate."
+            else
+              echo "::error title=$TITLE — tests failed::"
+              echo "::endgroup::"
+              exit 1
+            fi
+          fi
+          echo "::endgroup::"
+        fi

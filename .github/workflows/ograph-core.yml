@@ -1,55 +1,43 @@
-name: ograph.client.ci
+name: ograph-core
+
+# Core library (libraries/Assimalign.OGraph.Core): thin error primitives +
+# re-exports. No test project yet, so only the build phase runs.
+#
+# Runner: ubuntu-latest (every OGraph library targets net10.0). A windows-latest
+# leg adds no value for this area yet — see ograph-analyzers.yml for the matrix
+# extension point where it does.
 
 on:
   push:
-    branches:
-    - main
-    - development
-    paths: 
-    - 'Directory.Build.props'                                     # When the Global Props File Changes
-    - 'libraries/Core/src/**'
-    - '.github/workflows/assimalign.ograph.core.yml'        # When Pipeline File Changes
+    branches: [main, development]
+    paths:
+      - 'global.json'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - 'build/**'
+      - 'libraries/Directory.Build.props'
+      - 'libraries/Directory.Build.targets'
+      - 'libraries/Assimalign.OGraph.Core/**'
+      - '.github/actions/build/**'
+      - '.github/workflows/ograph-core.yml'
+  pull_request:
+    paths:
+      - 'global.json'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - 'build/**'
+      - 'libraries/Directory.Build.props'
+      - 'libraries/Directory.Build.targets'
+      - 'libraries/Assimalign.OGraph.Core/**'
+      - '.github/actions/build/**'
+      - '.github/workflows/ograph-core.yml'
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2    
-    
-    - name: Setup .NET 6
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '6.x'
-
-    - name: Setup .NET 7
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '7.x'
-        include-prerelease: true
-
-    - name: Setup .NET 8
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '8.x'
-        include-prerelease: true
-    
-    - name: Restore Project
-      run: dotnet restore 
-      working-directory: './libraries/Core/src/Assimalign.OGraph.Core'
-    
-    - name: Build Project
-      run: dotnet build --configuration Release --no-restore
-      working-directory: './libraries/Core/src/Assimalign.OGraph.Core'
-
-    - name: Restore Unit Tests Project
-      run: dotnet restore 
-      working-directory: './libraries/Core/tests/Assimalign.OGraph.Core.Tests'
-
-    - name: Run Unit Tests
-      run: dotnet test --no-restore --verbosity normal
-      working-directory: './libraries/Core/tests/Assimalign.OGraph.Core.Tests'
-    
-    - name: Publish Nuget Package
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-      run: dotnet nuget push "*.nupkg" -k ${{ secrets.NUGET_PUBLISHING_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
-      working-directory: './libraries/Core/src/Assimalign.OGraph.Core/bin/Release/'
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/build
+        with:
+          project: libraries/Assimalign.OGraph.Core/src/Assimalign.OGraph.Core.csproj
+          annotation-title: Core

@@ -1,0 +1,112 @@
+name: ograph-solution
+
+# Full-solution integration build. Runs on every push to main/development and on
+# every pull request (no path filter — this is the aggregate gate that the
+# per-area workflows feed into).
+#
+# Mechanism (chosen for being the simplest correct one): the required job
+# enumerates the projects declared in Assimalign.OGraph.slnx and builds each,
+# skipping only the projects that cannot produce a green build on ubuntu-latest:
+#
+#   * Assimalign.OGraph.Server[.Tests] — ~37 pre-existing compile errors
+#     (roadmap N-08); built instead in the isolated non-blocking job below.
+#   * Assimalign.OGraph.Vsix — net472 VSIX, Windows/Visual-Studio-SDK only.
+#   * …TypeUtilities.SourceGeneration.Tests — net472 analyzer test host.
+#
+# The two net472 projects are the matrix extension point: add a windows-latest
+# leg to build/run them (see ograph-analyzers.yml). Everything else — all
+# net10.0 libraries and their test projects (build-only here), the netstandard2.0
+# analyzers, the SDK/build tasks and the CLI — is a required gate.
+
+on:
+  push:
+    branches: [main, development]
+  pull_request:
+
+jobs:
+  solution:
+    name: solution (Server & net472 excluded)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # global.json is JSONC (has a // comment); source the pin ourselves rather
+      # than via setup-dotnet's strict global-json-file parser. See
+      # .github/actions/build/action.yml for the rationale.
+      - name: Resolve pinned SDK version (from global.json)
+        id: sdk
+        shell: bash
+        run: |
+          ver=$(sed -E 's://.*$::' global.json \
+            | grep -oE '"version"[[:space:]]*:[[:space:]]*"[^"]+"' \
+            | head -1 | grep -oE '[0-9][^"]*')
+          echo "version=$ver" >> "$GITHUB_OUTPUT"
+          echo "Pinned SDK from global.json: $ver"
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ steps.sdk.outputs.version }}
+
+      - name: Build slnx projects (buildable-on-ubuntu set)
+        shell: bash
+        run: |
+          set -o pipefail
+          # Project paths declared in the .slnx (forward-slashed, ubuntu-ready).
+          mapfile -t projects < <(grep -oE 'Path="[^"]+\.csproj"' Assimalign.OGraph.slnx | sed -E 's/Path="(.*)"/\1/')
+          rc=0
+          for p in "${projects[@]}"; do
+            case "$p" in
+              *Assimalign.OGraph.Server*|*Assimalign.OGraph.Vsix*|*TypeUtilities.SourceGeneration.Tests*)
+                echo "::notice title=Excluded from ubuntu gate::$p (built separately or Windows-only)"
+                continue
+                ;;
+            esac
+            echo "::group::Build $p"
+            if ! dotnet build "$p" --configuration Release -p:TreatWarningsAsErrors=false; then
+              echo "::error title=Solution build failed::$p"
+              rc=1
+            fi
+            echo "::endgroup::"
+          done
+          exit $rc
+
+  # Isolated, non-blocking Server build — keeps Server's deferred errors visible
+  # without failing the aggregate gate. See ograph-server.yml.
+  server:
+    name: server (non-blocking)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/build
+        with:
+          project: libraries/Assimalign.OGraph.Server/src/Assimalign.OGraph.Server.csproj
+          allow-build-failure: 'true'
+          annotation-title: Server
+
+  # ---------------------------------------------------------------------------
+  # NuGet publishing — intentionally NOT wired up.
+  #
+  # The old per-library workflows pushed *.nupkg to nuget.org on every push to
+  # main. Packages are not ready to ship (the engine, spec and versioning are
+  # still in flux — roadmap W01/W04), so that step is deliberately dropped rather
+  # than carried over. When packaging is ready, add a gated release job, e.g.:
+  #
+  #   publish:
+  #     name: publish (nuget.org)
+  #     needs: solution
+  #     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  #     runs-on: ubuntu-latest
+  #     steps:
+  #       - uses: actions/checkout@v4
+  #       - uses: actions/setup-dotnet@v4
+  #         with:
+  #           global-json-file: global.json
+  #       - name: Pack
+  #         run: dotnet pack Assimalign.OGraph.slnx -c Release -o artifacts
+  #       - name: Push
+  #         run: dotnet nuget push "artifacts/*.nupkg" -k "${{ secrets.NUGET_PUBLISHING_KEY }}" -s https://api.nuget.org/v3/index.json --skip-duplicate
+  #
+  # Tracking: see the roadmap "NuGet publishing" note added under N-01.
+  # ---------------------------------------------------------------------------

@@ -25,7 +25,7 @@ Every shipped library **must be NativeAOT-compatible**.
 | Sdk / Build.Tasks | MSBuild skeleton only | No source |
 | Cli | Empty stub | `Program.cs` is 8 lines |
 | Extensions (VS / VSCode) | Template scaffolds | VSIX template; TS LSP + Vue editor scaffold; committed `out/` build artifacts |
-| CI | Outdated | Five per-library workflows on .NET 6/7/8, actions v1/v2, wrong paths filters; repo now targets net10.0 |
+| CI | Modernized (N-01) | net10.0, actions v4/v5, shared composite build action (`.github/actions/build`), correct paths filters; per-area workflows + a full-`.slnx` integration build, all on ubuntu-latest. Server build is isolated non-blocking pending the baseline restore (N-08); library test suites run non-blocking pending #90; the two net472 projects (VSIX, analyzer test host) are the windows-latest matrix extension point. **NuGet publishing to nuget.org is intentionally dropped** (packages not ready) — a commented release-job stub lives in `ograph-solution.yml` for when it is |
 | Solution | Dual, partially stale | `Assimalign.OGraph.slnx` authoritative (22 projects); old `.sln` references nonexistent projects incl. a once-planned `AspNetCore` integration (now explicitly abandoned per D5) |
 
 **Reading:** the protocol's differentiators (policy-governed query capability, edge-level partial
