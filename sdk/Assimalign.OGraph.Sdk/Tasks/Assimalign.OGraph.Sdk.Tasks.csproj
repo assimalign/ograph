@@ -4,7 +4,7 @@
 		<TargetFrameworks>$(TargetFrameworkForLibraries)</TargetFrameworks>
 	</PropertyGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\libraries\Core\src\Assimalign.OGraph.Core\Assimalign.OGraph.Core.csproj" />
+		<OGraphProjectReference Include="Assimalign.OGraph.Core" />
 	</ItemGroup>
 
 	<Target Name="AddNuGetDlls" BeforeTargets="compile">

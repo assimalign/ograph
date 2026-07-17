@@ -3,6 +3,6 @@
 		<RootNamespace>Assimalign.OGraph</RootNamespace>
 	</PropertyGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\Core\src\Assimalign.OGraph.Core\Assimalign.OGraph.Core.csproj" />
+	  <OGraphProjectReference Include="Assimalign.OGraph.Core" />
 	</ItemGroup>
 </Project>
