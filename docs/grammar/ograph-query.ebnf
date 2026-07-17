@@ -1,0 +1,379 @@
+(* =====================================================================
+   OGraph Query Language — Grammar (EBNF)
+   =====================================================================
+
+   Status   : Normative. Ratified by roadmap features S-03 [O01.01.01.03]
+              (grammar) and S-04 [O01.01.01.04] (edge-traversal syntax and
+              scoping). This file is the normative grammar referenced by
+              docs/specification.md §5; where prose and grammar disagree,
+              this file governs surface syntax and §5 governs semantics.
+
+   Scope    : The complete OGraph query-language surface syntax — the entry
+              keyword, the filter / sort / page / project / edge clauses,
+              filter expressions with a precedence table, literals,
+              variables, comments, and the operator / function vocabulary.
+
+   Provenance (what this grammar is grounded in):
+     - The three worked queries in .designing/query.ograph (a design
+       sketch; internally inconsistent — see RECONCILIATION below).
+     - The committed lexer and parser tests under
+       libraries/Assimalign.OGraph.Syntax/tests/**. Where the sketch and
+       the executable tests disagree, the tests govern: they assert what
+       the parser accepts (Assert.Empty(document.Errors)) and what it
+       rejects (diagnostic codes G0001–G0004).
+     - The lexer/parser token and node vocabularies:
+         Internal/Lexer/TokenType.cs, Internal/Lexer/TokenSpans.cs,
+         SyntaxNodes/Enums/BinaryOperatorType.cs,
+         SyntaxNodes/Enums/FunctionType.cs.
+
+   Notation (ISO/IEC 14977 EBNF):
+     =        definition            ;        rule terminator
+     |        alternation           ,        concatenation
+     [ x ]    optional (0 or 1)     { x }    repetition (0 or more)
+     ( x )    grouping              "x"      terminal (literal text)
+     (* x *)  comment               a - b    a but not b
+   The language's own literal braces are written as the terminals "{" and
+   "}"; bare { } always denote EBNF repetition. Terminals are matched
+   case-insensitively for keywords and operators (the lexer lower-cases
+   keyword/operator candidates); identifiers and string contents are
+   case-sensitive.
+
+   Lexical layer: whitespace (" "), tab, carriage return, line feed, and
+   comments are token separators and are insignificant between tokens
+   except where a separator is required to terminate a keyword, operator,
+   literal, or identifier. They may appear freely around any terminal.
+   ===================================================================== *)
+
+
+(* ---------------------------------------------------------------------
+   1. Query document
+   --------------------------------------------------------------------- *)
+
+query               = entry , { clause }
+                    | clause , { clause } ;   (* clause-only form: the unit
+                                                 tests parse a bare
+                                                 ".filter({...})" etc. with
+                                                 no entry keyword *)
+
+
+(* ---------------------------------------------------------------------
+   2. Entry keyword  (the starting scope — a Node-bound Root Operation)
+
+   Grounded: vertex(employees), vertex('employees'), vertex ('employees'),
+             vertex(employees, 1234532), v(providers), n(), node(...).
+   "node"/"n" are canonical; "vertex"/"v" are accepted synonyms (spec
+   §1.1.1). The optional trailing constant is a Key argument that addresses
+   a single entity (spec §3.2 rule 5, Role = Key).
+   --------------------------------------------------------------------- *)
+
+entry               = entry-keyword , "(" , [ entry-target ] , [ "," , argument ] , ")" ;
+entry-keyword       = "node" | "n" | "vertex" | "v" ;
+entry-target        = ( identifier | string ) , [ alias ] ;
+
+
+(* ---------------------------------------------------------------------
+   3. Clause chain
+
+   A clause is dot-separated from the construct before it. The dot is the
+   chain separator; the very first clause of a clause-only query may omit
+   it (the unit tests write "filter({...})" and "project({...})").
+   --------------------------------------------------------------------- *)
+
+clause              = [ "." ] , ( filter-clause
+                                | sort-clause
+                                | page-clause
+                                | project-clause
+                                | edge-clause ) ;
+
+
+(* ---------------------------------------------------------------------
+   4. Filter clause
+
+   Grounded: filter({ firstName eq 'Chase' and ( startsWith(firstName,'c',true)
+             and endsWith(lastName,'e',true) ) or any(addresses, city eq 'Charlotte') })
+   The clause body is a "{" ... "}" block (a diagnostic — G0003 — is raised
+   when the block is absent; see RECONCILIATION note R1).
+   --------------------------------------------------------------------- *)
+
+filter-clause       = "filter" , "(" , predicate-block , ")" ;
+predicate-block     = "{" , [ predicate ] , "}" ;
+
+
+(* ---------------------------------------------------------------------
+   5. Predicate expressions and operator precedence
+
+   Precedence, tightest (1) to loosest (7). Binary operators are
+   left-associative; comparison operators are non-associative
+   (chaining, e.g. a lt b lt c, is invalid).
+
+     level  operators                         production
+     -----  --------------------------------  -----------------------
+       1    ( ) grouping, f(...) call, "." path  primary
+       2    (reserved for unary; none defined)   —
+       3    *  /   (multiplicative)              multiplicative-expr
+       4    +  -   (additive)                    additive-expr
+       5    eq neq gt gte lt lte (comparison)    comparison-expr
+       6    and                                  and-expr
+       7    or                                   or-expr
+
+   The layered productions below encode this precedence directly.
+   --------------------------------------------------------------------- *)
+
+predicate           = or-expr ;
+or-expr             = and-expr , { "or" , and-expr } ;
+and-expr            = comparison-expr , { "and" , comparison-expr } ;
+comparison-expr     = additive-expr , [ comparison-op , additive-expr ] ;
+additive-expr       = multiplicative-expr , { ( "+" | "-" ) , multiplicative-expr } ;
+multiplicative-expr = primary , { ( "*" | "/" ) , primary } ;
+
+primary             = "(" , predicate , ")"
+                    | function-call
+                    | literal
+                    | variable
+                    | member-path ;
+
+comparison-op       = "eq" | "neq" | "gt" | "gte" | "lt" | "lte" ;
+
+
+(* ---------------------------------------------------------------------
+   6. Functions
+
+   Two shapes:
+     - scalar-function : ordinary call with an argument list.
+         Grounded: startsWith(firstName,'c',true), endsWith(lastName,'e',true),
+                   contains(statuses,''), length(roles), concat(a,b),
+                   substring(s,0,3).
+     - lambda-function : any/all over a collection with a predicate body.
+         Grounded: any(roles, {type eq 1}), all(roles, {type eq 1}),
+                   any(addresses, city eq 'Charlotte'),
+                   any(roles, (startsWith(name,'c'))), any(roles, { }).
+
+   The predicate body of a lambda is either a "{" ... "}" block (which MAY
+   be empty) or a bare predicate.
+   --------------------------------------------------------------------- *)
+
+function-call       = lambda-function | scalar-function ;
+
+lambda-function     = lambda-name , "(" , member-path , "," , lambda-body , ")" ;
+lambda-name         = "any" | "all" ;
+lambda-body         = predicate-block | predicate ;
+
+scalar-function     = scalar-function-name , "(" , [ argument-list ] , ")" ;
+argument-list       = argument , { "," , argument } ;
+argument            = predicate ;
+
+(* Normative function vocabulary. String and collection/numeric families;
+   see specification.md §5.3. "contains" and "length" are polymorphic over
+   string and collection operands. Names are matched case-insensitively. *)
+scalar-function-name =
+      (* string *)
+        "startsWith" | "endsWith" | "contains" | "concat" | "substring"
+      | "padLeft" | "padRight" | "trim" | "trimLeft" | "trimRight"
+      (* collection / numeric *)
+      | "length" ;
+
+
+(* ---------------------------------------------------------------------
+   7. Sort clause
+
+   Grounded: sort({ firstName desc lastName asc }),
+             sort({ info { firstName lastName desc } }) (nested key set).
+   Default direction is ascending when omitted.
+   --------------------------------------------------------------------- *)
+
+sort-clause         = "sort" , "(" , sort-set , ")" ;
+sort-set            = "{" , { sort-key } , "}" ;
+sort-key            = member-path , [ direction ] , [ sort-set ] , [ "," ] ;
+direction           = "asc" | "desc" ;
+
+
+(* ---------------------------------------------------------------------
+   8. Page clause
+
+   Two modes, both carried in a "{" ... "}" block:
+     - offset mode : skip / take (order-independent; either may be omitted).
+         Grounded: page({ skip 0 take 25 }), page({ take 25 skip 32 }).
+     - cursor mode : a continuation token, optionally with take.
+         Grounded: page({ skip 0 take 25 token '' }).
+   A skip/take/token value is an integer literal or a variable
+   ($take); the token value is a string literal or a variable.
+   --------------------------------------------------------------------- *)
+
+page-clause         = "page" , "(" , page-set , ")" ;
+page-set            = "{" , { page-member } , "}" ;
+page-member         = offset-member | cursor-member ;
+offset-member       = ( "skip" | "take" ) , ( integer | variable ) ;
+cursor-member       = "token" , ( string | variable ) ;
+
+
+(* ---------------------------------------------------------------------
+   9. Project clause
+
+   Grounded: project({ firstName lastName addresses as locations { streetOne
+             as mainStreet streetTwo } auditEntry { ... } }),
+             member functions: fullName(FullNameFormat.FLM),
+             directives: employeeId @authorize('').
+   A trailing comma after a selection is tolerated and insignificant.
+   Nested selection sets require their own "{" ... "}" block.
+   --------------------------------------------------------------------- *)
+
+project-clause      = "project" , "(" , selection-set , ")" ;
+selection-set       = "{" , { selection } , "}" ;
+selection           = selection-target ,
+                      [ alias ] ,
+                      { directive } ,
+                      [ selection-set ] ,
+                      [ "," ] ;
+selection-target    = member-function | member-path ;
+member-function     = identifier , "(" , [ argument-list ] , ")" ;
+
+
+(* ---------------------------------------------------------------------
+   10. Edge clause  (issue #21 — the canonical form is the PATH form)
+
+   Grounded: .edge(addresses),
+             .edge(department as employeeDepartment),
+             .edge(companies/addresses),
+             .edge(jobs/tasks), .edge(jobs/tasks/workItems),
+             .edge(providers:/languages) (rejected ":/" spelling — see R2).
+
+   edge-path is resolved left-to-right against the current scope (see
+   specification.md §5.6 for scoping). A single segment names an Edge in
+   the current scope; a "/"-separated path re-anchors to a named
+   in-scope vertex and then walks Edge names. "as" names the target scope.
+   The optional trailing argument addresses a single edge target (Key).
+   --------------------------------------------------------------------- *)
+
+edge-clause         = "edge" , "(" , edge-selector , [ "," , argument ] , ")" ;
+edge-selector       = edge-path , [ alias ] ;
+edge-path           = identifier , { "/" , identifier } ;
+
+
+(* ---------------------------------------------------------------------
+   11. Shared productions
+   --------------------------------------------------------------------- *)
+
+alias               = "as" , identifier ;
+
+(* A directive is an annotation applied to a projection selection
+   (spec §1.1.2, §2.3.4.6). The "@" sigil introduces a directive; it never
+   grants or removes query capability. *)
+directive           = "@" , identifier , [ "(" , [ argument-list ] , ")" ] ;
+
+(* A member path is a dotted chain of identifiers. It also spells an
+   enum-member reference used as an argument, e.g. FullNameFormat.FLM. *)
+member-path         = identifier , { "." , identifier } ;
+
+(* A variable references a query parameter / bound value in value position.
+   The canonical sigil is "$" (e.g. skip $take, contains(name, $variable)). *)
+variable            = "$" , identifier ;
+
+
+(* ---------------------------------------------------------------------
+   12. Literals
+   --------------------------------------------------------------------- *)
+
+literal             = string | number | boolean | null ;
+
+number              = floating-point | integer ;
+integer             = digit , { digit } ;
+floating-point      = digit , { digit } , "." , { digit }
+                    , [ ( "e" | "E" ) , [ "+" | "-" ] , digit , { digit } ]
+                    | digit , { digit } , ( "e" | "E" ) , [ "+" | "-" ] , digit , { digit } ;
+
+(* A string is single- or double-quoted; it also carries Guid, TimeSpan,
+   Date/Time, and DateTimeOffset values, which are validated by their
+   target Type, not by the grammar. No escape processing is specified in
+   this revision; a string runs to its next matching quote. *)
+string              = "'" , { character - "'" } , "'"
+                    | '"' , { character - '"' } , '"' ;
+
+boolean             = "true" | "false" ;
+null                = "null" ;
+
+
+(* ---------------------------------------------------------------------
+   13. Identifiers, comments, and character classes
+   --------------------------------------------------------------------- *)
+
+(* An identifier begins with a letter or underscore and continues with
+   letters, digits, or underscores. Keyword and operator spellings
+   (node, n, vertex, v, filter, sort, page, project, edge, skip, take,
+   token, asc, desc, as, and, or, eq, neq, gt, gte, lt, lte, any, all,
+   true, false, null) are reserved in the positions the productions above
+   place them; elsewhere a matching spelling is an ordinary identifier. *)
+identifier          = ( letter | "_" ) , { letter | digit | "_" } ;
+
+(* A comment starts with "#" and runs to (but does not include) the next
+   line break; it is a separator and carries no syntactic value. *)
+comment             = "#" , { character - line-break } ;
+
+letter              = "A" | "..." | "Z" | "a" | "..." | "z" ;
+digit               = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+line-break          = ? carriage return ? | ? line feed ? ;
+character           = ? any Unicode character ? ;
+
+
+(* =====================================================================
+   RECONCILIATION — constructs in .designing/query.ograph that this
+   grammar deliberately REJECTS, with rationale. Every construct in the
+   three sketch queries is either derivable above or listed here.
+   =====================================================================
+
+   R1. Brace-less and positional clause bodies.
+       Sketch : .filter( <expr> ), .sort( id ), .page( skip 20 take 20 ),
+                .page(0, 20), .project( id ... ), .project().
+       Canonical requires the "{" ... "}" block:
+                .filter({ <expr> }), .page({ skip 20 take 20 }), etc.
+       Reason : the committed parser tests treat a clause body without its
+                block as a diagnostic — ProjectionMissingOpeningBracketTest
+                asserts G0003 for "project(employees, ...)" — and every
+                passing parse test wraps the body in "{" ... "}". A single
+                uniform block rule also unifies clause bodies with the
+                nested selection/sort sets and the lambda body, which are
+                brace-delimited even in the sketch.
+
+   R2. Arrow edge form  .edge(e-[has]->addresses:a).
+       Rejected in favour of the path form .edge(addresses as a) /
+       .edge(a/addresses). Reasons:
+         (a) It is not lexable by the committed lexer: "[" and "]" are not
+             recognised tokens (TokenSpans.Separators has only "{" "}"),
+             so "-[has]->" cannot be tokenised.
+         (b) The executable edge tests use only the path form
+             (.edge(companies/addresses), .edge(department as
+             employeeDepartment), .edge(jobs/tasks/workItems)).
+         (c) The path form matches the GDM edge model (spec §2.3.3): an
+             Edge is addressed by its Name from a Source scope, which is
+             exactly a directed-path segment (docs/spec-notes.md).
+       The ":/" and bare-":" scope spellings in query 3
+       (.edge(providers:/languages), .edge(addresses: secondaryAddress, ..))
+       are folded onto "/" and "as": the sole path separator is "/" and the
+       sole alias keyword is "as".
+
+   R3. Colon aliasing.
+       Sketch : node(:e), r(u:users), employeeInfo: info { ... },
+                addresses:a.
+       Canonical uses "as", with source-before-alias order:
+                node(employees as e), info as employeeInfo,
+                addresses as a.
+       Reason : the colon forms are internally inconsistent about operand
+                order (addresses:a treats the short token as the alias;
+                j:jobs treats the short token as the scope), while the
+                parser and every passing test use "<source> as <alias>".
+
+   R4. Entry keyword "r(...)".
+       Sketch : r(u:users) (query 2, first line).
+       Rejected: "r" is not an entry keyword. The entry keywords are
+                node / n / vertex / v (spec §1.1.1, §5.1). Read as
+                node(users as u).
+
+   R5. Variable / directive sigils.
+       An earlier lexer provisionally tagged "@name" as a variable
+       (TokenType.Variable) and left "$name" as a plain identifier. This
+       grammar fixes the canonical sigils: "$" introduces a VARIABLE in
+       value position (matching the sketch's $variable and the reserved
+       "$." names of spec §3.2/§3.3) and "@" introduces a DIRECTIVE on a
+       projection selection (matching the sketch's @authorize('')). The
+       page value @take in the parameter lexer test is read canonically as
+       $take.
+   ===================================================================== *)
