@@ -646,8 +646,8 @@ Request-body outcomes map onto status codes exactly as follows (RFC 10008
 
 Servers advertise QUERY support with the `Accept-Query` response header field (RFC 10008
 [§3](https://www.rfc-editor.org/rfc/rfc10008#section-3)), an
-[RFC 8941](https://www.rfc-editor.org/rfc/rfc8941) Structured Field **List** whose members are the
-supported query media types.
+[RFC 9651](https://www.rfc-editor.org/rfc/rfc9651) Structured Field **List** whose members are the
+supported query media types. (RFC 9651 obsoletes RFC 8941; RFC 10008 references it normatively.)
 
 **Rules**
 1. `Accept-Query` MUST be emitted on responses from bound resources, including the response to
