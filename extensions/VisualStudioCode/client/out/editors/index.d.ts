@@ -1,1 +1,0 @@
-export { OGraphQueryEditorProvider } from './query';
