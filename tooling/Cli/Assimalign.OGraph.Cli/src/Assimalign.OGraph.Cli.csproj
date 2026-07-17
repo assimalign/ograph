@@ -2,9 +2,9 @@
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 		<PackAsTool>true</PackAsTool>
-		<TargetFramework>$(TargetFrameworkForCli)</TargetFramework>
+		<TargetFramework>$(TargetFrameworkForTooling)</TargetFramework>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Sharprompt" />
+		<OGraphPackageReference Include="Sharprompt" />
 	</ItemGroup>
 </Project>

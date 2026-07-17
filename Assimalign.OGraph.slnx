@@ -4865,71 +4865,53 @@
 	<Folder Name="/ograph/libraries/Client/" />
 	<Folder Name="/ograph/libraries/Client/src/" />
 	<Folder Name="/ograph/libraries/Client/src/Assimalign.OGraph.Client/">
-		<Project Path="libraries/Client/src/Assimalign.OGraph.Client/Assimalign.OGraph.Client.csproj" />
+		<Project Path="libraries/Assimalign.OGraph.Client/src/Assimalign.OGraph.Client.csproj" />
 	</Folder>
 	<Folder Name="/ograph/libraries/Client/tests/" />
 	<Folder Name="/ograph/libraries/Client/tests/Assimalign.OGraph.Client.Tests/">
-		<Project Path="libraries/Client/tests/Assimalign.OGraph.Client.Tests/Assimalign.OGraph.Client.Tests.csproj" />
+		<Project Path="libraries/Assimalign.OGraph.Client/tests/Assimalign.OGraph.Client.Tests.csproj" />
 	</Folder>
 	<Folder Name="/ograph/libraries/Core/" />
 	<Folder Name="/ograph/libraries/Core/src/" />
 	<Folder Name="/ograph/libraries/Core/src/Assimalign.OGraph.Core/">
-		<Project Path="libraries/Core/src/Assimalign.OGraph.Core/Assimalign.OGraph.Core.csproj" />
+		<Project Path="libraries/Assimalign.OGraph.Core/src/Assimalign.OGraph.Core.csproj" />
 	</Folder>
 	<Folder Name="/ograph/libraries/Gdm/">
 		<File Path="libraries/Gdm/README.md" />
 	</Folder>
 	<Folder Name="/ograph/libraries/Gdm/src/" />
 	<Folder Name="/ograph/libraries/Gdm/src/Assimalign.OGraph.Gdm/">
-		<Project Path="libraries/Gdm/src/Assimalign.OGraph.Gdm/Assimalign.OGraph.Gdm.csproj" />
+		<Project Path="libraries/Assimalign.OGraph.Gdm/src/Assimalign.OGraph.Gdm.csproj" />
 	</Folder>
 	<Folder Name="/ograph/libraries/Gdm/tests/" />
 	<Folder Name="/ograph/libraries/Gdm/tests/Assimalign.OGraph.Gdm.Tests/">
-		<Project Path="libraries/Gdm/tests/Assimalign.OGraph.Gdm.Tests/Assimalign.OGraph.Gdm.Tests.csproj" />
+		<Project Path="libraries/Assimalign.OGraph.Gdm/tests/Assimalign.OGraph.Gdm.Tests.csproj" />
 	</Folder>
 	<Folder Name="/ograph/libraries/Server/" />
 	<Folder Name="/ograph/libraries/Server/src/" />
 	<Folder Name="/ograph/libraries/Server/src/Assimalign.OGraph.Server/">
-		<Project Path="libraries/Server/src/Assimalign.OGraph.Server/Assimalign.OGraph.Server.csproj" />
+		<Project Path="libraries/Assimalign.OGraph.Server/src/Assimalign.OGraph.Server.csproj" />
 	</Folder>
 	<Folder Name="/ograph/libraries/Server/tests/" />
 	<Folder Name="/ograph/libraries/Server/tests/Assimalign.OGraph.Server.Tests/">
-		<Project Path="libraries/Server/tests/Assimalign.OGraph.Server.Tests/Assimalign.OGraph.Server.Tests.csproj" />
+		<Project Path="libraries/Assimalign.OGraph.Server/tests/Assimalign.OGraph.Server.Tests.csproj" />
 	</Folder>
 	<Folder Name="/ograph/libraries/Syntax/" />
 	<Folder Name="/ograph/libraries/Syntax/src/" />
 	<Folder Name="/ograph/libraries/Syntax/src/Assimalign.OGraph.Syntax/">
-		<Project Path="libraries/Syntax/src/Assimalign.OGraph.Syntax/Assimalign.OGraph.Syntax.csproj" />
+		<Project Path="libraries/Assimalign.OGraph.Syntax/src/Assimalign.OGraph.Syntax.csproj" />
 	</Folder>
 	<Folder Name="/ograph/libraries/Syntax/tests/" />
 	<Folder Name="/ograph/libraries/Syntax/tests/Assimalign.OGraph.Syntax.Tests/">
-		<Project Path="libraries/Syntax/tests/Assimalign.OGraph.Syntax.Tests/Assimalign.OGraph.Syntax.Tests.csproj" />
-	</Folder>
-	<Folder Name="/ograph/libraries/ToolKit/">
-		<File Path="libraries/ToolKit/Directory.Build.props" />
-		<File Path="libraries/ToolKit/Directory.Build.targets" />
-	</Folder>
-	<Folder Name="/ograph/libraries/ToolKit/src/" />
-	<Folder Name="/ograph/libraries/ToolKit/src/Assimalign.OGraph.ToolKit/">
-		<Project Path="libraries/ToolKit/src/Assimalign.OGraph.ToolKit/Assimalign.OGraph.ToolKit.csproj" />
-	</Folder>
-	<Folder Name="/ograph/libraries/ToolKit/src/Assimalign.OGraph.ToolKit.Gdm/">
-		<Project Path="libraries/ToolKit/src/Assimalign.OGraph.ToolKit.Gdm/Assimalign.OGraph.ToolKit.Gdm.csproj" />
-	</Folder>
-	<Folder Name="/ograph/libraries/ToolKit/src/Assimalign.OGraph.ToolKit.TypeUtilities/">
-		<Project Path="libraries/ToolKit/src/Assimalign.OGraph.ToolKit.TypeUtilities/Assimalign.OGraph.ToolKit.TypeUtilities.csproj" />
-	</Folder>
-	<Folder Name="/ograph/libraries/ToolKit/tests/" />
-	<Folder Name="/ograph/libraries/ToolKit/tests/Assimalign.OGraph.ToolKit.Tests/">
-		<Project Path="libraries/ToolKit/tests/Assimalign.OGraph.ToolKit.Tests/Assimalign.OGraph.ToolKit.Tests.csproj" />
+		<Project Path="libraries/Assimalign.OGraph.Syntax/tests/Assimalign.OGraph.Syntax.Tests.csproj" />
 	</Folder>
 	<Folder Name="/ograph/sdk/" />
 	<Folder Name="/ograph/sdk/src/" />
 	<Folder Name="/ograph/sdk/src/Assimalign.OGraph.Build.Tasks/">
-		<Project Path="sdk/src/Assimalign.OGraph.Build.Tasks/Assimalign.OGraph.Build.Tasks.csproj" />
+		<Project Path="build/Tasks/Assimalign.OGraph.Build.Tasks.csproj" />
 	</Folder>
 	<Folder Name="/ograph/sdk/src/Assimalign.OGraph.Sdk/">
-		<Project Path="sdk/src/Assimalign.OGraph.Sdk/Assimalign.OGraph.Sdk.csproj" />
+		<Project Path="sdk/Assimalign.OGraph.Sdk/Tasks/Assimalign.OGraph.Sdk.Tasks.csproj" />
 	</Folder>
 	<Folder Name="/ograph/tooling/">
 		<File Path="tooling/Directory.Build.props" />
@@ -4940,6 +4922,10 @@
 	</Folder>
 	<Folder Name="/ograph/tooling/Cli/src/" />
 	<Folder Name="/ograph/tooling/Cli/src/Assimalign.OGraph.Cli/">
-		<Project Path="tooling/Cli/src/Assimalign.OGraph.Cli/Assimalign.OGraph.Cli.csproj" />
+		<Project Path="tooling/Cli/Assimalign.OGraph.Cli/src/Assimalign.OGraph.Cli.csproj" />
+	</Folder>
+	<Folder Name="/ograph/tooling/Cli/tests/" />
+	<Folder Name="/ograph/tooling/Cli/tests/Assimalign.OGraph.Cli.Tests/">
+		<Project Path="tooling/Cli/Assimalign.OGraph.Cli/tests/Assimalign.OGraph.Cli.Tests.csproj" />
 	</Folder>
 </Solution>

@@ -7,9 +7,4 @@
 		<EmbeddedResource Remove="Internal\Parsers\**" />
 		<None Remove="Internal\Parsers\**" />
 	</ItemGroup>
-	<!--<ItemGroup>
-	  <Compile Remove="Internal\Parsers\**" />
-	  <EmbeddedResource Remove="Internal\Parsers\**" />
-	  <None Remove="Internal\Parsers\**" />
-	</ItemGroup>-->
 </Project>

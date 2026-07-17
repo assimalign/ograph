@@ -20,9 +20,18 @@ public sealed class EdgeNode : QueryNode
     /// <exception cref="ArgumentNullException" />
     internal EdgeNode(LabelNode label, VertexNode source, VertexNode target, string text, Location location, LabelNode? alias = null, string? path = null): base(text, location) 
     {
-        if (label is null) ThrowHelper.ThrowArgumentNullException(nameof(label));
-        if (source is null) ThrowHelper.ThrowArgumentNullException(nameof(source));
-        if (target is null) ThrowHelper.ThrowArgumentNullException(nameof(target));
+        if (label is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(label));
+        }
+        if (source is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(source));
+        }
+        if (target is null)
+        {
+            ThrowHelper.ThrowArgumentNullException(nameof(target));
+        }
        
         Label = label;
         Source = source;
