@@ -1,0 +1,21 @@
+{
+  "name": "accept-query-options",
+  "title": "OPTIONS discovery — Accept-Query advertisement",
+  "description": "A pre-flight-independent capability probe: OPTIONS on a bound resource returns Allow (advertising the QUERY method) and Accept-Query (advertising accepted query media types, RFC 8941 List, no media-type parameters, path-scoped). A 204 carries no body, so there is no envelope to validate (§4.6).",
+  "spec": ["§4.6"],
+  "conformance": ["V-04"],
+  "request": {
+    "method": "OPTIONS",
+    "route": "/hrm/employees",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 204,
+    "headers": {
+      "Allow": "OPTIONS, GET, QUERY",
+      "Accept-Query": "\"application/vnd.ograph.query\""
+    },
+    "envelope": null
+  }
+}

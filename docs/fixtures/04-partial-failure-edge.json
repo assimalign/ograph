@@ -1,0 +1,67 @@
+{
+  "name": "partial-failure-edge",
+  "title": "Per-edge partial failure (edge 500 under root 200)",
+  "description": "The root operation succeeds (200) and one edge resolves normally, but a second edge resolver fails. The failed edge carries its own $status 500 and $errors while the root and the sibling edge remain successful. Demonstrates edge-level partial-failure isolation (§6.4).",
+  "spec": ["§6.4"],
+  "conformance": ["V-05", "V-06"],
+  "request": {
+    "method": "QUERY",
+    "route": "/hrm/employees",
+    "headers": {
+      "Content-Type": "application/vnd.ograph.query",
+      "Accept": "application/vnd.ograph+json"
+    },
+    "body": "node(employees)\n  .filter(id eq \"81c34648-7543-4fdd-8e8e-90fcfbbb97a8\")\n  .project(id info { firstName lastName })\n  .edge(addresses)\n    .project(id streetOne city state)\n  .edge(primaryAddress)\n    .project(id streetOne streetTwo city state)"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/vnd.ograph+json",
+      "Cache-Control": "no-store"
+    },
+    "envelope": {
+      "$status": 200,
+      "$errors": [],
+      "$count": 1,
+      "$total": 1,
+      "$nodes": [
+        {
+          "$uri": "/hrm/employees/81c34648-7543-4fdd-8e8e-90fcfbbb97a8",
+          "id": "81c34648-7543-4fdd-8e8e-90fcfbbb97a8",
+          "info": { "firstName": "Jim", "lastName": "Boe" },
+          "$edges": {
+            "addresses": {
+              "$status": 200,
+              "$uri": "/hrm/employees/81c34648-7543-4fdd-8e8e-90fcfbbb97a8/addresses",
+              "$errors": [],
+              "$count": 1,
+              "$total": 1,
+              "$nodes": [
+                {
+                  "$uri": "/hrm/employees/81c34648-7543-4fdd-8e8e-90fcfbbb97a8/addresses/8bf0f11a-2b9a-4760-b1b6-ad2adb7cb44b",
+                  "id": "8bf0f11a-2b9a-4760-b1b6-ad2adb7cb44b",
+                  "streetOne": "1234 Somewhere Ave",
+                  "city": "Charlotte",
+                  "state": "North Carolina"
+                }
+              ]
+            },
+            "primaryAddress": {
+              "$status": 500,
+              "$uri": "/hrm/employees/81c34648-7543-4fdd-8e8e-90fcfbbb97a8/primaryAddress",
+              "$errors": [
+                {
+                  "code": "EdgeResolutionFailed",
+                  "message": "The primaryAddress resolver did not complete.",
+                  "severity": "error",
+                  "target": "primaryAddress"
+                }
+              ],
+              "$nodes": null
+            }
+          }
+        }
+      ]
+    }
+  }
+}

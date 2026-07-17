@@ -1,0 +1,25 @@
+{
+  "name": "conditional-304",
+  "title": "Conditional QUERY — 304 Not Modified",
+  "description": "A client re-issues an identical QUERY carrying If-None-Match with the validator from an earlier 200 (e.g. fixture 01). The selected representation is unchanged, so the server returns 304 with no body, exactly as it would for a conditional GET on the equivalent resource (RFC 10008 §2.6; §4.7). A 304 carries no message body, so there is no envelope to validate.",
+  "spec": ["§4.7"],
+  "conformance": ["V-08"],
+  "request": {
+    "method": "QUERY",
+    "route": "/hrm/employees",
+    "headers": {
+      "Content-Type": "application/vnd.ograph.query",
+      "Accept": "application/vnd.ograph+json",
+      "If-None-Match": "\"c3b1-basic\""
+    },
+    "body": "node(employees)\n  .project(id info { firstName lastName })"
+  },
+  "response": {
+    "status": 304,
+    "headers": {
+      "ETag": "\"c3b1-basic\"",
+      "Cache-Control": "max-age=60"
+    },
+    "envelope": null
+  }
+}
