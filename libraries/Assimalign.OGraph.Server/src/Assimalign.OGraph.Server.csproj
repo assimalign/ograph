@@ -2,47 +2,6 @@
 	<PropertyGroup>
 		<RootNamespace>Assimalign.OGraph</RootNamespace>
 	</PropertyGroup>
-	<!--<ItemGroup>
-	  <Compile Remove="Exceptions\**" />
-	  <Compile Remove="Extensions\**" />
-	  <Compile Remove="Internal\QueryProviders\**" />
-	  <Compile Remove="Internal\Results\**" />
-	  <Compile Remove="Results\**" />
-	  <Compile Remove="Utilities\**" />
-	  <EmbeddedResource Remove="Exceptions\**" />
-	  <EmbeddedResource Remove="Extensions\**" />
-	  <EmbeddedResource Remove="Internal\QueryProviders\**" />
-	  <EmbeddedResource Remove="Internal\Results\**" />
-	  <EmbeddedResource Remove="Results\**" />
-	  <EmbeddedResource Remove="Utilities\**" />
-	  <None Remove="Exceptions\**" />
-	  <None Remove="Extensions\**" />
-	  <None Remove="Internal\QueryProviders\**" />
-	  <None Remove="Internal\Results\**" />
-	  <None Remove="Results\**" />
-	  <None Remove="Utilities\**" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Compile Remove="Internal\ApplicationBuilder.cs" />
-	  <Compile Remove="Internal\ApplicationOperationDescriptor.cs" />
-	  <Compile Remove="Internal\Executor.cs" />
-	  <Compile Remove="Internal\MiddlewareQueueBase.cs" />
-	  <Compile Remove="Internal\OperationBinding.cs" />
-	  <Compile Remove="Internal\OperationBinding.ErrorResult.cs" />
-	  <Compile Remove="Internal\OperationBindingContext.cs" />
-	  <Compile Remove="Internal\OperationBindingDescriptor.cs" />
-	  <Compile Remove="Internal\OperationBindingMiddleware.QueryParsing.cs" />
-	  <Compile Remove="Internal\OperationBindingMiddlewareQueue.cs" />
-	  <Compile Remove="Internal\OperationBindingMiddlewareWrapper.cs" />
-	  <Compile Remove="Internal\OperationBindingResolverWrapper.cs" />
-	  <Compile Remove="Internal\OperationBindingResultStrategy.cs" />
-	  <Compile Remove="Internal\PropertyBinding.cs" />
-	  <Compile Remove="Internal\PropertyBindingContext.cs" />
-	  <Compile Remove="Internal\PropertyBindingMiddlewareQueue.cs" />
-	  <Compile Remove="Internal\PropertyBindingResolver.cs" />
-	  <Compile Remove="OGraphExecutorBuilder.cs" />
-	  <Compile Remove="OGraphHeaderCollection.cs" />
-	</ItemGroup>-->
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\Core\src\Assimalign.OGraph.Core\Assimalign.OGraph.Core.csproj" />
 	</ItemGroup>

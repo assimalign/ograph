@@ -1,11 +1,6 @@
 <Project  Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <!-- <PackageId>Assimalign.OGraph.Sdk</PackageId>
-    <OutDirName>$(Configuration)\Sdks\$(PackageId)\tools</OutDirName>
-    <FileUpgradeFlags>40</FileUpgradeFlags>
-    <UpgradeBackupLocation>C:\Source\repos\assimalign\ograph\Backup\</UpgradeBackupLocation>
-    <OldToolsVersion>2.0</OldToolsVersion> -->
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Update="Microsoft.Build" />

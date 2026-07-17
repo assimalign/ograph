@@ -5,12 +5,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\libraries\Core\src\Assimalign.OGraph.Core\Assimalign.OGraph.Core.csproj" />
-		<!--<ProjectReference Include="..\..\..\libraries\Server\src\Assimalign.OGraph.Server\Assimalign.OGraph.Server.csproj" />-->
 	</ItemGroup>
-
-	<Target Name="test">
-		<Message Importance="High" Text="Chases Message"/>
-	</Target>
 
 	<Target Name="AddNuGetDlls" BeforeTargets="compile">
 		 <!--Merge the collection of PackageReference and Assemblies using the NuGetPackageId key.
@@ -29,18 +24,5 @@
 
 		<Message Importance="High" Text="Adding DLLs from the following packages: @(_PackagesToPack->'%(NuGetPackageId)')" />
 
-		<!--<ItemGroup>
-			 Update the collection of items to pack with the DLLs from the NuGet packages 
-			<None Include="@(_PackagesToPack)"
-				  Pack="true"
-				  PackagePath="analyzers/dotnet/cs"
-				  Visible="false" />
-
-			 Add the DLL produced by the current project to the NuGet package 
-			<None Include="$(OutputPath)\$(AssemblyName).dll"
-				  Pack="true"
-				  PackagePath="analyzers/dotnet/cs"
-				  Visible="false" />
-		</ItemGroup>-->
 	</Target>
 </Project>
