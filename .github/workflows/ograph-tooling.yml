@@ -1,0 +1,53 @@
+name: ograph-tooling
+
+# Tooling area: the CLI (tooling/Cli), the SDK MSBuild tasks
+# (sdk/Assimalign.OGraph.Sdk/Tasks) and the build tasks (build/Tasks). All build
+# on ubuntu — the builds are a required gate.
+#
+# The CLI test project is an empty stub today, so its test phase is non-blocking
+# (tracked in #90). The SDK/build task projects have no tests.
+#
+# Runner: ubuntu-latest.
+
+on:
+  push:
+    branches: [main, development]
+    paths:
+      - 'global.json'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - 'build/**'
+      - 'sdk/**'
+      - 'tooling/**'
+      - '.github/actions/build/**'
+      - '.github/workflows/ograph-tooling.yml'
+  pull_request:
+    paths:
+      - 'global.json'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - 'build/**'
+      - 'sdk/**'
+      - 'tooling/**'
+      - '.github/actions/build/**'
+      - '.github/workflows/ograph-tooling.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/build
+        with:
+          project: tooling/Cli/Assimalign.OGraph.Cli/src/Assimalign.OGraph.Cli.csproj
+          tests: tooling/Cli/Assimalign.OGraph.Cli/tests/Assimalign.OGraph.Cli.Tests.csproj
+          allow-test-failure: 'true'
+          annotation-title: Cli
+      - uses: ./.github/actions/build
+        with:
+          project: sdk/Assimalign.OGraph.Sdk/Tasks/Assimalign.OGraph.Sdk.Tasks.csproj
+          annotation-title: Sdk.Tasks
+      - uses: ./.github/actions/build
+        with:
+          project: build/Tasks/Assimalign.OGraph.Build.Tasks.csproj
+          annotation-title: Build.Tasks

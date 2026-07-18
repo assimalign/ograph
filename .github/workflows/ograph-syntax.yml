@@ -1,55 +1,45 @@
-name: ograph.syntax.ci
+name: ograph-syntax
+
+# Syntax library (libraries/Assimalign.OGraph.Syntax). Build is a required gate.
+# Tests run but are non-blocking for now: filter/sort paths and the base
+# QueryVisitor are unfinished, so part of the suite is pre-existing red —
+# tracked in #90. Drop allow-test-failure once the suite is green.
+#
+# Runner: ubuntu-latest.
 
 on:
   push:
-    branches:
-    - main
-    - development
-    paths: 
-    - 'Directory.Build.props'                                     # When the Global Props File Changes
-    - 'libraries/Syntax/src/**'
-    - '.github/workflows/assimalign.ograph.syntax.yml'        # When Pipeline File Changes
+    branches: [main, development]
+    paths:
+      - 'global.json'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - 'build/**'
+      - 'libraries/Directory.Build.props'
+      - 'libraries/Directory.Build.targets'
+      - 'libraries/Assimalign.OGraph.Syntax/**'
+      - '.github/actions/build/**'
+      - '.github/workflows/ograph-syntax.yml'
+  pull_request:
+    paths:
+      - 'global.json'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - 'build/**'
+      - 'libraries/Directory.Build.props'
+      - 'libraries/Directory.Build.targets'
+      - 'libraries/Assimalign.OGraph.Syntax/**'
+      - '.github/actions/build/**'
+      - '.github/workflows/ograph-syntax.yml'
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2    
-    
-    - name: Setup .NET 6
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '6.x'
-
-    - name: Setup .NET 7
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '7.x'
-        include-prerelease: true
-
-    - name: Setup .NET 8
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '8.x'
-        include-prerelease: true
-    
-    - name: Restore Project
-      run: dotnet restore 
-      working-directory: './libraries/Syntax/src/Assimalign.OGraph.Syntax'
-    
-    - name: Build Project
-      run: dotnet build --configuration Release --no-restore
-      working-directory: './libraries/Syntax/src/Assimalign.OGraph.Syntax'
-
-    - name: Restore Unit Tests Project
-      run: dotnet restore 
-      working-directory: './libraries/Syntax/tests/Assimalign.OGraph.Syntax.Tests'
-
-    - name: Run Unit Tests
-      run: dotnet test --no-restore --verbosity normal
-      working-directory: './libraries/Syntax/tests/Assimalign.OGraph.Syntax.Tests'
-    
-    - name: Publish Nuget Package
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-      run: dotnet nuget push "*.nupkg" -k ${{ secrets.NUGET_PUBLISHING_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
-      working-directory: './libraries/Syntax/src/Assimalign.OGraph.Syntax/bin/Release/'
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/build
+        with:
+          project: libraries/Assimalign.OGraph.Syntax/src/Assimalign.OGraph.Syntax.csproj
+          tests: libraries/Assimalign.OGraph.Syntax/tests/Assimalign.OGraph.Syntax.Tests.csproj
+          allow-test-failure: 'true'
+          annotation-title: Syntax

@@ -1,57 +1,45 @@
-name: ograph.client.ci
+name: ograph-client
+
+# Client library (libraries/Assimalign.OGraph.Client). Build is a required gate.
+# The test project is currently an empty stub (no discoverable tests), so the
+# test phase is non-blocking — tracked in #90. Drop allow-test-failure once real
+# tests exist.
+#
+# Runner: ubuntu-latest.
 
 on:
   push:
-    branches:
-    - main
-    - development
-    paths: 
-    - 'Directory.Build.props'                                     # When the Global Props File Changes
-    - 'libraries/Client/src/**'
-    - '.github/workflows/assimalign.ograph.client.yml'        # When Pipeline File Changes
-
-
+    branches: [main, development]
+    paths:
+      - 'global.json'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - 'build/**'
+      - 'libraries/Directory.Build.props'
+      - 'libraries/Directory.Build.targets'
+      - 'libraries/Assimalign.OGraph.Client/**'
+      - '.github/actions/build/**'
+      - '.github/workflows/ograph-client.yml'
+  pull_request:
+    paths:
+      - 'global.json'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - 'build/**'
+      - 'libraries/Directory.Build.props'
+      - 'libraries/Directory.Build.targets'
+      - 'libraries/Assimalign.OGraph.Client/**'
+      - '.github/actions/build/**'
+      - '.github/workflows/ograph-client.yml'
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2    
-    
-    - name: Setup .NET 6
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '6.x'
-
-    - name: Setup .NET 7
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '7.x'
-        include-prerelease: true
-
-    - name: Setup .NET 8
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '8.x'
-        include-prerelease: true
-    
-    - name: Restore Project
-      run: dotnet restore 
-      working-directory: './libraries/Client/src/Assimalign.OGraph.Client'
-    
-    - name: Build Project
-      run: dotnet build --configuration Release --no-restore
-      working-directory: './libraries/Client/src/Assimalign.OGraph.Client'
-
-    - name: Restore Unit Tests Project
-      run: dotnet restore 
-      working-directory: './libraries/Client/tests/Assimalign.OGraph.Client.Tests'
-
-    - name: Run Unit Tests
-      run: dotnet test --no-restore --verbosity normal
-      working-directory: './libraries/Client/tests/Assimalign.OGraph.Client.Tests'
-    
-    - name: Publish Nuget Package
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-      run: dotnet nuget push "*.nupkg" -k ${{ secrets.NUGET_PUBLISHING_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
-      working-directory: './libraries/Client/src/Assimalign.OGraph.Client/bin/Release/'
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/build
+        with:
+          project: libraries/Assimalign.OGraph.Client/src/Assimalign.OGraph.Client.csproj
+          tests: libraries/Assimalign.OGraph.Client/tests/Assimalign.OGraph.Client.Tests.csproj
+          allow-test-failure: 'true'
+          annotation-title: Client

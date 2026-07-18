@@ -1,0 +1,68 @@
+name: ograph-analyzers
+
+# Analyzers area (analyzers/src): the Roslyn source generators and code fixes
+# (ToolKit.Gdm.* and ToolKit.TypeUtilities.*). These target netstandard2.0 and
+# build cleanly on ubuntu — the build is a required gate.
+#
+# MATRIX EXTENSION POINT (windows-latest):
+#   The analyzer test project
+#   (analyzers/tests/…​TypeUtilities.SourceGeneration.Tests) targets net472 and
+#   cannot build or run on ubuntu-latest. Running it is the one place a
+#   windows-latest leg adds real value. When that suite is ready, extend this
+#   job with a matrix and gate the tests to Windows, e.g.:
+#
+#     strategy:
+#       matrix:
+#         os: [ubuntu-latest, windows-latest]
+#     runs-on: ${{ matrix.os }}
+#     ...
+#       - if: runner.os == 'Windows'
+#         uses: ./.github/actions/build
+#         with:
+#           project: analyzers/tests/Assimalign.OGraph.ToolKit.TypeUtilities.SourceGeneration.Tests/Assimalign.OGraph.ToolKit.TypeUtilities.SourceGeneration.Tests.csproj
+#           tests:   analyzers/tests/Assimalign.OGraph.ToolKit.TypeUtilities.SourceGeneration.Tests/Assimalign.OGraph.ToolKit.TypeUtilities.SourceGeneration.Tests.csproj
+#
+# For now: ubuntu-only, build the generators/code-fixes only.
+
+on:
+  push:
+    branches: [main, development]
+    paths:
+      - 'global.json'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - 'build/**'
+      - 'analyzers/**'
+      - '.github/actions/build/**'
+      - '.github/workflows/ograph-analyzers.yml'
+  pull_request:
+    paths:
+      - 'global.json'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - 'build/**'
+      - 'analyzers/**'
+      - '.github/actions/build/**'
+      - '.github/workflows/ograph-analyzers.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/build
+        with:
+          project: analyzers/src/Assimalign.OGraph.ToolKit.Gdm.SourceGeneration/Assimalign.OGraph.ToolKit.Gdm.SourceGeneration.csproj
+          annotation-title: Analyzers · Gdm.SourceGeneration
+      - uses: ./.github/actions/build
+        with:
+          project: analyzers/src/Assimalign.OGraph.ToolKit.Gdm.CodeFixes/Assimalign.OGraph.ToolKit.Gdm.CodeFixes.csproj
+          annotation-title: Analyzers · Gdm.CodeFixes
+      - uses: ./.github/actions/build
+        with:
+          project: analyzers/src/Assimalign.OGraph.ToolKit.TypeUtilities.SourceGeneration/Assimalign.OGraph.ToolKit.TypeUtilities.SourceGeneration.csproj
+          annotation-title: Analyzers · TypeUtilities.SourceGeneration
+      - uses: ./.github/actions/build
+        with:
+          project: analyzers/src/Assimalign.OGraph.ToolKit.TypeUtilities.CodeFixes/Assimalign.OGraph.ToolKit.TypeUtilities.CodeFixes.csproj
+          annotation-title: Analyzers · TypeUtilities.CodeFixes
