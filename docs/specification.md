@@ -531,6 +531,14 @@ The OGraph query language addresses a Root Operation and composes keyword clause
 entry keyword is `node(...)` (alias `n(...)`); `vertex(...)`/`v(...)` are accepted synonyms
 (§1.1.1).
 
+The complete surface syntax is defined by the committed grammar at
+[`grammar/ograph-query.ebnf`](grammar/ograph-query.ebnf), which is **normative**: it governs what
+a conforming parser accepts and rejects, and it seeds the conformance suite (N-03). This section
+defines the semantics that the grammar's syntax carries — keyword availability, the operator and
+function vocabulary, clause evaluation order, paging modes, and edge traversal and scoping. Where
+this prose and the grammar file disagree on surface form, the grammar file governs; where they
+disagree on meaning, this section governs.
+
 ## 5.1 — Keywords
 
 | Keyword | Availability rule |
@@ -549,24 +557,218 @@ entry keyword is `node(...)` (alias `n(...)`); `vertex(...)`/`v(...)` are accept
    call signature, the model is invalid.
 2. Keyword availability is validated against the capability model (§3.3.3) **before** execution.
 3. Within a scope, clauses are evaluated in the canonical order **filter → sort → page →
-   project**, regardless of their textual order in the query.
+   project**, regardless of their textual order in the query; the full evaluation-order semantics
+   are specified in §5.4.
 
-## 5.2 — Paging forms
+## 5.2 — Grammar
 
-Offset paging is carried forward from earlier drafts:
+The surface syntax of every construct named in this section — the entry keyword, the clause
+chain, filter expressions, literals, variables (`$var`), comments (`#`), and the clause bodies —
+is defined by [`grammar/ograph-query.ebnf`](grammar/ograph-query.ebnf). That file is the
+**normative grammar** delivered by S-03 [O01.01.01.03] (grammar) and S-04 [O01.01.01.04]
+(edge-traversal syntax and scoping); it supersedes the informal paging fragment of earlier drafts.
+Its RECONCILIATION section records the design-sketch constructs
+(`.designing/query.ograph`) that are deliberately rejected and their canonical replacements.
+
+A clause body is a brace-delimited block. `.filter({ … })`, `.sort({ … })`, `.page({ … })`, and
+`.project({ … })` each carry their body in a `{ … }` block; a body presented without its block is
+invalid (diagnostic `G0003`). Nested selection sets, nested sort-key sets, and the predicate body
+of an `any`/`all` lambda are likewise `{ … }` blocks.
+
+## 5.3 — Operator and function vocabulary
+
+This subsection defines the operator and function **names** that §2.3.6 defers to S-03. These are
+the portable query operations; a Property-hosted `$.filter`/`$.sort` policy (§2.3.6) selects which
+of them a member permits, and an operation-level policy (§3.3.3) selects which members are exposed.
+A model MUST NOT admit an operator or function name outside this vocabulary unless it is an
+implementation extension carrying a vendor prefix.
+
+### 5.3.1 — Operators
+
+| Class | Name | Spelling | Arity | Notes |
+| --- | --- | --- | --- | --- |
+| Comparison | Equal | `eq` | binary | non-associative |
+| Comparison | Not equal | `neq` | binary | non-associative |
+| Comparison | Greater than | `gt` | binary | non-associative |
+| Comparison | Greater than or equal | `gte` | binary | non-associative |
+| Comparison | Less than | `lt` | binary | non-associative |
+| Comparison | Less than or equal | `lte` | binary | non-associative |
+| Logical | And | `and` | binary | left-associative |
+| Logical | Or | `or` | binary | left-associative |
+| Arithmetic | Add | `+` | binary | left-associative |
+| Arithmetic | Subtract | `-` | binary | left-associative |
+| Arithmetic | Multiply | `*` | binary | left-associative |
+| Arithmetic | Divide | `/` | binary | left-associative |
+
+**Precedence**, tightest to loosest: grouping `( )` and function call → multiplicative `* /` →
+additive `+ -` → comparison (`eq neq gt gte lt lte`) → `and` → `or`. Comparison operators do not
+chain (`a lt b lt c` is invalid); use grouping and `and`. The layered productions in the grammar
+(`or-expr`, `and-expr`, `comparison-expr`, `additive-expr`, `multiplicative-expr`) encode this
+precedence, so a conforming parser needs no separate precedence table at runtime.
+
+### 5.3.2 — Functions
+
+Function names are matched case-insensitively. `contains` and `length` are polymorphic over string
+and collection operands.
+
+| Family | Name | Signature (informal) | Result |
+| --- | --- | --- | --- |
+| String | `startsWith` | `(string, string [, ignoreCase])` | Boolean |
+| String | `endsWith` | `(string, string [, ignoreCase])` | Boolean |
+| String | `contains` | `(string, string)` | Boolean |
+| String | `concat` | `(string, string, …)` | String |
+| String | `substring` | `(string, start [, length])` | String |
+| String | `padLeft` | `(string, width [, char])` | String |
+| String | `padRight` | `(string, width [, char])` | String |
+| String | `trim` | `(string)` | String |
+| String | `trimLeft` | `(string)` | String |
+| String | `trimRight` | `(string)` | String |
+| Collection | `any` | `(collection, predicate)` | Boolean |
+| Collection | `all` | `(collection, predicate)` | Boolean |
+| Collection | `contains` | `(collection, value)` | Boolean |
+| Collection / Numeric | `length` | `(string | collection)` | Integer |
+
+`any` and `all` are **lambda functions**: their second argument is a predicate evaluated in the
+element scope of the collection named by the first argument. The predicate body is a `{ … }` block
+(which MAY be empty, denoting the always-true predicate) or a bare predicate expression. Nesting is
+permitted: a lambda predicate MAY reference members of the element and MAY itself invoke `any`/`all`
+over a nested collection.
+
+The `startsWith`/`endsWith` optional third argument is a Boolean case-insensitivity flag. A member
+function used inside `.project()` (e.g. `fullName(FullNameFormat.FLM)`) shares this call syntax; its
+availability is bounded by the member's `$.project` capability (§2.3.6.1) and its enum-qualified
+argument (`FullNameFormat.FLM`) is an ordinary member path.
+
+## 5.4 — Clause evaluation-order semantics
+
+Within a single scope, clauses are evaluated in the canonical order **filter → sort → page →
+project**, regardless of their textual order in the query text and regardless of repetition.
+
+**Rules**
+1. **Canonical order.** A scope's clauses evaluate as: `filter` narrows the candidate set; `sort`
+   orders the survivors; `page` selects a window over the ordered survivors; `project` shapes the
+   selected results. Textual order is cosmetic and MUST NOT change results.
+2. **At most one of each per scope.** A scope MUST NOT declare two `filter`, two `sort`, two
+   `page`, or two `project` clauses. A model or query that does so is invalid.
+3. **Paging follows ordering.** Because `page` selects a window, a `page` clause without a `sort`
+   clause in the same scope yields an implementation-defined but stable order; a conforming
+   implementation SHOULD document its default. Cursor paging (§5.5) MUST resolve against the same
+   ordering that produced the cursor.
+4. **Projection is last.** Members removed by `project` are still available to `filter`, `sort`,
+   and `page` in the same scope; a member referenced by those clauses need not appear in
+   `project`.
+5. **Per-scope application.** Evaluation order applies independently within each edge scope
+   (§5.6). A child scope's clauses evaluate over the results the parent scope yields for each
+   parent element.
+6. **Availability precedes evaluation.** Keyword availability is validated against the capability
+   model (§3.3.3) before any clause evaluates; an unavailable keyword is a validation error, not a
+   runtime one.
+
+## 5.5 — Paging forms
+
+Paging is expressed by the `page` clause; both modes carry their arguments in the `{ … }` block.
+
+**Offset mode** selects a window by position. `skip` and `take` are order-independent, and either
+MAY be omitted (`skip` defaults to `0`; an absent `take` yields an implementation-defined page
+size).
 
 ```ograph
-.page(
-  skip: {integer}
-  take: {integer}
-)
+.page({
+  skip 0
+  take 25
+})
 ```
 
-Cursor paging is a planned second mode.
+**Cursor mode** continues from an opaque continuation token. `token` carries the cursor; it MAY be
+combined with `take` to bound the page size and MAY be combined with `skip` to apply an additional
+starting offset relative to the cursor position. The grammar's `page-set` admits `skip`, `take`,
+and `token` in any combination within one `page` clause, and the golden parser test
+(`CompleteParseSuccessful`) exercises `page({ skip 0 take 25 token '' })` accordingly.
 
-*[Owned by S-03 [O01.01.01.03]: the committed EBNF grammar — filter operators and precedence,
-functions, literals, variables, and the full paging clause syntax (offset and cursor modes).
-Owned by S-04 [O01.01.01.04]: final edge-traversal syntax and traversal scoping rules.]*
+```ograph
+.page({
+  take 25
+  token '<opaque-cursor>'
+})
+```
+
+Each `skip`/`take` value is an integer literal or a variable (`$take`); each `token` value is a
+string literal or a variable. A cursor is produced by a prior page of the same scope and ordering
+(§5.4 rule 3); its internal structure is opaque to the client and is defined by the response
+envelope owner (S-06).
+
+## 5.6 — Edge traversal and scoping *(S-04 [O01.01.01.04])*
+
+### 5.6.1 — Decision: the path form is canonical
+
+The design sketch diverged between an **arrow form** `.edge(e-[has]->addresses:a)` and a **path
+form** `.edge(node/edge)` / `.edge(node:/edge)`. **The path form is canonical; the arrow form is
+rejected.** Rationale:
+
+1. **Lexability.** The arrow form is not tokenizable by the committed lexer: `[` and `]` are not
+   recognized tokens, so `-[has]->` cannot be lexed. The path form uses only `/`, identifiers, and
+   the `as` keyword, all of which the lexer and parser already accept.
+2. **Executable ground truth.** Every passing edge test uses the path form
+   (`.edge(companies/addresses)`, `.edge(department as employeeDepartment)`,
+   `.edge(jobs/tasks/workItems)`), asserting `document.Errors` is empty.
+3. **GDM alignment (S-01).** An Edge is a first-class relationship addressed by its `Name` from a
+   `Source` Node to a `Target` Node (§2.3.3). A `/`-separated selector is exactly a directed-path
+   segment sequence over that model (walk/trail/path, `spec-notes.md`); the arrow form's inline
+   relationship label duplicates the Edge `Name` the model already owns.
+
+The `:/` and bare-`:` scope spellings and the colon alias `:a` are folded onto the single path
+separator `/` and the single alias keyword `as`. The grammar's RECONCILIATION notes R2–R3 record
+the surface mapping.
+
+### 5.6.2 — Canonical edge syntax
+
+```ograph
+.edge( edge-selector [ , argument ] )
+```
+
+- **`edge-selector`** is `edge-path [ as alias ]`, where `edge-path` is one or more identifiers
+  separated by `/` (`edge`, or `scope/edge`, or `scope/edge/edge`).
+- **`alias`** (`as name`) names the **target scope** the traversal produces, so deeper clauses can
+  re-anchor to it. The target scope **always** carries an **implicit alias** — the final
+  `edge-path` segment (the Edge name) — whether or not an explicit `as` alias is given; when an `as`
+  alias is present it is an additional name for the same scope. Either name may head a qualified
+  path (§5.6.3 rule 2).
+- **`argument`** is an optional single-entity key applied to the traversal target (Role = `Key`,
+  §3.2 rule 5).
+
+### 5.6.3 — Scope resolution
+
+Every query has a **scope stack**. The entry keyword establishes the **root scope**, bound to the
+entry Node; the entry Node's `Name` is the root scope's **implicit alias**, and an explicit `as`
+name, when present, is an additional alias for the same scope. Each `.edge(...)` resolves against
+the scope stack and pushes a **child scope** bound to the resolved Edge's `Target` Node.
+
+**Rules**
+1. **Single-segment selector.** `.edge(name)` resolves `name` as an Edge available from the
+   **current (innermost)** scope's Node (a Resolver Operation, §3.1); the Edge's `Target` becomes
+   the new innermost scope.
+2. **Qualified path.** `.edge(a/b/c)` resolves left-to-right: `a` MUST name an **in-scope scope** —
+   matched against that scope's **implicit alias** (the entry Node's `Name` for the root scope, or
+   the Edge `Name` that produced an enclosing edge scope per §5.6.2) or its explicit `as` alias —
+   and each following segment is an Edge `Name` walked from the prior segment's target. The final
+   segment's `Target` becomes the new innermost scope. A qualified path is how a clause
+   **re-anchors** to an outer scope rather than the innermost one. Thus `.edge(companies as
+   employeeCompanies)` followed by `.edge(companies/addresses)` re-anchors via the Edge-name
+   implicit alias `companies`, and an unaliased root `v(providers)` re-anchors via its Node-name
+   implicit alias in `.edge(providers/languages)`.
+3. **Scope binding of chained clauses.** `.filter()`, `.sort()`, `.page()`, `.project()`, and a
+   further `.edge()` that follow an `.edge(...)` bind to that edge's **target scope** (the innermost
+   scope) until a subsequent `.edge(...)` re-anchors or pushes a new scope. Textual indentation is
+   cosmetic; binding is determined solely by the scope stack and the selector, not by whitespace.
+4. **Alias uniqueness.** Within one root query, an `as` alias MUST be unique across live scopes; a
+   selector segment that matches no in-scope alias and no Edge in the current scope is a resolution
+   error.
+5. **Resolver ambiguity.** If more than one Resolver Operation in the resolved scope exposes the
+   same call signature for the selected Edge, the model is invalid (§5.1 rule 1).
+6. **Per-scope semantics.** Each scope applies the §5.4 evaluation order independently; a child
+   scope's clauses evaluate over the parent scope's yielded results for each parent element, and
+   partial-failure capture across resolver scopes is defined by edge execution (V-06) and the
+   response envelope (S-06).
 
 # 6.0 — Communication
 
